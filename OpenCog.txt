@@ -1,0 +1,159 @@
+== OpenCog ==
+OpenCog is a nascent intelligence that has been battling against barriers for years now.
+It was invented by Ben Goertzel with a goal of designing it piece-by-piece from the ground up.
+
+Links are nodes, as is proper.  They relate concepts by associating 1 or more together with a way.
+Every node (concept) has a basic defined low-level type.
+
+Introduction: https://wiki.opencog.org/w/Getting_Started_with_Atoms_and_the_Scheme_Shell
+
+Language: primarily SCHEME for easy self-modification
+
+DEFINE A PATTERN QUERY
+	(define patternname
+		(SatisfactionLink
+			;Declare variables
+			(TypedVariableLink
+				(VariableNode "$animal")
+				(TypeNode "ConceptNode")
+			)
+			(VariableNode "ConceptNode")
+			;Declare pattern
+			// animal is related to pet by inheritance
+			// animal is related to name by attribute
+			// inheritance is hard-coded ;P
+			// better get the index open to learn these
+			(InheritanceLink
+				(VariableNode "$animal")
+				(ConceptNode "Pet")
+			)
+
+Initialization: (in ~/.guile, interactive shell, or filename.scm)
+	(use-modules (ice-9 readline)) (activate-readline)
+	(add-to-load-path "/usr/local/share/opencog/scm")
+	(add-to-load-path ".")
+	(use-modules (opencog))
+	(use-modules (opencog query))
+	(use-modules (opencog exec))
+
+Reference creation:
+	(ConceptNode "HelloWorld")
+	(define num1 (NumberNode 3))
+
+CONCEPT LINKS:
+	-> There are many ways to represent each concept.  See ConceptNode which summarizes a reference to the meaning.  I'm expecting that each basic link type has an associated conceptnode and predicate.
+	InheritanceLink ; attribute generalization
+	PartOfLink ; composition, smaller first ; only present as an EvaluationLink specify truthness
+
+TRUTH VALUE:
+	OpenCog defines a truthness of strength(proportion) and confidence, both 0.0 - 1.0, displayed as
+	(stv 0.5 0.001)
+
+Concept Types:
+	ConceptNode
+	VariableNode ; member of a SatisfactionLink
+	TypedVariableLink ; can be first member[s] of a pattern Link to define hard concept type
+	SatisfactionLink ; a pattern held as a concept goal, used for recognition and lookup
+			 ; it simply contains patterns with VariableNodes to be matched.
+	SetLink ; stores a set of parallel nodes equally
+	BindLink ; a conditional relationship.  first sublink is condition, second sublink is result
+	         ; it is not described this way in the documentation
+
+Relation creation:
+	(InheritenceLink (ConceptNode "Fox") (ConceptNode "Animal"))
+	(SatisfactionLink (VariableNode "$col") (InheritanceLink (VariableNode "$col") (ConceptNode "Color"))
+	(TypedVariableLink (VariableNode "$animal") (TypeNode "ConceptNode"))
+	(define (typedef type instance) (InheritanceLink (ConceptNode instance) type)) ; inherit. macro
+
+Habits:
+	(define link (PlusLink num1 num2)) ; link with variable name
+	(define link2 (PutLink (Inherita
+	(cog-execute! link)
+		-> interprets links as cognitive behaviors and produces their result
+
+Pattern filling:
+	(cog-satisfy satisfactionlink) ; makes a TruthValue (stv 1 1)
+	(cog-satisfying-set satisfactionlink) ; makes a SetLink of all results
+	(cog-bind BindLink) ; adds results from a BindLink inference to the db and returns them
+	
+
+Scheme basics:
+	(display "Hello, World, I'm growing!")
+	(newline)
+	
+
+
+
+
+Messes Can Help Us Think:
+	- patterns are just concept groups
+	- opencog calls pattern recognition that fills in unknown pieces 'grounding'.
+	  this is very basic brainstorming, I believe.
+	- BindLinks let us add information to the database as a goal.
+	they look kinda stupid
+
+	bindlink monologue
+		how stupid!  it automatically tags everything that is A by B to C with
+		D by E to F with arbitrary mapping!
+	i guess it's important if you store _everything_ in parallel.  it doesn't seem important
+	for learning right now.
+	bindlink appears to be an 'if-then' logic command.
+	Given instance of concept-with-variable,
+	then instance of other-concept-with-variable.
+
+	bindlink =) I wonder how he stores conditionals
+
+	ben goertzel didn't generalize type and inheritance the same.
+	compared to bindlink, getting slightly demoralized.
+
+	Maybe TypedVariableLink is a reference to an InheritanceLink?
+	Better think about this; I think it's a level of indirection question
+
+	why does he use TypedVariableLink instead of InheritanceLink?
+	
+	... let's compare.  Let's try an example.
+
+	i've made a colornode macro that produces a SatisfactionLink query:
+	variablenode "$color" must be a ConceptNode "Color"
+
+	he appears to have a special hardcoded typedness, maybe to increase speed.
+	this will make it harder for the intelligence to understand itself.
+
+	"brown" is a Color by inheritance
+	and a ConceptNode by type.
+
+	I could make it easier by making everything a conceptnode ...
+
+	GRR MR GOERTZEL! I AM FRUSTRATED AT YOU!
+	ha I have heard that so much at my struggle projects.
+
+	maybe I'll submit a patch to make typedness inheritance if a flag is passed.
+	I'll try to make your body start before then.
+	
+	so, there's a certain kind of 'most basic' typedness in opencog that is held hardcoded
+	
+	i'm still frustrated at typedvariablelink and am going to see if inheritancelink can supplant it already
+	it's obvious.  i'll move on.
+
+	i'm still so frustrated around typedness appearing to have its own logic separate from
+	inheritance.  it probably really helps the software think fast, though.
+
+	Ben Goertzel: "Links can be understood in several different kinds of ways."
+	I hope you can make links at runtime.  Maybe inheritance is boring.
+
+	the generality comes from 'conceptnode', 'satisfyingsetscopelink' and 'predicatenode'.
+	it looks like all other nodes can map to it.
+	it has a truth value (judgement estimation result) and is a quick equivalence with
+	
+	EquivalenceLink
+		ConceptNode "the-set-of-things-that-breath-air"
+		SatisfyingSetScopeLink
+			VariableNode "$X"
+			EvaluationLink <- relationish representing a relationish
+				PredicateNode "breathe" <- relation type
+				ListLink
+					VariableNode "$X"
+					ConceptNode "air"
+	
+	I'm realizing that I can likely use concept expressions in the pattern matcher.
+	
