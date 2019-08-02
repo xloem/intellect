@@ -19,7 +19,7 @@ using namespace std;
 //
 //      concept: dynamic values aquirable from inside code, i.e. what-number-called-me what-number-comes-after-me
 //      thinking the code would likely evolve to handle some inputs differently
-unsigned long new_number = 0;
+unsigned long new_number = 1;
 
 int main()
 {
@@ -32,47 +32,44 @@ int main()
 	                ofnum = new_number++;
 	                ofname = to_string(ofnum) + ".cpp";
 	        } while (-1 != stat(ofname.c_str(), &sb));
-		cout << "stat of " << ofname << " yields " << stat(ofname.c_str(), &sb) << endl;
 	}
 
         {
                 ofstream outfile(ofname);
-                vector<unsigned long> nums;
-                while (!cin.eof()) {
-                        unsigned long num;
-                        cin >> num;
-                        nums.push_back(num);
+                vector<string> vals;
+		while (true) {
+			string val;
+                        cin >> val;
+			if (val == "") break;
+                        vals.push_back(val);
                 }
-                // when a file runs,  it has numbres on input, it also has numbers equal to it
+                // when a file runs,  it has numbers on input, it also has numbers equal to it
                 // we want to generate run-code with new numbers from input
                 // so we generate something with numbers equal to it, and output that
                 // we have one ref for the whole shebang
-                outfile << "#ifdef NUMCT" << endl
-                        << "  #undef NUMCT" << endl
-                        << "#endif";
-                outfile << "#define NUMCT" << " " << nums.size() << endl;
-                outfile << "#ifdef NUMS" << endl
-                        << "  #undef NUMS" << endl
-                        << "#endif";
-                outfile << "#define NUMS [";
-                for (size_t index = 0; index < nums.size(); ++ index)
+                outfile << "#if !defined(VALCT)" << endl;
+                outfile << "  #define VALCT" << " " << vals.size() << endl;
+                outfile << "  #define VALS [";
+                for (size_t index = 0; index < vals.size(); ++ index)
                 {
                         if (index > 0) outfile << ",";
-                        outfile << nums[index];
+                        outfile << "\"" << vals[index] << "\"";
                 }
                 outfile << "]" << endl;
-                for (size_t index = 0; index < nums.size(); ++ index)
+    		outfile << "#endif" << endl;
+                for (size_t index = 0; index < vals.size();)
                 {
-                        outfile << endl << "/* " << nums[index] << " */" << endl;
+                        outfile << endl << "/* " << vals[index] << vals[index+1] << " */" << endl;
                         outfile << "#if defined(IDX)" << endl
                                 << "  #undef IDX" << endl
                                 << "#endif" << endl;
                         outfile << "#define IDX " << index << endl;
-                        outfile << "#if defined(NUM)" << endl
-                                << "  #undef NUM" << endl
+                        outfile << "#if defined(VAL)" << endl
+                                << "  #undef VAL" << endl
                                 << "#endif" << endl;
-                        outfile << "#define NUM " << nums[index] << endl;
-                        string fname = to_string(nums[index]) + ".cpp";
+                        outfile << "#define VAL \"" << vals[index] << "\"" << endl;
+			outfile << "#define ARG \"" << vals[index+1] << "\"" << endl;
+                        string fname = vals[index] + ".cpp";
                         ifstream code(fname);
                         size_t ctrd = -1;
                         while (ctrd != 0) {
@@ -80,13 +77,16 @@ int main()
                                 ctrd = code.rdbuf()->sgetn(buf, sizeof(buf));
                                 outfile.rdbuf()->sputn(buf, ctrd);
                         }
+			index += 2;
                 }
+		// TODO: compile
+		// TODO: execute, replacing process?
         }
 // read numbers inputs
 // open files having the numbers as the names
 // cat them all to a gcc process
-// execute
-// run the output
+// execute <-
+// run the output <-
 }
 
 // karl obvious knows what he was doing ...
