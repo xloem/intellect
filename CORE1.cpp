@@ -3,6 +3,7 @@
 //
 // let's make it!
 
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,6 +12,33 @@
 #include <sys/stat.h>
 
 using namespace std;
+
+// LET'S USE THE TRAUMA THERAPY INTELLECT APPROACH.
+// The core is that we focus our energy on handling our failures.
+// This can involve taking the time to understand them, or entering a trauma state and asking the user for help.
+// 	Trauma state must be logged.  Solution must be stored.  Can just be creation of a trauma-handling pattern, I suppose.
+// 	Understanding will likely involve breaking behavior into steps
+// 		maybe then backtracking from a failure to the steps that caused it, and opening those steps up into substeps
+
+// GDB HAS A MACHINE INTERFACE MODE THAT COULD BE USED TO MANAGE EXECUTION WITH LEARNING
+
+// DYLOAD NOTES:
+//
+// 	#define _GNU_SOURCE
+// 	#include <dlfcn.h>
+// 	// LM_ID_NEWLM makes a new isolated namespace
+// 	void *handle = dlmopen(LM_ID_NEWLM, "./path.so", RTLD_NOW); // NULL -> failure
+// 		link with -ldl
+// 		links .so with -shared -fPIC
+// 	void *addr = dlsym(handle, "symbolname"); // NULL -> failure
+// 	int res = dlclose(handle); // 0 -> success (dlerror)
+//
+//	extern "C" // place before exports to demangle their symbols
+//
+// 	__attribute__((constructor)) and __attribute__((destructor)) functions
+// 		are called on load/unload
+// 		alternatively use _init() and _fini_() and pass -nostartfiles to gcc
+// 		atexit() is preferred
 
 // problem: how does a .cpp file reference another file with a number
 // answer: use #includes or interpret the whole shebang as numbers
@@ -79,8 +107,15 @@ int main()
                         }
 			index += 2;
                 }
-		// TODO: compile
-		// TODO: execute, replacing process?
+		{
+			// TODO: hash code to reuse exact stuff, somehow
+			string cmd = "g++ -ggdb -std=c++11 -o " + ofname + ".exec " + ofname;
+			int status = system(cmd.c_str());
+			if (status != 0) throw status;
+		}
+		// execute output, replacing process, to loop.  use same input.  it should represent our own code.
+		// cmd = "./" + ofname + ".exec " <
+
         }
 // read numbers inputs
 // open files having the numbers as the names
@@ -88,6 +123,17 @@ int main()
 // execute <-
 // run the output <-
 }
+
+// need input to pass to output
+// propose pass our input & output to it
+// so, a number for what we are,
+// and a number for what we ran.
+//
+// also idea of treating whats-next as data
+// makes it a little harder to .. make a program out of stuff
+// we could load a building-program number
+// and it could treat them differently, taking each one as a program-piece
+//
 
 // karl obvious knows what he was doing ...
 //      ... we were just helping him out of his issue
