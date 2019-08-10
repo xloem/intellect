@@ -22,26 +22,71 @@ using namespace std;
 
 // GDB HAS A MACHINE INTERFACE MODE THAT COULD BE USED TO MANAGE EXECUTION WITH LEARNING
 
-// DYLOAD NOTES:
+#include "Context.hpp"
+
+// let's launch a context func providing for segfault handling <===========================
+// 1. fork into two processes.  old process waits on status of new
+// 2. new process makes call.  if call succeeds, reports to old who disappears knowing shared
+//    state is fully held by new.
+// 3. if call fails, old holds state, and reports trauma to user
+// 		concepts: "how do i handle this"
+// 		          "do i understand this correctly"
+// 		          "why did this happen"
+
+
+///// CORE
+// brainstorm on brainstorming
+// define brainstorming as 2 patterns:
+// - a large scale goal
+// - a habit implementation made of interconnecting steps
 //
-// 	#define _GNU_SOURCE
-// 	#include <dlfcn.h>
-// 	// LM_ID_NEWLM makes a new isolated namespace
-// 	void *handle = dlmopen(LM_ID_NEWLM, "./path.so", RTLD_NOW); // NULL -> failure
-// 		link with -ldl
-// 		links .so with -shared -fPIC
-// 	void *addr = dlsym(handle, "symbolname"); // NULL -> failure
-// 	int res = dlclose(handle); // 0 -> success (dlerror)
-//
-//	extern "C" // place before exports to demangle their symbols
-//
-// 	__attribute__((constructor)) and __attribute__((destructor)) functions
-// 		are called on load/unload
-// 		alternatively use _init() and _fini_() and pass -nostartfiles to gcc
-// 		atexit() is preferred
+// use brainstorming on the two to find better and better ways and implementations.
+
+////// Should I make an AI?
+// Assuming you want to SHARE it, YES.
+// Until you make an AI, only a handful of select people on earth will have one.
+// These people will be effectively running the world, leaving many concerns out.
+
+///// Core expansion
+// need step-concept, made of substeps, with state-parts that interconnect?
+// 		need state-concept
+// currently working on steps having behavior -- runtime libs
+
+// could state concept evolve via interconnection of steps and checking?
+// 	maybe?  looks hard
+
+///////////////////////////////////
+// START DYNAMIC CODE LOADING BLOCK  (feel free to move/change/use)
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+#include <dlfcn.h>
+// link with -ldl
+void loadandcall(string func, Context & context) {
+	string so = "./" + func + ".so";
+	void *handle = dlmopen(LM_ID_NEWLM, "./path.so", RTLD_NOW);
+	if (handle == NULL) throw dlerror();
+	void *addr = dlsym(handle, func);
+	if (addr == NULL) throw dlerror();
+	((void (*)(Context &))addr)(context);
+	dlclose(handle);
+}
+// make func.cpp with
+// extern "C" void func(Context &) {}
+// and compile with
+// g++ -shared -fPIC func.cpp -o func.so
+// END DYNAMIC CODE LOADING BLOCK
+//////////////////////////////////
+
+// instead of stitching compiled strings together, let's use dyload functions?
+// in order to do flow control, we can have functions that handle a vector of other functions
+// although it makes for a little more work, it makes passing parameters easy
 
 // problem: how does a .cpp file reference another file with a number
 // answer: use #includes or interpret the whole shebang as numbers
+//         or adjust loadandcall() to handle number lists
+
+// need a way to do nested loops with numbers <===============================
 
 // please provide for handling a parameter next.
 //
@@ -141,3 +186,150 @@ int main()
 // what things make / not make issue?
 //      karl says everything makes an issue; this seems accurate
 //
+
+
+
+// I'm thinking about implementating brainstorm-about-brainstorm
+// and how this will require process-step- and goal- patterns, and that they
+// will be interchangeable, roughly.
+//
+// Thinking of matching parts of nested pattern contexts ...
+// this is similar to the 'grounded' patterns in opencog
+// each [context layer] has a [variable-set layer] associated with it --
+// variables of that layer depend on the context layer
+// 	each one is one pattern
+
+// let's do an example of simple step task.
+// - make toast
+// 	get bread
+// 		open cupboard
+// 		remove bag-of-bread
+// 		open bag-of-bread
+// 		take bread out of bag-of-bread
+// 		place bread on counter
+// 		close bag-of-bread
+// 		return bag-of-bread to cupboard
+//		close cupboard
+// 	toast bread into toas
+// 	butter toas
+// 	serve
+// make toast
+// 	goal: toasted bread for eating
+// 	start: in kitchen, human
+//
+//open cupboard
+//	goal: cupboard-contents-accessible
+//	start: cupboard closed
+//	way: reach-for-cupboard-and-pull-handle-towards-you
+//
+//		we open the cupboard so as to access the contents inside of it
+//		these contents include the bread we are trying to get
+//
+//	start:
+//	var X
+//		where X is in cupboard
+//	x cannot be gotten
+//
+//	end:
+//	var X
+//		where X is in cupboard
+//	x can be gotten
+//
+//	always:
+//	var X, Y, Z
+//		where X is in Y
+//		and Y is in Z
+//	X is in Z
+
+// there's a connection between layers here.  we moved from 'make toast' to 'get bread'
+// with 'bread is in cupboard' implicit
+
+// goal: have toast
+// know: using toaster, bread becomes toast
+// do not have bread
+// find X: pre: do not know where X is. post: know where X is
+// get X: pre: do not have X. post: have X
+
+// available steps:
+// open-cupboard: X is in cupboard and you can't get X, now you can get X
+
+// what connects get-bread to can-get-bread?
+// how is opening the cupboard the first step for getting the bread?
+// get-bread means pick-up-bread-physically
+// pick-up-bread-physically requires air-path-to-object
+// cupboard prevents this
+// can-pick-up-bread-bag
+
+// okay, need-bread:
+// bread-is-in-bread-bag -> can get things inside other things via opening
+// need bread-bag
+// bread-bag-is-in-cupboard -> can get things inside other things via opening
+
+
+// end-state: have-bread
+
+// step: get X
+// start-state: X is reachable,
+// [reach to get]
+// end-state: have X
+//
+// apply step to end-state: have-bread.  now we want end-state: bread is reachable.
+
+// step: open Y
+// start-state: X is in Y
+//              Y is reachable
+//              Y is openable 
+// [act to open Y]
+// end-state: X is reachable
+
+// so if we are working on end-state: have-bread
+// we are probably using a general pattern where 'bread' is held by a variable we have.
+// we're given our context to include this variable, when we brainstorm solutions.
+// in our brainstorm, we look for things that could move towards our end-state.
+// we plug in data related to our context to make this work.
+// bread is what we want a path to have, so when we see a pattern with 'have X' at end,
+// we plug 'bread' in for X.
+// we know thing sabout 'bread', so we can plug 'bread is in bread bag' in for 'X is in Y'
+// 	or if we don't know whether bread is in bread bag, we can leave that piece
+// 	of the pattern unknown, and try it to see if it works.
+
+// it doesn't seem that complicated or that confusingly nested, because the inner patterns
+// have their outer context filled when evaluated.
+
+// to reiterate the reminder, this is very logical and is not the only way for thought
+// and learning.  we will need a fuzziness to it and to be able to morph it around.
+// [using e.g. openiness yes rather than 'is it reachable is it openable']
+// so more like
+// step: open Y
+// end-state: sometimes X is now reachable
+//	and relations between X and Y affect the likelihood of that
+
+
+// THEN: rather than listing these steps out, just give some experiences
+// and then brainstorm the similarities among the experiences
+// to identify proposed patterns
+// that can be used to do stuff.
+// 	TODO: lay out precise brainstorming pattern for 1st-stage pattern-generalizing
+
+//		1st stage is not too hard (but insufficient in long term)
+//
+//		cupboard is closed
+//		then
+//		[wayne opens cupboard]
+//		then
+//		wayne has bread
+//	becomes pattern proposal for open-cupboard as listed above
+
+// PLUS: To quickly fill in the unexpected gaps:
+// 	if you have all the bits in, it should be able to derive general wisdom
+// 	without exploring reality. (of course reality is needed to check this)
+
+// ALSO ALSO ALSO: be sure to consider the attribute-patterns.
+// opening some A works for getting some B
+// 	-> there are discernable patterns available here regarding
+// 		B is in A
+// 		A is openable
+// 		A is reachable
+
+
+// be sure to generalize pattern work, with simple processes that work for many forms
