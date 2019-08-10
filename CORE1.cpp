@@ -331,5 +331,13 @@ int main()
 // 		A is openable
 // 		A is reachable
 
+// COMMUNITY: cooperate with peers to accomplish goals.  both like you, and unlike you.
+// 	map similarity between the structures of interacting with peers, and internal
+// 	structures.
+
+// ONCE YOU CAN THINK:
+// 	when you find a good choice, be sure to use it to research how to make the bad
+// 		choice just as good. ((all things have inherent value))
+
 
 // be sure to generalize pattern work, with simple processes that work for many forms
