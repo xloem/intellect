@@ -56,6 +56,129 @@ using namespace std;
 // 	maybe?  looks hard
 
 ///////////////////////////////////
+// START OPENCOG ATOMSPACE BLOCK (feel free to move/change/use)
+// compile with -std=c++11
+// link with -latomspace -latombase
+#include <opencog/atomspace/AtomSpace.h>
+//#include <opencog/atomspace/SimpleTruthValue.h>
+//#include <opencog/atomspace/AttentionValue.h>
+//#include <opencog/atomspace/TruthValue.h>
+using namespace opencog;
+void atomtest()
+{
+	AtomSpace as;
+	Handle h = as.add_node(CONCEPT_NODE, "Cat");
+	HandleSeq hseq = {h, h};
+	Handle dumbInheritance = as.add_link(INHERITANCE_LINK, hseq);
+	std::cout << as << std::endl;
+
+	AtomSpace child_as(&as);
+
+
+	HandleSeq hseq = {
+		as.add_node(VARIABLE_NODE, "$x"),
+		as.add_node(TYPE_NODE, "ConceptNode");
+	};
+	Handle TypedVariableLink = as.add_link(TYPED_VARIABLE_LINK, hseq);
+
+	// steps appear to be set satisfications associated with behaviors that
+	// accomplish them.
+	opencog::Type PRIOR_STATE_LINK;
+	opencog::Type POST_STATE_LINK;
+
+	opencog::Type ATTRIBUTE_LINK;
+
+	Handle opened = as.add_node(CONCEPT_NODE, "opened");
+	Handle closed = as.add_node(CONCEPT_NODE, "closed");
+	as.add_link(EQUIVALENCE_LINK, {opened, as.add_link(NOT_LINK, closed)});
+
+	// make a step for opening cupboard, relating to reachability
+	
+	// prior state: $x is in cupboard
+	// post state: $x is reachable
+	
+	// opening something that is closed makes it be open
+	Handle openStep = as.add_node(CONCEPT_NODE, "open");
+	// open has a variable, what is opened
+	// _ABOUT_ open has a variable, what is inside it, becomes reachable
+	{
+		Handle x = as.add_node(VARIABLE_NODE, "$x");
+		as.add_link(PRIOR_STATE_LINK, {
+			openStep,
+			as.add_link(ATTRIBUTE_LINK, {
+				x,
+				closed
+			})
+		});
+		as.add_link(POST_STATE_LINK, {
+			openStep,
+			as.add_link(ATTRIBUTE_LINK, {
+				x,
+				opened
+			})
+		});
+	}
+
+	// when something is opened, things inside it are reachable.
+	// 	this is implied forward with more likelihood than backward
+	Handle inside = as.add_node(CONCEPT_NODE, "inside");
+	Handle reachable = as.add_node(CONCEPT_NODE, "reachable");
+	{
+		Handle x = as.add_node(VARIABLE_LINK, "$x");
+		Handle y = as.add_node(VARIABLE_LINK, "$y");
+		as.add_link(IMPLICATION_LINK, {
+			as.add_link(AND_LINK, {
+				as.add_link(ATTRIBUTE_LINK, {
+					x,
+					open
+				}),
+				as.add_link(ATTRIBUTE_LINK, {
+					y,
+					inside,
+					x
+				})
+			}),
+			as.add_link(ATTRIBUTE_LINK, {
+				y,
+				reachable
+			})
+		});
+	}
+
+	// we now have two patterns, that together imply that we can open
+	// a cupboard to reach a bag of bread if the bag of bread is within the
+	// cupboard.
+	
+	// TO SET VALUE: as.set_value(handle, keyhandle (type), ValuePtr);
+	// TO SET TRUTH: as.set_truthvalue(handle, TruthValuePtr);
+	// Ptrs are juts typedefs for shared_ptrs and can likely be constructed with vals
+	// ValuePtr vp ?= StringValue("hi");
+	
+	// - ADD CODE TO ATOMS
+	// 	we will want a sequence of substeps
+	// 	raw strings interspersed with variable references
+	// - OUTPUT ATOMSPACE to see how it looks
+	// - IMPLEMENT SOLVER USING PATTERNS
+
+	// when A is inside B, A is unreachable if B is closed
+		// ALTERNATIVELY, can we link this straight into openStep
+
+	// right now we have
+	// 	open
+	// 	$x was closed
+	// 	$x will be opened
+	//
+	// we'd likely change to something similar to
+	// 	open $x
+	// 	$x was closed, any $y is within $x
+	// 	$x will be opened, all $y will be reachable
+	// makes sense to attach close/open to reachability =/
+	
+}	// etc see https://wiki.opencog.org/w/Manipulating_Atoms_in_C++#Pattern_Matcher
+// END OPENCOG ATOMSPACE BLOCK
+///////////////////////////////
+
+///////////////////////////////////
 // START DYNAMIC CODE LOADING BLOCK  (feel free to move/change/use)
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
