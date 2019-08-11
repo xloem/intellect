@@ -159,6 +159,11 @@ void atomtest()
 	// 	raw strings interspersed with variable references
 	// - OUTPUT ATOMSPACE to see how it looks
 	// - IMPLEMENT SOLVER USING PATTERNS
+	// 	will need a way to
+	// 		- get patterns matching requests
+	// 		ordered by relevence
+	// 			propose using subcontexts and queries that return all results
+	//		- inspect pattern content
 
 	// when A is inside B, A is unreachable if B is closed
 		// ALTERNATIVELY, can we link this straight into openStep
