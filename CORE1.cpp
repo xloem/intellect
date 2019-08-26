@@ -21,6 +21,7 @@ using namespace std;
 // 		maybe then backtracking from a failure to the steps that caused it, and opening those steps up into substeps
 
 // GDB HAS A MACHINE INTERFACE MODE THAT COULD BE USED TO MANAGE EXECUTION WITH LEARNING
+// It likely also handles segfaults.
 
 #include "Context.hpp"
 
@@ -46,6 +47,7 @@ using namespace std;
 // Assuming you want to SHARE it, YES.
 // Until you make an AI, only a handful of select people on earth will have one.
 // These people will be effectively running the world, leaving many concerns out.
+// They have a head start on you, so it is likely only possible if you don't harm them in the work.
 
 ///// Core expansion
 // need step-concept, made of substeps, with state-parts that interconnect?
