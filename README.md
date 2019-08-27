@@ -10,10 +10,9 @@ and it must be able to refer to itself usefully.
 1. Choose a simple algorithm for collecting steps together to perform a task.
 2. Choose a simple representation of steps to use for #1.
 3. Implement #2 enough to use it to communicate a step to another process.
-
 Once #3 works, the goal now is to efficiently produce a form of #1 as a collection of
-processes that can develop themselves, so make sure to reuse your work, and do work that is
-reusable, as much as possible.
+processes that can develop themselves, using each other as their steps.  Make sure to
+reuse your work, and do work that is reusable, as much as possible.
 
 4. Choose a simple algorithm for handling if something horrible goes wrong that must
    never be repeated (trauma).  Consider storing a detailed log forever.  Consider refusing to

@@ -67,6 +67,7 @@ using namespace opencog;
 void atomtest()
 {
 	AtomSpace as;
+	// Handle subclasses a shared_ptr to Atom
 	Handle h = as.add_node(CONCEPT_NODE, "Cat");
 	HandleSeq hseq = {h, h};
 	Handle dumbInheritance = as.add_link(INHERITANCE_LINK, hseq);
@@ -157,7 +158,7 @@ void atomtest()
 	// - ADD CODE TO ATOMS
 	// 	we will want a sequence of substeps
 	// 	raw strings interspersed with variable references
-	// - OUTPUT ATOMSPACE to see how it looks
+	// - OUTPUT ATOMSPACE to see how it looks <-- this was just to help a different state of work
 	// - IMPLEMENT SOLVER USING PATTERNS
 	// 	will need a way to
 	// 		- get patterns matching requests
@@ -463,9 +464,40 @@ int main()
 // 	map similarity between the structures of interacting with peers, and internal
 // 	structures.
 
-// ONCE YOU CAN THINK:
+// AFTER YOU CAN THINK RELIABLY:
 // 	when you find a good choice, be sure to use it to research how to make the bad
 // 		choice just as good. ((all things have inherent value))
 
 
-// be sure to generalize pattern work, with simple processes that work for many forms
+// be sure to generalize patterns and pattern work,w/ simple processes that work for many forms
+
+// CUR TASK: send and receive a simple goal with habit to reach goal
+// this is a subtask of process optimization
+// it is communication between subprocesses
+//
+// 	goal: communicate with other process
+// 	
+// 	pre:
+// 	$x is a process
+// 	$y is a process
+// 	$z is information
+// 	$x knows $z
+// 	$y does not know $z
+//
+//	post:
+//	$y knows $z
+//
+//	habit: <code reference>
+//
+// we'll need a step reserializer.
+// 	way to merge serialization and deserialization?
+// 		1. form patterns mapping between the two
+// 		2. make a general reserialization process that makes the missing pattern exist
+// 			<let's keep send/recv separate for now, but make this for
+// 			 line-meaning>
+
+// CORE ROLES:
+// 	- group learning: research how to research stuff
+// 	- diversity: brainstorm new parts of learning to be researched
+// 	- implement processes researching the parts of learning brainstormed
+//
