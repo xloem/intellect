@@ -8,5 +8,10 @@ That is:
 		by picking habits that are relevent in the moment [choose what to do],
 		and running them on relevent data [choose to what, and do it]
 ========================================================================================================
+	- the habits should be to identify what is relevent
+
+	- we have a request for the initial goal of the process to be to write a chunk of code out in its own language
+		tighter self-reference is made without the extra sourcecode-file step, but it may be slower to code due to not getting as much help from it
+
 The hope is the process becomes good at active choice.
 
