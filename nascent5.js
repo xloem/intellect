@@ -1,57 +1,3 @@
-class ActiveMemory {
-	// provides for needs of data
-	constructor() {
-		this.ram = []
-		this.cloned = false
-	}
-	clone() {
-		let ret = new ActiveMemory();
-		ret.ram = this.ram
-		ret.cloned = true
-		return ret
-	}
-	add(...items) {
-		if (this.cloned) { this.ram = this.ram.slice(); this.cloned = false; }
-		for (let item of items)
-			this.ram.push(item)
-	}
-	del(...items) {
-		if (this.cloned) { this.ram = this.ram.slice(); this.cloned = false; }
-		for (let item of items) {
-			let index = this.ram.indexOf(item)
-			this.ram.splice(index, 1)
-		}
-	}
-	contains(...items) {
-		for (let item of items)
-			if (this.ram.indexOf(item) === -1) return false
-		return true
-	}
-	containsWith(...props) {
-		let ret = []
-		outer: for (let a of this.ram) {
-			for (let i = 0; i < props.length; i += 2)
-				if (! a.props.has(props[i], props[i+1]))
-					continue outer
-			return true
-		}
-		return false
-	}
-	getWith(...props) {
-		let ret = []
-		outer: for (let a of this.ram) {
-			//console.log(a.props.props)
-			for (let i = 0; i < props.length; i += 2) {
-				//console.log(props[i] + ': ' + props[i+1] + '?')
-				if (! a.props.has(props[i], props[i+1]))
-					continue outer
-			}
-			ret.push(a)
-		}
-		if (ret.length > 0) return ret
-		return null
-	}
-}
 class Property {
 	constructor(type, dest) {
 		this.type = type
@@ -110,12 +56,79 @@ class ArrayData extends Array {
 		this.props.del('is', 'string')
 	}
 }
-// inhibition: wants lines to line up in top window
+
+// MEMORY
+// the archivist.  Provides for needs of data.  Memory is relevent whenever there is
+// an informational need.
+//
+// 	When remembering steps, likely what is relevent is what is needed to reach the goal
+// 		Here's a possible step memory.
+//
+//		let ret = new StringData('labeled ' + items.length + ' text-string')
+//		ret.props.add('is','step-memory')
+//		ret.props.add('step',genproptextstring)
+//		ret.props.add('ram',ram)
+//		ret.props.add('count',items.length)
+//		for (let a of items)
+//			ret.props.add('item', a)
+
+class ActiveMemory extends ArrayData {
+	// although Memory is eventually a module that provides for stored information needs
+	// this class is just a group of concepts, moved in and out as needed
+	constructor(items, from) {
+		super(items || [], from)
+		this.props.add('is','working-ram')
+	}
+	clone() {
+		return new ActiveMemory(this, this);
+	}
+	add(...items) {
+		//if (this.cloned) { this = this.slice(); this.cloned = false; }
+		for (let item of items)
+			this.push(item)
+	}
+	del(...items) {
+		//if (this.cloned) { this = this.slice(); this.cloned = false; }
+		for (let item of items) {
+			let index = this.indexOf(item)
+			this.splice(index, 1)
+		}
+	}
+	contains(...items) {
+		for (let item of items)
+			if (this.indexOf(item) === -1) return false
+		return true
+	}
+	containsWith(...props) {
+		let ret = []
+		outer: for (let a of this) {
+			for (let i = 0; i < props.length; i += 2)
+				if (! a.props.has(props[i], props[i+1]))
+					continue outer
+			return true
+		}
+		return false
+	}
+	getWith(...props) {
+		let ret = []
+		outer: for (let a of this) {
+			//console.log(a.props.props)
+			for (let i = 0; i < props.length; i += 2) {
+				//console.log(props[i] + ': ' + props[i+1] + '?')
+				if (! a.props.has(props[i], props[i+1]))
+					continue outer
+			}
+			ret.push(a)
+		}
+		if (ret.length > 0) return ret
+		return null
+	}
+}
+// note: for now we produce only data; state-changes are data-changes
 class FunctionData {
 	constructor(name, // name of function
 	            func, // function taking ordered needs
 	                  // ordered array of made objects is returned
-	            relevence, // TEMPORARY; MOVE TO HABIT. function that generates the needs, takes ram
 	            needs, // array of 1-property-per-object this function requires
 	            makes // array of 1-property-per-object this function produces
 	) {
@@ -123,7 +136,9 @@ class FunctionData {
 		this.props = new Properties('function')
 		this.props.add('name', name)
 		this.call = func
-		this.relevence = relevence
+		// If needed, make atomspace-like pattern structures for needs/makes.
+		// 	- represent multiple properties on 1 needed object
+		// 	- represent input objects present in output
 		this.needs = needs
 		this.makes = makes
 	}
@@ -161,35 +176,61 @@ line2words = new FunctionData(
 	(line) => { // call
 		let res = new ArrayData(line.split(' '), line)
 		res.props.add('is','words')
+		res.props.del('is','text-string')
 		return res
-	},
-	(ram) => { // relevence
-		return ram.getWith('is','text', 'is','string')
 	},
 	['is','text-string'], // needs
 	['is','word-array'] // makes
 )
 
+// makes text-string used by line2words.  example of small relevence habit
+genproptextstring = new FunctionData(
+	'genproptextstring',
+	/*call*/(text) => {
+		if (text.props.has('is','string')) {
+			if (!text.props.has('is','text-string')) {
+				text.props.add('is','text-string')
+			}
+			return text
+		}
+		return null
+	},
+	/*needs*/['is','text'],
+	/*makes*/['is','text-string']
+)
+
 respondhello = new FunctionData(
 	'respondhello',
 	(words) => { // call
-		console.log(words[0] + ", user!")
+		console.log(words[0] + " world!")
 		let res = new StringData("said " + words[0])
 		res.props.add('is','output')
 		res.props.add('is','text')
 		return res
 	},
-	(ram) => { // relevence
-		let res = ram.getWith('is','words', 'is','input')
-		if (res) {
-			res = res.filter(x => { x = x[0].toLowerCase(); return x == 'hello' || x == 'hi'})
-		}
-		return res
-	},
-	['is','input-words'], // needs
+	['is','hello-input'], // needs
 	['is','output'] // makes
 )
 
+genprophelloinput = new FunctionData(
+	'genprophelloinput',
+	/*call*/(input) => {
+		if (!input.props.has('is','words'))
+			return null
+		if (!input.props.has('is','hello-input')) {
+			let x = input[0].toLowerCase()
+			let c = x[x.length-1]
+			if (c == ',' || c == '!' || c == '.') x = x.slice(0,x.length-1)
+			if (x != 'hello' && x != 'hi') return null
+			input.props.add('is','hello-input')
+		}
+		return input
+	},
+	/*needs*/['is','input'],
+	/*makes*/['is','hello-input']
+)
+
+/* old, this isn't relevent to needed structure
 // nodejs is missing a succinct read-line-from-stdin function.  make our own.
 userinput = (() => {
 	const readline = require('readline')
@@ -198,9 +239,9 @@ userinput = (() => {
 		lines.push(line)
 	})
 
-	return new FunctionData(
+	let ret = new FunctionData(
 		'userinput',
-		() => { // call
+		(self) => { // call
 			let res = new StringData(lines.shift())
 			res.props.add('is','text')
 			res.props.add('is','input')
@@ -209,21 +250,55 @@ userinput = (() => {
 		() => { // relevence
 			return lines.length > 0
 		},
-		['userinput-has','lines'] // needs
+		['has','userinput-lines'] // needs
 		['is','string','is','text','is','input'] // makes
 	)
+	ret.lines = lines
 })()
-// => switching from 'relevence' to 'needs'. <= relevence is the module that processes needs
-// TODO: we need to make active memory a Data so that we can pass sets of data to relevence
-// TODO: want to move the relevence funcs out of the func defs that use them
-// TODO: we have 'is input-words'; can make as makeinputwords from respondhello.relevence
-// TODO: we have 'is word-array' instead of 'is words' and 'is array'
+genprophaslines = new FunctionData(
+	'genprophaslines',
+	(userinput) => { // call
+	}
+)
+*/
+
+// PATTERN REQUEST: we want to be able to store needed-steps.
+// 	needed-steps are parallel needs that are needed for a helpful step
+// 	any one may be met, and others are ignored once one is, but all are generated at once
+// 	habits that meet needs expect them not to be inside an array and have no way of referring to that.
+// 	[AND needs can be collapsed, but OR needs need patterns]
+// 		[how do we pull a need out of the list?]
+
+// make a habit that plans core behavior
+findstepsfor = new FunctionData(
+	'findstepsfor',
+	/*call*/(need, depth) => {
+		// find a habit that does the final goal.
+		// TODO: for now we assume all needs are 'is' and store just what-it-is in the need string.  when doesn't work anymore, make type-getters on Properties to retrieve the need details
+		let ret = new ArrayData([])
+		for (let habit of all_parts) {
+			if (habit.makes.indexOf(need) !== -1) {
+				// found a workable habit
+				ret.push(habit.needs)
+			}
+		}
+		ret.props.add('is','alternate-needs-array')
+		return ret
+	},
+	// TODO: likely need more structure here
+	/*needs*/['is','desired-need'],
+	/*makes*/['is','alternate-needs-array']
+)
+
+// TODO: add structure enough to build findstepsfor
+// TODO: build findstepsfor
 // TODO 2: add to surrounding process: remove source needs when there is no longer a reason for their presence
 
 
-all_parts = [ line2words, respondhello ]
+all_parts = [ line2words, genproptextstring, respondhello, genprophelloinput ]
 
 ram = new ActiveMemory()
+//ram.add(ram)
 optstried = new Set()
 steps = []
 
@@ -241,21 +316,23 @@ readline.createInterface({
 		cont = false
 		for (let part of all_parts) {
 			//console.log('for-loop-of-parts ' + part.name)
-			let rel = part.relevence(ram)
+			// TODO: >1 parameter,must redo next line
+			let rel = ram.getWith(...part.needs)
 			if (rel) {
 				for (let a of rel) {
 					//console.log('for-loop-of-rel ' + part.name + ' ' + a)
 					if (optstried.has(part.name + ' ' + a)) continue; 
 					//console.log('call-part ' + part.name + ' ' + a)
 					res = part.call(a)
+					optstried.add(part.name + ' ' + a)
+					if (res == null) continue
+					// TODO: res==null is considered failure now
 					ram.add(res)
 					//console.log('part-called')
 					step = [a, part.name, res]
 					steps.push(step)
 					console.log('made ' + step)
 					cont = true
-					optstried.add(part.name + ' ' + a)
-
 				}
 			}
 		}
@@ -269,20 +346,24 @@ readline.createInterface({
 // using an item should link it to what it is used by, so that it may be found easier again when needed
 
 // Please grow to understand your own structure.  What is needed to make an intellect?
+// 	^-- we want it to learn the basic needs of life, eventually, on its own.
+// 	    notably those to do with care for others.
 
-// MEMORY: the archivist.  Provides for needs of data.  Memory is relevent whenever there is
-// an informational need.
+// MEMORY: see MEMORY above
 
 // RELEVENCE: the gofer.  Provides the link between needs, etc, and the behavior that
 // finds them.  Is relevent for meeting needs in active ways and likely much else.
 
 // BEHAVIOR: the core.  combines interdependent habits from memory to meet needs.
-//
-// 1 way to make behavior:
-// 	find a habit that does the final goal
-// 	find with this process, information that meets its needs
+// The two below go on simultaneously.  only 1 is needed.
+// A way to plan behavior:
+// 	find habits that do the final goal, discern their needs
+// 	pick needs to treat as a new final goal and repeat until needs are met
+// A way to make behavior:
+// 	find a habit that does a goal
+// 	find with this process, information that meets its needs <spawns more>
 // 	run it
+// 		TODO: for subprocesses spawning,
+//		consider labelling things that are very quick and side-effect-free
+//		these can probably be immediately run.
 //
-// specifying the needs is an interesting problem
-// but i think our norm is just property specs
-// other habits can generate the property specs
