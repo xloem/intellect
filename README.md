@@ -27,5 +27,9 @@ This code is written very tiny so that little work need be invested in it for it
 is that it move rapidly towards coding itself, such that as it gets coded, the developer need do less to work on it, being able to
 instead make use of its internal functions for producing code-like behavior.
 
+# language
+By prototyping in a flexible language like Javascript, design work may be hastened a little.  I also theorize that a good AI doesn't
+need many cpu cycles to get stuff done, because it makes smart choices.
+
 # etc
 There is of course more.  This writing content was made day-of-creation.  Will I ever edit this again?  Unknown.

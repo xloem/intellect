@@ -1,6 +1,24 @@
 The habits should be used to discern what is relevent; to form relevence.
 The goal should be to choose a relevent habit and do that habit.
 
+These are the basic habits I thought up that a computer program has:
+        variables:
+                - create a place to store a value
+                - place a value in such a place
+                - retrieve a value from such a place
+        data-structures:
+                - make a class definition (collection of variables)
+                - initialize an object
+                - set/retrieve properties (variables)
+        flow:
+                - trigger a different step than the next, conditionally
+        procedures:
+                - collect a set of behaviors together
+                - trigger a collected set of behaviors and continue
+        expressions:
+                - evaluate arithmetic on variables and constants
+
+
 That is:
 ========================================================================================================
 	- the active goal is to choose what to do and to what, and do it
