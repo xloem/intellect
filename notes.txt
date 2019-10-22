@@ -52,18 +52,43 @@ We need to identify relevent important needs that support our needs.
 We need to be able to try new ways of doing things.
 We need to be able to judge what works.
 
-
-What is a full intellect?
-	A full intellect can both keep something constant in a diverse, changing environment,
-	and design and build something that functions as well as it does, without access to its own workings.
-
+Proposed Definitions:
 What is an intellect?
-	An intellect is something that keep something constant in a diverse, changing environment,
-	so long as the environment changes slowly enough for the intellect to learn to adapt to it.
+	Propose an intellect is something that can adapt to keep something constant in a diverse, changing environment,
+	so long as the environment changes slowly enough and with enough familiarity for them to learn or prepare effectively.
+What is a full intellect?
+	Propose that a full intellect is an intellect that can design and build something that functions as well as they do,
+	without access to their own workings, and is able to learn to handle arbitrarily fast or new diverse environmental change.
 
 What basic parts do we expect a full intellect to have?
-brainstorming/trial-and-error: the ability to try or consider different things and find ones that work well
+- Trial Exploration
+- Relevence
+- Self Coding
+- Pattern Generality
+- Meaning Representation
+- Promise Meeting
+
+Trial Exploration
+	Brainstorming, trial-and-error.  The ability to try or consider different things and find ones that work well.
 	simple approaches: exhaustive search, and random trial
-meaning representation: the ability to store and work with conceptual information
-relevence: the ability to apply concepts and actions more in contexts they are likely to be useful than those they aren't
-self-modification: at least part of the system must be fully alterable by the system and generic enough to replace it. <- due to danger, must include controversial needs in decisions
+
+Relevence
+	The ability to apply concepts and actions moreso in contexts they are likely to be useful than those they aren't.
+	1. responsiveness for behavior: a habit acts when conditions arise, not when it is 'next'
+	2. possibly a promise for decision-making, for proposals to have reasons with associated strengths
+
+Self-Coding
+	At least part of the system must be fully alterable by the system and generic enough to replace it.
+	Due to the danger involved in this, controversial concerns must be fully included in decisions around it.
+	Karl references Convergent Facilitation as proof that a decision can be found to satisfy any set of controversial concerns.
+		<it very roughly involves rapidly moving towards the reasons of the concerns until they don't conflict; there is a lot of caring dialogue>
+
+Pattern Generality
+	The ability to brainstorm on enough relationships, possibly mathematical, to discover pattern-summaries that are diversely effective in the real world.
+
+Meaning Representation
+	The ability to store and work with conceptual information.
+
+Promise Meeting
+	The ability to make agreements on behavior and structure, adhere to them, and change them when needed.
+
