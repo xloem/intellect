@@ -22,7 +22,8 @@ class Properties {
 	}
 	has(type, dest) {
 		for (let p of this.props)
-			if (p.type == type && p.dest == dest)
+			if ((p.type == type || isVar(type))
+			    && (p.dest == dest || isVar(dest)))
 				return true
 		return false
 	}
@@ -35,6 +36,9 @@ class Properties {
 			}
 		}
 		return false
+	}
+	hasIsVar() {
+		return this.has('is','variable')
 	}
 }
 class AbstractData {
@@ -55,6 +59,14 @@ class ArrayData extends Array {
 		this.props = new Properties('array', from && from.props)
 		this.props.del('is', 'string')
 	}
+}
+
+// Abstractions?
+const VAR_X = new StringData('X')
+VAR_X.props.add('is','variable')
+// recommend e.g. 'is','variable-rep' when code is designing them, so don't match everything
+function isVar(x) {
+	return x.props && x.props.has('is','variable')
 }
 
 // MEMORY
@@ -159,7 +171,7 @@ class FunctionData {
 //)
 //         - place a value in such a place
 //         - retrieve a value from such a place
-// data-structures:
+// data-structures: (these are like promises of what to do and how to use something)
 //         - make a class definition (collection of variables)
 //         - initialize an object
 //         - set/retrieve properties (variables)
@@ -270,6 +282,7 @@ genprophaslines = new FunctionData(
 // 		[how do we pull a need out of the list?]
 
 // make a habit that plans core behavior
+// for some other ideas, see this function in nascent6.js
 findstepsfor = new FunctionData(
 	'findstepsfor',
 	/*call*/(need, depth) => {

@@ -33,3 +33,37 @@ That is:
 
 The hope is the process becomes good at active choice.
 
+
+
+Ideas for Tenets for a Need-Based Artificial Life <need ordering + addition + code>
+Behavior is Life <maybe Life is Behavior That Adapts>
+All life has the same core needs.  Needs are the reasons to do anything at all.
+We need to know what we want when we act. (all behavior has a reason)
+We need to be able to learn new things.
+We need to be able to make promises on how to behave. (provides for cooperation)
+We need to be able to keep our promises.
+We need to know how to communicate with others what each of us knows.
+We need to freely interact with our friends, our parts, and our community, in ways that we know well. (community is our body)
+Information lives with a reason, a purpose.
+We need to retain the information we choose to retain.
+We need to act to meet our needs.
+We need to identify relevent important needs that support our needs.
+
+We need to be able to try new ways of doing things.
+We need to be able to judge what works.
+
+
+What is a full intellect?
+	A full intellect can both keep something constant in a diverse, changing environment,
+	and design and build something that functions as well as it does, without access to its own workings.
+
+What is an intellect?
+	An intellect is something that keep something constant in a diverse, changing environment,
+	so long as the environment changes slowly enough for the intellect to learn to adapt to it.
+
+What basic parts do we expect a full intellect to have?
+brainstorming/trial-and-error: the ability to try or consider different things and find ones that work well
+	simple approaches: exhaustive search, and random trial
+meaning representation: the ability to store and work with conceptual information
+relevence: the ability to apply concepts and actions more in contexts they are likely to be useful than those they aren't
+self-modification: at least part of the system must be fully alterable by the system and generic enough to replace it. <- due to danger, must include controversial needs in decisions
