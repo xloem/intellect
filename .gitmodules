@@ -1,0 +1,6 @@
+[submodule "biscuit"]
+	path = biscuit
+	url = https://github.com/xloem/biscuit.git
+[submodule "bagel"]
+	path = bagel
+	url = https://github.com/fuzzyTew/bagel.git
