@@ -1,1 +1,1 @@
-../time_reversal/name.scm
+starts/time_reversal/name.scm
