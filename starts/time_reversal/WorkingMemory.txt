@@ -1,0 +1,3 @@
+- [ ] finish tutorial #2 on pattern matching of opencog?
+- [ ] find enough components in opencog to provide for some kind of safety
+- [ ] submit patch to opencog to make typedness be inheritance [if a flag is passed?]
