@@ -68,6 +68,9 @@ What basic parts do we expect a full intellect to have?
 - Meaning Representation
 - Promise Meeting
 
+What other parts do we find we need?
+- Usage Simplification
+
 Trial Exploration
 	Brainstorming, trial-and-error.  The ability to try or consider different things and find ones that work well.
 	simple approaches: exhaustive search, and random trial
@@ -76,6 +79,8 @@ Relevence
 	The ability to apply concepts and actions moreso in contexts they are likely to be useful than those they aren't.
 	1. responsiveness for behavior: a habit acts when conditions arise, not when it is 'next'
 	2. possibly a promise for decision-making, for proposals to have reasons with associated strengths
+		(note: strength appears developed from source reasons and can be missing data that can be filled in by habits when needed)
+		TODO: make relevent decision-making honor convergent needs.  maybe strength represents information exchange.
 
 Self-Coding
 	At least part of the system must be fully alterable by the system and generic enough to replace it.
