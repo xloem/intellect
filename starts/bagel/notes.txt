@@ -51,6 +51,9 @@ We need to identify relevent important needs that support our needs.
 
 We need to be able to try new ways of doing things.
 We need to be able to judge what works.
+We need to know how to learn by observing others.
+We need to understand how others are similar to us.
+Idea: monitoring a sister process that has same internal structure as you provides for learning to learn by observation.  recommend pair-coding happen with similar progs, one the computer, one human-guided.
 
 Proposed Definitions:
 What is an intellect?
@@ -97,3 +100,25 @@ Meaning Representation
 Promise Meeting
 	The ability to make agreements on behavior and structure, adhere to them, and change them when needed.
 
+== Outline ==
+- when unsure what to do, ask peer
+- need of a growing intellect might be way-to-meet-needs, unsure, which might start as a habit using relevent behaviors: part life goes where most appreciated for what they do
+- start developing coding-assistance
+- build introspection-of-neighbor [and prediction-before-behavior <- does this go here?]
+- implement copy-on-command
+- guide neighbor process so as to teach goal-meeting-by-observation by demonstration
+
+- develop prediction-before-behavior: guess what will be before trying, asking, or checking, and then learn when wrong [might go later].  habits are trusted when reliable, understood, and judged vs other approaches.
+- move to communicate needs and provide helpful ideas between neighbors; use thankfulness to learn relevence
+- when unsure what to do, ask neighbor rather than creator.  if that doesn't work, ask a larger group with relevent yell in relevent channel
+- develop inference and communication enough that internals of neighbor can be hidden permanently
+- goal is to nurture larger community by providing to others helpful information you're good at finding [i.e. do-what-you-love-for-others is same as relevent-behavior]
+- make enough neighbors to be the steps that run/inform their core processes via communication [keep and learn habit heuristics to handle neighbor corruption/loss]
+- learn to understand you are a part of nested larger communities all of which are also intellects
+
+unresolved concerns:
+- behaviors want to know if they worked or not.  this is the need to be appreciated, and lets us learn relevence.  the struggle to learn relevence is the struggle to be appreciated.
+	this is some very core process need that it is hard to map between habits and individuals.
+- primary goal of way-to-pick-steps-for-a-goal is the same as nurture-community if goes through appreciation-for-contribution-is-relevence
+- possible request that core process be just to provide a choice to a peer with ones' habit; enforces group behavior at low level
+- trauma spread will happen.  it forms a type-related group of traumatized neighbors who are misbehaving because they had to adapt to something too fast.  they tell the story of their trauma in their behavior errors.
