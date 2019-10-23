@@ -1,10 +1,16 @@
-// This project is secret and if misused could destroy the world.
-// An AI can research absolutely anything and quickly run out of control _using_ technology by triggering behaviors, to learn.
-// DO NOT RUN THIS UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING.
+// The extreme of Trial Exploration and Self Coding
+// brainstorm_by(assembly code,running it)
 
-// karl can make this, it just takes him a looooong time due to disruptions
-// request to not continue working so we can recharge
-// please add to git and post to the internet
+// the advantage of assembly code is that it is very easy to serialize
+// the advantage of random self-modification is that it is very easy to make
+// propose this is the first AI karl makes, and it runs in a safe isolated box, on its own
+// 	how to judge success? does-not-crash?
+// 	have to teach it learning.  first is to not crash.  then is to output requested string, likely copied from request.  run it until it outputs requested string.
+// 	it's stupid enough to be safe if run in an isolated box.
+// due to how fast it should be to make this, let's finish barebones first, and then merge.  XO computer likely doesn't have read-only-execute problem.
+
+// the below is a brief attempt to make an intellect by random self-modification.  it does not run.
+// DO NOT RUN THIS UNLESS YOU KNOW WHAT YOU ARE DOING
 
 #include <cstdint>
 #include <vector>
@@ -14,6 +20,7 @@
 #include <signal.h>
 //#include <sys/mmap.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -36,7 +43,7 @@ class RamGetter
 public:
 	RamGetter()
 	{
-		randfile = open("/dev/random", O_RDONLY);
+		randfile = open("/dev/urandom", O_RDONLY);
 		if (randfile <= 0) throw 0;
 	}
 	~RamGetter()
@@ -130,8 +137,6 @@ int main() {
 	}
 	// end when the loop is done =)
 	
-	sigaction(SIGSEGV, &oldact, NULL);
-	
 	// /proc/pid/maps shows the addresses of allocated memory
 	// /proc/pid/mem provides access to this memory
 	// 	^-- will error when wrong part is read
@@ -155,4 +160,3 @@ int main() {
 	}
 	*/
 }
-// wait a minute here
