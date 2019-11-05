@@ -1,3 +1,11 @@
+- UPDATE THE DOCUMENT WITH "THANKFULNESS" which describes a mature model for relevence-to-meet-needs in the human community.
+	Imagining a mess of behaviors having goals in the same environment, giving thanks to each other for doing a helpful behavior _when_ it helped meet the goal.
+	The whenness is the thing to add to the habit-doer's behavior relevence.
+	Thankfulness appears countered by anger.  The instincts and cultures around the habits and meanings of these show experienced relevence habits.
+- Suspect relevence builds by celebration and mourning that gets bound to associated concepts.  The desire to celebrate and mourn these concepts produces daydreams and rituals
+	that build further meaningful celebration and mourning of further relevent concepts, using relevence habits that have been celebrated in the past.
+- The concept of 'where did you get this from' / 'who knows more about this' might help construct memory and relevent association -> means codelines and behaviors have association
+
 The habits should be used to discern what is relevent; to form relevence.
 The goal should be to choose a relevent habit and do that habit.
 
@@ -101,7 +109,7 @@ Promise Meeting
 	The ability to make agreements on behavior and structure, adhere to them, and change them when needed.
 
 == Outline ==
-- when unsure what to do, ask peer
+- when unsure what to do, ask peer [migrate quickly to try things and wait for feedback on them].
 - need of a growing intellect might be way-to-meet-needs, unsure, which might start as a habit using relevent behaviors: part life goes where most appreciated for what they do
 - start developing coding-assistance
 - build introspection-of-neighbor [and prediction-before-behavior <- does this go here?]
