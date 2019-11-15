@@ -1,3 +1,7 @@
+=== clump2, move me ===
+a part needs awareness of its met needs
+so it may complain when they are no longer met or are threatened: relates to timing of group behavior
+for a simple habit this means the habit instructions must be kept correct, and they must be able to be executed.
 === this rethinking clump is kind of messy, document starts below it
 - update for community relevence habits? ideas of axes (kind of random, words below seem more helpful):
 	- thankfulness and anger: communicating someone's community relevence
