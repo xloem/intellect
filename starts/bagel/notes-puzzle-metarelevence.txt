@@ -1,0 +1,67 @@
+I'm trying to relearn how to solve puzzles.
+My brain has a learning state where it explores what I am calling metarelevence to see if it works.
+In this state my brain can do new things but stores how it is figuring them out very weakly.
+I've found my intelligence inhibition is associated with metarelevence and learning states like this.
+	In processing it, it seemed to me there were many layers of metarelevence.  Each being patterns and habits
+	to aid in forming, finding, choosing, and combining the lower layers effectively.
+	Learning in deeper layers makes for much stronger intelligence.
+
+I was working on a puzzle described by '> > > # < < <'.  The goal is to move all the '>' to replace all the '<' on the
+right.  Each may move only in the direction it is pointing, only by 1 or 2 spaces, and only by swapping places with
+the '#'.
+I was unable to get more than 1 '>' over there by exploration except for once.  That one time I can call a childlike-
+learning experience.  I was unable to repeat it, so by writing I iterated all options, and found it again.  When I
+found it again, in my exploration to understand, I engaged another childlike-learning state where I solved the whole
+puzzle by accident.  I could tell I had not learned how to repeat the success generally, so I reset the puzzle.
+It seemed to me in the childlike-learning state I was exploring possible metarelevence towards finding puzzle
+solutions.  I was thinking of it as 'layer 2 metarelevence'.  But I was not strongly storing some information,
+possibly the layer 3 information, so as to efficiently repeat the experience.  That seemed an attribute of the
+childlike learning state.  I'm pretty sure when I was younger I stored this kind of metarelevence much better.
+The state of mind feels familiar to me, of solving a puzzle with a certain feeling of storing the way to do it,
+that does not reach verbal description.
+I cast the second childlike learning experience as similar to the first, and again do not feel able to repeat it.
+			
+Thinking over the puzzle solution itself, it seems there is active inhibition growing around certain kinds of
+metarelevence development.  Like a pattern that happens to limit my intelligence.
+
+In summary it sounded like there is some of what I am calling metarelevence (a few layers deep) that ends up being
+specifically inhibited for me.  As I describe this, I am trying to form a new structure matching this metarelevence:
+the inhibition finds it and inhibits associated behaviors.  Maybe a part of my brain that knows to handle such
+learning is overtaxed.
+The problematic metarelevence appears related to the construction of new forms of quality relevence.
+That is, it seems like I am allergic to certain patterns of pattern-matching... ehhh it is hard to think about.
+	When I have a goal, I need things to meet it.
+	I need to know which things to pick first, and which things might be useful with other things.
+	In meeting my goal, given A, what is useful to combine with A to help form structures that meet the goal?
+	When thinking of what is useful to combine with an idea towards a goal, we use and build certain habits.
+	Some of these habits seem inhibited.
+		If I want to go to the store, is a rabbit helpful? no.
+		Is a car helpful?  Yes, cars are a tool for travel, travel is a tool for going to the store.
+		Given this, if I am in the hay loft, how do I take the car to the store?
+			I will need to use the ladder down from the hay loft, after putting down my hay, to get
+			towards the kitchen where I keep my keys for the car.
+				I have put down my hay before and know I will be without hay as I leave my task.
+		We found ladder and keys.  These are near the car and store for us, now.
+		We did not iterate all possible tools.  We used relevence to find the ladder and keys.
+			What about our situation might have linked ladder, keys, being-in-hayloft, and drive-to-store?
+				Ladder is near hayloft in ways-to-enter-and-leave.
+				Keys are near car in needed-to-use.
+				Kitchen is near keys in where-are.  Where is found from need-to-have-to-use.
+				Ladder and Kitchen form a path of active travel to meet needs of drive-to-store.
+					We craft a path of active travel as we work towards meeting our goal.
+					Our body looks for the most helpful places to go and goes there.
+	Different parts of cognition influence our relevence when we look for ways to meet our goal.
+	Things have states that depict what can happen.  These states are summaries of their limiting attributes.  These states develop associated with what something is doing, where it is, or other attributes of context.
+
+		i-need-to-have-my-keys-to-use-them
+		keys must be in my-posession state, for me-to-use them.
+		keys must be in usable-by-X state.  Are not for X=me unless I am in kitchen.
+		use-Y must be possible
+
+		please make: A=me, B=store, A-in-B
+		note: me-in-hayloft, me-holding-hay
+		when: make A-in-B, A is adult (me is STRONGLY KNOWN to be adult), B is far-away (store is MEDIUM KNOWN to be far away), 
+			then A-in-car is relevent to making A-in-B
+				using STRONGLY and MEDIUM KNOWING, stem from habits of metarelevence for brainstorming
+		
+		
