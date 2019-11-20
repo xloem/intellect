@@ -79,3 +79,17 @@ relevence is much more useful in the mind, for other situations, than specific r
 
 Karl's thoughts imply he believes there are kind of idealized pattern structures, and that a good, well-learned
 general habit can apply to a completely unrelated domain, via understanding of general structures of patterns.
+
+The solution to the puzzle is a ping-ponging pattern of jumping forward through alternating arrows.
+It evolved slowly, first from finding a starting set of steps that made more than 1 arrow go to the opposite side,
+then through realizing the danger of paired arrows pointing the same direection which trap the ones they are
+pointing at, and recognizing the value of more jumping over something rather than moving a single step (which
+first started as a do-this-always, and then regressed back to do-this-usually briefly before settling on do-this-
+except-in-these-special-cases), noting the pattern at the end of jumping many in succession across the board,
+and finally eventually explaining the starting moves in terms of a detailed expression of that repeating pattern.
+The general pattern of when to jump rather than move a single step did not end up getting expanded.
+There are also many whys that did not end up getting expanded.  I guess whys would be simply more general patterns.
+The ping-ponging pattern is a repeated experience of jumping over something to fill a hole.  Because of how the
+arows work, this travels in one direction until it hits the edge of the board.  The repetition was an indication
+of a general pattern being in play.  The solution was found by engaging in altering the board such that the repetition
+could occur more, partly found by using some existing habits for making space for pieces on a board to arrive.
