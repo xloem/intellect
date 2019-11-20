@@ -51,6 +51,7 @@ That is, it seems like I am allergic to certain patterns of pattern-matching... 
 					We craft a path of active travel as we work towards meeting our goal.
 					Our body looks for the most helpful places to go and goes there.
 	Different parts of cognition influence our relevence when we look for ways to meet our goal.
+		This seems big for metarelevence.  Disparate parts of the cognition have patterns in relation to each other.
 	Things have states that depict what can happen.  These states are summaries of their limiting attributes.  These states develop associated with what something is doing, where it is, or other attributes of context.
 
 		i-need-to-have-my-keys-to-use-them
@@ -65,6 +66,10 @@ That is, it seems like I am allergic to certain patterns of pattern-matching... 
 				using STRONGLY and MEDIUM KNOWING, stem from habits of metarelevence for brainstorming
 				things that are STRONGLY known seem to have their full expansion handled by specialized active habits, that are built when needed to sustain the strong knowing i.e. full expansion.
 				this makes habits that e.g. relate to brainstorming: quickly producing implications, sidestepping a brainstorm
+		Since A-in-car is relevent, and walking-to-car is possible, body begins walking to get closer to
+			relevent states.  [this relates to path of active travel, and to relevence influenced by
+			                   disparate parts of cognition]
+			                  also looks analogous to brainstorming.
 
 I seemed to have an issue with building strongly known metarelevence.
 
