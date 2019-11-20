@@ -63,5 +63,19 @@ That is, it seems like I am allergic to certain patterns of pattern-matching... 
 		when: make A-in-B, A is adult (me is STRONGLY KNOWN to be adult), B is far-away (store is MEDIUM KNOWN to be far away), 
 			then A-in-car is relevent to making A-in-B
 				using STRONGLY and MEDIUM KNOWING, stem from habits of metarelevence for brainstorming
-		
-		
+				things that are STRONGLY known seem to have their full expansion handled by specialized active habits, that are built when needed to sustain the strong knowing i.e. full expansion.
+				this makes habits that e.g. relate to brainstorming: quickly producing implications, sidestepping a brainstorm
+
+I seemed to have an issue with building strongly known metarelevence.
+
+When Karl tries to solve the puzzle, he tries to come up with patterns that would solve other, similar puzzles,
+and those are the ones he looks for to store.  This habit may help his brain learn to be smart again, because general
+relevence is much more useful in the mind, for other situations, than specific relevence.
+	He looks for what general structures are in play in the situation.
+	The puzzle itself is a combination of relevent general structures.  A good solution approach would be
+	habits that handle interconnected general structures in a general way, that is then used for the
+	specific puzzle.  In each puzzle he attempts, Karl looks to learn habits that in their extreme would be
+	collecting together a general solution to all puzzles.
+
+Karl's thoughts imply he believes there are kind of idealized pattern structures, and that a good, well-learned
+general habit can apply to a completely unrelated domain, via understanding of general structures of patterns.
