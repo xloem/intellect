@@ -1,4 +1,7 @@
-CXXFLAGS=-std=c++11 -ggdb
+CXXFLAGS=-std=c++14 -ggdb
+LINK.o=$(LINK.cc)
 
-main: main.cpp
-aain.cpp: *.hpp
+main: main.o concept.o helpers.o
+%.o: *.hpp
+clean:
+	-rm *.o main

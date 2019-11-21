@@ -7,6 +7,6 @@ using namespace std;
 
 int main()
 {
-	cid concept = "concept"_c;
-	cout << str(concept) << endl;
+	ref concept = "concept";
+	cout << string(concept) << endl;
 }

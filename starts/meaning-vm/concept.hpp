@@ -5,70 +5,42 @@
 #include <string>
 #include <vector>
 
-using cid = struct concept *;
+struct concept;
+template <typename T> struct value;
+
+struct ref
+{
+	ref(concept *p) : ptr(p) { }
+	operator concept*() const { return ptr; }
+
+	// helper names
+	ref(std::string);
+	operator std::string();
+	ref(char const * str) : ref(std::string(str)) { }
+
+	concept * ptr;
+};
 
 struct concept
 {
 	// a concept is made of concept-typed links to other concepts
-	std::multimap<cid,cid> links;
-	using array = std::vector<cid>;
+	std::multimap<ref,ref,std::less<concept*>> links;
+	using array = std::vector<ref>;
 
-	cid id();
-	cid get(cid type); // returns first
-	array getAll(cid type);
-	void link(cid type, cid target);
-	void unlink(cid type, cid target);
+	ref id();
+	ref get(ref type); // returns first
+	array getAll(ref type);
+	void link(ref type, ref target);
+	void unlink(ref type, ref target);
 };
 
 template <typename T>
 struct value : public concept, public T
 {
-	static value<T>& of(cid c)
+	value(T const & val) : T(val) {}
+	value(value<T> const & val) = default;
+	static value<T>& of(ref c)
 	{
-		return *static_cast<value<T>*>(c);
+		return *static_cast<value<T>*>(c.ptr);
 	}
 };
-
-cid concept::id()
-{
-	return this;
-}
-
-cid concept::get(cid type)
-{
-	auto result = links.equal_range(type);
-	if (result.first == result.second) {
-		throw std::out_of_range("no such concept link to get");
-	}
-	return result.first->second;
-}
-
-concept::array concept::getAll(cid type)
-{
-	array ret;
-	for (
-		auto range = links.equal_range(type);
-		range.first != range.second;
-		++ range.first
-	) { 
-		ret.push_back(range.first->second);
-	}
-	return ret;
-}
-
-void concept::link(cid type, cid target)
-{
-	links.insert({type, target});
-}
-
-void concept::unlink(cid type, cid target)
-{
-	auto ls = links.equal_range(type);
-	for (auto l = ls.first; l != ls.second; ++ l) {
-		if (l->second == target) {
-			links.erase(l);
-			return;
-		}
-	}
-	throw std::out_of_range("no such concept link to erase");
-}
