@@ -9,7 +9,7 @@
 concept namesByConcept;
 std::unordered_map<value<std::string>,concept,std::hash<std::string>> conceptsByName;
 
-ref::ref(std::string s)
+ref::ref(std::string const & s)
 {
 	try {
 		ptr = &conceptsByName.at(value<std::string>(s));
@@ -18,11 +18,15 @@ ref::ref(std::string s)
 		ref con = &insertion.first->second;
 		ref nam = const_cast<concept *>((concept const *)&insertion.first->first);
 		namesByConcept.link(con, nam);
-		ptr = con;
+		ptr = con.ptr;
 	}
 }
 
-ref::operator std::string()
+value<std::string> & ref::name() const
 {
 	return value<std::string>::of(namesByConcept.get(*this));
+}
+
+ref::operator const char *() const {
+	return name().c_str();
 }

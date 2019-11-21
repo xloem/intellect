@@ -11,12 +11,14 @@ template <typename T> struct value;
 struct ref
 {
 	ref(concept *p) : ptr(p) { }
-	operator concept*() const { return ptr; }
+	concept* operator->() { return ptr; }
+	bool operator<(ref const & other) const { return ptr < other.ptr; }
 
 	// helper names
-	ref(std::string);
-	operator std::string();
+	ref(std::string const &);
 	ref(char const * str) : ref(std::string(str)) { }
+	value<std::string> & name() const;
+	operator const char *() const;
 
 	concept * ptr;
 };
@@ -24,7 +26,7 @@ struct ref
 struct concept
 {
 	// a concept is made of concept-typed links to other concepts
-	std::multimap<ref,ref,std::less<concept*>> links;
+	std::multimap<ref,ref> links;
 	using array = std::vector<ref>;
 
 	ref id();

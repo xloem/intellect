@@ -7,6 +7,9 @@ using namespace std;
 
 int main()
 {
-	ref concept = "concept";
-	cout << string(concept) << endl;
+	r(fruit);
+	r(banana);
+	r(is);
+	banana->link(is, fruit);
+	cout << banana << "-" << is << "-" << fruit << endl;
 }
