@@ -7,9 +7,8 @@ using namespace std;
 
 int main()
 {
-	r(fruit);
-	r(banana);
-	r(is);
+	decl(fruit, banana, is);
+
 	banana->link(is, fruit);
 	cout << banana << "-" << is << "-" << fruit << endl;
 }

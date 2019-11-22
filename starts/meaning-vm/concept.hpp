@@ -12,11 +12,14 @@ struct ref
 {
 	ref(concept *p) : ptr(p) { }
 	concept* operator->() { return ptr; }
+
+	// for use by containers
 	bool operator<(ref const & other) const { return ptr < other.ptr; }
 
-	// helper names
+	// for helpers
 	ref(std::string const &);
 	ref(char const * str) : ref(std::string(str)) { }
+	ref() : ref("nothing") { }
 	value<std::string> & name() const;
 	operator const char *() const;
 
