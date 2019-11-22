@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++14 -ggdb
+CXXFLAGS=-std=c++14 -fno-operator-names -ggdb
 LINK.o=$(LINK.cc)
 
 main: main.o concept.o helpers.o

@@ -5,6 +5,21 @@ ref concept::id()
 	return this;
 }
 
+bool concept::linked(ref type)
+{
+	return links.count(type) > 0;
+}
+
+bool concept::linked(ref type, ref target)
+{
+	for (ref t : getAll(type)) {
+		if (t == target) {
+			return true;
+		}
+	}
+	return false;
+}
+
 ref concept::get(ref type)
 {
 	auto result = links.equal_range(type);
