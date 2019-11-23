@@ -1,5 +1,6 @@
 #include "concept.hpp"
 #include "helpers.hpp"
+#include "meaning.hpp"
 
 using namespace std;
 
@@ -7,7 +8,7 @@ using namespace std;
 
 void dumpconcept(ref r)
 {
-	declrefs(dumped, name);
+	decllnks(dumped, name);
 
 	for (auto & l : r->links) {
 		if (ref(l.first) == name) {
@@ -27,27 +28,22 @@ void dumpconcept(ref r)
 
 int main()
 {
-	declrefs(is, link, type);
-	is->link(is, link-type);
-
-	declrefs(source, target);
-	declrefs(linked, A, B, C, abc, variable);
-	declrefs(trueness, truth, what, not);
-
-	declrefs(add, unique, habit, needs, assumes, makes);
-	A = a(variable);
-	B = a(variable);
-	C = a(variable);
+	declrefs(make, linked, habit);
+	declrefs(A, B, C);
+	decllnks(needs, assumes, makes);
 
 	// add a new unique link to a concept
 	// given A, B, C
 	// and assuming A is not linked by B to C,
 	// makes A be linked by B to C.
-	add-link-unique = a(habit)[
-		needs = a(variable, A), needs = a(variable, B), needs = a(variable, C),
-		makes = a(link, abc-linked)[link-source = A, link-type = B, link-target = C],
-		assumes = a(trueness, abc-not-linked)[what = abc-linked, truth = false]
+	// NEXT? make code for make-linked that takes a ref
+	//       change the needs structure to use a model for the ref,
+	//       with needed values specified as 'provided'
+	make-linked = a(habit)[
+		needs = and(avariable(A), avariable(B), avariable(C)),
+		assumes = not(A-B-C-linked = link(A, B, C)),
+		makes = A-B-C-linked
 	];
 
-	dumpconcept(add-link-unique);
+	dumpconcept(make-linked);
 }

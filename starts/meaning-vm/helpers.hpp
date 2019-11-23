@@ -48,6 +48,22 @@ void __helper_init_ref_names(std::string names, T &... refrefs)
 	ref __VA_ARGS__; \
 	__helper_init_ref_names(#__VA_ARGS__, __VA_ARGS__)
 
+template <typename... T>
+void lnks(T ... passedrefs)
+{
+	std::initializer_list<ref> refs = { passedrefs... };
+	declrefs(link, type, is);
+	for (ref r : refs) {
+		if (!r->linked(is, link-type)) {
+			r->link(is, link-type);
+		}
+	}
+}
+
+#define decllnks(...) \
+	declrefs(__VA_ARGS__); \
+	lnks(__VA_ARGS__)
+
 ref operator,(ref a, ref b);
 ref operator-(ref a, ref b);
 

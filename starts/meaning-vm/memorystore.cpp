@@ -16,26 +16,27 @@ ref alloc(concept * moved) {
 	return r;
 }
 
-bool referenced(ref r) {
+concept* referenced(ref r) {
 	for (ref r2 : concepts()) {
 		if (r2 == r) {
 			continue;
 		}
 		for (auto & l : r2->links) {
 			if (ref(l.first) == r) {
-				return true;
+				return r2.ptr;
 			}
 			if (ref(l.second) == r) {
-				return true;
+				return r2.ptr;
 			}
 		}
 	}
-	return false;
+	return 0;
 }
 
 void dealloc(ref r) {
-	if (referenced(r)) {
-		throw std::logic_error("concept is referenced");
+	concept * referenced = ::referenced(r);
+	if (referenced) {
+		throw std::logic_error("concept '" + r.name() + "' is referenced by '" + ref(referenced).name() + '"');
 	}
 	for (
 		auto it = concepts().begin();

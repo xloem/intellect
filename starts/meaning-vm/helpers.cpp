@@ -1,5 +1,6 @@
 #include "helpers.hpp"
 
+#include "meaning.hpp"
 #include "memorystore.hpp"
 
 #include <unordered_map>
@@ -11,9 +12,25 @@ ref operator-(ref a, ref b)
 
 ref ref::operator=(ref that)
 {
-	// if this is not anonymous, and that is, then we are naming it
-	declrefs(anonymous, name, is);
-	if (that->linked(anonymous, true) && !ptr->linked(anonymous, true)) {
+	decllnks(anonymous, is, name);
+	declrefs(link, source, type, target, unknown);
+	lnks(link-target, link-source, link-target);
+	if (this->isa(link) && ptr->get(link-target) == unknown) {
+		// we are a link missing a target: our assignment is making the link happen
+		ptr->unlink(link-target, unknown);
+		ptr->link(link-target, that);
+		ref src = ptr->get(link-source);
+		if (ptr->get(link-type) != unknown && src != unknown) {
+			src->link(ptr->get(link-type), ptr->get(link-target));
+			dealloc(ptr);
+			return src;
+		} else {
+			throw std::logic_error("not sure what to do with incomplete link assignment");
+		}
+	} else if (isa(link-type)) {
+		// assignment to a link-type is likely inside a [type1=target1,type2=target2] expression
+		return (*this) << that;
+	} else if (that->linked(anonymous, true) && !ptr->linked(anonymous, true)) {
 		// this is assignment of anonymous content to empty named concept
 		bool donealready = false;
 		if (ptr->links.size() != 1) {
@@ -30,24 +47,34 @@ ref ref::operator=(ref that)
 		that->unlink(anonymous, true);
 		auto nam = that->get(name);
 		that->unlink(name, nam);
-		dealloc(nam);
 		if (!donealready) {
 			ptr->links.insert(that->links.begin(), that->links.end());
 		}
+		that->link(name, nam);
 		dealloc(that);
+		dealloc(nam);
 		return *this;
 	}
+	throw std::logic_error("unexpected use of assignment");
+}
 
-	// if this is link-type, make new concept [not checked, might want to assume]
+ref ref::operator<<(ref target)
+{
+	// prep a link
 	ref ret = alloc();
-	ret->link(*this, that);
+	ret->link(*this, target);
 	return ret;
 }
 
-ref ref::operator[](ref links) {
-	ptr->links.insert(links->links.begin(), links->links.end());
-	dealloc(links);
-	return *this;
+ref ref::operator[](ref that) {
+	declrefs(link, type, unknown);
+	if (that.isa(link-type)) {
+		return ::link(*this, that, unknown);
+	} else {
+		ptr->links.insert(that->links.begin(), that->links.end());
+		dealloc(that);
+		return *this;
+	}
 }
 
 ref operator,(ref a, ref b)
@@ -66,10 +93,17 @@ struct name_t : public ref
 {
 	name_t();
 } name;
+
+template <>
+vref<std::string>::vref(std::string const & s)
+: ptr(valloc(s).ptr)
+{
+	ptr->link(::name, ptr);
+}
 name_t::name_t()
 : ref(alloc())
 {
-	auto nam = valloc(std::string("name"));
+	vref nam(std::string("name"));
 	ptr->link(::name, nam);
 	conceptsByName.emplace(nam, ptr);
 }
@@ -81,7 +115,7 @@ ref::ref(std::string const & s)
 		ptr = res->second;
 	} else {
 		ref con = alloc();
-		auto nam = valloc<std::string>(s);
+		vref<std::string> nam(s);
 		conceptsByName.emplace(nam, con.ptr);
 		con->link(::name, nam);
 		ptr = con.ptr;
@@ -90,7 +124,12 @@ ref::ref(std::string const & s)
 
 value<std::string> & ref::name() const
 {
-	return *ptr->vget<std::string>(::name).ptr;
+	try {
+		return *ptr->vget<std::string>(::name, true).ptr;
+	} catch (std::out_of_range) {
+		declrefs(UNNAMED);
+		return UNNAMED.name();
+	}
 }
 
 ref::operator const char *() const {
@@ -100,7 +139,7 @@ ref::operator const char *() const {
 ref a(ref what)
 {
 	static unsigned long long gid = 0;
-	declrefs(is, anonymous);
+	decllnks(is, anonymous);
 	return ref(what.name() + "-" + std::to_string(gid++))[is = what, anonymous = true];
 }
 ref a(ref what, ref name)
@@ -121,6 +160,7 @@ bool ref::isa(ref what) const
 	declrefs(is);
 	for (auto group : ptr->getAll(is)) {
 		if (group == what) return true;
+		if (group == *this) continue;
 		if (group.isa(what)) return true;
 	}
 	return false;

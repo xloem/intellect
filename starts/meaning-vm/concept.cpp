@@ -20,11 +20,16 @@ bool concept::linked(ref type, ref target)
 	return false;
 }
 
-ref concept::get(ref type)
+ref concept::get(ref type, bool quick)
 {
+	// this is called by name(), so it passes quick=true
 	auto result = links.equal_range(type.ptr);
 	if (result.first == result.second) {
-		throw std::out_of_range("no such concept link to get: " + type.name());
+		if (quick) {
+			throw std::out_of_range("no such concept link to get");
+		} else {
+			throw std::out_of_range("no such concept link to get: " + type.name());
+		}
 	}
 	return result.first->second;
 }
