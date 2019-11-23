@@ -66,6 +66,7 @@ struct concept
 	array getAll(ref type);
 	void link(ref type, ref target);
 	void unlink(ref type, ref target);
+	void unlink(ref type);
 };
 
 template <typename T>

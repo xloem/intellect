@@ -58,3 +58,17 @@ void concept::unlink(ref type, ref target)
 	}
 	throw std::out_of_range("no such concept link to erase");
 }
+
+void concept::unlink(ref type)
+{
+	auto ls = links.equal_range(type.ptr);
+	if (ls.first == ls.second) {
+		throw std::out_of_range("no such concept link to erase");
+	}
+	auto mid = ls.first;
+	++ mid;
+	if (mid != ls.second) {
+		throw std::out_of_range("more than one link of type to erase");
+	}
+	links.erase(ls.first);
+}

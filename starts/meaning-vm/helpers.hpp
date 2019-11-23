@@ -53,3 +53,5 @@ ref operator-(ref a, ref b);
 
 ref a(ref what);
 ref an(ref what);
+ref a(ref what, ref name);
+ref an(ref what, ref name);
