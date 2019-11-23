@@ -24,7 +24,7 @@ ref concept::get(ref type)
 {
 	auto result = links.equal_range(type);
 	if (result.first == result.second) {
-		throw std::out_of_range("no such concept link to get");
+		throw std::out_of_range("no such concept link to get: " + type.name());
 	}
 	return result.first->second;
 }

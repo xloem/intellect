@@ -7,9 +7,12 @@ using namespace std;
 
 void dumpconcept(ref r)
 {
-	declrefs(dumped);
+	declrefs(dumped, name);
 
 	for (auto & l : r->links) {
+		if (l.first == name) {
+			continue;
+		}
 		cout << r << " " << l.first << " " << l.second << endl;
 	}
 	if (!r->linked(dumped)) {
@@ -40,6 +43,15 @@ int main()
 	// given A, B, C
 	// and assuming A is not linked by B to C,
 	// makes A be linked by B to C.
+	
+	// would like to do A = a(variable);
+	// 	solution might be to tag anons as such, and take them with a condition in operator=
+	// since we want to return a ref, change [is=variable] to use refs.  this means learning
+	// to delete them, which means checking if they are used or not.
+	// 	where do we put the deleting?
+	// 	right now helpers is doing memory.  maybe instead we can have a memory class.
+	// 	ideally memory is handled by a concept.
+	// 	let's make a pool of concepts?
 	(add-link-unique)[
 		is = habit,
 		needs = A, needs = B, needs = C,
