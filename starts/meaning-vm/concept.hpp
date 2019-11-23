@@ -14,9 +14,9 @@ struct ref
 	ref(concept *p) : ptr(p) { if (p == 0) throw std::logic_error("null reference"); }
 	ref(ref const &) = default;
 	concept* operator->() { return ptr; }
+	bool operator==(ref const & that) const { return this->ptr == that.ptr; }
 
-	// for use by containers
-	bool operator<(ref const & other) const { return ptr < other.ptr; }
+	bool operator<(ref const &) const { throw std::logic_error("ref has redefined syntax sugar: do not use in containers"); }
 
 	// for helpers
 	ref(std::string const &);
@@ -26,8 +26,8 @@ struct ref
 	value<std::string> & name() const;
 	operator const char *() const;
 
-	concept operator=(ref other); // helper constructs new concept with this as link
-	ref operator[](concept links); // helper sets all links from passed concept
+	ref operator=(ref other); // helper constructs new concept with this as link
+	ref operator[](ref links); // helper sets all links from passed concept
 
 	bool isa(ref what) const;
 	bool isan(ref what) const;
@@ -46,7 +46,7 @@ struct vref
 	operator ref() { return ptr; }
 
 	// for use by containers
-	bool operator<(ref const & other) const { return ptr < other.ptr; }
+	//bool operator<(ref const & other) const { return ptr < other.ptr; }
 
 	value<T> * ptr;
 };
@@ -54,7 +54,7 @@ struct vref
 struct concept
 {
 	// a concept is made of concept-typed links to other concepts
-	std::multimap<ref,ref> links;
+	std::multimap<concept*,concept*> links;
 	using array = std::vector<ref>;
 
 	ref id();

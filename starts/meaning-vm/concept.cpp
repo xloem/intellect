@@ -7,7 +7,7 @@ ref concept::id()
 
 bool concept::linked(ref type)
 {
-	return links.count(type) > 0;
+	return links.count(type.ptr) > 0;
 }
 
 bool concept::linked(ref type, ref target)
@@ -22,7 +22,7 @@ bool concept::linked(ref type, ref target)
 
 ref concept::get(ref type)
 {
-	auto result = links.equal_range(type);
+	auto result = links.equal_range(type.ptr);
 	if (result.first == result.second) {
 		throw std::out_of_range("no such concept link to get: " + type.name());
 	}
@@ -33,7 +33,7 @@ concept::array concept::getAll(ref type)
 {
 	array ret;
 	for (
-		auto range = links.equal_range(type);
+		auto range = links.equal_range(type.ptr);
 		range.first != range.second;
 		++ range.first
 	) { 
@@ -44,14 +44,14 @@ concept::array concept::getAll(ref type)
 
 void concept::link(ref type, ref target)
 {
-	links.insert({type, target});
+	links.insert({type.ptr, target.ptr});
 }
 
 void concept::unlink(ref type, ref target)
 {
-	auto ls = links.equal_range(type);
+	auto ls = links.equal_range(type.ptr);
 	for (auto l = ls.first; l != ls.second; ++ l) {
-		if (l->second == target) {
+		if (l->second == target.ptr) {
 			links.erase(l);
 			return;
 		}

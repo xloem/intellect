@@ -9,7 +9,7 @@ ref operator-(ref a, ref b)
 	return ref(a.name() + "-" + b.name());
 }
 
-concept ref::operator=(ref other)
+ref ref::operator=(ref other)
 {
 	// if this is not anonymous, and other is, then we are naming it
 	/*declrefs(anonymous);
@@ -17,28 +17,28 @@ concept ref::operator=(ref other)
 		return;
 	}*/
 	// if this is link-type, make new concept [not checked, might want to assume]
-	concept ret;
-	ret.link(*this, other);
+	ref ret = alloc();
+	ret->link(*this, other);
 	return ret;
 }
 
-ref ref::operator[](concept links) {
-	ptr->links.insert(links.links.begin(), links.links.end());
+ref ref::operator[](ref links) {
+	ptr->links.insert(links->links.begin(), links->links.end());
+	dealloc(links);
 	return *this;
 }
 
-concept operator,(concept a, concept b)
+ref operator,(ref a, ref b)
 {
-	concept ret;
-	ret.links.insert(a.links.begin(), a.links.end());
-	ret.links.insert(b.links.begin(), b.links.end());
-	return ret;
+	a->links.insert(b->links.begin(), b->links.end());
+	dealloc(b);
+	return a;
 }
 
 // concept names are for bootstrapping convenience,
 // to make hardcoding structures easier.
 // hence there is just one single list of them
-std::unordered_map<vref<std::string>,ref,std::hash<std::string>,std::equal_to<std::string>> conceptsByName;
+std::unordered_map<std::string,concept*,std::hash<std::string>,std::equal_to<std::string>> conceptsByName;
 
 struct name_t : public ref
 {
@@ -49,19 +49,18 @@ name_t::name_t()
 {
 	auto nam = valloc(std::string("name"));
 	ptr->link(::name, nam);
-	conceptsByName.emplace(nam, *this);
+	conceptsByName.emplace(nam, ptr);
 }
 
 ref::ref(std::string const & s)
 {
-	value<std::string> str(s);
-	auto res = conceptsByName.find(&str);
+	auto res = conceptsByName.find(s);
 	if (res != conceptsByName.end()) {
-		ptr = res->second.ptr;
+		ptr = res->second;
 	} else {
 		ref con = alloc();
 		auto nam = valloc<std::string>(s);
-		conceptsByName.emplace(nam, con);
+		conceptsByName.emplace(nam, con.ptr);
 		con->link(::name, nam);
 		ptr = con.ptr;
 	}

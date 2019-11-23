@@ -48,7 +48,7 @@ void __helper_init_ref_names(std::string names, T &... refrefs)
 	ref __VA_ARGS__; \
 	__helper_init_ref_names(#__VA_ARGS__, __VA_ARGS__)
 
-concept operator,(concept a, concept b);
+ref operator,(ref a, ref b);
 ref operator-(ref a, ref b);
 
 ref a(ref what);

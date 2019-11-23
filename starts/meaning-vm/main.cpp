@@ -10,10 +10,10 @@ void dumpconcept(ref r)
 	declrefs(dumped, name);
 
 	for (auto & l : r->links) {
-		if (l.first == name) {
+		if (ref(l.first) == name) {
 			continue;
 		}
-		cout << r << " " << l.first << " " << l.second << endl;
+		cout << r << " " << ref(l.first) << " " << ref(l.second) << endl;
 	}
 	if (!r->linked(dumped)) {
 		r[dumped = true];

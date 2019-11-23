@@ -5,24 +5,24 @@
 
 using namespace std;
 
-std::vector<ref> concepts;
+std::vector<concept*> concepts;
 
 ref alloc(concept * moved) {
 	ref r = moved ? moved : new concept();
-	concepts.push_back(r);
+	concepts.push_back(r.ptr);
 	return r;
 }
 
 bool referenced(ref r) {
-	for (auto & r2 : concepts) {
+	for (ref r2 : concepts) {
 		if (r2 == r) {
 			continue;
 		}
 		for (auto & l : r2->links) {
-			if (l.first == r) {
+			if (ref(l.first) == r) {
 				return true;
 			}
-			if (l.second == r) {
+			if (ref(l.second) == r) {
 				return true;
 			}
 		}
@@ -39,9 +39,9 @@ void dealloc(ref r) {
 		it != concepts.end();
 		++ it)
 	{
-		if (*it == r) {
+		if (ref(*it) == r) {
 			concepts.erase(it);
-			delete r;
+			delete r.ptr;
 			return;
 		}
 	}
