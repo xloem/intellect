@@ -1,20 +1,23 @@
 #include "memorystore.hpp"
 
-#include <list>
-#include <vector>
+#include <unordered_set>
 
 using namespace std;
 
-std::vector<concept*> concepts;
+auto & concepts()
+{
+	static std::unordered_set<concept*> concepts;
+	return concepts;
+}
 
 ref alloc(concept * moved) {
 	ref r = moved ? moved : new concept();
-	concepts.push_back(r.ptr);
+	concepts().insert(r.ptr);
 	return r;
 }
 
 bool referenced(ref r) {
-	for (ref r2 : concepts) {
+	for (ref r2 : concepts()) {
 		if (r2 == r) {
 			continue;
 		}
@@ -35,12 +38,12 @@ void dealloc(ref r) {
 		throw std::logic_error("concept is referenced");
 	}
 	for (
-		auto it = concepts.begin();
-		it != concepts.end();
+		auto it = concepts().begin();
+		it != concepts().end();
 		++ it)
 	{
 		if (ref(*it) == r) {
-			concepts.erase(it);
+			concepts().erase(it);
 			delete r.ptr;
 			return;
 		}
