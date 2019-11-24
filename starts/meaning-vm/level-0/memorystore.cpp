@@ -1,22 +1,25 @@
 #include "memorystore.hpp"
+#include "concept.hpp"
+#include "errors.hpp"
 
 #include <unordered_set>
 
-using namespace std;
+namespace intellect {
+namespace level0 {
 
-auto & concepts()
+static auto & concepts()
 {
-	static std::unordered_set<concept*> concepts;
+	static std::unordered_set<ref, std::hash<concept*>> concepts;
 	return concepts;
 }
 
 ref alloc(concept * moved) {
 	ref r = moved ? moved : new concept();
-	concepts().insert(r.ptr);
+	concepts().insert(r);
 	return r;
 }
 
-concept* referenced(ref r) {
+static concept* referenced(ref r) {
 	for (ref r2 : concepts()) {
 		if (r2 == r) {
 			continue;
@@ -34,9 +37,9 @@ concept* referenced(ref r) {
 }
 
 void dealloc(ref r) {
-	concept * referenced = ::referenced(r);
+	concept * referenced = intellect::level0::referenced(r);
 	if (referenced) {
-		throw std::logic_error("concept '" + r.name()->data + "' is referenced by '" + ref(referenced).name()->data + '"');
+		throw still_referenced_by(r, referenced);
 	}
 	for (
 		auto it = concepts().begin();
@@ -49,5 +52,8 @@ void dealloc(ref r) {
 			return;
 		}
 	}
-	throw std::logic_error("concept not held");
+	throw no_such_concept(r);
+}
+
+}
 }

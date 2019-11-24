@@ -1,0 +1,10 @@
+The codebase is made in levels.
+Ideally each level defines a complete API to the underworkings.
+Higher levels include greater degrees of meaning.
+
+# LEVEL 0
+Level 0 defines an interconnected network of concept references in memory.
+Each concept has a unique address, and a list of concept pairs it links to.
+The first of the pair represents the type of the link, and the second the target.
+Concepts may not be deallocated unless nothing links to them.
+A special kind of concept is the value, which holds arbitrary data alongside itself.
