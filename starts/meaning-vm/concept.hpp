@@ -8,6 +8,7 @@
 template <typename T> struct vref;
 struct concept;
 template <typename T> struct value;
+class statementevaluable;
 
 struct ref
 {
@@ -24,11 +25,11 @@ struct ref
 	ref(char const * str) : ref(std::string(str)) { }
 	ref(bool b) : ref(b ? "true" : "false") { }
 	ref() : ref("nothing") { }
-	value<std::string> & name() const; // this is a reference so that its char pointer lasts
+	vref<std::string> name() const;
 	operator const char *() const;
 
 	// helper linking syntax sugar
-	ref operator=(ref that);
+	statementevaluable operator=(ref that);
 	ref operator<<(ref target);
 	ref operator[](ref links);
 
@@ -75,12 +76,17 @@ struct concept
 };
 
 template <typename T>
-struct value : public concept, public T
+struct value : public concept
 {
-	value(T const & val) : T(val) { }
+	value(T const & val) : data(val) { }
 	value(value<T> const & val) = default;
 	static value<T>& of(ref c)
 	{
 		return *static_cast<value<T>*>(c.ptr);
 	}
+
+	operator T&() { return data; }
+	operator T const &() const { return data; }
+
+	T data;
 };

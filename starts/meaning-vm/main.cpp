@@ -29,8 +29,11 @@ void dumpconcept(ref r)
 int main()
 {
 	declrefs(make, linked, habit);
-	declrefs(A, B, C);
+	declrefs(structure, function, argument, position, provide);
 	decllnks(needs, assumes, makes);
+	decllnks(A, B, C);
+	decllnks(is);
+	lnks(argument-position);
 
 	// add a new unique link to a concept
 	// given A, B, C
@@ -40,7 +43,13 @@ int main()
 	//       change the needs structure to use a model for the ref,
 	//       with needed values specified as 'provided'
 	make-linked = a(habit)[
-		needs = and(avariable(A), avariable(B), avariable(C)),
+		needs = a(structure)[
+			is = function-argument,
+			argument-position = vref<int>(1),
+			avariable(A) = provide,
+			avariable(B) = provide,
+			avariable(C) = provide
+		],
 		assumes = not(A-B-C-linked = link(A, B, C)),
 		makes = A-B-C-linked
 	];

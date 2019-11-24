@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++17 -fno-operator-names -ggdb -O0
+CXXFLAGS=-Wall -Werror -std=c++17 -fno-operator-names -ggdb -O0
 LINK.o=$(LINK.cc)
 
 main: main.o concept.o helpers.o memorystore.o meaning.o

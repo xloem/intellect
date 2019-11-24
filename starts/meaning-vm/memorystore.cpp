@@ -36,7 +36,7 @@ concept* referenced(ref r) {
 void dealloc(ref r) {
 	concept * referenced = ::referenced(r);
 	if (referenced) {
-		throw std::logic_error("concept '" + r.name() + "' is referenced by '" + ref(referenced).name() + '"');
+		throw std::logic_error("concept '" + r.name()->data + "' is referenced by '" + ref(referenced).name()->data + '"');
 	}
 	for (
 		auto it = concepts().begin();

@@ -28,7 +28,7 @@ ref concept::get(ref type, bool quick)
 		if (quick) {
 			throw std::out_of_range("no such concept link to get");
 		} else {
-			throw std::out_of_range("no such concept link to get: " + type.name());
+			throw std::out_of_range("no such concept link to get: " + (std::string)type.name());
 		}
 	}
 	return result.first->second;

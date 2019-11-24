@@ -27,7 +27,43 @@
 // 	if there is an "is" link to the passed ref.
 
 #include "concept.hpp"
+#include "memorystore.hpp"
 #include <sstream>
+
+inline std::string operator+(vref<std::string> a, char const * b) { return std::string(a) + b; }
+inline std::string operator+(vref<std::string> a, std::string b) { return std::string(a) + b; }
+inline std::string operator+(char const * a, vref<std::string> b) { return a + std::string(b); }
+inline std::string operator+(std::string a, vref<std::string> b) { return a + std::string(b); }
+
+// TODO TODO
+// actually, get rid of this, and set the function as a value on a normal ref.
+// then use ref destructor.
+// 	have to delete ref copy constructor.  use move constructor instead.
+// 	could also alter ref copy constructor to tell copied ref is okay.
+class statementevaluable : public ref
+{
+public:
+	statementevaluable(ref r, std::function<void(ref)> evaluation)
+	: ref(r.ptr),
+	  evaluation(evaluation)
+	{ }
+	statementevaluable(statementevaluable const &) = delete;
+	~statementevaluable() { if (evaluate) { evaluation(*this); } }
+private:
+	std::function<void(ref)> evaluation;
+};
+
+template <>
+vref<std::string>::vref(std::string const &);
+
+template <typename T>
+vref<T>::vref(T const & v)
+: ptr(valloc(v).ptr)
+#include "memorystore.hpp"
+{
+	ptr->link(ref("name"), vref(std::to_string(v)));
+}
+
 
 template <typename... T>
 void __helper_init_ref_names(std::string names, T &... refrefs)
