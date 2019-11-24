@@ -28,29 +28,36 @@
 
 #include "concept.hpp"
 #include "memorystore.hpp"
+
 #include <sstream>
+#include <functional>
 
 inline std::string operator+(vref<std::string> a, char const * b) { return std::string(a) + b; }
 inline std::string operator+(vref<std::string> a, std::string b) { return std::string(a) + b; }
 inline std::string operator+(char const * a, vref<std::string> b) { return a + std::string(b); }
 inline std::string operator+(std::string a, vref<std::string> b) { return a + std::string(b); }
 
-// TODO TODO
-// actually, get rid of this, and set the function as a value on a normal ref.
-// then use ref destructor.
-// 	have to delete ref copy constructor.  use move constructor instead.
-// 	could also alter ref copy constructor to tell copied ref is okay.
-class statementevaluable : public ref
+// reasons to use special struct:
+//   the reason not to use ref directly is because we want to pass a ref to the function handler,
+//   and it is easier to use if it is a bare copy.  the bare copy triggers destruction and eval.
+// 	an alternate would be to add an evaluation flag to ref, but this might make it big.
+// reasons to not use special struct:
+//   the operator, takes a ref type and returns a ref type
+struct statementcallref
 {
-public:
-	statementevaluable(ref r, std::function<void(ref)> evaluation)
-	: ref(r.ptr),
-	  evaluation(evaluation)
-	{ }
-	statementevaluable(statementevaluable const &) = delete;
-	~statementevaluable() { if (evaluate) { evaluation(*this); } }
-private:
-	std::function<void(ref)> evaluation;
+	statementcallref(ref type, std::function<void(ref)> func);
+	statementcallref(ref const & that);
+
+	// handles evaluating refs as statements
+	~statementcallref();
+	statementcallref(statementcallref & that);
+	statementcallref(statementcallref && that) noexcept;
+
+	operator ref();
+	
+	void destatement();
+	
+	ref r;
 };
 
 template <>
@@ -100,7 +107,7 @@ void lnks(T ... passedrefs)
 	declrefs(__VA_ARGS__); \
 	lnks(__VA_ARGS__)
 
-ref operator,(ref a, ref b);
+statementcallref operator,(statementcallref a, statementcallref b);
 ref operator-(ref a, ref b);
 
 ref a(ref what);

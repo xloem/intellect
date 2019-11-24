@@ -2,7 +2,6 @@
 #include "helpers.hpp"
 #include "meaning.hpp"
 
-using namespace std;
 
 #include <iostream>
 
@@ -14,7 +13,7 @@ void dumpconcept(ref r)
 		if (ref(l.first) == name) {
 			continue;
 		}
-		cout << r << " " << ref(l.first) << " " << ref(l.second) << endl;
+		std::cout << r << " " << ref(l.first) << " " << ref(l.second) << std::endl;
 	}
 	if (!r->linked(dumped)) {
 		r[dumped = true];

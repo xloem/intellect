@@ -5,14 +5,14 @@ ref concept::id()
 	return this;
 }
 
-bool concept::linked(ref type)
+bool concept::linked(ref const & type) const
 {
 	return links.count(type.ptr) > 0;
 }
 
-bool concept::linked(ref type, ref target)
+bool concept::linked(ref const & type, ref const & target) const
 {
-	for (ref t : getAll(type)) {
+	for (ref const & t : getAll(type)) {
 		if (t == target) {
 			return true;
 		}
@@ -20,7 +20,7 @@ bool concept::linked(ref type, ref target)
 	return false;
 }
 
-ref concept::get(ref type, bool quick)
+ref concept::get(ref const & type, bool quick) const
 {
 	// this is called by name(), so it passes quick=true
 	auto result = links.equal_range(type.ptr);
@@ -34,7 +34,7 @@ ref concept::get(ref type, bool quick)
 	return result.first->second;
 }
 
-concept::array concept::getAll(ref type)
+concept::array concept::getAll(ref const & type) const
 {
 	array ret;
 	for (
@@ -42,17 +42,17 @@ concept::array concept::getAll(ref type)
 		range.first != range.second;
 		++ range.first
 	) { 
-		ret.push_back(range.first->second);
+		ret.emplace_back(range.first->second);
 	}
 	return ret;
 }
 
-void concept::link(ref type, ref target)
+void concept::link(ref const & type, ref const & target)
 {
 	links.insert({type.ptr, target.ptr});
 }
 
-void concept::unlink(ref type, ref target)
+void concept::unlink(ref const & type, ref const & target)
 {
 	auto ls = links.equal_range(type.ptr);
 	for (auto l = ls.first; l != ls.second; ++ l) {
@@ -64,7 +64,7 @@ void concept::unlink(ref type, ref target)
 	throw std::out_of_range("no such concept link to erase");
 }
 
-void concept::unlink(ref type)
+void concept::unlink(ref const & type)
 {
 	auto ls = links.equal_range(type.ptr);
 	if (ls.first == ls.second) {

@@ -8,13 +8,13 @@
 template <typename T> struct vref;
 struct concept;
 template <typename T> struct value;
-class statementevaluable;
+struct statementcallref;
 
 struct ref
 {
 	ref(concept *p) : ptr(p) { if (p == 0) throw std::logic_error("null reference"); }
-	ref(ref const &) = default;
 	concept* operator->() { return ptr; }
+	concept const * operator->() const { return ptr; }
 	bool operator==(ref const & that) const { return this->ptr == that.ptr; }
 	bool operator!=(ref const & that) const { return this->ptr != that.ptr; }
 
@@ -29,14 +29,22 @@ struct ref
 	operator const char *() const;
 
 	// helper linking syntax sugar
-	statementevaluable operator=(ref that);
-	ref operator<<(ref target);
+	statementcallref operator=(ref that);
+	//ref operator<<(ref target);
 	ref operator[](ref links);
 
 	bool isa(ref what) const;
 	bool isan(ref what) const;
 
 	concept * ptr;
+
+	/*
+	// destructor handles evaluating refs as statements
+	~ref() noexcept;
+	ref(ref & that);
+	ref(ref && that) noexcept;
+	void destatement();
+	*/
 };
 
 template <typename T>
@@ -64,15 +72,15 @@ struct concept
 	using array = std::vector<ref>;
 
 	ref id();
-	bool linked(ref type);
-	bool linked(ref type, ref target);
-	ref get(ref type, bool quick = false); // returns first
+	bool linked(ref const & type) const;
+	bool linked(ref const & type, ref const & target) const;
+	ref get(ref const & type, bool quick = false) const; // returns first
 	template <typename T>
-	vref<T> vget(ref type, bool quick = false) { return get(type, quick); }
-	array getAll(ref type);
-	void link(ref type, ref target);
-	void unlink(ref type, ref target);
-	void unlink(ref type);
+	vref<T> vget(ref const & type, bool quick = false) const { return get(type, quick); }
+	array getAll(ref const & type) const;
+	void link(ref const & type, ref const & target);
+	void unlink(ref const & type, ref const & target);
+	void unlink(ref const & type);
 };
 
 template <typename T>
