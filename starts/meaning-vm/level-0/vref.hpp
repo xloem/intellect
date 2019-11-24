@@ -15,10 +15,11 @@ struct vref
 	value<T>* operator->() { return ptr; }
 	operator T const &() const { return *ptr; }
 
-	vref(T const & val) : ptr(alloc(new value<T>(val))) { }
+	vref(T const & val) : vref(alloc(new value<T>(val))) { }
 
 	vref(ref const & other) : ptr(static_cast<value<T>*>(other.ptr)) { }
 	operator ref() { return ptr; }
+	T const & val() { return *ptr; }
 
 	// for use by containers
 	bool operator<(vref<T> const & other) const { return self.ptr < other.ptr; }

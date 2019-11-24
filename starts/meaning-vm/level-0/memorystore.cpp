@@ -55,5 +55,10 @@ void dealloc(ref r) {
 	throw no_such_concept(r);
 }
 
+std::size_t allocated()
+{
+	return concepts().size();
+}
+
 }
 }
