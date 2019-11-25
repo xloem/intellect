@@ -9,11 +9,11 @@ namespace level0 {
 
 static auto & concepts()
 {
-	static std::unordered_set<ref, std::hash<concept*>> concepts;
+	static std::unordered_set<concept*, std::hash<concept*>> concepts;
 	return concepts;
 }
 
-ref alloc(concept * moved) {
+concept* alloc(concept * moved) {
 	ref r = moved ? moved : new concept();
 	concepts().insert(r);
 	return r;
@@ -36,7 +36,7 @@ static concept* referenced(ref r) {
 	return 0;
 }
 
-void dealloc(ref r) {
+void dealloc(concept * r) {
 	concept * referenced = intellect::level0::referenced(r);
 	if (referenced) {
 		throw still_referenced_by(r, referenced);
@@ -46,7 +46,7 @@ void dealloc(ref r) {
 		it != concepts().end();
 		++ it)
 	{
-		if (ref(*it) == r) {
+		if (*it == r) {
 			concepts().erase(it);
 			delete (concept*)r;
 			return;

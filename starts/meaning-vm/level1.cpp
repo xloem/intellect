@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace intellect::level1;
-using namespace concepts;
+using namespace intellect::level1::concepts;
 
 int main()
 {
@@ -20,7 +20,7 @@ int main()
 
 			ref ret = a(structure);
 			ret.link(is, function-argument);
-			ret.set(argument-position, vref<int>(1)),
+			ret.set(argument-position, ref(1)),
 			ret.set(a(variable, A), provide);
 			ret.set(a(variable, B), provide);
 			ret.set(a(variable, C), provide);

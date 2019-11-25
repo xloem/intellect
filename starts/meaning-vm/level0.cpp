@@ -12,8 +12,8 @@ int main()
 	ref c = alloc();
 	ref d = alloc();
 	ref e = alloc();
-	vref<int> num(3);
-	vref<std::function<void()>> code([](){
+	ref num = valloc<int>(3);
+	ref code = valloc<std::function<void()>>([](){
 		std::cout << "Hello, world." << std::endl;
 	});
 	auto numlink = alloc();
@@ -31,8 +31,8 @@ int main()
 	std::cout << "Num: " << ref(num).dump(skip, skip);
 	std::cout << "Code: " << ref(code).dump(skip, skip);
 	std::cout << a.dump(skip, skip);
-	std::cout << "Num: " << a.vget<int>(numlink).val() << std::endl;
-	std::cout << "Code:  "; a.vget<std::function<void()>>(codelink).val()();
+	std::cout << "Num: " << a.vget<int>(numlink) << std::endl;
+	std::cout << "Code:  "; a.vget<std::function<void()>>(codelink)();
 
 	std::cout << allocated() << " allocated" << std::endl;
 

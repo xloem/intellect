@@ -6,4 +6,3 @@
 #include "memorystore.hpp"
 #include "ref.hpp"
 #include "value.hpp"
-#include "vref.hpp"

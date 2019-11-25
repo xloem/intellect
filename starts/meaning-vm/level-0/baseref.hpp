@@ -9,8 +9,9 @@
 namespace intellect {
 namespace level0 {
 
-template <typename ref, template<typename> typename vref, typename concept>
-class baseref {
+template <typename ref>
+class baseref
+{
 	struct array; struct links_t;
 public:
 	baseref(concept *p)
@@ -35,14 +36,21 @@ public:
 	links_t links() const;
 
 	template <typename T>
-	vref<T> vget(ref const & type) const { return p->template vget<T>(type.p); }
+	T& vget(ref const & type) const { return p->vget<T>(type.p)->data; }
 
 	template <typename T>
-	vref<T> val() { return p->template val<T>(); }
+	T& val() { return p->val<T>()->data; }
 
 	operator concept*() const { return p; }
 	concept*& ptr() { return p; }
 	concept* const & ptr() const { return p; }
+
+	level0::ref & r0() { return *reinterpret_cast<level0::ref*>(this); }
+	level1::ref & r1() { return *reinterpret_cast<level1::ref*>(this); }
+	level2::ref & r2() { return *reinterpret_cast<level2::ref*>(this); }
+	level3::ref & r3() { return *reinterpret_cast<level3::ref*>(this); }
+	level4::ref & r4() { return *reinterpret_cast<level4::ref*>(this); }
+	level5::ref & r5() { return *reinterpret_cast<level5::ref*>(this); }
 
 	bool operator==(ref const & other) const { return self.p == other.p; }
 	bool operator!=(ref const & other) const { return self.p == other.p; }
@@ -90,13 +98,13 @@ private:
 	};
 };
 
-template <typename ref, template<typename> typename vref, typename concept>
-typename baseref<ref,vref,concept>::array baseref<ref,vref,concept>::getAll(ref const & type) const
+template <typename ref>
+typename baseref<ref>::array baseref<ref>::getAll(ref const & type) const
 {
 	return {p->getAll(type.p)};
 }
-template <typename ref, template<typename> typename vref, typename concept>
-typename baseref<ref,vref,concept>::links_t baseref<ref,vref,concept>::links() const
+template <typename ref>
+typename baseref<ref>::links_t baseref<ref>::links() const
 {
 	return {p->links};
 }
