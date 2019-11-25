@@ -21,22 +21,22 @@ int main()
 
 	ref skip = alloc();
 	
-	a->link(b, c);
-	a->link(d, e);
-	e->link(b, a);
-	c->link(b, e);
-	a->link(numlink, num);
-	a->link(codelink, code);
+	a.set(b, c);
+	a.link(d, e);
+	e.link(b, a);
+	c.link(b, e);
+	a.link(numlink, num);
+	a.link(codelink, code);
 
 	std::cout << "Num: " << ref(num).dump(skip, skip);
 	std::cout << "Code: " << ref(code).dump(skip, skip);
 	std::cout << a.dump(skip, skip);
-	std::cout << "Num: " << a->vget<int>(numlink).val() << std::endl;
-	std::cout << "Code:  "; a->vget<std::function<void()>>(codelink).val()();
+	std::cout << "Num: " << a.vget<int>(numlink).val() << std::endl;
+	std::cout << "Code:  "; a.vget<std::function<void()>>(codelink).val()();
 
 	std::cout << allocated() << " allocated" << std::endl;
 
-	e->unlink(b, a);
+	e.unlink(b, a);
 	dealloc(a);
 	dealloc(c);
 	dealloc(e);

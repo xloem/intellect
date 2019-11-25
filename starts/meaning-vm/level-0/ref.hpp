@@ -1,13 +1,14 @@
 #pragma once
 
 #include "common.hpp"
+#include "ref-mixin.hpp"
 
 #include <string>
 
 namespace intellect {
 namespace level0 {
 
-struct ref
+struct ref : public refmixin<ref, vref>
 {
 	ref(concept *p);
 	operator concept*() const { return ptr; }
