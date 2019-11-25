@@ -6,25 +6,17 @@
 
 using namespace intellect::level0;
 
-ref::ref(concept *p)
-: ptr(p)
-{
-	if (p == 0) {
-		throw null_reference();
-	}
-}
-
 std::string ref::dump(ref skipmarkertype, ref skipmarkertarget)
 {
-	if (self->linked(skipmarkertype, skipmarkertarget)) {
+	if (self.linked(skipmarkertype, skipmarkertarget)) {
 		return {};
 	}
-	std::string ret = std::to_string((unsigned long)ptr) + ":\n";
-	for (auto & link : self->links) {
-		ret += "  " + std::to_string((unsigned long)link.first.ptr) + ": " + std::to_string((unsigned long)link.second.ptr) + "\n"; 
+	std::string ret = std::to_string((unsigned long)ptr()) + ":\n";
+	for (auto & link : self.links()) {
+		ret += "  " + std::to_string((unsigned long)link.first.ptr()) + ": " + std::to_string((unsigned long)link.second.ptr()) + "\n"; 
 	}
-	self->link(skipmarkertype, skipmarkertarget);
-	for (auto & link : self->links) {
+	self.link(skipmarkertype, skipmarkertarget);
+	for (auto & link : self.links()) {
 		if (link.first == skipmarkertype && link.second == skipmarkertarget) {
 			continue;
 		}

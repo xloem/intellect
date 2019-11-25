@@ -45,7 +45,7 @@ level0::ref getnamed(std::string const & name)
 }
 
 ref::ref(std::string const & name)
-: ref0((level0::concept*)getnamed(name))
+: baseref(getnamed(name).ptr())
 { }
 
 vref<std::string> ref::name() const

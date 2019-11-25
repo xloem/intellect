@@ -24,7 +24,7 @@ static concept* referenced(ref r) {
 		if (r2 == r) {
 			continue;
 		}
-		for (auto & l : r2->links) {
+		for (auto & l : r2.links()) {
 			if (ref(l.first) == r) {
 				return r2;
 			}

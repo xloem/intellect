@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.hpp"
-#include "ref.hpp"
 
 #include <map>
 #include <vector>
@@ -12,26 +11,29 @@ namespace level0 {
 struct concept
 {
 	// a concept is made of concept-typed links to other concepts
-	std::multimap<ref,ref> links;
-	using array = std::vector<ref>;
+	std::multimap<concept*,concept*> links;
+	using array = std::vector<concept*>;
 
-	ref id();
+	concept* id();
 
-	void link(ref const & type, ref const & target);
-	void unlink(ref const & type, ref const & target);
-	void unlink(ref const & type);
+	void link(concept* type, concept* target);
+	void unlink(concept* type, concept* target);
+	void unlink(concept* type);
 
-	bool linked(ref const & type) const;
-	bool linked(ref const & type, ref const & target) const;
+	bool linked(concept* type) const;
+	bool linked(concept* type, concept* target) const;
 
-	array getAll(ref const & type) const;
+	array getAll(concept* type) const;
 
 	// get and set enforce that only 1 link of a given type is present
-	ref get(ref const & type) const;
-	void set(ref const & type, ref const & target);
+	concept* get(concept* type) const;
+	void set(concept* type, concept* target);
 
 	template <typename T>
-	vref<T> vget(ref const & type) const { return get(type); }
+	value<T>* vget(concept* type) const { return static_cast<value<T>*>(get(type)); }
+
+	template <typename T>
+	value<T>* val() { return this; }
 };
 
 }

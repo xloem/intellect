@@ -5,17 +5,17 @@ using namespace intellect::level0;
 
 #define selfref const_cast<concept*>(&self)
 
-ref concept::id()
+concept* concept::id()
 {
 	return this;
 }
 
-void concept::link(ref const & type, ref const & target)
+void concept::link(concept* type, concept* target)
 {
 	links.insert({type, target});
 }
 
-void concept::unlink(ref const & type, ref const & target)
+void concept::unlink(concept* type, concept* target)
 {
 	auto ls = links.equal_range(type);
 	for (auto l = ls.first; l != ls.second; ++ l) {
@@ -27,7 +27,7 @@ void concept::unlink(ref const & type, ref const & target)
 	throw no_such_link_type_target(selfref, type, target);
 }
 
-void concept::unlink(ref const & type)
+void concept::unlink(concept* type)
 {
 	auto ls = links.equal_range(type);
 	if (ls.first == ls.second) {
@@ -41,14 +41,14 @@ void concept::unlink(ref const & type)
 	links.erase(ls.first);
 }
 
-bool concept::linked(ref const & type) const
+bool concept::linked(concept* type) const
 {
 	return links.count(type) > 0;
 }
 
-bool concept::linked(ref const & type, ref const & target) const
+bool concept::linked(concept* type, concept* target) const
 {
-	for (ref const & t : getAll(type)) {
+	for (concept* t : getAll(type)) {
 		if (t == target) {
 			return true;
 		}
@@ -56,7 +56,7 @@ bool concept::linked(ref const & type, ref const & target) const
 	return false;
 }
 
-concept::array concept::getAll(ref const & type) const
+concept::array concept::getAll(concept* type) const
 {
 	array ret;
 	for (
@@ -69,7 +69,7 @@ concept::array concept::getAll(ref const & type) const
 	return ret;
 }
 
-ref concept::get(ref const & type) const
+concept* concept::get(concept* type) const
 {
 	auto result = links.equal_range(type);
 	if (result.first == result.second) {
@@ -83,7 +83,7 @@ ref concept::get(ref const & type) const
 	return result.first->second;
 }
 
-void concept::set(ref const & type, ref const & target)
+void concept::set(concept* type, concept* target)
 {
 	if (linked(type)) {
 		throw link_type_not_unique(selfref, type);

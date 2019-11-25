@@ -27,7 +27,7 @@ namespace internal {
 			if (name[name.size() - 1] == ',') {
 				name = name.substr(0, name.size() - 1);
 			}
-			refptrs[i]->l0() = ref(name).l0();
+			refptrs[i]->ptr() = ref(name).ptr();
 		}
 	}
 }

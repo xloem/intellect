@@ -1,5 +1,5 @@
 #pragma once
-#include "ref.hpp"
+#include "concept.hpp"
 
 #include <stdexcept>
 
@@ -8,62 +8,62 @@ namespace level0 {
 
 struct no_such_link_type : public std::out_of_range
 {
-	no_such_link_type(ref source, ref type)
+	no_such_link_type(concept* source, concept* type)
 	: std::out_of_range("no such concept link type"),
 	  source(source),
 	  type(type)
 	{ }
 
-	ref const source;
-	ref const type;
+	concept* const source;
+	concept* const type;
 };
 
 struct no_such_link_type_target : public std::out_of_range
 {
-	no_such_link_type_target(ref source, ref type, ref target)
+	no_such_link_type_target(concept* source, concept* type, concept* target)
 	: std::out_of_range("no such concept link type and target"),
 	  source(source),
 	  type(type),
 	  target(type)
 	{ }
 
-	ref const source;
-	ref const type;
-	ref const target;
+	concept* const source;
+	concept* const type;
+	concept* const target;
 };
 
 struct link_type_not_unique : public std::invalid_argument
 {
-	link_type_not_unique(ref source, ref type)
+	link_type_not_unique(concept* source, concept* type)
 	: std::invalid_argument("more than one such concept link type"),
 	  source(source),
 	  type(type)
 	{ }
 
-	ref const source;
-	ref const type;
+	concept* const source;
+	concept* const type;
 };
 
 struct still_referenced_by : public std::invalid_argument
 {
-	still_referenced_by(ref topic, ref referrer)
+	still_referenced_by(concept* topic, concept* referrer)
 	: std::invalid_argument("concept is still referenced"),
 	  topic(topic),
 	  referrer(referrer)
 	{ }
 
-	ref const topic;
-	ref const referrer;
+	concept* const topic;
+	concept* const referrer;
 };
 
 struct no_such_concept : public std::invalid_argument
 {
-	no_such_concept(ref topic)
+	no_such_concept(concept* topic)
 	: std::invalid_argument("no such concept reference"),
 	  topic(topic)
 	{ }
 
-	ref const topic;
+	concept* const topic;
 };
 
 struct null_reference : public std::invalid_argument
