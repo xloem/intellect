@@ -12,7 +12,7 @@ ref concept::id()
 
 void concept::link(ref const & type, ref const & target)
 {
-	links.insert({type.ptr, target.ptr});
+	links.insert({type, target});
 }
 
 void concept::unlink(ref const & type, ref const & target)
@@ -43,7 +43,7 @@ void concept::unlink(ref const & type)
 
 bool concept::linked(ref const & type) const
 {
-	return links.count(type.ptr) > 0;
+	return links.count(type) > 0;
 }
 
 bool concept::linked(ref const & type, ref const & target) const
@@ -71,7 +71,7 @@ concept::array concept::getAll(ref const & type) const
 
 ref concept::get(ref const & type) const
 {
-	auto result = links.equal_range(type.ptr);
+	auto result = links.equal_range(type);
 	if (result.first == result.second) {
 		throw no_such_link_type(selfref, type);
 	}

@@ -26,10 +26,10 @@ static concept* referenced(ref r) {
 		}
 		for (auto & l : r2->links) {
 			if (ref(l.first) == r) {
-				return r2.ptr;
+				return r2;
 			}
 			if (ref(l.second) == r) {
-				return r2.ptr;
+				return r2;
 			}
 		}
 	}
@@ -48,7 +48,7 @@ void dealloc(ref r) {
 	{
 		if (ref(*it) == r) {
 			concepts().erase(it);
-			delete r.ptr;
+			delete (concept*)r;
 			return;
 		}
 	}

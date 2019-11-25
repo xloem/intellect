@@ -1,8 +1,11 @@
 CXXFLAGS=-Wall -Werror -std=c++17 -fno-operator-names -ggdb -O0
 LINK.o=$(LINK.cc)
 
+all: level0 level1
 level0: level0.o liblevel0.a
 liblevel0.a: level-0/memorystore.o level-0/concept.o level-0/ref.o
+level1: level1.o liblevel0.a liblevel1.a
+liblevel1.a: level-1/ref.o level-1/sugar.o level-1/concepts.o
 %.a:
 	ar ru $@ $^
 	ranlib $@
@@ -10,4 +13,4 @@ liblevel0.a: level-0/memorystore.o level-0/concept.o level-0/ref.o
 main: main.o concept.o helpers.o memorystore.o meaning.o
 *.o: *.hpp  */*.hpp
 clean:
-	-rm *.o main level0 *.a */*.o
+	-rm *.o main level0 level1 level2 *.a */*.o

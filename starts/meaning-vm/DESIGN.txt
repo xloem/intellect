@@ -8,3 +8,9 @@ Each concept has a unique address, and a list of concept pairs it links to.
 The first of the pair represents the type of the link, and the second the target.
 Concepts may not be deallocated unless nothing links to them.
 A special kind of concept is the value, which holds arbitrary data alongside itself.
+
+# LEVEL 1
+Level 1 provides for every concept having a name.  There is additionally syntax sugar
+for instantiating and using named or hyphen-separated references.
+Level-1 names are for development ease, and are considered unique.  Hence this also
+begins definition of simple shared meaning associated with a name.

@@ -14,7 +14,7 @@ ref::ref(concept *p)
 	}
 }
 
-std::string ref::dump(ref skipmarkertype, ref skipmarkertarget) const
+std::string ref::dump(ref skipmarkertype, ref skipmarkertarget)
 {
 	if (self->linked(skipmarkertype, skipmarkertarget)) {
 		return {};
@@ -25,7 +25,7 @@ std::string ref::dump(ref skipmarkertype, ref skipmarkertarget) const
 	}
 	self->link(skipmarkertype, skipmarkertarget);
 	for (auto & link : self->links) {
-		if (link.first == skipmarkertype && link.second == skipmarkertype) {
+		if (link.first == skipmarkertype && link.second == skipmarkertarget) {
 			continue;
 		}
 		ret += link.second.dump(skipmarkertype, skipmarkertarget);

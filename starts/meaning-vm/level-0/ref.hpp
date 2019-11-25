@@ -11,16 +11,19 @@ namespace level0 {
 struct ref : public refmixin<ref, vref>
 {
 	ref(concept *p);
+	ref(ref const & other) : ref(other.ptr) { }
+	ref & operator=(ref const & other) { self.ptr = other.ptr; return self; }
 	operator concept*() const { return ptr; }
 	concept* operator->() const { return ptr; }
-	bool operator==(ref const & other) const { return self.ptr == other.ptr; }
-	bool operator!=(ref const & other) const { return self.ptr != other.ptr; }
-	bool operator<(ref const & other) const { return self.ptr < other.ptr; }
 	concept & deref() { return *ptr; }
 
-	std::string dump(ref skipmarkertype, ref skipmarkertarget) const;
+	ref & l0() { return self; }
+	ref const & l0() const { return self; }
 
-	concept * const ptr;
+	std::string dump(ref skipmarkertype, ref skipmarkertarget);
+
+private:
+	concept * ptr;
 };
 
 }
