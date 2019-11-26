@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "errors.hpp"
+#include "memorystore.hpp"
 
 #include <map>
 #include <vector>
@@ -37,6 +38,8 @@ public:
 
 	template <typename T>
 	T& vget(ref const & type) const { return p->vget<T>(type.p)->data; }
+	template <typename T>
+	void vset(ref const & type, T const & v) { p->set(type.p, valloc<T>(v)); }
 
 	template <typename T>
 	T& val() { return p->val<T>()->data; }

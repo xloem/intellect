@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.hpp"
-#include "ref.hpp"
 #include "value.hpp"
 
 namespace intellect {

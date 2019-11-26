@@ -12,10 +12,6 @@ int main()
 	ref c = alloc();
 	ref d = alloc();
 	ref e = alloc();
-	ref num = valloc<int>(3);
-	ref code = valloc<std::function<void()>>([](){
-		std::cout << "Hello, world." << std::endl;
-	});
 	auto numlink = alloc();
 	auto codelink = alloc();
 
@@ -25,11 +21,13 @@ int main()
 	a.link(d, e);
 	e.link(b, a);
 	c.link(b, e);
-	a.link(numlink, num);
-	a.link(codelink, code);
+	a.vset<int>(numlink, 3);
+	a.vset<std::function<void()>>(codelink, [](){
+		std::cout << "Hello, world." << std::endl;
+	});
 
-	std::cout << "Num: " << ref(num).dump(skip, skip);
-	std::cout << "Code: " << ref(code).dump(skip, skip);
+	std::cout << "Num: " << a.get(numlink).dump(skip, skip);
+	std::cout << "Code: " << a.get(codelink).dump(skip, skip);
 	std::cout << a.dump(skip, skip);
 	std::cout << "Num: " << a.vget<int>(numlink) << std::endl;
 	std::cout << "Code:  "; a.vget<std::function<void()>>(codelink)();
@@ -37,15 +35,17 @@ int main()
 	std::cout << allocated() << " allocated" << std::endl;
 
 	e.unlink(b, a);
+	auto num = a.get(numlink);
+	auto code = a.get(codelink);
 	dealloc(a);
+	dealloc(num);
+	dealloc(code);
+	dealloc(numlink);
+	dealloc(codelink);
 	dealloc(c);
 	dealloc(e);
 	dealloc(b);
 	dealloc(d);
-	dealloc(numlink);
-	dealloc(codelink);
-	dealloc(num);
-	dealloc(code);
 	dealloc(skip);
 
 	std::cout << allocated() << " allocated" << std::endl;
