@@ -36,6 +36,16 @@ public:
 	array getAll(ref const & type) const;
 	links_t links() const;
 
+	ref link(std::initializer_list<ref> refs)
+	{
+		for (auto it = refs.begin(); it != refs.end();) {
+			ref type = *it++;
+			ref target = *it++;
+			link(type, target);
+		}
+		return ptr();
+	}
+
 	template <typename T>
 	T& vget(ref const & type) const { return p->vget<T>(type.p)->data; }
 	template <typename T>

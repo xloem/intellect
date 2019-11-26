@@ -12,26 +12,29 @@ int main()
 	decls(not, topic);
 	decls(A, B, C);
 	decls(source, type, target);
+	decls(structure, function, argument, position);
+	decls(variable, provide);
 
-	(make-linked).set(is, habit);
-	(make-linked).set(needs, []() -> ref {
-			decls(structure, function, argument, position);
-			decls(variable, A, B, C, provide);
-
-			ref ret = a(structure);
-			ret.link(is, function-argument);
-			ret.set(argument-position, ref(1)),
-			ret.set(a(variable, A), provide);
-			ret.set(a(variable, B), provide);
-			ret.set(a(variable, C), provide);
-			return ret;
-	}());
-	movetoname(a(link), A-B-C-linked).set(link-source, A);
-	(A-B-C-linked).set(link-type, B);
-	(A-B-C-linked).set(link-target, C);
+	(make-linked).link({
+		is, habit,
+		needs, a(structure).link({
+			is, function-argument,
+			argument-position, ref(1),
+			a(variable, A), provide,
+			a(variable, B), provide,
+			a(variable, C), provide
+		})
+	});
+	movetoname(a(link), A-B-C-linked).link({
+		link-source, A,
+		link-type, B,
+		link-target, C
+	});
 	a(not, not-A-B-C-linked).set(topic, A-B-C-linked);
-	(make-linked).set(assumes, not-A-B-C-linked);
-	(make-linked).set(makes, A-B-C-linked);
+	(make-linked).link({
+		assumes, not-A-B-C-linked,
+		makes, A-B-C-linked
+	});
 
 	std::cout << (make-linked).dump("dumped", true) << std::endl;
 

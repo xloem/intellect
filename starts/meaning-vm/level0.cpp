@@ -17,9 +17,11 @@ int main()
 
 	ref skip = alloc();
 	
-	a.set(b, c);
-	a.link(d, e);
-	e.link(b, a);
+	a.link({
+		b, c,
+		d, e
+	});
+	e.set(b, a);
 	c.link(b, e);
 	a.vset<int>(numlink, 3);
 	a.vset<std::function<void()>>(codelink, [](){

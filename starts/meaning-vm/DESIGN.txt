@@ -1,6 +1,20 @@
 The codebase is made in levels.
 Ideally each level defines a complete API to the underworkings.
-Higher levels include greater degrees of meaning.
+Higher levels include greater degrees of meaning and are
+more expressive and powerful.
+The purpose of levels is to prevent complexity recursion
+until the components are smart enough to adapt, and make
+handling bugs much less explosive.
+
+Levels have a 'ref' class they use to refer to concepts.
+Each higher level adds more functionality to this class.
+The desired norm of coding a level is to use only the
+functionality of the level prior, except to use that
+level's ref class, rather than the lower one.  Ref classes
+are just wrappers for a pointer, so this should cause no
+issues.
+This norm was established after levels 0 and 1 were coded,
+so they do not meet it yet.
 
 # LEVEL 0
 Level 0 defines an interconnected network of concept references in memory.

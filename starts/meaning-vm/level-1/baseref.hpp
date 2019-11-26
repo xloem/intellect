@@ -3,6 +3,8 @@
 #include "common.hpp"
 #include "funcs.hpp"
 
+#include "../level-0/ref.hpp"
+
 namespace intellect {
 namespace level1 {
 
