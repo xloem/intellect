@@ -8,6 +8,7 @@ namespace level1 {
 
 namespace concepts {
 
+extern ref nothing; // default value of a ref
 extern ref name; // used as the link to value<std::string> naming each concept
 extern ref is; // a link to define group relationships, links to the more general class
 extern ref anonymous; // a group given concepts with generated names

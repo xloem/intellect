@@ -16,6 +16,8 @@ value<std::string>* getname(concept* r);
 
 bool isa(concept* member, concept* group);
 
+concept* hyphenate(concept* a, concept* b);
+
 template <typename T>
 value<T>* valloc(T const & val);
 

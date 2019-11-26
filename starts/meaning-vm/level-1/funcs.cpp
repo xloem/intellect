@@ -74,6 +74,11 @@ value<T>* valloc(T const & val)
 	return ret;
 }
 
+concept* hyphenate(concept* a, concept* b)
+{
+	return getnamed(getname(a)->data + "-" + getname(b)->data);
+}
+
 template value<std::string>* valloc<std::string>(std::string const & val);
 template value<int>* valloc<int>(int const & val);
 

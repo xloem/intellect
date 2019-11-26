@@ -23,6 +23,8 @@ struct baseref : public level0::baseref<ref>
 	operator std::string const &() const { return getname(self)->data; }
 	operator char const *() const { return getname(self)->data.c_str(); }
 
+	ref operator-(ref other) { return hyphenate(self.ptr(), other.ptr()); }
+
 	std::string dump(ref skipmarkertype, ref skipmarkertarget);
 };
 
