@@ -7,8 +7,6 @@ namespace level0 {
 
 struct concept;
 struct ref;
-template <typename T> struct value;
-template <typename T> struct vref;
 
 }
 namespace level1 { struct ref; template <typename> struct vref; }

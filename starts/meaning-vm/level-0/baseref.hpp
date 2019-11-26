@@ -49,12 +49,12 @@ public:
 	}
 
 	template <typename T>
-	T& vget(ref const & type) const { return p->vget<T>(type.p)->data; }
+	T& vget(ref const & type) const { return p->vget<T>(type.p); }
 	template <typename T>
-	void vset(ref const & type, T const & v) { p->set(type.p, valloc<T>(v)); }
+	void vset(ref const & type, T const & v) { p->set(type.p, alloc(v)); }
 
 	template <typename T>
-	T& val() { return p->val<T>()->data; }
+	T& val() { return p->val<T>(); }
 
 	operator concept*() const { return p; }
 	concept*& ptr() { return p; }

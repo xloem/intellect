@@ -11,7 +11,5 @@ liblevel%.a: level-%/*.hpp
 	ar ru $@ $^
 	ranlib $@
 
-#main: main.o concept.o helpers.o memorystore.o meaning.o
-#*.o: *.hpp  */*.hpp
 clean:
-	-rm *.o main level0 level1 level2 *.a */*.o
+	-rm *.o level? *.a */*.o

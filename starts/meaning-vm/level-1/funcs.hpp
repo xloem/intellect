@@ -12,14 +12,13 @@ namespace intellect {
 namespace level1 {
 
 concept* getnamed(std::string const & name);
-value<std::string>* getname(concept* r);
+std::string& getname(concept* r);
 
 bool isa(concept* member, concept* group);
 
 concept* hyphenate(concept* a, concept* b);
 
-template <typename T>
-value<T>* valloc(T const & val);
+concept* alloc(std::any val);
 
 }
 }

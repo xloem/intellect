@@ -21,9 +21,9 @@ static auto & namestruct()
 		name_t()
 		: nameref(level0::alloc())
 		{
-			auto namestr = valloc<std::string>("name");
+			level0::ref namestr = alloc((std::string)("name"));
 			nameref.set(nameref, namestr);
-			conceptsByName.emplace(namestr->data, nameref);
+			conceptsByName.emplace(namestr.val<std::string>(), nameref);
 		}
 	} namestruct;
 	return namestruct;
@@ -37,14 +37,14 @@ concept* getnamed(std::string const & name)
 		return res->second;
 	} else {
 		level1::ref con = level0::alloc();
-		level0::value<std::string>* namestr = level0::valloc(name);
-		ns.conceptsByName.emplace(namestr->data, con);
+		level0::ref namestr = level0::alloc(name);
+		ns.conceptsByName.emplace(namestr.val<std::string>(), con);
 		con.set(ns.nameref, namestr);
 		return con.ptr();
 	}
 }
 
-value<std::string>* getname(concept* r)
+std::string& getname(concept* r)
 {
 	try {
 		return r->vget<std::string>(namestruct().nameref);
@@ -63,24 +63,31 @@ bool isa(concept* member, concept* group)
 	return false;
 }
 
-template <typename T>
-value<T>* valloc(T const & val)
+concept* alloc(std::any val)
 {
-	auto ret = level0::valloc<T>(val);
+
+	ref ret = level0::alloc(val);
 	std::stringstream ss;
-	// << val is making recursion
-	ss << typeid(T).name() << "(" << val << ")";
-	ret->link(concepts::name, level0::valloc(ss.str()));
+	ss << val.type().name() << "(";
+	if (false);
+#define t(T) \
+		else if (val.type() == typeid(T)) { \
+			ss << ret.val<T>(); \
+		}
+	t(uint8_t) t(int8_t) t(uint16_t) t(int16_t)
+	t(uint32_t) t(int32_t) t(uint64_t) t(int64_t)
+	t(bool) t(float) t(double) t(std::string) t(char const *)
+#undef t
+	else { ss << "?"; }
+	ss << ")";
+	ret.link(concepts::name, level0::alloc(ss.str()));
 	return ret;
 }
 
 concept* hyphenate(concept* a, concept* b)
 {
-	return getnamed(getname(a)->data + "-" + getname(b)->data);
+	return getnamed(getname(a) + "-" + getname(b));
 }
-
-template value<std::string>* valloc<std::string>(std::string const & val);
-template value<int>* valloc<int>(int const & val);
 
 }
 }

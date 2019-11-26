@@ -21,8 +21,8 @@ struct baseref : public level0::baseref<ref>
 	bool isa(ref group) const { return level1::isa(self, group); }
 	bool isan(ref group) const { return isa(group); }
 
-	std::string const & name() const { return getname(self)->data; }
-	operator std::string const &() const { return getname(self)->data; }
+	std::string const & name() const { return getname(self); }
+	operator std::string const &() const { return getname(self); }
 	operator char const *() const { return getname(self)->data.c_str(); }
 
 	ref operator-(ref other) { return hyphenate(self.ptr(), other.ptr()); }

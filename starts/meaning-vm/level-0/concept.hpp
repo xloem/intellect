@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 
+#include <any>
 #include <map>
 #include <vector>
 
@@ -12,6 +13,9 @@ struct concept
 {
 	// a concept is made of concept-typed links to other concepts
 	std::multimap<concept*,concept*> links;
+	// and optional associated arbitrary data
+	std::any data;
+
 	using array = std::vector<concept*>;
 
 	concept* id();
@@ -30,10 +34,10 @@ struct concept
 	void set(concept* type, concept* target);
 
 	template <typename T>
-	value<T>* vget(concept* type) const { return static_cast<value<T>*>(get(type)); }
+	T & vget(concept* type) const { return get(type)->val<T>(); }
 
 	template <typename T>
-	value<T>* val() { return this; }
+	T & val() { return std::any_cast<T&>(data); }
 };
 
 }

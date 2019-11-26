@@ -14,8 +14,9 @@ static auto & concepts()
 	return concepts;
 }
 
-ref alloc(concept * moved) {
-	ref r = moved ? moved : new concept();
+ref alloc(std::any data) {
+	concept * r = new concept();
+	r->data = data;
 	concepts().insert(r);
 	return r;
 }
