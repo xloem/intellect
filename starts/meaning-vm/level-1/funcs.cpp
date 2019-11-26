@@ -39,7 +39,7 @@ concept* getnamed(std::string const & name)
 		level1::ref con = level0::alloc();
 		level0::value<std::string>* namestr = level0::valloc(name);
 		ns.conceptsByName.emplace(namestr->data, con);
-		con.set(ns.nameref.r0(), namestr);
+		con.set(ns.nameref, namestr);
 		return con.ptr();
 	}
 }

@@ -6,10 +6,10 @@
 namespace intellect {
 namespace level0 {
 
-concept * alloc(concept * moved = 0);
+ref alloc(concept * moved = 0);
 template <typename T>
-value<T> * valloc(T const & v) { return static_cast<value<T>*>(alloc(new value<T>(v))); }
-void dealloc(concept*);
+value<T> * valloc(T const & v) { return static_cast<value<T>*>(alloc(new value<T>(v)).ptr()); }
+void dealloc(ref);
 std::size_t allocated();
 
 }

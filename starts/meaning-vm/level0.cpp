@@ -17,10 +17,10 @@ int main()
 
 	ref skip = alloc();
 	
-	a.link({
+	a.link(
 		b, c,
 		d, e
-	});
+	);
 	e.set(b, a);
 	c.link(b, e);
 	a.vset<int>(numlink, 3);

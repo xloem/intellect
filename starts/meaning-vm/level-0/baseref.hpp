@@ -36,8 +36,10 @@ public:
 	array getAll(ref const & type) const;
 	links_t links() const;
 
-	ref link(std::initializer_list<ref> refs)
+	template <typename... Ref>
+	ref link(Ref... refspack)
 	{
+		std::initializer_list<ref> refs{refspack...};
 		for (auto it = refs.begin(); it != refs.end();) {
 			ref type = *it++;
 			ref target = *it++;
@@ -58,12 +60,12 @@ public:
 	concept*& ptr() { return p; }
 	concept* const & ptr() const { return p; }
 
-	level0::ref & r0() { return *reinterpret_cast<level0::ref*>(this); }
-	level1::ref & r1() { return *reinterpret_cast<level1::ref*>(this); }
-	level2::ref & r2() { return *reinterpret_cast<level2::ref*>(this); }
-	level3::ref & r3() { return *reinterpret_cast<level3::ref*>(this); }
-	level4::ref & r4() { return *reinterpret_cast<level4::ref*>(this); }
-	level5::ref & r5() { return *reinterpret_cast<level5::ref*>(this); }
+	operator level0::ref &() { return *reinterpret_cast<level0::ref*>(this); }
+	operator level1::ref &() { return *reinterpret_cast<level1::ref*>(this); }
+	operator level2::ref &() { return *reinterpret_cast<level2::ref*>(this); }
+	operator level3::ref &() { return *reinterpret_cast<level3::ref*>(this); }
+	operator level4::ref &() { return *reinterpret_cast<level4::ref*>(this); }
+	operator level5::ref &() { return *reinterpret_cast<level5::ref*>(this); }
 
 	bool operator==(ref const & other) const { return self.p == other.p; }
 	bool operator!=(ref const & other) const { return self.p == other.p; }

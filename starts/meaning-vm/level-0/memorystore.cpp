@@ -1,6 +1,7 @@
 #include "memorystore.hpp"
 #include "concept.hpp"
 #include "errors.hpp"
+#include "ref.hpp"
 
 #include <unordered_set>
 
@@ -9,11 +10,11 @@ namespace level0 {
 
 static auto & concepts()
 {
-	static std::unordered_set<concept*, std::hash<concept*>> concepts;
+	static std::unordered_set<ref, std::hash<concept*>> concepts;
 	return concepts;
 }
 
-concept* alloc(concept * moved) {
+ref alloc(concept * moved) {
 	ref r = moved ? moved : new concept();
 	concepts().insert(r);
 	return r;
@@ -36,7 +37,7 @@ static concept* referenced(ref r) {
 	return 0;
 }
 
-void dealloc(concept * r) {
+void dealloc(ref r) {
 	concept * referenced = intellect::level0::referenced(r);
 	if (referenced) {
 		throw still_referenced_by(r, referenced);
