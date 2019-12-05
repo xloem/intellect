@@ -5,6 +5,8 @@
 
 #include "../level-0/ref.hpp"
 
+#include <functional>
+
 namespace intellect {
 namespace level1 {
 
@@ -27,7 +29,38 @@ struct baseref : public level0::baseref<ref>
 
 	ref operator-(ref other) { return hyphenate(self.ptr(), other.ptr()); }
 
+	template <typename T>
+	void vset(ref const & type, T const & v) { self.set(type, level1::alloc(v)); }
+
+	template <typename... Ref>
+	std::function<ref(Ref...)> & fun() { return self.template val<std::function<ref(Ref...)>>(); }
+	template <typename... Ref>
+	void fun(std::function<ref(Ref...)> const & f) { val(f); }
+	template <typename... Ref>
+	void fun(std::function<void(Ref...)> const & f) { val(voidtoret(f)); }
+	template <typename... Ref>
+	void fget(ref const & type) { return self.template vget<std::function<ref(Ref...)>>(type); }
+	template <typename... Ref>
+	void fset(ref const & type, std::function<ref(Ref...)> f) { self.vset(type, f); }
+	template <typename... Ref>
+	void fset(ref const & type, std::function<void(Ref...)> f) { fset(type, voidtoret(f)); }
+
+	template <typename... Ref>
+	ref operator()(Ref... args) { return self.template fun<Ref...>()(args...); }
+
 	std::string dump(ref skipmarkertype, ref skipmarkertarget);
+
+private:
+	template <typename... Refs>
+	std::function<ref(Refs...)> voidtoret(std::function<void(Refs...)> f)
+	{
+		return [f](Refs... args) -> ref
+		{
+			std::initializer_list<ref const *>({&args...});
+			f(args...);
+			return concepts::nothing;
+		};
+	}
 };
 
 }

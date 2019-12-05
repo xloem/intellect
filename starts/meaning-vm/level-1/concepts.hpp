@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ref.hpp"
-#include "sugar.hpp"
 
 namespace intellect {
 namespace level1 {

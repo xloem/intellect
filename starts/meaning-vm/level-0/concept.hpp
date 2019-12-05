@@ -38,6 +38,9 @@ struct concept
 
 	template <typename T>
 	T & val() { return std::any_cast<T&>(data); }
+
+	template <typename T>
+	void val(T const & v) { data = v; }
 };
 
 }

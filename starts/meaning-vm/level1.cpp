@@ -14,6 +14,7 @@ int main()
 	decls(source, type, target);
 	decls(structure, function, argument, position);
 	decls(variable, provide);
+	decls(act);
 
 	(make-linked).link(
 		is, habit,
@@ -35,8 +36,30 @@ int main()
 		assumes, not-A-B-C-linked,
 		makes, A-B-C-linked
 	);
+	(make-linked).fset(
+		act,
+		(std::function<void(ref)>)[](ref args)
+		{
+			ref source = args.get("A");
+			ref type = args.get("B");
+			ref target = args.get("C");
+			std::cout << "Linking " << source.name() << " by " << type.name() << " to " << target.name() << std::endl;
+			source.link(type, target);
+		}
+	);
 
 	std::cout << (make-linked).dump("dumped", true) << std::endl;
+
+	decls(apple, fruit);
+	(make-linked).get(act)
+		(a(function-argument)
+		 .link(
+			 A, apple,
+			 B, is,
+			 C, fruit
+		));
+
+	std::cout << apple.dump("dumped", true) << std::endl;
 
 	return 0;
 }
