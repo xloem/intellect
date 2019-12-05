@@ -1,3 +1,7 @@
-Crying
-	Focusing on finding and using resources to learn from a
-	new bad thing.
+Happy
+	Focusing on a good thing.  Wanting it to repeat eventually.
+Sad
+	Focusing on a bad thing.  Wanting it to go better.
+Crying / Mourning
+	Focusing on learning from a bad thing. Wanting resources
+	to aid this.
