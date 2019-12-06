@@ -25,9 +25,9 @@ struct baseref : public level0::baseref<ref>
 
 	std::string const & name() const { return getname(self); }
 	operator std::string const &() const { return getname(self); }
-	operator char const *() const { return getname(self)->data.c_str(); }
+	explicit operator char const *() const { return getname(self)->data.c_str(); }
 
-	ref operator-(ref other) { return hyphenate(self.ptr(), other.ptr()); }
+	ref operator-(ref other) const { return hyphenate(self, other); }
 
 	template <typename T>
 	void vset(ref const & type, T const & v) { self.set(type, level1::alloc(v)); }
@@ -35,9 +35,9 @@ struct baseref : public level0::baseref<ref>
 	template <typename... Ref>
 	std::function<ref(Ref...)> & fun() { return self.template val<std::function<ref(Ref...)>>(); }
 	template <typename... Ref>
-	void fun(std::function<ref(Ref...)> const & f) { val(f); }
+	void fun(std::function<ref(Ref...)> const & f) { self.val(f); }
 	template <typename... Ref>
-	void fun(std::function<void(Ref...)> const & f) { val(voidtoret(f)); }
+	void fun(std::function<void(Ref...)> const & f) { self.val(voidtoret(f)); }
 	template <typename... Ref>
 	void fget(ref const & type) { return self.template vget<std::function<ref(Ref...)>>(type); }
 	template <typename... Ref>

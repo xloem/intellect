@@ -23,6 +23,12 @@ public:
 		}
 	}
 
+	baseref & operator=(concept *p)
+	{
+		self.p = p;
+		return self;
+	}
+
 	void link(ref const & type, ref const & target) { p->link(type.p, target.p); }
 	void unlink(ref const & type, ref const & target) { p->unlink(type.p, target.p); }
 	void unlink(ref const & type) { p->unlink(type.p); }
