@@ -3,11 +3,11 @@ LINK.o=$(LINK.cc)
 
 all: level0 level1 habit-starts/rhythm
 level0: level0.o liblevel0.a
-liblevel0.a: level-0/memorystore.o level-0/concept.o level-0/ref.o
-level1: level1.o liblevel1.a liblevel0.a
-liblevel1.a: level-1/ref.o level-1/sugar.o level-1/concepts.o level-1/funcs.o
+liblevel0.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp))
+level1: level1.o liblevel1.a
+liblevel1.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-1/*.cpp))
 
-habit-starts/rhythm: habit-starts/rhythm.o liblevel1.a liblevel0.a
+habit-starts/rhythm: habit-starts/rhythm.o liblevel1.a
 
 liblevel%.a: level-%/*.hpp
 %.a:
