@@ -18,7 +18,12 @@ be shrinking -- responding to failures after an expectation of success by
 pulling away.
 
 If we are a random expert at one thing, these successes and failures
-give us our value and danger to the larger group: hence emotion.
+give us our value and danger to the larger subgroup: hence emotion.  This
+relates also to our need to know we are needed.
+	Having significant permanent storage of events could significantly reduce
+	the impact of badness and failures, if those who aren't viewed as
+	contributing can be patient and still until they find safe relevence.
+	That would be a pattern for life on a blockchain.
 If we are already valuable due to perhaps rare knowledge, failures could be
 an important thing to repeat, to find rare successes.  Be determined, be confident.
 
