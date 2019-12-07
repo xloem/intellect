@@ -86,7 +86,7 @@ concept* concept::get(concept* type) const
 void concept::set(concept* type, concept* target)
 {
 	if (linked(type)) {
-		throw link_type_not_unique(selfref, type);
+		unlink(type);
 	}
 	link(type, target);
 }
