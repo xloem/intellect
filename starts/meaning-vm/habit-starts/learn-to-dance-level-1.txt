@@ -1,0 +1,89 @@
+'validate your reason for existence' relates directly to pattern learning.
+
+The validation is a pattern of what is good about us, most simplistically
+a reference to a past event we were involved in, where we contributed/succeeded.
+Preferably a pattern of us being able to reproduce good events.
+
+This is a way to learn to dance.
+
+Say we have a habit that has an unknown delay before firing, and we want to fire
+it in synchrony with an event.  Our goal is to produce our event within a smaller
+time window to the target event than in the past ("same time as").
+Good: time window is closer than ever before.
+
+need: history log to refer to good event.
+	please wait a little? expanding reference to good event into how-to-learn
+		need: behavior based on what-succeeded, what-failed
+		value metric?
+
+SO! we want to learn how to time an event.  We have some tools, for example:
+	- waiting for or until a given time
+	- getting the current time
+	- comparing two times
+We want to combine the tools in a way that makes the event happen at the time
+we want.
+	- doing something after the right time happens
+	- doing our event
+Since each habit has an unknown delay, we might play with delaying a certain
+time since the last event, until we find the right delay that works best for us
+most of the time.
+	Testing metric: runs when event is fired, measures time between
+	  event and right time.  if time is less than ever before, success.
+	  if time is significantly more than behavior's norm, failure.
+	Convert to English: try to have the event happen at the right time.
+		note metric will give random successes false status
+
+A successful approach would be to adjust the delay towards the difference by
+a small ratio.
+The most successful approach would be to use the time difference to adjust the
+delay precisely.
+	Ideally we would find solution #2 after trying solution #1.
+	The idea of 'moving towards' would adjust into 'moving the exact right
+	amount'.
+	In operators, this could be a development of the subtraction operator.
+	But using a value exactly is actually simpler than using a ratio of it.
+		So we can move from numbers towards ideas.
+		More.  Less.  More a lot?  Less a lot?  More a little?  Less a little?
+			Ideally we use learning strategies that facilitiate learning
+			how to learn in general.
+			That means summarizing and acting on the meaning of pattern structures.
+In reality, everything jitters a little bit.  Nothing is ever exactly the same.
+Things also grow and shrink over time.
+
+Habits look to be needed, to have value.
+As one ourselves, we look to relate to those that meet our needs, have value to
+us.
+The core habit, to learn, is the one that selects other habits and works with
+them.  Ideally it's an intermixing of existing habits.
+
+What might a winning habit's structure look like? say it is the perfect one.
+set to do 1ce on goal time:
+	ctx X
+	record time A
+	set to do 1ce on goal time:
+		record time B
+		trigger D1 for X
+	delay for C (X)
+	record time E
+	trigger D2 for X
+	When both D1 and D2 have been triggered for X:
+		calculate B - E, store in F
+		calculate F + C, provide as C for next context
+
+			will want to know which C is being used when we delay.
+			could be wrong C.
+
+			and we'll want to form structure promises ...
+			.. and map to meaning for operator
+				operator watches and understands as learning
+				develops, and provides labels for shared
+				understanding that develops.
+				operator will want generalization to happen
+				fast, so as to label shared meaning.
+				could also provide label-goals, and code must guess
+				towards goals, to get onto same page as operator.
+
+I think in structuring such a large habit out of parts, we would find a lot
+of learning relevence.
+		
+	
