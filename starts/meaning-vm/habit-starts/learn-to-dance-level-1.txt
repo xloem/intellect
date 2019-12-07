@@ -9,7 +9,7 @@ This is a way to learn to dance.
 Say we have a habit that has an unknown delay before firing, and we want to fire
 it in synchrony with an event.  Our goal is to produce our event within a smaller
 time window to the target event than in the past ("same time as").
-Good: time window is closer than ever before.
+Good: [usual?] time window is closer than ever before.
 
 need: history log to refer to good event.
 	please wait a little? expanding reference to good event into how-to-learn
@@ -87,3 +87,21 @@ I think in structuring such a large habit out of parts, we would find a lot
 of learning relevence.
 		
 	
+Let's try to make a good goal habit that doesn't use precise
+numbers.  This sets a norm of having more learning space around
+ideal solutions.
+
+rhythm is happening
+set to do 1ce at goal time:
+	ctx X
+	set to do 1ce on goal time:
+		set next-happened (local)
+	delay (a sequence of habits that do nothing)
+	if next-happened is set
+		remove something from delay
+	otherwise
+		add something to delay (wait for unspecified user-perceptible time, selected from discrete set)
+	provide adjusted delay to next context
+This appears much better.  Keeping the wait-set discrete
+helps give code some reason to look for more things
+related to when the event happens, to respond to.
