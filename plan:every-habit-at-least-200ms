@@ -1,0 +1,8 @@
+This helps assuage fears around something taking off without sharing learning
+common sense with humans, because some operator is too excited.
+	"Let's try building with our operator's car! lots of parts are in that!"
+
+Every habit or workable process step must delay at least 200ms before completing.
+This gives space for human perception, and forces the system to learn to be
+smart for real, rather than rapidly rote in a way that happens to work for
+something.
