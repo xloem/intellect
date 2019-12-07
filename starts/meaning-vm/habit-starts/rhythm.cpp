@@ -13,11 +13,15 @@
 
 using namespace intellect::level1;
 
+#define habitdelay \
+	static int thisdelay = (double(rand()) / RAND_MAX * 400000 + 200000); \
+	usleep(thisdelay); \
+
 int main()
 {
 
 	srand(time(0));
-	int micros = 900000 + double(rand()) / RAND_MAX * 200000;
+	int micros = 400000 + double(rand()) / RAND_MAX * 400000;
 	// do something, wait a constant (secret) time, and do it again.
 
 	// the time things take is usually not known in advance, especially
@@ -40,6 +44,7 @@ int main()
 	(next-habit).fun((std::function<ref(ref)>)
 	[=](ref self)
 	{
+		habitdelay;
 		ref ctx = self.get(context);
 		ref n = self.get(next);
 		n.set(context, ctx);
@@ -50,6 +55,7 @@ int main()
 	(start-habit).fun((std::function<ref(ref)>)
 	[=](ref self)
 	{
+		habitdelay;
 		ref ctx = self.get(context);
 		ref s = ctx.get(start);
 		ctx.set(active-habit, s);
@@ -60,6 +66,7 @@ int main()
 	(keep-doing-habit).fun((std::function<void(ref)>)
 	[=](ref self)
 	{
+		habitdelay;
 		ref ctx = self.get(context);
 		ref(start-habit)(self);
 
@@ -72,6 +79,7 @@ int main()
 	(beat-habit).fun((std::function<void(ref)>)
 	[=](ref self)
 	{
+		habitdelay;
 		int  & b = self.get(context).vget<int>(beat);
 		char const * beats[] = {
 			"A one!",
@@ -132,6 +140,7 @@ int main()
 	(wait-habit).fun((std::function<void(ref)>)
 	[=](ref self)
 	{
+		habitdelay;
 		usleep(micros);
 	});
 
@@ -140,6 +149,7 @@ int main()
 	(start-beat).fun((std::function<void(ref)>)
 	[=](ref self)
 	{
+		habitdelay;
 		self.get(context).vset(beat, int(0));
 		self.set(next, wait-habit);
 		(beat-habit).set(next, wait-habit);
