@@ -4,18 +4,11 @@
 // Ideally, a human would run the rhythm.
 
 #include "../level-1/level-1.hpp"
+#include "habit.hpp"
 
 #include <iostream>
 
-#include <unistd.h> // usleep(unsigned int usecs)
-#include <stdlib.h> // int rand(); void srand(int seed);
-#include <time.h> // int time(0);
-
 using namespace intellect::level1;
-
-#define habitdelay \
-	static int thisdelay = (double(rand()) / RAND_MAX * 400000 + 200000); \
-	usleep(thisdelay); \
 
 int main()
 {
@@ -29,7 +22,8 @@ int main()
 	// hence this time is kept secret, as this pattern is about learning
 	// to work with the timing of other processes.
 	
-	// four habits: output beat, wait, next-habit, and keep-doing
+	// six habits: next-habit, start-habit, keep-doing, output beat, wait, and start-beat
+	// not sure if one is redundant in there somewhere
 	
 	decls(active, habit, step);
 	decls(beat, wait, next, keep, doing);
@@ -37,50 +31,39 @@ int main()
 
 	// structure habit
 	// next -> habit that follows
-	// context -> data shared between habits
 
 #undef self
-	a(habit-step, next-habit);
-	(next-habit).fun((std::function<ref(ref)>)
-	[=](ref self)
+	ahabit(next-habit,
 	{
-		habitdelay;
-		ref ctx = self.get(context);
-		ref n = self.get(next);
-		n.set(context, ctx);
+		ref n = ctx.get(active-habit).get(next);
 		ctx.set(active-habit, n);
-		return n(n);
+		return n(ctx);
 	});
-	a(habit-step, start-habit);
-	(start-habit).fun((std::function<ref(ref)>)
-	[=](ref self)
+	ahabit(start-habit,
 	{
-		habitdelay;
-		ref ctx = self.get(context);
 		ref s = ctx.get(start);
 		ctx.set(active-habit, s);
-		s.set(context, ctx);
-		return s(s);
+		return s(ctx);
 	});
-	a(habit-step, keep-doing-habit);
-	(keep-doing-habit).fun((std::function<void(ref)>)
-	[=](ref self)
+	ahabit(keep-doing-habit,
 	{
-		habitdelay;
-		ref ctx = self.get(context);
-		ref(start-habit)(self);
+		ref(start-habit)(ctx);
 
 		while (true) {
-			ref(next-habit)(ctx.get(active-habit));
+			ref(next-habit)(ctx);
 		}
 	});
 
-	a(habit-step, beat-habit);
-	(beat-habit).fun((std::function<void(ref)>)
-	[=](ref self)
+	ahabit(start-beat,
 	{
-		habitdelay;
-		int  & b = self.get(context).vget<int>(beat);
+		ctx.vset(beat, int(0));
+		self.set(next, wait-habit);
+		(beat-habit).set(next, wait-habit);
+		(wait-habit).set(next, beat-habit);
+	});
+	ahabit(beat-habit,
+	{
+		int  & b = ctx.vget<int>(beat);
 		char const * beats[] = {
 			"A one!",
 			"and a two",
@@ -136,30 +119,14 @@ int main()
 		std::cout << beats[b] << std::endl;
 		b = (b + 1) % (sizeof(beats) / sizeof(*beats));
 	});
-	a(habit-step, wait-habit);
-	(wait-habit).fun((std::function<void(ref)>)
-	[=](ref self)
+	ahabit(wait-habit,
 	{
 		habitdelay;
 		usleep(micros);
 	});
 
 
-	a(habit-step, start-beat);
-	(start-beat).fun((std::function<void(ref)>)
-	[=](ref self)
-	{
-		habitdelay;
-		self.get(context).vset(beat, int(0));
-		self.set(next, wait-habit);
-		(beat-habit).set(next, wait-habit);
-		(wait-habit).set(next, beat-habit);
-	});
-
 	a(context, habit-context);
 	(habit-context).set(start, start-beat);
-
-	(keep-doing-habit).set(context, habit-context);
-
-	(keep-doing-habit)(keep-doing-habit);
+	(keep-doing-habit)(habit-context);
 }
