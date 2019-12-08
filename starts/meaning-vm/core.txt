@@ -1,0 +1,4 @@
+
+- the problem-parts used by solutions show the problem-similarities needed in trying to apply the solution-parts elsewhere.  this starts with a metric of when the approach can work.
+	THAT IS: once you find and simplify a solution, the problem structure the solution
+	         uses shows at least one way to generalize the problem.
