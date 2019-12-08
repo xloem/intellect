@@ -47,10 +47,10 @@ int main()
 	});
 	ahabit(keep-doing-habit,
 	{
-		ref(start-habit)(ctx);
+		(start-habit)(ctx);
 
 		while (true) {
-			ref(next-habit)(ctx);
+			(next-habit)(ctx);
 		}
 	});
 
