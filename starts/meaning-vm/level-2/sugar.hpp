@@ -1,10 +1,9 @@
 #pragma once
 
 #include <stdlib.h> // int rand(); void srand(int seed);
-#include <time.h> // int time(0);
+#include <time.h> // int time(0); int clock_gettime(CLOCK_REALTIME, struct timespec *tp{tv_sec,tv_nsec})
 #include <unistd.h> // usleep(unsigned int usecs)
 
-__attribute__ ((visibility ("hidden"))) int __seed = (srand(time(0)), time(0));
 #define habitdelay \
 	static int thisdelay = (double(rand()) / RAND_MAX * 400000 + 200000); \
 	usleep(thisdelay)
@@ -21,3 +20,10 @@ __attribute__ ((visibility ("hidden"))) int __seed = (srand(time(0)), time(0));
 		__VA_ARGS__ \
 		return intellect::level1::concepts::nothing; \
 	});
+
+// seed random number generator statically, for habitdelay
+namespace __internal {
+static struct timespec __tp;
+static int __timeres = clock_gettime(CLOCK_REALTIME, &__tp);
+static int __seed = (srand(__tp.tv_nsec), __tp.tv_nsec);
+}

@@ -4,7 +4,7 @@
 // Ideally, a human would run the rhythm.
 
 #include "../level-1/level-1.hpp"
-#include "habit.hpp"
+#include "../level-2/level-2.hpp"
 
 #include <iostream>
 
@@ -121,7 +121,6 @@ int main()
 	});
 	ahabit(wait-habit,
 	{
-		habitdelay;
 		usleep(micros);
 	});
 
