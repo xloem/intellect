@@ -29,6 +29,14 @@ static auto & namestruct()
 	return namestruct;
 }
 
+void givename(concept* con, std::string const & name)
+{
+	auto & ns = namestruct();
+	level0::ref namestr = level0::alloc(name);
+	ns.conceptsByName.emplace(namestr.val<std::string>(), con);
+	con.set(ns.nameref, namestr);
+}
+
 concept* getnamed(std::string const & name)
 {
 	auto & ns = namestruct();
