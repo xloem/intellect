@@ -1,4 +1,4 @@
-CXXFLAGS=-Wall -Werror -std=c++17 -fno-operator-names -ggdb -O0
+CXXFLAGS=-Wall -Werror -std=gnu++17 -fno-operator-names -ggdb -O0
 LINK.o=$(LINK.cc)
 
 all: level0 level1 habit-starts/rhythm
@@ -11,10 +11,16 @@ liblevel2.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.
 
 habit-starts/rhythm: habit-starts/rhythm.o liblevel2.a
 
+%.o: %.ii
+	$(CXX) $(CXXFLAGS) -c $^ -o $@
+%.ii: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $^ -o $@
+.INTERMEDIATE: $(patsubst %.cpp,%.ii,$(wildcard */*.cpp *.cpp))
+
 liblevel%.a: level-%/*.hpp
 %.a:
 	ar ru $@ $^
 	ranlib $@
 
 clean:
-	-rm *.o level? *.a */*.o
+	-rm *.ii *.o level? *.a */*.o */*.ii

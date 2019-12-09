@@ -19,6 +19,8 @@ struct baseref : public level1::baseref<ref>
 	// thread-local context
 	static ref context() { return level2::context(); }
 
+	template <typename... Refs>
+	ref operator()(Refs... args) { return level2::dohabit(self, {args.ptr()...}); }
 };
 
 }

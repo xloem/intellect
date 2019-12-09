@@ -32,35 +32,34 @@ int main()
 	// next -> habit that follows
 
 #undef self
-	ahabit(next-habit,
+	ahabit(next-habit, (),
 	{
 		ref n = ctx[active-habit].get(next);
 		ctx.set(active-habit, n);
 		return n();
 	});
-	ahabit(start-habit,
+	ahabit(start-habit, ((start,s)),
 	{
-		ref s = ctx[start];
 		ctx.set(active-habit, s);
 		return s();
 	});
-	ahabit(keep-doing-habit,
+	ahabit(keep-doing-habit, ((start,s)),
 	{
-		(start-habit)();
+		(start-habit)(s);
 
 		while (true) {
 			(next-habit)();
 		}
 	});
 
-	ahabit(start-beat,
+	ahabit(start-beat, (),
 	{
 		ctx.vset(beat, int(0));
 		self.set(next, wait-habit);
 		(beat-habit).set(next, wait-habit);
 		(wait-habit).set(next, beat-habit);
 	});
-	ahabit(beat-habit,
+	ahabit(beat-habit, (),
 	{
 		int  & b = ctx.vget<int>(beat);
 		char const * beats[] = {
@@ -118,12 +117,10 @@ int main()
 		std::cout << beats[b] << std::endl;
 		b = (b + 1) % (sizeof(beats) / sizeof(*beats));
 	});
-	ahabit(wait-habit,
+	ahabit(wait-habit, (),
 	{
 		usleep(micros);
 	});
 
-
-	ref::context().set(start, start-beat);
-	(keep-doing-habit)();
+	(keep-doing-habit)(start-beat);
 }
