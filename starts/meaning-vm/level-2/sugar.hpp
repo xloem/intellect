@@ -24,15 +24,14 @@
 	intellect::level2::makehabit( \
 		name, \
 		{_macro_call(_macro_for_each_parens, _macro_habit_argnameref _macro_comma_remove_parens(argnametoklist))}, \
-		(std::function<void()>) \
-	[=]() \
+		(std::function<void(ref)>) \
+	[=](ref ctx) \
 	{ \
 		{ \
 			static int delay = (double(rand()) / RAND_MAX * 400000 + 200000); \
 			usleep(delay); \
 		} \
 		ref self = name; (void)self; \
-		ref ctx = intellect::level2::ref::context(); (void) ctx;\
 		_macro_call(_macro_for_each_parens, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
 		__VA_ARGS__ \
 	});

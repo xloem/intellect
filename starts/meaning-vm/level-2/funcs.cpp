@@ -17,7 +17,7 @@ ref context()
 	return ctx;
 }
 
-ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void()> code)
+ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(ref)> code)
 {
 	ref habit = level1::a(habit, name);
 	ref posarg = habit;
@@ -46,7 +46,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	if (posarg.linked(next-positional-argument)) {
 		throw std::invalid_argument("wrong number of arguments to habit");
 	}
-	ref ret = habit.fun<>()();
+	ref ret = habit.fun<ref>()(ref::context());
 	posarg = habit;
 	while (posarg.linked(next-positional-argument)) {
 		posarg = posarg[next-positional-argument];

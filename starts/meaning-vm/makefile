@@ -15,7 +15,7 @@ habit-starts/rhythm: habit-starts/rhythm.o liblevel2.a
 	$(CXX) $(CXXFLAGS) -c $^ -o $@
 %.ii: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $^ -o $@
-.INTERMEDIATE: $(patsubst %.cpp,%.ii,$(wildcard */*.cpp *.cpp))
+.INTERMEDIATE: $(patsubst %.cpp,%.ii,$(wildcard */*.cpp) $(wildcard *.cpp))
 
 liblevel%.a: level-%/*.hpp
 %.a:
