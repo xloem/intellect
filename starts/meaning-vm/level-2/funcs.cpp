@@ -11,7 +11,7 @@ namespace level2 {
 
 using namespace concepts;
 
-ref context()
+ref & context()
 {
 	static thread_local auto ctx = a(concepts::context);
 	return ctx;
@@ -19,7 +19,7 @@ ref context()
 
 ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(ref)> code)
 {
-	ref habit = level1::a(habit, name);
+	ref habit = level1::a(concepts::habit, name);
 	ref posarg = habit;
 	for (auto argname : argnames) {
 		ref nextarg = a(positional-argument);
