@@ -89,5 +89,28 @@ concept* hyphenate(concept* a, concept* b)
 	return getnamed(getname(a) + "-" + getname(b));
 }
 
+std::string dump(concept* what, concept* skipmarkertype, concept* skipmarkertarget)
+{
+	if (what->linked(skipmarkertype, skipmarkertarget)) {
+		return {};
+	}
+	std::string ret;
+	for (auto & link : ref(what).links()) {
+		if (link.first == concepts::name) { continue; }
+		if (ret.size() == 0) {
+			ret = ref(what).name() + ":\n";
+		}
+		ret += "  " + link.first.name() + ": " + link.second.name() + "\n";
+	}
+	what->link(skipmarkertype, skipmarkertarget);
+	for (auto & link : ref(what).links()) {
+		if (link.first.ptr() == skipmarkertype && link.second.ptr() == skipmarkertarget) {
+			continue;
+		}
+		ret += dump(link.second, skipmarkertype, skipmarkertarget);
+	}
+	return ret;
+}
+
 }
 }

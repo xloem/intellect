@@ -20,5 +20,7 @@ concept* hyphenate(concept* a, concept* b);
 
 concept* alloc(std::any val);
 
+std::string dump(concept * what, concept * skipmarkertype, concept * skipmarkertarget);
+
 }
 }
