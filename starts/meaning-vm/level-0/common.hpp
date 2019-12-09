@@ -28,9 +28,14 @@ struct concept;
 struct ref;
 
 }
-namespace level1 { struct ref; template <typename> struct vref; }
-namespace level2 { struct ref; template <typename> struct vref; }
-namespace level3 { struct ref; template <typename> struct vref; }
-namespace level4 { struct ref; template <typename> struct vref; }
-namespace level5 { struct ref; template <typename> struct vref; }
+namespace level1 { struct ref; }
+namespace level2 { struct ref; }
+namespace level3 { struct ref; }
+namespace level4 { struct ref; }
+namespace level5 { struct ref; }
+namespace level6 { struct ref; }
+namespace level7 { struct ref; }
+namespace level8 { struct ref; }
+namespace level9 { struct ref; }
+
 }

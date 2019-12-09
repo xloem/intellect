@@ -74,6 +74,10 @@ public:
 	operator level3::ref &() { return *reinterpret_cast<level3::ref*>(this); }
 	operator level4::ref &() { return *reinterpret_cast<level4::ref*>(this); }
 	operator level5::ref &() { return *reinterpret_cast<level5::ref*>(this); }
+	operator level6::ref &() { return *reinterpret_cast<level6::ref*>(this); }
+	operator level7::ref &() { return *reinterpret_cast<level7::ref*>(this); }
+	operator level8::ref &() { return *reinterpret_cast<level8::ref*>(this); }
+	operator level9::ref &() { return *reinterpret_cast<level9::ref*>(this); }
 
 	bool operator==(ref const & other) const { return self.p == other.p; }
 	bool operator!=(ref const & other) const { return self.p == other.p; }

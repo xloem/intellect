@@ -8,14 +8,13 @@
 
 #include <iostream>
 
-using namespace intellect::level1;
+using namespace intellect::level2;
 
 int main()
 {
 
-	srand(time(0));
-	int micros = 400000 + double(rand()) / RAND_MAX * 400000;
 	// do something, wait a constant (secret) time, and do it again.
+	int micros = 400000 + double(rand()) / RAND_MAX * 400000;
 
 	// the time things take is usually not known in advance, especially
 	// for events one is still learning about.

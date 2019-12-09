@@ -12,7 +12,7 @@
 #define ahabit(name, ...) \
 	a(habit, name); \
 	(name).fun((std::function<ref(ref)>) \
-	[=](ref ctx) \
+	[=](ref ctx) -> ref\
 	{ \
 		habitdelay; \
 		ref self = name; \
@@ -20,6 +20,25 @@
 		__VA_ARGS__ \
 		return intellect::level1::concepts::nothing; \
 	});
+
+// thinking on handling arguments with less boilerplate, more positional sugar
+// transfer argslist to a context for calling?
+// possibly transfer argslist to a function signature for the call
+// transfer context to the argslist for handling call
+// for each item of argslist, make a local variable, and set it to its value
+/*
+#define _positionalhabitarg(local, arg) \
+	ref local = ctx.get(arg);
+#define _ph
+
+#define apositionalhabit(name, argslist, ...) \
+	a(habit, name); \
+	(name).fun((std::function<ref(ref)>) \
+	[=](ref ctx) \
+	{ \
+		\
+	});
+*/
 
 // seed random number generator statically, for habitdelay
 namespace __internal {

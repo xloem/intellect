@@ -22,7 +22,7 @@ namespace internal {
 	void init_ref_names(std::string names, T &... refrefs)
 	{
 		std::stringstream ss(names);
-		ref* refptrs[] = {&refrefs...};
+		ref* refptrs[] = {&static_cast<ref&>(refrefs)...};
 		for (std::size_t i = 0; i < sizeof...(refrefs); ++ i) {
 			std::string name;
 			ss >> name;
