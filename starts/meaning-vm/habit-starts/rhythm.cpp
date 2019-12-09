@@ -34,22 +34,22 @@ int main()
 #undef self
 	ahabit(next-habit,
 	{
-		ref n = ctx.get(active-habit).get(next);
+		ref n = ctx[active-habit].get(next);
 		ctx.set(active-habit, n);
-		return n(ctx);
+		return n();
 	});
 	ahabit(start-habit,
 	{
-		ref s = ctx.get(start);
+		ref s = ctx[start];
 		ctx.set(active-habit, s);
-		return s(ctx);
+		return s();
 	});
 	ahabit(keep-doing-habit,
 	{
-		(start-habit)(ctx);
+		(start-habit)();
 
 		while (true) {
-			(next-habit)(ctx);
+			(next-habit)();
 		}
 	});
 
@@ -124,7 +124,6 @@ int main()
 	});
 
 
-	a(context, habit-context);
-	(habit-context).set(start, start-beat);
-	(keep-doing-habit)(habit-context);
+	ref::context().set(start, start-beat);
+	(keep-doing-habit)();
 }

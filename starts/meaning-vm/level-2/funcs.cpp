@@ -1,13 +1,16 @@
-#include "funcs.hp"
+#include "funcs.hpp"
 
 #include "../level-1/sugar.hpp"
+#include "ref.hpp"
+
 
 namespace intellect {
+using namespace level1;
 namespace level2 {
 
-level2::ref context()
+ref context()
 {
-	static thread_local level1::ref ctx = level1::a("context");
+	static thread_local auto ctx = a("context");
 	return ctx;
 }
 

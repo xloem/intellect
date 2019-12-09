@@ -11,12 +11,12 @@
 #undef self
 #define ahabit(name, ...) \
 	a(habit, name); \
-	(name).fun((std::function<ref(ref)>) \
-	[=](ref ctx) -> ref\
+	(name).fun((std::function<void()>) \
+	[=]() -> ref\
 	{ \
 		habitdelay; \
-		ref self = name; \
-		(void)self; \
+		ref self = name; (void)self; \
+		ref ctx = intellect::level2::ref::context(); (void) ctx;\
 		__VA_ARGS__ \
 		return intellect::level1::concepts::nothing; \
 	});
