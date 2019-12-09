@@ -38,11 +38,11 @@ int main()
 	);
 	(make-linked).fset(
 		act,
-		(std::function<void(ref)>)[](ref args)
+		(std::function<void(ref)>)[&](ref args)
 		{
-			ref source = args.get("A");
-			ref type = args.get("B");
-			ref target = args.get("C");
+			ref source = args[A];
+			ref type = args[B];
+			ref target = args[C];
 			std::cout << "Linking " << source.name() << " by " << type.name() << " to " << target.name() << std::endl;
 			source.link(type, target);
 		}
@@ -51,7 +51,7 @@ int main()
 	std::cout << (make-linked).dump("dumped", true) << std::endl;
 
 	decls(apple, fruit);
-	(make-linked).get(act)
+	(make-linked)[act]
 		(a(function-argument)
 		 .link(
 			 A, apple,

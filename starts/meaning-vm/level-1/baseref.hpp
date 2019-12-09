@@ -28,6 +28,7 @@ struct baseref : public level0::baseref<ref>
 	explicit operator char const *() const { return getname(self)->data.c_str(); }
 
 	ref operator-(ref other) const { return hyphenate(self, other); }
+	ref operator[](ref subref) const { return self.get(subref); }
 
 	template <typename T>
 	void vset(ref const & type, T const & v) { self.set(type, level1::alloc(v)); }
