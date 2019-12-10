@@ -18,7 +18,7 @@ bool isa(concept* member, concept* group);
 
 concept* hyphenate(concept* a, concept* b);
 
-concept* alloc(std::any val);
+concept* alloc(concept* allocator, std::any val);
 
 std::string dump(concept * what, concept * skipmarkertype, concept * skipmarkertarget);
 

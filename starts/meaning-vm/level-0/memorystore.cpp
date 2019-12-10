@@ -8,21 +8,66 @@
 namespace intellect {
 namespace level0 {
 
-static auto & concepts()
+static auto & index()
 {
-	static std::unordered_set<ref, std::hash<concept*>> concepts;
-	return concepts;
+	static std::unordered_set<ref, std::hash<concept*>> index;
+	return index;
 }
 
-ref alloc(std::any data) {
+
+namespace concepts {
+	ref allocator() { static ref ret = new concept(); return ret; };
+	ref allocates() { static ref ret = new concept(); return ret; };
+	ref allocations() { static ref ret = new concept(); return ret; };
+	ref level0allocations() { static ref ret = new concept(); return ret; };
+}
+
+struct init { init()
+{
+	concepts::allocator().link(concepts::allocator(), concepts::level0allocations());
+	concepts::level0allocations().link(concepts::allocates(), concepts::allocator());
+	index().insert(concepts::allocator());
+
+	concepts::allocates().link(concepts::allocator(), concepts::level0allocations());
+	concepts::level0allocations().link(concepts::allocates(), concepts::allocates());
+	index().insert(concepts::allocates());
+
+	concepts::allocations().link(concepts::allocator(), concepts::level0allocations());
+	concepts::level0allocations().link(concepts::allocates(), concepts::allocations());
+	index().insert(concepts::allocations());
+
+	concepts::level0allocations().link(concepts::allocator(), concepts::level0allocations());
+	concepts::level0allocations().link(concepts::allocates(), concepts::level0allocations());
+	index().insert(concepts::level0allocations());
+} } _init;
+
+ref alloc(ref source, std::any data)
+{
 	concept * r = new concept();
 	r->data = data;
-	concepts().insert(r);
+	alloc((ref)r, source);
+	index().insert(r);
 	return r;
 }
 
-static concept* referenced(ref r) {
-	for (ref r2 : concepts()) {
+void alloc(ref r, ref source)
+{
+	r.link(concepts::allocator(), source);
+	source.link(concepts::allocates(), r);
+}
+
+void realloc(ref r, ref newsource)
+{
+	ref oldsource = r.get(concepts::allocator());
+	alloc(r, newsource);
+	dealloc(r, oldsource);
+}
+
+static concept* referenced(ref r, ref source) {
+	for (ref r2 : index()) {
+		if (r2 == source) {
+			continue;
+		}
 		if (r2 == r) {
 			continue;
 		}
@@ -38,28 +83,33 @@ static concept* referenced(ref r) {
 	return 0;
 }
 
-void dealloc(ref r) {
-	concept * referenced = intellect::level0::referenced(r);
-	if (referenced) {
-		throw still_referenced_by(r, referenced);
+void dealloc(ref r, ref source) {
+	auto it = index().find(r);
+	if (it == index().end()) { throw no_such_concept(r); }
+
+	source.unlink(concepts::allocates(), r);
+	r.unlink(concepts::allocator(), source);
+	if (r.linked(concepts::allocator())) { return; }
+
+	index().erase(it);
+
+	auto ours = r.getAll(concepts::allocates());
+	for (auto allocation : ours) {
+		dealloc(allocation, r);
 	}
-	for (
-		auto it = concepts().begin();
-		it != concepts().end();
-		++ it)
-	{
-		if (*it == r) {
-			concepts().erase(it);
-			delete (concept*)r;
-			return;
+
+	for (auto ghost : ours) {
+		concept * referenced = intellect::level0::referenced(ghost, source);
+		if (referenced) {
+			throw still_referenced_by(ghost, referenced);
 		}
 	}
-	throw no_such_concept(r);
+	delete (concept*)r;
 }
 
 std::size_t allocated()
 {
-	return concepts().size();
+	return index().size();
 }
 
 }

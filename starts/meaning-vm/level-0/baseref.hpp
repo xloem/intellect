@@ -57,7 +57,7 @@ public:
 	template <typename T>
 	T& vget(ref const & type) const { return p->vget<T>(type.p); }
 	template <typename T>
-	void vset(ref const & type, T const & v) { p->set(type.p, level0::alloc(v)); }
+	void vset(ref const & type, T const & v) { p->set(type.p, level0::alloc(self, v)); }
 
 	template <typename T>
 	T& val() { return p->val<T>(); }
@@ -100,7 +100,7 @@ private:
 		bool operator!=(mutit const & other) const { return self.it != other.it; }
 
 		val & operator*() { return *(val*)&self.it.operator*(); }
-		val & operator->() { return *(val*)&self.it.operator->(); }
+		val * operator->() { return (val*)self.it.operator->(); }
 
 	private:
 		It it;

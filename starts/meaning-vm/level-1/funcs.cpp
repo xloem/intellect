@@ -19,9 +19,9 @@ static auto & namestruct()
 		std::unordered_map<std::string,ref,std::hash<std::string>,std::equal_to<std::string>> conceptsByName;
 		ref nameref;
 		name_t()
-		: nameref(level0::alloc())
+		: nameref(level0::alloc(level0::concepts::allocations()))
 		{
-			level0::ref namestr = alloc((std::string)("name"));
+			level0::ref namestr = level0::alloc(nameref.ptr(), (std::string)("name"));
 			nameref.set(nameref, namestr);
 			conceptsByName.emplace(namestr.val<std::string>(), nameref);
 		}
@@ -32,9 +32,9 @@ static auto & namestruct()
 void givename(concept* con, std::string const & name)
 {
 	auto & ns = namestruct();
-	level0::ref namestr = level0::alloc(name);
+	level0::ref namestr = level0::alloc(con, name);
 	ns.conceptsByName.emplace(namestr.val<std::string>(), con);
-	con.set(ns.nameref, namestr);
+	con->set(ns.nameref, namestr);
 }
 
 concept* getnamed(std::string const & name)
@@ -44,10 +44,8 @@ concept* getnamed(std::string const & name)
 	if (res != ns.conceptsByName.end()) {
 		return res->second;
 	} else {
-		level1::ref con = level0::alloc();
-		level0::ref namestr = level0::alloc(name);
-		ns.conceptsByName.emplace(namestr.val<std::string>(), con);
-		con.set(ns.nameref, namestr);
+		level1::ref con = level0::alloc(level0::concepts::allocations());
+		givename(con, name);
 		return con.ptr();
 	}
 }
@@ -71,10 +69,9 @@ bool isa(concept* member, concept* group)
 	return false;
 }
 
-concept* alloc(std::any val)
+concept* alloc(concept* allocator, std::any val)
 {
-
-	ref ret = level0::alloc(val);
+	ref ret = level0::alloc(allocator, val);
 	std::stringstream ss;
 	ss << val.type().name() << "(";
 	if (false);
@@ -88,7 +85,7 @@ concept* alloc(std::any val)
 #undef t
 	else { ss << "?"; }
 	ss << ")";
-	ret.link(concepts::name, level0::alloc(ss.str()));
+	ret.link(concepts::name, level0::alloc(ret, ss.str()));
 	return ret;
 }
 
@@ -104,6 +101,7 @@ std::string dump(concept* what, concept* skipmarkertype, concept* skipmarkertarg
 	}
 	std::string ret;
 	for (auto & link : ref(what).links()) {
+		if (link.first.linked(level0::concepts::allocator(), level0::concepts::level0allocations())) { continue; }
 		if (link.first == concepts::name) { continue; }
 		if (ret.size() == 0) {
 			ret = ref(what).name() + ":\n";
@@ -112,6 +110,7 @@ std::string dump(concept* what, concept* skipmarkertype, concept* skipmarkertarg
 	}
 	what->link(skipmarkertype, skipmarkertarget);
 	for (auto & link : ref(what).links()) {
+		if (link.first.linked(level0::concepts::allocator(), level0::concepts::level0allocations())) { continue; }
 		if (link.first.ptr() == skipmarkertype && link.second.ptr() == skipmarkertarget) {
 			continue;
 		}

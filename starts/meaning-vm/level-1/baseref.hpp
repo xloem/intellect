@@ -31,7 +31,7 @@ struct baseref : public level0::baseref<ref>
 	ref operator[](ref subref) const { return self.get(subref); }
 
 	template <typename T>
-	void vset(ref const & type, T const & v) { self.set(type, level1::alloc(v)); }
+	void vset(ref const & type, T const & v) { self.set(type, level1::alloc(level0::concepts::allocations(), v)); }
 
 	template <typename... Ref>
 	std::function<ref(Ref...)> & fun() { return self.template val<std::function<ref(Ref...)>>(); }
