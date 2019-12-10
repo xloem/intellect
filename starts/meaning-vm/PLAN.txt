@@ -11,6 +11,7 @@ a habit that produces a descriptive structure of the last link made,
 outputs a log whenever you do something, redoes everything you do
 but with all arguments wrapped in a structure, or does the same thing
 as you but with a different set of inner habits.
+	- work with me to annotate every habit with enough information to plan around it
 
 Level 0 should be low level enough to provide for arbitrary flexibility.
 There shouldn't be decision-making challenges with regard to exposing
