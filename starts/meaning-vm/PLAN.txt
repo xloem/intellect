@@ -6,7 +6,10 @@ The learning process involves using existing heuristics and habits, to
 produce better heuristics and habits to use.
 
 The process to learn is the system itself: for example, what norms can we
-establish to keep our memory use bounded while we run.
+establish to keep our memory use bounded while we run.  Or, craft
+a habit that produces a descriptive structure of the last link made. Or,
+find a way to redo everything you do, that has the same results but passes
+arguments wrapped in a structure.
 
 Level 0 should be low level enough to provide for arbitrary flexibility.
 There shouldn't be decision-making challenges with regard to exposing
