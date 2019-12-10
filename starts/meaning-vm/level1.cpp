@@ -65,7 +65,7 @@ int main()
 	std::cout << apple.dump("dumped", true) << std::endl;
 
 	std::cout << intellect::level0::allocated() << " allocated" << std::endl;
-	intellect::level0::dealloc(intellect::level0::concepts::allocations(), intellect::level0::concepts::allocations());
+	intellect::level0::dealloc(intellect::level0::concepts::allocations(), intellect::level0::concepts::level0allocations());
 	std::cout << intellect::level0::allocated() << " allocated" << std::endl;
 
 	return 0;

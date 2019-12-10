@@ -3,50 +3,53 @@
 #include "errors.hpp"
 #include "ref.hpp"
 
-#include <unordered_set>
+#include <memory>
+#include <unordered_map>
 
 namespace intellect {
 namespace level0 {
 
 static auto & index()
 {
-	static std::unordered_set<ref, std::hash<concept*>> index;
+	static std::unordered_map<ref, std::unique_ptr<concept>, std::hash<concept*>> index;
 	return index;
 }
 
 
 namespace concepts {
-	ref allocator() { static ref ret = new concept(); return ret; };
-	ref allocates() { static ref ret = new concept(); return ret; };
-	ref allocations() { static ref ret = new concept(); return ret; };
-	ref level0allocations() { static ref ret = new concept(); return ret; };
+	ref allocator() { static ref ret = basic_alloc(); return ret; };
+	ref allocates() { static ref ret = basic_alloc(); return ret; };
+	ref allocations() { static ref ret = basic_alloc(); return ret; };
+	ref level0allocations() { static ref ret = basic_alloc(); return ret; };
 }
 
 struct init { init()
 {
 	concepts::allocator().link(concepts::allocator(), concepts::level0allocations());
 	concepts::level0allocations().link(concepts::allocates(), concepts::allocator());
-	index().insert(concepts::allocator());
 
 	concepts::allocates().link(concepts::allocator(), concepts::level0allocations());
 	concepts::level0allocations().link(concepts::allocates(), concepts::allocates());
-	index().insert(concepts::allocates());
 
 	concepts::allocations().link(concepts::allocator(), concepts::level0allocations());
 	concepts::level0allocations().link(concepts::allocates(), concepts::allocations());
-	index().insert(concepts::allocations());
 
 	concepts::level0allocations().link(concepts::allocator(), concepts::level0allocations());
 	concepts::level0allocations().link(concepts::allocates(), concepts::level0allocations());
-	index().insert(concepts::level0allocations());
 } } _init;
+
+ref basic_alloc(std::any data)
+{
+	ref r = new concept();
+	r.ptr()->data = data;
+	index().emplace(r, r.ptr());
+	return r;
+}
 
 ref alloc(ref source, std::any data)
 {
-	concept * r = new concept();
-	r->data = data;
-	alloc((ref)r, source);
-	index().insert(r);
+	ref r = basic_alloc(data);
+	alloc(r, source);
 	return r;
 }
 
@@ -63,9 +66,10 @@ void realloc(ref r, ref newsource)
 	dealloc(r, oldsource);
 }
 
-static concept* referenced(ref r, ref source) {
-	for (ref r2 : index()) {
-		if (r2 == source) {
+static concept* referenced(ref r, concept* source = 0) {
+	for (auto & r2pair : index()) {
+		ref r2 = r2pair.first;
+		if (r2.ptr() == source) {
 			continue;
 		}
 		if (r2 == r) {
@@ -83,7 +87,63 @@ static concept* referenced(ref r, ref source) {
 	return 0;
 }
 
-void dealloc(ref r, ref source) {
+void basic_dealloc(ref r)
+{
+	auto it = index().find(r);
+	if (it == index().end()) { throw no_such_concept(r); }
+
+	concept * referenced = intellect::level0::referenced(r);
+	if (referenced) {
+		throw still_referenced_by(r, referenced);
+	}
+
+	index().erase(it);
+}
+
+void dealloc_from(ref source)
+{
+	std::remove_reference<decltype(index())>::type forgotten;
+
+	auto ours = source.getAll(concepts::allocates());
+	for (auto allocation : ours) {
+		source.unlink(concepts::allocates(), allocation);
+		allocation.unlink(concepts::allocator(), source);
+		if (allocation.linked(concepts::allocator())) { continue; }
+
+		auto it = index().find(allocation);
+		if (it != index().end()) {
+			forgotten.insert(index().extract(it));
+		}
+	}
+	try {
+		for (auto allocation : ours ) {
+			if (allocation.linked(concepts::allocates())) {
+				dealloc_from(allocation);
+			}
+		}
+		for (auto ghost : ours) {
+			concept * referenced = intellect::level0::referenced(ghost, source);
+			if (referenced) {
+				throw still_referenced_by(ghost, referenced);
+			}
+		}
+	} catch(...) {
+		// NOTE: this doesn't rebuild deallocated subgroups, but that could be done
+		// by returning them.
+		index().merge(forgotten);
+		for (auto allocation : ours) {
+			source.link(concepts::allocates(), allocation);
+			allocation.link(concepts::allocator(), source);
+		}
+		throw;
+	}
+
+	// concepts in forgotten will be deallocated when they leave scope
+	// note: scoped allocation is just a plan to forget (at the end of a { } block)
+}
+
+void dealloc(ref r, ref source)
+{
 	auto it = index().find(r);
 	if (it == index().end()) { throw no_such_concept(r); }
 
@@ -91,20 +151,18 @@ void dealloc(ref r, ref source) {
 	r.unlink(concepts::allocator(), source);
 	if (r.linked(concepts::allocator())) { return; }
 
-	index().erase(it);
-
-	auto ours = r.getAll(concepts::allocates());
-	for (auto allocation : ours) {
-		dealloc(allocation, r);
-	}
-
-	for (auto ghost : ours) {
-		concept * referenced = intellect::level0::referenced(ghost, source);
+	try {
+		dealloc_from(r);
+		concept * referenced = intellect::level0::referenced(r, source);
 		if (referenced) {
-			throw still_referenced_by(ghost, referenced);
+			throw still_referenced_by(r, referenced);
 		}
+
+		index().erase(it);
+	} catch(...) {
+		source.link(concepts::allocates(), r);
+		r.link(concepts::allocator(), source);
 	}
-	delete (concept*)r;
 }
 
 std::size_t allocated()

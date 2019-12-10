@@ -9,6 +9,8 @@ using namespace intellect::level0;
 
 int main()
 {
+	std::cout << allocated() << " allocated" << std::endl;
+
 	ref store = alloc(concepts::allocations()); out(store);
 	ref a = alloc(store); out(a);
 	ref b = alloc(store); out(b);
