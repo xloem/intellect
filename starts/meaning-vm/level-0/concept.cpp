@@ -12,6 +12,7 @@ concept* concept::id()
 
 void concept::link(concept* type, concept* target)
 {
+	if (type == 0 || target == 0) { throw null_reference(); }
 	links.insert({type, target});
 }
 

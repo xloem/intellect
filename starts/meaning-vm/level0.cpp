@@ -5,17 +5,23 @@
 
 using namespace intellect::level0;
 
+#define out(name) std::cout << " " #name ":" << (long)name.ptr()
+
 int main()
 {
-	ref a = alloc();
-	ref b = alloc();
-	ref c = alloc();
-	ref d = alloc();
-	ref e = alloc();
-	auto numlink = alloc();
-	auto codelink = alloc();
+	std::cout << allocated() << " allocated" << std::endl;
 
-	ref skip = alloc();
+	ref store = alloc(concepts::allocations()); out(store);
+	ref a = alloc(store); out(a);
+	ref b = alloc(store); out(b);
+	ref c = alloc(store); out(c);
+	ref d = alloc(store); out(d);
+	ref e = alloc(store); out(e);
+	auto numlink = alloc(a); out(numlink);
+	auto codelink = alloc(a); out(codelink);
+
+	ref skip = alloc(store); out(skip);
+	std::cout << std::endl;
 	
 	a.link(
 		b, c,
@@ -37,18 +43,8 @@ int main()
 	std::cout << allocated() << " allocated" << std::endl;
 
 	e.unlink(b, a);
-	auto num = a.get(numlink);
-	auto code = a.get(codelink);
-	dealloc(a);
-	dealloc(num);
-	dealloc(code);
-	dealloc(numlink);
-	dealloc(codelink);
-	dealloc(c);
-	dealloc(e);
-	dealloc(b);
-	dealloc(d);
-	dealloc(skip);
+	//dealloc(a, store);
+	dealloc(store, concepts::allocations());
 
 	std::cout << allocated() << " allocated" << std::endl;
 

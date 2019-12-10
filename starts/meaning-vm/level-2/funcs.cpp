@@ -40,7 +40,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 			throw std::invalid_argument("wrong number of arguments to habit");
 		}
 		posarg = posarg[next-positional-argument];
-		// TODO: subcontexts
+		// TODO: subcontexts or call instances
 		ref::context().set(posarg[argument], arg);
 	}
 	if (posarg.linked(next-positional-argument)) {

@@ -9,6 +9,7 @@ ref is("is");
 ref anonymous("anonymous");
 ref link("link");
 ref name("name");
+ref allocation("allocation"), part("part"), group("group");
 
 }
 }

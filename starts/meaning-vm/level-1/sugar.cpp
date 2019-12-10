@@ -49,15 +49,17 @@ ref movetoname(ref anonymous, ref name)
 	// information is not available at this level.
 	bool nonempty = false;
 	for (auto & l : name.links()) {
+		if (l.first.linked(level0::concepts::allocator(), level0::concepts::level0allocations())) { continue; }
 		if (l.first == concepts::name) { continue; }
 		nonempty = true;
 	}
 	if (nonempty) {
 		for (auto & link : anonymous.links()) {
 			if (link.first == concepts::is && link.second == concepts::anonymous) { continue; }
+			if (link.first.linked(level0::concepts::allocator(), level0::concepts::level0allocations())) { continue; }
 			if (link.first == concepts::name) { continue; }
 			if (!name.linked(link.first, link.second)) {
-				throw std::logic_error(name.name() + " already defined otherwise from " + anonymous.get(concepts::is).name());
+				throw std::logic_error(name.name() + " already defined otherwise from " + anonymous.getAll(concepts::is).begin()->name());
 			}
 		}
 	}
@@ -66,12 +68,13 @@ ref movetoname(ref anonymous, ref name)
 	anonymous.unlink(concepts::name, nam);
 	if (!nonempty) {
 		for (auto & l : anonymous.links()) {
+			if (l.first.linked(level0::concepts::allocator(), level0::concepts::level0allocations())) { continue; }
 			name.link(l.first, l.second);
 		}
 	}
 	anonymous.link(concepts::name, nam);
-	dealloc(anonymous);
-	dealloc(nam);
+	dealloc(anonymous, level0::concepts::allocations());
+	//dealloc(nam, level0::concepts::allocations());
 	return name;
 }
 
