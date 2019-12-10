@@ -1,0 +1,21 @@
+A network of interconnected references that can hold arbitrary data
+is used to run a sequence of computer-code-like steps that perform a core
+learning process on the system itself.
+
+The learning process involves using existing heuristics and habits, to
+produce better heuristics and habits to use.
+
+The process to learn is the system itself: for example, what norms can we
+establish to keep our memory use bounded while we run.
+
+Level 0 should be low level enough to provide for arbitrary flexibility.
+There shouldn't be decision-making challenges with regard to exposing
+an interface at level 0.  Rather, decisions should be makeable by its
+user.
+
+The topmost C++ level should be expressive enough to easily code all of
+level 0 into habits that interconnect, and produce one to select some
+of them and run them together.
+
+The levels together should provide a library that can be used exclusively
+to work on the system, without resorting to external libraries.
