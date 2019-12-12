@@ -50,16 +50,16 @@ ref movetoname(ref anonymous, ref name)
 	bool nonempty = false;
 	for (auto & l : name.links()) {
 		if (l.first.linked(level0::concepts::allocator(), level0::concepts::level0allocations())) { continue; }
-		if (l.first == concepts::name) { continue; }
+		if (l.second.isa(concepts::name)) { continue; }
 		nonempty = true;
 	}
 	if (nonempty) {
 		for (auto & link : anonymous.links()) {
 			if (link.first == concepts::is && link.second == concepts::anonymous) { continue; }
 			if (link.first.linked(level0::concepts::allocator(), level0::concepts::level0allocations())) { continue; }
-			if (link.first == concepts::name) { continue; }
+			if (link.second.isa(concepts::name)) { continue; }
 			if (!name.linked(link.first, link.second)) {
-				throw std::logic_error(name.name() + " already defined otherwise from " + anonymous.getAll(concepts::is).begin()->name());
+				throw std::logic_error(name.name() + " already defined otherwise from " + anonymous.getAll(concepts::is).begin()->name());// + ": \n" + dump(name, ref("dump"), ref(true)) + dump(anonymous, ref("dump"), ref(true)));
 			}
 		}
 	}

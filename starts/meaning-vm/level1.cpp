@@ -9,6 +9,8 @@ int main()
 {
 	std::cout << intellect::level0::allocated() << " allocated" << std::endl;
 
+	///*
+
 	decls(make, linked, habit);
 	std::cout << intellect::level0::allocated() << " allocated" << std::endl;
 	decls(needs, assumes, makes);
@@ -68,10 +70,12 @@ int main()
 	while (true) {
 		try {
 			intellect::level0::dealloc(intellect::level0::concepts::allocations(), intellect::level0::concepts::level0allocations());
+			break;
 		} catch (intellect::level0::still_referenced_by &e) {
 			if (e.topic->linked(intellect::level0::concepts::allocates(), e.referrer)) {
-				intellect::level0::dealloc(e.referrer, e.topic);
+				intellect::level0::realloc(e.referrer, intellect::level0::concepts::allocations());
 			} else {
+				std::cout << "In deallocation, " << ref(e.topic).name() << " still referenced by " << ref(e.referrer).name() << std::endl;
 				throw;
 			}
 		}

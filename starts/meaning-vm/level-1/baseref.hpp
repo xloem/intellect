@@ -15,16 +15,15 @@ struct baseref : public level0::baseref<ref>
 {
 	baseref(concept * p) : level0::baseref<ref>(p) { }
 	baseref(level0::ref const & other) : baseref(other.ptr()) { }
-	baseref(std::string const & name) : baseref(getnamed(name)) { }
-	baseref(const char *name) : baseref(std::string(name)) { }
+	baseref(std::string const & name, concept* allocator = nullptr) : baseref(getnamed(name, allocator)) { }
+	baseref(const char *name, concept* allocator = nullptr) : baseref(std::string(name), allocator) { }
 	baseref(bool b) : baseref(b ? "true" : "false") { }
 	baseref() : baseref("nothing") { }
 
 	bool isa(ref group) const { return level1::isa(self, group); }
 	bool isan(ref group) const { return isa(group); }
 
-	std::string const & name() const { return getname(self); }
-	operator std::string const &() const { return getname(self); }
+	std::string name() const { return getname(self); }
 	explicit operator char const *() const { return getname(self)->data.c_str(); }
 
 	ref operator-(ref other) const { return hyphenate(self, other); }
