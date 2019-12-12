@@ -163,6 +163,7 @@ void dealloc(ref r, ref source)
 	} catch(...) {
 		source.link(concepts::allocates(), r);
 		r.link(concepts::allocator(), source);
+		throw;
 	}
 }
 

@@ -67,17 +67,13 @@ int main()
 	std::cout << intellect::level0::allocated() << " allocated" << std::endl;
 	while (true) {
 		try {
-			std::cout << "calling dealloc" << std::endl;
 			intellect::level0::dealloc(intellect::level0::concepts::allocations(), intellect::level0::concepts::level0allocations());
 		} catch (intellect::level0::still_referenced_by &e) {
-			std::cout << "expected exception" << std::endl;
 			if (e.topic->linked(intellect::level0::concepts::allocates(), e.referrer)) {
 				intellect::level0::dealloc(e.referrer, e.topic);
 			} else {
 				throw;
 			}
-		} catch (...) {
-			std::cout << "unexpected exception" << std::endl;
 		}
 	}
 	std::cout << intellect::level0::allocated() << " allocated" << std::endl;
