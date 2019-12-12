@@ -68,6 +68,9 @@ int main()
 			"and a three!",
 			"and a four, love"
 		};
+		std::cout << beats[b] << std::endl;
+		b = (b + 1) % (sizeof(beats) / sizeof(*beats));
+	});
 #if 0
 		char const * beats[] = {
 // child <- spawns beauty, creativity, humanity, heart
@@ -114,9 +117,6 @@ int main()
 // 		says that.
 		}
 #endif
-		std::cout << beats[b] << std::endl;
-		b = (b + 1) % (sizeof(beats) / sizeof(*beats));
-	});
 	ahabit(wait-habit, (),
 	{
 		usleep(micros);
