@@ -43,7 +43,7 @@ int main()
 	std::cout << allocated() << " allocated" << std::endl;
 
 	e.unlink(b, a);
-	//dealloc(a, store);
+	dealloc(a, store);
 	dealloc(store, concepts::allocations());
 
 	std::cout << allocated() << " allocated" << std::endl;

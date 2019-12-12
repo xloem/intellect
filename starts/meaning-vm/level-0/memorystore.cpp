@@ -17,10 +17,10 @@ static auto & index()
 
 
 namespace concepts {
-	ref allocator() { static ref ret = basic_alloc(); return ret; };
-	ref allocates() { static ref ret = basic_alloc(); return ret; };
-	ref allocations() { static ref ret = basic_alloc(); return ret; };
-	ref level0allocations() { static ref ret = basic_alloc(); return ret; };
+	ref allocator() { static ref ret = basic_alloc(); return ret; }
+	ref allocates() { static ref ret = basic_alloc(); return ret; }
+	ref allocations() { static ref ret = basic_alloc(); return ret; }
+	ref level0allocations() { static ref ret = basic_alloc(); return ret; }
 }
 
 struct init { init()
@@ -117,8 +117,9 @@ void dealloc_from(ref source)
 	}
 	try {
 		for (auto allocation : ours ) {
-			if (allocation.linked(concepts::allocates())) {
-				dealloc_from(allocation);
+			for (auto suballocation : allocation.getAll(concepts::allocates())) {
+				// check for this link to find subgroups
+				throw still_referenced_by(allocation, suballocation);
 			}
 		}
 		for (auto ghost : ours) {

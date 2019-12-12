@@ -1,4 +1,4 @@
-CXXFLAGS=-Wall -Werror -Wno-error=deprecated-declarations -std=gnu++17 -fno-operator-names -ggdb -O0
+CXXFLAGS=-pedantic -Wall -Werror -Wno-error=deprecated-declarations -std=gnu++17 -fno-operator-names -ggdb -O0
 LINK.o=$(LINK.cc)
 
 all: level0 level1 habit-starts/rhythm

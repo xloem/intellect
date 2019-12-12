@@ -44,7 +44,6 @@ void basic_dealloc(ref allocated);
 ref alloc(ref allocator, std::any data = {}); // new concept
 void alloc(ref allocated, ref allocator); // extra ownership for concept
 void realloc(ref allocated, ref allocator); // move ownership for concept to allocator
-[[deprecated("can make recursion: turn to workable habits")]]
 void dealloc(ref allocated, ref allocator); // remove ownership for concept
 std::size_t allocated();
 
