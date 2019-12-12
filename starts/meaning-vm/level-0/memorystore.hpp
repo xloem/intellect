@@ -28,6 +28,18 @@ namespace level0 {
 // some level of understanding that they will shrink, or we stop them and try
 // something else.
 
+// A solution to recursion appears to involve emotional expression.
+// Too much recursion maps acceptably to frustration of the process doing the repetitive task.
+// The building unmet need for effectiveness should influence other decision-making processes
+// if nothing else is larger.  Notably if the caller needs timeliness, they won't get this
+// if the callee(s) do not have effectiveness.
+// 	propose: raise frustration[effectiveness] when calling self or repeating same behavior
+// 	propose: raise frustration[timeliness] if subprocess takes long (say every 400ms)
+// 	ideally raising an emotional expression should be associated with what caused it
+// 	and how the the universe might change to fix it.
+// decision-making processes need to judge what is relevent to them: a product of how well
+// they can help something and how strongly it is needed.
+
 namespace concepts {
 
 extern ref allocator(); // link shows what is holding something alive
