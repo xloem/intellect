@@ -13,7 +13,7 @@ decl(action, happens, context);
 decl(happened); // happened-habit(ctx) performs actions associated with ctx[happens]
 decl(whenever); // whenever-habit(ctx) stores to do ctx[action] when ctx[happens] happens
                 // providing ctx[action-context]
-decl(stop); decl(when); // stop-when-habit(ctx) removes doing ctx[happens] on ctx[event]
+decl(stop); decl(when); // stop-when-habit(ctx) removes doing ctx[action] on ctx[happens]
 decl(once); // once-habit(ctx) stores to do ctx[action] the next time ctx[happens] happens
             // providing ctx[action-context]
 
