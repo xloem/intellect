@@ -35,7 +35,7 @@ namespace internal {
 }
 
 #define decl(r) \
-	ref r(#r);
+	ref r(#r)
 
 #define decls(...) \
 	ref __VA_ARGS__; \
