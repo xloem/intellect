@@ -1,3 +1,5 @@
+# Karl is slowly building a computer mind
+
 Please support Karl working on this intelligence framework.  The basic framework needs to be
 quality (including simple if possible), so that the rest may function.
 
@@ -6,10 +8,14 @@ Facilitation.  Convergent Facilitation is a way of efficiently reaching agreemen
 everybody, which is rare in other systems.
 Please help him reach such a community.  Please help such communities exist and be accessible.
 
+# Intellect
+
 This is everyone's intellect.  We want to design it to be harmless and nurturing.  This means
 it needs to understand the role of culture, etc.  Karl believes if done properly this will end up
-being natural and easy.  Please ask questions.  Please influence this work, choosing words that
-are likely to be heard and understood.  Please improve, share, learn, experiment, communicate.
+being natural and easy.  Please ask questions.  Please influence this work, preferably choosing
+words and contributation that are likely to be received and understood.  Please improve, share, learn, experiment, communicate.
+
+# Framework
 
 An intelligence framework should provide for easily writing instructions that reference and work
 with all other parts, in all four of data, behavior, structure, and meaning.
