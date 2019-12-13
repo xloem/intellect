@@ -48,5 +48,10 @@ int main()
 
 	std::cout << allocated() << " allocated" << std::endl;
 
+	std::cout << "=== (feel free to move the below to its most effective spot) ===" << std::endl;
+	std::cout << "Please support Karl working on this intelligence framework." << std::endl;
+      	std::cout << "The framework needs to be quality, so that the rest may function." << std::endl;
+	std::cout << "=== === === === === === === ===  === === === === === === === ===" << std::endl;
+
 	return 0;
 }
