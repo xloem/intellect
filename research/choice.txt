@@ -1,0 +1,67 @@
+This monologue is an exploration of how decisions can be made in a way that learns with understanding, communication, and
+similarity to the experienced human mind.
+
+The proposal is for habits to produce associated concepts with things, for example how long they take, or what they result in.
+Some habits require choice, and need to use this information to make it.
+
+Propose we develop habits that combine the associated information in different ways, to see if these combinations are
+useful for choice.
+As an experiment, was going to try to some possible metrics, such as how long something takes, and see how this compares
+with personal judgement-making.
+	when coding we worry about maintainability, difficulty, speed, effectiveness.
+	a general decision-making process may multiply value/importance by effectiveness and pick the greatest.
+
+# worry: this research may not close.  it could inhibit associated things.
+# reason to continue is because it may inform other decisions.
+# do you know it won't close? any concept around how much?
+# no.  let's see if it closes.
+# wait: experience has danger-label.  many things similar to this have resulted in amnesia and confusion.
+# okay.  let's take a break and try to return.  if returning is blocked and not spreading, do other relevent task.
+# if returning is blocked and spreading, record failure and research idea for future similar situations.
+	
+here is monologue:
+do not bus to food.  close out code, save research, and then eat.  continue research while eating.
+		research informs all other project choices.  do first if available unless other is needed for task.
+
+simplest solution is to do first item differently.
+
+for_each can handle this, or we can do it outside foreach
+note, argnametoklist is one passed list in parentheses, so we'd need macros to extract the first and remainder from a list
+seems nice and generic, except the remainder will be unsude if empty, which is a little harder.
+let's add first item to argnametoklist
+
+		so we have a process in our mind that uses experienced relevence
+		to be informed by the emotional intensity / experience frequency / attributes of the different things considered
+		and use them to make decisions based on context.
+		it's comparing difficulty, speed, generality
+			generality seem summarized into kinda maintainability or cleanness
+		maintainability, difficulty, and speed.
+		as these are influenced, our choices change.
+			received a concern around effectiveness and use of time.  is _not_ being summarized as these others are.
+		but anyway ... the habits or others associated with them report metrics or summaries that could be of interest
+		in decision-making or informed change.
+		decision-making processes combine these metrics or summaries using experienced judgement habits
+			so, we're spending seconds on a task we did not plan to
+			the task has value: this value is just a feeling for me atm, but is related to plans
+			the other task had expectations.  this time spent is disrupting their expectations.
+		the piece we're missing is combining the useful labels coming from processes
+		to make choices they need to function well
+		so when i pick what to do next, i need information to make this choice.
+		i'll need to try different ways of combining the available information to see what works
+		and when i find a way of combining that does work, it could be an important judgement metric that i should
+		remember and give a name to.
+			say we have number of seconds
+		update: we are working on an unstable coding issue.  please make work stable, save, then continue this research.
+			research appears to be into how to learn as a human has evolved to.
+			makes goal-pursuit better.
+
+it helps us do this to keep parts of the state of mind of doing it.  we started naming parts but ran into some inhibition.
+	this is so hard to do sometimes, IT IS AWESOME TO BUIlD TRIGGER HABITS!!! IT IS AWESOME TO BUILD TRIGGER HABITS.
+	oh man those trigger habits are so awesome to work on.
+		joy around trigger-habit work.
+			worry: joy references fade as not accessed.
+let's keep working on the trigger habits.  hrm this conflicts with do reseearch around choice.
+	choice fades with less recovery.  sorry.
+		let's do research on computer? on bus?
+	can try.
+	developed plan is to save research, access on cell phone.  more normal and convenient to stare at in public.
