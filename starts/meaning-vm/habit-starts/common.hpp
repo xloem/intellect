@@ -5,6 +5,8 @@
 
 namespace habitstarts {
 
+using namespace intellect::level2;
+
 decl(habit);
 
 }

@@ -1,19 +1,18 @@
 #include "learning-parts.hpp"
 
 using namespace habitstarts;
-using namespace intellect::level1;
+using namespace intellect::level2;
 
 static int __init = ([]()->int{
 
-	ahabit(happened-habit,
+	ahabit(happened-habit, ((happened, ev)),
 	{
-		ref ev = ctx.get(happens);
-		// TODO: perform each event associated with ctx[happens] (see line above)
+		// TODO: perform each event associated with ctx[happened] 
 
 		// use a sub-habit for each call, so we can handle happened for them, too.
 	});
 
-	ahabit(whenever-habit,
+	ahabit(whenever-habit, ((happens, ev), (action, act), (action-context, actctx)),
 	{
 		// store ctx[action] on ctx[happens] as behavior to do
 		// store ctx[action-context] as context for behavior
@@ -24,12 +23,12 @@ static int __init = ([]()->int{
 		// 		a unique concept ref for each error type.  plan to add to level-0.
 	});
 
-	ahabit(stop-when-habit,
+	ahabit(stop-when-habit, ((action, act), (happens, ev)),
 	{
 		// remove doing ctx[action] for ctx[happens]
 	});
 
-	ahabit(once-habit,
+	ahabit(once-habit, ((happens, ev), (action, act), (action-context, actctx)),
 	{
 		// takes ctx[action] and ctx[happens] and ctx[action-context]
 		// uses above habits to do the action only once, probably by using

@@ -9,7 +9,7 @@ namespace habitstarts {
 // stop doing B whenever A happens.
 // when A happens, do B once.
 
-decl(action, happens, context);
+decl(action); decl(happens); decl(context);
 decl(happened); // happened-habit(ctx) performs actions associated with ctx[happens]
 decl(whenever); // whenever-habit(ctx) stores to do ctx[action] when ctx[happens] happens
                 // providing ctx[action-context]
