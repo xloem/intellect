@@ -13,37 +13,37 @@
 #define _macro_expand_to_arg2(_1, arg, ...) arg
 
 // macro argument iteration, from stackoverflow.com/questions/1872220
-#define _macro_for_each(funcormacro,...) \
+#define _macro_for_each(firstfuncormacro,restfuncormacro,...) \
 	_macro_fe_get(_0,##__VA_ARGS__, \
 			_macro_fe_9,_macro_fe_8,_macro_fe_7,_macro_fe_6,_macro_fe_5,_macro_fe_4,_macro_fe_3,_macro_fe_2,_macro_fe_1,_macro_fe_0 \
-			)(funcormacro,__VA_ARGS__)
-	#define _macro_fe_0(what,    ...) 
-	#define _macro_fe_1(what, x, ...) what(x)_macro_fe_0(what, __VA_ARGS__)
-	#define _macro_fe_2(what, x, ...) what(x)_macro_fe_1(what, __VA_ARGS__)
-	#define _macro_fe_3(what, x, ...) what(x)_macro_fe_2(what, __VA_ARGS__)
-	#define _macro_fe_4(what, x, ...) what(x)_macro_fe_3(what, __VA_ARGS__)
-	#define _macro_fe_5(what, x, ...) what(x)_macro_fe_4(what, __VA_ARGS__)
-	#define _macro_fe_6(what, x, ...) what(x)_macro_fe_5(what, __VA_ARGS__)
-	#define _macro_fe_7(what, x, ...) what(x)_macro_fe_6(what, __VA_ARGS__)
-	#define _macro_fe_8(what, x, ...) what(x)_macro_fe_7(what, __VA_ARGS__)
-	#define _macro_fe_9(what, x, ...) what(x)_macro_fe_8(what, __VA_ARGS__)
+			)(firstfuncormacro,restfuncormacro,__VA_ARGS__)
+	#define _macro_fe_0(first,rest,    ...) 
+	#define _macro_fe_1(first,rest, x, ...) first(x)_macro_fe_0(rest,rest, __VA_ARGS__)
+	#define _macro_fe_2(first,rest, x, ...) first(x)_macro_fe_1(rest,rest, __VA_ARGS__)
+	#define _macro_fe_3(first,rest, x, ...) first(x)_macro_fe_2(rest,rest, __VA_ARGS__)
+	#define _macro_fe_4(first,rest, x, ...) first(x)_macro_fe_3(rest,rest, __VA_ARGS__)
+	#define _macro_fe_5(first,rest, x, ...) first(x)_macro_fe_4(rest,rest, __VA_ARGS__)
+	#define _macro_fe_6(first,rest, x, ...) first(x)_macro_fe_5(rest,rest, __VA_ARGS__)
+	#define _macro_fe_7(first,rest, x, ...) first(x)_macro_fe_6(rest,rest, __VA_ARGS__)
+	#define _macro_fe_8(first,rest, x, ...) first(x)_macro_fe_7(rest,rest, __VA_ARGS__)
+	#define _macro_fe_9(first,rest, x, ...) first(x)_macro_fe_8(rest,rest, __VA_ARGS__)
 	#define _macro_fe_get( \
 			_0,_1,_2,_3,_4,_5,_6,_7,_8,_9, \
 			name,...) name
-#define _macro_for_each_parens(funcormacro,...) \
+#define _macro_for_each_parens(firstfuncormacro,restfuncormacro,...) \
 	_macro_fe_get(_0,##__VA_ARGS__, \
 			_macro_fep9,_macro_fep8,_macro_fep7,_macro_fe_6,_macro_fep5,_macro_fep4,_macro_fep3,_macro_fep2,_macro_fep1,_macro_fep0 \
-			)(funcormacro,__VA_ARGS__)
-	#define _macro_fep0(what,    ...) 
-	#define _macro_fep1(what, x, ...) what x _macro_fep0(what, __VA_ARGS__)
-	#define _macro_fep2(what, x, ...) what x _macro_fep1(what, __VA_ARGS__)
-	#define _macro_fep3(what, x, ...) what x _macro_fep2(what, __VA_ARGS__)
-	#define _macro_fep4(what, x, ...) what x _macro_fep3(what, __VA_ARGS__)
-	#define _macro_fep5(what, x, ...) what x _macro_fep4(what, __VA_ARGS__)
-	#define _macro_fep6(what, x, ...) what x _macro_fep5(what, __VA_ARGS__)
-	#define _macro_fep7(what, x, ...) what x _macro_fep6(what, __VA_ARGS__)
-	#define _macro_fep8(what, x, ...) what x _macro_fep7(what, __VA_ARGS__)
-	#define _macro_fep9(what, x, ...) what x _macro_fep8(what, __VA_ARGS__)
+			)(firstfuncormacro,restfuncormacro,__VA_ARGS__)
+	#define _macro_fep0(first,rest,    ...) 
+	#define _macro_fep1(first,rest, x, ...) first x _macro_fep0(rest,rest, __VA_ARGS__)
+	#define _macro_fep2(first,rest, x, ...) first x _macro_fep1(rest,rest, __VA_ARGS__)
+	#define _macro_fep3(first,rest, x, ...) first x _macro_fep2(rest,rest, __VA_ARGS__)
+	#define _macro_fep4(first,rest, x, ...) first x _macro_fep3(rest,rest, __VA_ARGS__)
+	#define _macro_fep5(first,rest, x, ...) first x _macro_fep4(rest,rest, __VA_ARGS__)
+	#define _macro_fep6(first,rest, x, ...) first x _macro_fep5(rest,rest, __VA_ARGS__)
+	#define _macro_fep7(first,rest, x, ...) first x _macro_fep6(rest,rest, __VA_ARGS__)
+	#define _macro_fep8(first,rest, x, ...) first x _macro_fep7(rest,rest, __VA_ARGS__)
+	#define _macro_fep9(first,rest, x, ...) first x _macro_fep8(rest,rest, __VA_ARGS__)
 
 namespace intellect {
 namespace level0 {

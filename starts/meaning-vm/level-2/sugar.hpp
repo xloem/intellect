@@ -23,7 +23,7 @@
 #define ahabit(name, argnametoklist, ...) \
 	intellect::level2::makehabit( \
 		name, \
-		{_macro_call(_macro_for_each_parens, _macro_habit_argnameref _macro_comma_remove_parens(argnametoklist))}, \
+		{_macro_call(_macro_for_each_parens, _macro_habit_argnameref, _macro_habit_commaargnameref _macro_comma_remove_parens(argnametoklist))}, \
 		(std::function<void(ref)>) \
 	[=](ref ctx) \
 	{ \
@@ -32,11 +32,13 @@
 			usleep(delay); \
 		} \
 		ref self = name; (void)self; \
-		_macro_call(_macro_for_each_parens, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
+		_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
 		__VA_ARGS__ \
 	});
 	#define _macro_habit_argnameref(name, tok) \
 		ref(#name)
+	#define _macro_habit_commaargnameref(name, tok) \
+		, ref(#name)
 	#define _macro_habit_set_posarg(name, tok) \
 		ref tok = ctx[ref(#name)];
 	
