@@ -8,14 +8,17 @@ Please help him reach such a community.  Please help such communities exist and 
 
 This is everyone's intellect.  We want to design it to be harmless and nurturing.  This means
 it needs to understand the role of culture, etc.  Karl believes if done properly this will end up
-being natural and easy.  Please ask questions.  Please experiment, improve, share.
+being natural and easy.  Please ask questions.  Please influence this work, choosing words that
+are likely to be heard and understood.  Please improve, share, learn, experiment, communicate.
 
-A framework should provide for easily writing instructions that reference and work with all other
-parts, in all four of data, behavior, structure, and meaning.
+An intelligence framework should provide for easily writing instructions that reference and work
+with all other parts, in all four of data, behavior, structure, and meaning.
 	(meaning is met sufficiently by providing for arbitrarily structured annotations on all parts that can map structure, data, and patterns to shared labels)
 	(behavior alone could obviously meet the other three with some work or code-learning)
 		Hence the guiding focus is a behavior that can improve itself or its parts,
-		in the framework.
+		in the framework, and produce structures relating to the meaning of doing such.
+		If the current task does not help build such a behavior, some other task is
+		likely more effective.
 
 Karl came up with and mostly built a solution to the framework problem on his own in 2003, which he called "narcissus", kept private, and lost.  narcissus applied the concept of a graph where links are nodes, to C memory pointers.  Karl has no academic training in machine learning or artificial intelligence, but has a plan held in his mind for completing this task including dealing with all encountered computer programming problems, and has held this for many years.
 
