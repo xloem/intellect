@@ -1,3 +1,5 @@
+# Please support Karl working on this intelligence framework.  The framework needs to be quality, so that the rest may function.
+
 CXXFLAGS=-pedantic -Wall -Werror -Wno-error=deprecated-declarations -std=gnu++17 -fno-operator-names -ggdb -O0
 LINK.o=$(LINK.cc)
 
