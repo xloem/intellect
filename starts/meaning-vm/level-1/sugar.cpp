@@ -20,6 +20,7 @@ ref a(ref group)
 }
 ref a(ref group, ref name)
 {
+	if (name == nothing) { return a(group); }
 	if (!name.isa(group)) {
 		name.link(is, group);
 	}

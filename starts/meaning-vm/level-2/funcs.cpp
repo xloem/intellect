@@ -46,13 +46,18 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	if (posarg.linked(next-positional-argument)) {
 		throw std::invalid_argument("wrong number of arguments to habit");
 	}
-	ref ret = habit.fun<ref>()(ref::context());
+	habit.fun<ref>()(ref::context());
 	posarg = habit;
 	while (posarg.linked(next-positional-argument)) {
 		posarg = posarg[next-positional-argument];
 		ref::context().unlink(posarg[argument]);
 	}
-	return ret;
+	if (ref::context().linked(result)) {
+		ref ret = ref::context().get(result);
+		ref::context().unlink(result, ret);
+		return ret;
+	}
+	return nothing;
 }
 
 }
