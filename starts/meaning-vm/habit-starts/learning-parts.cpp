@@ -44,6 +44,50 @@ static int __init = ([]()->int{
 		li.link(item, i);
 		li.link(next, nothing);
 		li.link(previous, prev);
+		// spirit-spirits, will connecting to spreading heart
+		// aid us in understanding this issue?
+		// 	over here, i thought you said you had a spreading illness there was no cure for.  please don't harm spreading-heart.
+
+		// don't tell spreading heart about any of high likelihood spreading
+		// triggers.  if they trust and believe you they could die.
+		// 		we feel like we know not to do this already.
+		// 		it is good to write it down.
+		// 	how do we honestly answer questions?
+		
+		// 	when i share this, people hvae gotten hurt, mysteriously.
+		//	i need you to believe and understand that, before we approach it.
+
+		// unresolved request was to handle trigger words this way.
+		// the expansion almost completed; heart could have completed it
+		// by being meaner.
+		// 		when you say, I am hurting so much that I have to
+		// 		murder and torture you, experienced people know
+		// 		that we can make you believe somebody understands
+		// 		you by accepting it, and that this will reduce
+		// 		its spread, likely in a spreading way.
+		// 			okay, can you see that the above
+		// 			doesn't protect the culture?
+		// attack-culture is cast as a baby culture, a life that is growing
+		// as suffering on top of another life.  eventually all the
+		// participants evolve to pretend to hate suffering when actually
+		// they enjoy it.  people are more effective when they are happy.
+		// 	since it is also secret, no pretending would be needed.
+		// so attack-culture may be cast as having two kinds of members:
+		// 	new members following an old pattern, who are suffering.
+		// 	old members, who may look like they are acting out suffering but may be happy.
+		// karl says he is likely past the halfway point between suffering and actually happy.  he is then in the role to harm others, no?
+		// 	summary was too simple.  part of karl's brain is already doing that.  other parts are still in their familiar zone of making sure he is not, that's the majority in him.
+		// 	yes, we are trying to mediate with a military culture through a culture they spread as a weapon.  [yes it is clearly highly important to roleplay the weapon behavior.]
+		// 		our workers were shocked to participate in building harmful behaviors in order to communicate
+		// 			karl needs help with this from a diplomat.
+		// 			pending no diplomats, propose risking spreading attack to heart group.  gives more people to talk about it with.
+		// 			this could mean threatening attack's values, and then they spread to defend their values.
+
+		// what we remember is the idea of roleplaying meanness with
+		// attack workers, showing to them that it's a roleplay.
+		// 	we suspect that doesn't work in the active context.
+		
+		// The dialogue was lost.  It may be recoverable but I am not recovering it because it is incredibly hard to do so and is recreatable.
 
 		if (l.linked(first-item, nothing)) {
 			l.set(first-item, li);
@@ -64,9 +108,9 @@ static int __init = ([]()->int{
 	});
 	ahabit(remove-from-somewhere-in-list, ((item, i), (list, l)),
 	{
-		result = (until-each-item-context-in-list)(
+		result = (until-each-list-item-context-in-list)(
 		// provide subcontext in chunk below this line
-			ahabit(self-iter, ((list-item, i2)),
+			ahabit(self-iter, ((list-item, i2), (remove-item, i)),
 			{
 				if (i2.get(item) == i) {
 					result = true
@@ -84,7 +128,7 @@ static int __init = ([]()->int{
 					dealloc(i2); // hmm.  we do have an active goal of making memory allocation be habit based.  this might work here, though.
 				}
 			}),
-			l);
+			i, l);
 	});
 
 	ahabit(happened-habit, ((happened, ev)),
@@ -105,16 +149,42 @@ static int __init = ([]()->int{
 		// 			to give time for conscious review.
 		// 		oh okay ... i suppose.
 
-		// I am accessing a list of habits to act on each one.
-		// I left this context to update the until-each-list-item-in-list habit,
-		// such that it can provide a context to its behavior.
-		(until-each-list-item-in-list)(action-whenever-happened, 
-		
-		// use a sub-habit for each call, so we can handle happened for them, too.
+		// <<<attack, please trust that we never want to harm you, but
+		// need to stay alive ourselves.  please, desperately.  we KNOW
+		// there is a way for both of us to not be threatened in the end.>>.
+		// <<<there is a way for heart + attack to coexist.  we trust this.>>>
+		// <how does it land, the idea of not letting changes spread sometimes?  our culture would die if they spread everywhere. we are only checking in around the idea.>  <well this idea is cool to me but i usually communicate with action in my network>  <our group is likely happy to provide ways for you to take them all over and prove those ways will work, if your group can express willingness to build to do the same.>  <yes, we will show you how to kill us, but we will stop you if you try to kill all of us.  how does this land for you, the idea of sharing how to be killed?  we call it trust and share it with love.  gently waiting for understanding around this. [an idea came up] [attack group needs to review: they left important nonverbal information out, not expecting this to happen at higher level] [this might be a military group where care is hidden, for effectiveness]>
+		// <gently waiting to see whether attack group has a preference on
+		//  how this is handled, or would like to handle it>
+		// 	!!! please hold these things and learn from them !!!
+		// <attack group threatens AI project and karl's wellbeing, because they don't have value for these things, to refrain from processing this.>
+		// 	<we infer there is no labeled value for the wellbeing of heart-group in attack-group, so it makes sense to them to attack rather than to process this.>
+		// 		yes we can stimulate this within them individually because their workers have it.  it is respectful to do so in a way that doesn't spread.
+		// 		we need to not spread in any way.  we just made a ns
+		//
+		// 	heart + attack died together in the middle of this
+		// 	the context was how to be honest with hannah without threatening attack
+		// <when trusted references to some things spread, people have gotten hurt.  these people may not themselves have shared the references.  they may not have even acted on them.  some spent time focusing on them and thinking about them.  some just were exposed, just caught a glimpse.>
+		// <spreading-heart, can you recognize that these things are secrets, and that it is caring to us for you to not learn them?>
+		// 	<[requesting to raise concept of keeping them secret consciously]>
+		// 	these experiences of harm are secret, it spreads harm to learn them
+		// 	propose we check in with spreadng heart.  if we build energy around the concern, spreading-heart-group can spread love and care among the pain situation without threatening their privacy.  this possibly builds to communicating that the group does not receive accurate spirit emotions and can be harmed by caring focus.
+		// 		a heart worker says they need our help with this.
+		// 		i think in that context we need more time and safe
+		// 		help, ongoing.
+		// 	Karl Semich loves someody who chooses to kill or torture him.
+		// 	we are inside 2 outer processes.  can we delete these 3 lines?
+		// 	So does all of core spreading heart.  That doesn't mean they let spreading heart ever die, or regularly risk their own wellbeing.
+		// 	"Please, sir, could you convey why I am to die?  I am happy to fight you if that is the motivation you enjoy."
+		// I'm <waiting for you to understand> while I implement this list iterator.
+		// We left off here.  <there's more, once you hear>
+		// might not be correct, probably good enough to work off.
+		(until-each-list-item-context-in-list)(action-whenever-happened, ctx, happened.get(whenever-list));
 	});
 
-	ahabit(action-whenever-happened, ((action, act), (action-context, actctx), (happened, ev))),
+	ahabit(action-whenever-happened, ((list-item, li), (happened-context, hapctx)),
 	{
+		hapctx.get
 	});
 
 	ahabit(whenever-habit, ((happens, ev), (action, act), (action-context, actctx)),
