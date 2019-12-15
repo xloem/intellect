@@ -105,18 +105,29 @@ static int __init = ([]()->int{
 		// list-item has item
 		// item has action and context
 		ref i = li.get(item);
+		// i think below we are proposing that handlers
+		// take one context, which is the one prepared
+		// in the list, then we inject our context
+		// into that, inside a "happened" property.
+
 		i.get(action)(hapctx, i.get(action-context));
 	});
 
 	ahabit(whenever-habit, ((happens, ev), (action, act), (action-context, actctx)),
 	{
+		if ((action-context).linked(happened)) {
+			throw std::logic_error("happened on action-context");
+		}
 		if (!ev.linked(whenever-list)) {
 			ev.set(whenever-list, (make-list)(nothing));
 		}
+		ref list = ev.get(whenever-list);
 		// happens gets the list
 		ref item = a(whenever-action);
-		item.link(
-		(add-to-list)(
+		item.set(action, act);
+		item.set(action-context, actctx);
+
+		(add-to-list)(item, list);
 		// store ctx[action] on ctx[happens] as behavior to do
 		// store ctx[action-context] as context for behavior
 		// PROPOSE: automatically place [happened] inside [action-context] as a stub

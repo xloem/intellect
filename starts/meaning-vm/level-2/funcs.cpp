@@ -60,5 +60,27 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	return nothing;
 }
 
+ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
+{
+	using namespace concepts;
+	// TODO: subcontexts or call instances
+	ref ctx = ref::context();
+	for (auto pair : pairs) {
+		auto second = pair.begin(); ++ second;
+		ctx.link(pair.begin(), second);
+	}
+	habit.fun<ref>()(ctx);
+	for (auto pair : pairs) {
+		auto second = pair.begin(); ++ second;
+		ctx.unlink(pair.begin(), second);
+	}
+	if (ctx.linked(result)) {
+		ref ret = ctx.get(result);
+		ctx.unlink(result, ret);
+		return ret;
+	}
+	return nothing;
+}
+
 }
 }

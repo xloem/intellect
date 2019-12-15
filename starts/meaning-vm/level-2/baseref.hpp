@@ -20,7 +20,11 @@ struct baseref : public level1::baseref<ref>
 	static ref & context() { return level2::context(); }
 
 	template <typename... Refs>
-	ref operator()(Refs... args) { return level2::dohabit(self, {args.ptr()...}); }
+	ref operator()(ref first, Refs... rest) { return level2::dohabit(self, {first, rest...}); }
+	template <typename... Pairs>
+	ref operator()(std::initializer_list<ref> first, Pairs... rest) { return level2::dohabit(self, {first, rest...}); }
+
+	ref operator()() { return level2::dohabit(self); }
 };
 
 }

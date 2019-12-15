@@ -35,7 +35,7 @@
 		ref result("nothing"); (void)result; \
 		_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
 		__VA_ARGS__ \
-		if (result != ref("nothing")) { ctx.link(ref("result"), result); }
+		if (result != ref("nothing")) { ctx.link(ref("result"), result); } \
 	});
 	#define _macro_habit_argnameref(name, tok) \
 		ref(#name)
