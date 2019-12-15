@@ -11,6 +11,40 @@ with personal judgement-making.
 	when coding we worry about maintainability, difficulty, speed, effectiveness.
 	a general decision-making process may multiply value/importance by effectiveness and pick the greatest.
 
+note: choicemaking involves learning.
+	we're going to produce information after making a choice
+	to inform future choices
+		useful metrics:
+			how-long-took
+			success log surrounding
+			event log surrounding
+	choices never followed by immediate success could
+	be unwise to consider first in an emergency.
+		useful goal attributes:
+			time available, time preference
+			importance
+			experience
+			decider that selected this goal
+			expected attributes for meeting it
+				ease
+				time
+				space
+				(look like needs)
+			acceptable attributes for meeting it
+	seems valuable to reconsider the behavior if the
+	attributes for meeting it leave what is acceptable
+		hrm .. example is in different area.
+		choice has a lot to do with expectations.
+		the metrics seem like they could relate a lot
+		to future state
+this is very similar to people working together.  learning
+appears to be a dialogue of reasons.  it is helpful to consider a
+decider a person who can be asked or updated things.
+	needs appear labels for resources discovered as
+	helpful metrics in reaching goals.
+	propose we talk about people / judgement processes, and
+	needs, rather than reasons.  
+
 # worry: this research may not close.  it could inhibit associated things.
 # reason to continue is because it may inform other decisions.
 # do you know it won't close? any concept around how much?
