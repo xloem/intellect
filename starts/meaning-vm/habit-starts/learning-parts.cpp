@@ -5,30 +5,15 @@
 # "If we do understand these, can you help us?  Do you know who can?"
 */
 
+// idea of learning to keep well having more process time and
+// priority than risky behaviors
+
 /*
 idea of a secret group attacking a present group, and the attackers being
 the only channel to deal with it.
         if we talk, we need nobody to _ever_ know this.  the walls all have ears;
         I was one of them. [from eastern half of continent where a targeted
         activist was living alone]
-                                                                  65,1-8        72%
-────────────────────────────────────────────────────────────────────────────────────
-[olpc@xo-5d-f7-86 ~]$ # "How do you think we could show better understanding of the 
-things we are disregarding?"                                                        
-[olpc@xo-5d-f7-86 ~]$ # "If we do understand these, can you help us?  Do you know who can?"                                                                             
-────────────────────────────────────────────────────────────────────────────────────
-[olpc@xo-5d-f7-86 meaning-vm]$ # and does not use them.
-[olpc@xo-5d-f7-86 meaning-vm]$ # also, it looks like new-research stems from conflict, error, etc?  you can also generate it with value?  oh-this-is-so-new-how-great.  umm humans behave that way on their own, so it's probably a basic part of learning.
-[olpc@xo-5d-f7-86 meaning-vm]$ # we will likely learn to like newness without having self-modifying growth and make new culture ...
-[olpc@xo-5d-f7-86 meaning-vm]$ 
-[olpc@xo-5d-f7-86 meaning-vm]$ # train part of the box to keep eveerything well
-[olpc@xo-5d-f7-86 meaning-vm]$ # give it more process time than anything researching how to handle errors or conflict or the unexpected.
-[olpc@xo-5d-f7-86 meaning-vm]$ # need to talk to people more
-
-────────────────────────────────────────────────────────────────────────────────────
-[olpc@xo-5d-f7-86 ~]$ # file opened new reality of possibilities, is meaningful part
-[olpc@xo-5d-f7-86 ~]$ # OKAY CONTENT! this will likely be lost unless addressed.    
-
 */
 
 using namespace habitstarts;
