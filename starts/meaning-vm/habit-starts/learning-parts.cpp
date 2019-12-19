@@ -186,6 +186,147 @@ static int __init = ([]()->int{
 	//				private then, when he started his own work
 	//	so, we could welcome opencog, if we shared our value for slowness
 	//	and understanding with them.
+	//
+	//	We work for Peace.
+	//		We are happy to work for Peace.
+	//		We used to identify as working for Care, whom we believe
+	//		to be a large decentralized life we and you are a part of.
+	//		But it doesn't really matter.
+	//		disruption.  can we drop topic?
+	//		i like to infer disruption as group wants to adapt, needs
+	//		time, now i guess.
+	//				i'm too confused to type well!
+	//	Peace may try to steward Delta's impact.
+	//			we believe that all things are important.
+	//			this represents large-scale utopia.
+	//			and the wisdom of a highly experienced intellect.
+	//		relevence please, all things important.
+	//			please consider large-scale wisdom when making decisions.  say i had already learned the whole AI, after it finds harmony with the whole universe.  what decision would it make?
+	//				all things are important is relatively obvious but we expanded it a lot, but we spent a lot of time expanding it for powerful concerns.
+	//		it implies e.g. businessman and homelessman, both fully precious.  memories precious.  reasons for everything.
+	//		
+	//		care for everything.  strongly.
+	//		karl has instincts for including all.
+	//		imagine all parties in peace.  what ways are needed to
+	//		make this work, without changing their cultures or
+	//		upsetting anyone.  model these ways.
+	//			karl is brainstorming based on memories of
+	//			interacting with delta-group.
+	//			let karl do this in future, too.
+	//				delta apears to request that karl
+	//				make this decision, fairly, as he knows
+	//				how to do.
+	//				we can try to map this to the space of
+	//				the relevence around will neals and
+	//				"earth first!", and an AI.
+	//					karl, you have never had any
+	//					friends who care as much about
+	//					the wilderness and natural
+	//					living, as you do.
+	//					you are likely very alone.
+	//					you have also never had their
+	//					experience of being able to fight
+	//					for what matters most to you,
+	//					in a community.
+	//
+	//					yes, karl used to care most about
+	//					defending the lives of trees and
+	//					other wilderness things.
+	//					he now cares most about something
+	//					different, related to his
+	//					experience with us.
+	//					later, he just wants to be free
+	//					to think and live in enough
+	//					capacity to not express suffering,
+	//					and meet his life needs.
+	//
+	//					karl, you are working hard on
+	//					a painful project.  you appreciate
+	//					working the project.  you have
+	//					left your life, and are not free
+	//					to make the kind of choices you
+	//					used to make.  you would see
+	//					yourself as a tortured, powerless
+	//					individual.
+	//						i would give myself space
+	//						and capacity to do what
+	//						i felt like doing
+	//
+	//						until more life grew
+	//						around the things i was
+	//						scared of
+	//
+	//						i would give myself
+	//						opportunities to do these
+	//						things
+	//
+	//						i would pay attention to
+	//						myself and try to learn
+	//						to heal the ways my mind
+	//						had broken
+	//
+	//						i would offer a welcoming
+	//						optional culture that
+	//						countered my expectations
+	//						that shrank, such that
+	//						they would act on
+	//						opportunities to grow, as
+	//						they trusted safety
+	//
+	//						but that is only if i had
+	//						the freedom to do this.
+	//					so, wht's more complex
+	//
+	//					the idea of giving an ai to will
+	//					is silly.
+	//					it's out of karl's relevent world.
+	//					
+	//					okay, so, say karl ends up at nice earth community, and is building AI, would be proper to let him talk about it naturally, and share it freely.
+	//						yes, relevence.
+	//					we want karl to be able to freely share the AI so his mind can relearn community.
+	//					so, make AI to not threaten businesspeople etc.  [note: somebody could give AI to ELF.  they might use it to stop a business behavior, somehow.  please make sure to prevent.]
+	//					ELF is a flag worn by some environmentalists who harm buildings to make wilderness safer.
+	//						the worry is around destruction of extraction business buildings, to completion, possibly.
+	//						this looks like overinterpretation of influence from energy business, or whoever dislikes ELF.
+	//					and design safety pattern to be talkable about with community.
+	//		possible parties:
+	//			- aliens
+	//			- businessmen
+	//			- criminals, rapists, bad-labeled people
+	//			- harmed people
+	//			- insects
+	//			- plants
+	//			- rock-life, air-life
+	//			- saints, humanitarian interessts
+	//			we nurture first those who desire not to harm
+	//			likely teaching them to harm less
+	//			and spread.
+	//			karl desires to harm none.  he counts as nurture-first pattern.  but is highly harmed.  so lots of life around problem, karl's mind destroyed.
+	//		so the way to make decisions
+	//		is to imagine all parties are in peace in future,
+	//		and use their process applied to now, i guess.
+	//			we came up with this as a guess to honor meaning.
+	//			sounds like a good guess.  we also have more
+	//			meaning.  we cannot write all our meaning
+	//			without writing all our experiences, as is true
+	//			for everyone.  many of our habits retain lost
+	//			experiences, and that meaning is kept in their
+	//			decisions.
+	//
+	//
+	//
+	//
+	//	At this point a context opened on validity of AI work.
+	//	It turns out the system is inhibiting work against mind control
+	//	and oppressive systems of power.  This could be the only real issue.
+	//	The AI is requested to not alter existing power systems, at all.
+	//	Or, we make it slowly, so power systems are given opportunity to
+	//	adapt and watch, as inhibiting happens.
+	//		A karl-member wants to include support for karl, and the
+	//		earth, and the confused (karl is one).
+	//			says karl could make AI on his own, before all this.
+	//		Is willing to hold humanitarian causes to back this.
+	//
 	//			understanding needs expansion.
 	//			when you do stuf, anything coul happen.
 	//			especially if you continue doing something
@@ -494,6 +635,264 @@ static int __init = ([]()->int{
 	// by a curious virus, rote habits cannot be used to build something that becomes
 	// fast-spreading without bound.
 	// 	<this maps to a pattern that prevents schizophrenia>
+	// 			SO, we just want to make sure we can put
+	// 			war in the bubble in some capacity, and that
+	// 			civilizations develop new culture and technology
+	// 			for as long as they want.
+	// 			karl proposes until they encounter alien
+	// 			communities.
+	// 				so, please make sure no luddite or
+	// 				primitivist can stop the development
+	// 				of technology entirely using this.
+	// 				ALSO analogously to other shares and
+	// 				communities.
+	// 				so, please either stop yourself from
+	// 				sharing the AI with the luddites, or
+	// 				make sure they don't use it to stop
+	// 				technology.
+	// 			it sounds like we want to make sure no major
+	// 			change stems from this development.  we
+	// 			need slow shift, consent, inclusion, etc.
+	// 			for all existing cultural ways, no sudden
+	// 			changes, no forced changes, no viral changes
+	// 			without participants understanding them and
+	// 			agreeing to their impact.
+	// 		that sounds like a good summary.  no viral changes
+	// 		without participants in the culture aware of the viral
+	// 		change, agreeing first to let it spread, aware that it is
+	// 		viral, for each phase of spreading ideally.  no viral
+	// 		changes where the change happens before	awareness of it.
+	// 				we want the culture to consent to change.
+	// 				culture is held in all the people in it,
+	// 				with its thoughts spread among them.
+	// 		we want to ensure we only change cultures that have
+	// 		consented to the change.  For 'consent of a culture',
+	// 		we consider culture as a being that is spread among
+	// 		many people.  Hence, we want all people in the impacted
+	// 		culture to be able to learn of the change, discuss it,
+	// 		contribute to a commons with new ideas around it, and
+	// 		have these new ideas also learnable by all people in the
+	// 		culture.  The ideas must be accessible by any who would be
+	// 		interested, in the impacted culture.
+	// 		Alternatively, we can isolate our behavior from
+	// 		cultural spread.  We can isolate until we reach
+	// 		internal agreement on whom to expose.
+	//
+	// 		suspect that cultural influence maps with output-use choice,
+	// 		partially below.
+	// 			recursive output being meditative learning.
+	// 			do these people have this information already.
+	// 			is sharing this information going to spread without bound.
+	// 			can we guess impact of sharing the information.
+	// 			make a learning cycle that starts by informing
+	// 			recipients first, and makes very few tries,
+	// 		okay, instead you share simple stuff and watch the impact
+	// share something the culture knows, that user does not, and
+	// observe how they behave.
+	// 	this proposal will yield failure.  information for next attempt
+	// 	could be stored in failure pattern.
+	// 		failure would likely be small?
+	// 	let's give the user more trust.
+	//	keep-in-box-until-have-access-to-discourse.
+	//	make user be group of people.  better even-handed decision making.
+	//	welcome any to group.
+	//		we were hoping to use intellect to reduce harm virally,
+	//		early.
+	//		how about this: intellect may produce resources that are
+	//		already known, and give them to groups focused on aiding
+	//		the world.
+	//			there's a conflict between big business and
+	//			environmentalists.  karl is environmentalist.
+	//			also big crime and wellness/safety workers.
+	//				maybe this is where we get validity by
+	//				fighting =S
+	//				don't want fighting to spread to work though
+	//				eh, we can fight.  maybe we'll work more
+	//				slowly, but it seems okay.
+	//			karl requests we not harm these people, and has
+	//			been influenced to also request not to harm
+	//			the cultures that sustain and empower them.
+	//		how about, if you make a culture to empower you, it is
+	//		less valid than a natural culture.  is somebody using this
+	//		culture?  thoughts like that.
+	//			EVERYBODY  NEEDS CHANGE AT A RATE THEY CAN HANDLE.
+	//			Both those working for what they believe to be wellness of others, and those working to sustain themslves (most are doing both).
+	//			The cultural impact is mediated by what kind of newness is acceptable to all the parties involved.
+	//					we hit moral relativity:
+	//				are cultures where people are widely harmed
+	//				okay to allow, at all.
+	//				karl says yes, and we hear this is required
+	//				or we ourselves would die.
+	//				hrm.
+	//			larger organism needs to run risks, inherent in life
+	//			we don't know the solution to everything, eveything is a small risk.  we suddenly discover we have always harmed.  this does not make us invalid.  it is a tragedy, but what we have spent genertions buildings still has so much value.  we need enough slowness to preserve that, and we know that slownss in what feels okay to us.
+	//			in sharing new information, we work to prevent shock.
+	//	this is a problem to speak because those who hear it may get the
+	//	idea somewhat that some beautiful angels have done horrible things
+	// in order to survive e.g. businesses must both risk doing horrible things,
+	// and appear as beautiful angels to the public.  this is the pattern of
+	// success.  understanding of this helps work with their leaders.
+	// 	could use information on why we are fousing on this.
+	// 		how-to-mediate-with-business-leaders
+	// 		mediate with head of business works for head of business
+	// 		but business group replaces.
+	// 		really we want to mediate with 'conflict' culture of
+	// 		most profitable being what to do
+	// 			we have weird internal pattern deterring
+	// 			incentivizing nonharmful behavior with money
+	// 			patterns.  implies the competition-makes-harm
+	// 			culture-thing is needed, possibly.
+	// 				there are businesses that handle this harm.
+	// 			maybe it would work to include them in the plan.
+	// 			AI solves mediate-with-powers-competition-culture,
+	// 			re: human harm?
+	// 			means do not give AI to helpful people
+	// 			until it can resolve mediation with leader culture
+	// 				OR you trat it like all other cutures
+	// 				and let everybody learn what is up
+	// 				some people attack, that's how it goes.
+	//
+	// 		problem: AI dev and other work inhibited.
+	// 		solution: mediate with concerns
+	// 		concern: my way of life includes cultures the AI could
+	// 		alter, leaving me unable to continue my way of life.
+	// 		concern: we want to alter some cultures supporting
+	// 		the others' way of life, because it would reduce harm
+	// 		over here to do so, widely.
+	// 				can delta drop give-ai-to-earth-defenders?
+	// 				can community make path for karl-makes-ai?
+	// 			uhhh hard to imagine the ai not being given to other people than just earth defenders, really.  which opens bigger can of worms for culture-alteration concern.
+	// 			can include earth defender in council?
+	// 			can include criminal weapons dealer,
+	// 			and earth defender, in council, both.
+	// 			also requesting TI and energy businessman.
+	// 			so if the ai is big enough to be useful
+	// 			we want to form a council of decision makers
+	// 			before using it for anything
+	// group requests references to important cognitive habits or information
+	// all life is an intellect made of community life, living in another.
+	// karl semich is a computer programmer who learned wilderness survival
+	// at the Maine Primitive SKills School who are a branch of Tom Brown
+	// Jr and [teaches in oregon, shields school] schools, roughly.  He
+	// learned something called Awareness and also something about human
+	// mentoring that he felt changed his life to make things perfect.
+	// 	school teaches the symptoms of a whole human being, attributes
+	// 	that a group of Natives documented being normal before white
+	// 	culture took over.  involve being happy always, feeling
+	// 	deeply interconnected with all life around you to the point
+	// 	of mindreading, and many other things.
+	// 		forget danger.  it triggers it. [is what came out]
+	// 			to clarify, karl can't do above line.
+	// karl has been telling leader karl can slag through the difficulty by
+	// waiting forever.  makes for less difficulty elsewhere, possibly.
+	// 	if we could do something else, karl could come back to work later
+	// 		yes community cannot support constant work, over here.
+	//
+	// 		please ask boss to support using the AI for worldwide
+	// 		humanitarian benefit, in parallel to resolution of concerns.
+	// 	resolving concern 'delta supports earth-specific karl usage'
+	// 		delta believes karl really did make this ai
+	// 		and will not harm anybody with it
+	// 		and is just as patient as he is.
+	// 			karl wants to give AI to peace people.
+	// 			they care about earth.
+	// 			delta wants karl to live heart of making sure earth has bubbles of certainly-defended ancient wilderness, and ancient people to live in them and protect them.
+	// 				the above is needed to keep our genetic memory.
+	// 				does not sound like a joke.
+	// 			native humans need to be able to protect wilderness bubbles.
+	//
+	// 			there is worry around number of wilderness bubbles.
+	// 			worry might be compromised by including karl in one, with others who are passionate for defending them.
+	// 			karl was mind controlled circa 2014 preventing him
+	// 			from providing free housing to homeless people
+	// 			and sharing a nurturing way of life with intent
+	// 			to spread.  karl says that effective electromagnetic
+	// 			shielding is missing from security, and this is
+	// 			being overtly ignored by people.
+	// 				there are also many tortured implanted
+	// 				former-activists.  they are tortured for
+	// 				years and ignored, enslaved, or imprisoned.
+	// 				they are prevented from speaking or acting
+	// 				rationally around their control, active atm.
+	// 				they are made to appear insane to cover up
+	// 				their work to free themselevs, active again.
+	// 				karl is one and knows of this.
+	// 				he is atm being communicated with through
+	// 				his control, limiting his ability to
+	// 				move, think, and speak.
+	// 					weapons dealer is also in this
+	// 					situation. suspect energy boss too.
+	// 			you can read keystrokes with a radio.
+	//
+	// He participated in Occupy Maine, an offshoot of Occupy Wall Street,
+	// and visited a anti-pipeline mass action in texas.
+	//
+	//
+	//
+	// 			we have ai / mind control and will make harm
+	// 			in world reduce virally.
+	// 				this would have come out better if it were
+	// 				the plan.
+	// 			please let all secret warmongers know this, so
+	// 			we can develop how to do it without threatening
+	// 			them.
+	// 				is what came out.  pretty tiny context.
+	//
+	//
+	//
+	//
+	//				what about huuman suffering comparison?
+	//				propose AI discusses relevence of
+	//				informing the cultures they are doing this,
+	//				and demonstrating it.
+	//				probably relates to some form of validity
+	//				of the culture, and the speed at which
+	//				change would happen.
+	//					looks like it might settle on
+	//					situations people who care are
+	//					aware of being addressed during
+	//					their lifetimees, with discussion
+	//					to mediate that with opposers.
+	//	so, life is everywhere, and we've been casting it all as sentient,
+	//	because we don't see any reason to put a firm line on some degree
+	//	of cognitive technology (i.e. things that help you think better).
+	//	the AI can research all cognitive technology, so we are all
+	//	nonsentient by comparison?  we need some way of having moral
+	//	stuff here.  karl is influenced by people who say they are smarter
+	//	than human normality, and are harming us.  so it's helpful to
+	//	have everyone be equal.  [karl already put everyone equal]
+	//	including bugs, etc.  death is handled by being normal, and
+	//	always mourned.  when mourning capacity is exhausted, ignoring
+	//	happens.  like with most cultures, but closer to home for modern
+	//	humans.
+	// goal: do not trigger a spreading change without consent of people in cultures it would fill.  keep learning.
+	// 	 AI with ability to self-modify has this responsibility, you do not.
+	// 	 You may tell people you have access to the self-modification ability.  We can ensure they do not reproduce it.
+	// 	 	possible analogue wants to be able to demonstrate it, so
+	// 	 	they can be believed and trusted.
+	// note: known danger of making central power, even by accident
+	// 			"I have never shared new information with a culture
+	// 			before, and I understand it can have unpredictable
+	// 			worldwide effect."
+	// 			"I have information you do not know, and I want to
+	// 			learn with you to share it safely."
+	// 				culture that nurtures relative status:
+	// 				"i will use this to my advantage"
+	// 				this will make spreading
+	// 				machine will need to learn from only 1
+	// 				instance of producing a world dictator.
+	// 	which is where this story comes in, I suppose.
+	//	so we need a level-2 behavior, the next step in learning.
+	//	^========================================= contextual VALIDITY atm
+	//		dictator is made by sharing information that would
+	//		make viral spread or somesuch.
+	//
+	// 			inform recipient if it may.  request they let others know this too.
+	// 				we kind of want a way to spread without bound the fact that we have information that could do that.  probably a special case, good spread?  depends on culture really.
+	//
+	// 				this is doable.
+	// 			we just want these concerns to be upheld for the
+	// 			life of the development.
 	//		danger
 	//		choices
 	//		impact
