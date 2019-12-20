@@ -89,7 +89,6 @@ static int __init = ([]()->int{
 	// 	opencog has functions for pattern matching etc
 	// 	they arent self-modifiable, may not matter
 	
-	
 	decls(ordered, behavior);
 	// need args and result for sequence
 	//ahabit(habit-sequence, ((
@@ -109,14 +108,6 @@ static int __init = ([]()->int{
 	// could pick one or the other to use depending on presence of triggers
 	// or temporary change or something. dunno.
 	// 
-	// 	hey in the notepad, you can call habits from outside.  is that ok?
-	// 	only meaningful if you pass to them more code to run?
-	// 		note: habits never recurse
-	// 	habits might make decision based on you.  they will track it.
-	// 	seems okay.  need to specify that all parameters are from output.
-	// 		that could make exponential slowness, quickly
-	// 		only if decision is made. make decisions inside notepad.
-	// 	we'll figure it out.
 
 	ahabit(make-list, ((list, l)),
 	{
