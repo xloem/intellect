@@ -157,18 +157,12 @@ static int __init = ([]()->int{
 	{
 		if (!happened.linked(whenever-list)) { return; }
 
-		(until-each-list-item-context-in-list)(action-whenever-happened, ctx, happened.get(whenever-list));
-
-		OR
-
 		ref stub = a(event);
 		stub.set(event, ev);
 
 		(until-each-list-item-context-in-list)(action-whenever-happened, stub, happened.get(whenever-list));
 	});
 
-	ahabit(action-whenever-happened, ((list-item, li), (happened-context, hapctx)),
-			OR
 	ahabit(action-whenever-happened, ((list-item, li), (event, h)),
 	{
 		// here: when we trigger a behavior, we want information associated with producing the trigger,
@@ -182,15 +176,11 @@ static int __init = ([]()->int{
 		// in the list, then we inject our context
 		// into that, inside a "happened" property.
 
-		i.get(action)(hapctx, i.get(action-context));
-
-			OR
-
 		ref actctx = i.get(action-context);
 
 		actctx.set(happened, h);
  
-		i.get(action).fun<ref>()(i.get(actctx));
+		i.get(action).fun<ref>()(actctx);
 	});
 
 	ahabit(whenever-habit, ((happens, ev), (action, act), (action-context, actctx)),
