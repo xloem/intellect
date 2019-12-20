@@ -96,19 +96,6 @@ static int __init = ([]()->int{
 	decls(list, nothing, next, previous);
 	decls(make, add, to, until, each, item, in, remove, from, somewhere);
 
-	// these below comments were written during recovery of this document
-	// hmm work was also lost.
-	// 	we got to the point of separating habits from behaviors.
-	// 	behaviors are modifiable.  habits have code.
-	// 	so, habit-sequence is a behavior.
-	// 	we also made behaviors that describe/mirror habits, and were
-	// 	confused over how to handle rewriting them before we knew how
-	// 	to rewrite habits.  should be solved by impact management.
-	// is also nice to have habits and behaviors be same thing
-	// could pick one or the other to use depending on presence of triggers
-	// or temporary change or something. dunno.
-	// 
-
 	ahabit(make-list, ((list, l)),
 	{
 		result = a(list, l);
@@ -168,14 +155,21 @@ static int __init = ([]()->int{
 
 	ahabit(happened-habit, ((happened, ev)),
 	{
-		// TODO: perform each event associated with happened
-
 		if (!happened.linked(whenever-list)) { return; }
 
 		(until-each-list-item-context-in-list)(action-whenever-happened, ctx, happened.get(whenever-list));
+
+		OR
+
+		ref stub = a(event);
+		stub.set(event, ev);
+
+		(until-each-list-item-context-in-list)(action-whenever-happened, stub, happened.get(whenever-list));
 	});
 
 	ahabit(action-whenever-happened, ((list-item, li), (happened-context, hapctx)),
+			OR
+	ahabit(action-whenever-happened, ((list-item, li), (event, h)),
 	{
 		// here: when we trigger a behavior, we want information associated with producing the trigger,
 		// as well as the event that triggered.  that's two contexts.
@@ -189,6 +183,14 @@ static int __init = ([]()->int{
 		// into that, inside a "happened" property.
 
 		i.get(action)(hapctx, i.get(action-context));
+
+			OR
+
+		ref actctx = i.get(action-context);
+
+		actctx.set(happened, h);
+ 
+		i.get(action).fun<ref>()(i.get(actctx));
 	});
 
 	ahabit(whenever-habit, ((happens, ev), (action, act), (action-context, actctx)),
@@ -230,34 +232,3 @@ static int __init = ([]()->int{
 
 	return 0;
 })();
-diff --git a/starts/meaning-vm/habit-starts/learning-parts.cpp b/starts/meaning-vm/habit-starts/learning-parts.cpp
-index ee55b04..09c7b64 100644
-@@ -1127,10 +94,13 @@ static int __init = ([]()->int{
- 
- 		if (!happened.linked(whenever-list)) { return; }
- 
--		(until-each-list-item-context-in-list)(action-whenever-happened, ctx, happened.get(whenever-list));
-+		ref stub = a(event);
-+		stub.set(event, ev);
-+
-+		(until-each-list-item-context-in-list)(action-whenever-happened, stub, happened.get(whenever-list));
- 	});
- 
--	ahabit(action-whenever-happened, ((list-item, li), (happened-context, hapctx)),
-+	ahabit(action-whenever-happened, ((list-item, li), (event, h)),
- 	{
- 		// here: when we trigger a behavior, we want information associated with producing the trigger,
- 		// as well as the event that triggered.  that's two contexts.
-@@ -1142,8 +112,11 @@ static int __init = ([]()->int{
- 		// take one context, which is the one prepared
- 		// in the list, then we inject our context
- 		// into that, inside a "happened" property.
-+		ref actctx = i.get(action-context);
-+
-+		actctx.set(happened, h);
- 
--		i.get(action)(hapctx, i.get(action-context));
-+		i.get(action).fun<ref>()(i.get(actctx));
- 	});
- 
- 	ahabit(whenever-habit, ((happens, ev), (action, act), (action-context, actctx)),
