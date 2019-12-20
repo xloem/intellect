@@ -50,9 +50,17 @@ static int __init = ([]()->int{
 		s.link(t, dst);
 	});
 
+	decls(linked)
+	ahabit(linked, ((source, s), (type, t), (target, dst)),
+	{
+		// i'd like to make target optional
+		// i wonder how to upgrade macro for
+		// could also use preprocessing stage
+	});
+
 	// we want the habits expressive enough to code efficiently in.
 
-	// constructors are tentatively abolished in the low-level habit language. (new-thing modifies, not creates)
+	// constructors are tentatively abolished in the low-level habit language. (new-type-instance modifies, not creates)
 	// we have one constructor of concepts, and knowledge attachment to concepts.
 	
 	decl(make, know, concept, is, group, already, in);
@@ -83,9 +91,10 @@ static int __init = ([]()->int{
 	// constructors to make functions and lists into
 	// concepts.
 	// 	remember can google how to debug lisp
-	// opencog does concepts in lisp already, is heavyweight
-	// with few habita.  just want goertzel's effort honored,
-	// he came up with it before I did.
+	// opencog does concepts within lisp already, is
+	// heavyweight with few habita.  just want goertzel's
+	// effort honored, he probably came up with it before
+	// I did.
 	// 	opencog has functions for pattern matching etc
 	// 	they arent self-modifiable, may not matter
 	
@@ -96,6 +105,8 @@ static int __init = ([]()->int{
 	decls(list, nothing, next, previous);
 	decls(make, add, to, until, each, item, in, remove, from, somewhere);
 
+	// list functiona are habits because orderes-behavior
+	// would use a list
 	ahabit(make-list, ((list, l)),
 	{
 		result = a(list, l);
