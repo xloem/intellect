@@ -52,12 +52,12 @@ int main()
 		}
 	});
 
-	ahabit(start-beat, (),
+	ahabit(start-beat, ((wait-habit, w, wait-habit), (beat-habit, b, beat-habit)),
 	{
 		ctx.vset(beat, int(0));
-		self.set(next, wait-habit);
-		(beat-habit).set(next, wait-habit);
-		(wait-habit).set(next, beat-habit);
+		self.set(next, w);
+		(b).set(next, w);
+		(w).set(next, b);
 	});
 	ahabit(beat-habit, (),
 	{

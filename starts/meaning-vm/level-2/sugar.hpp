@@ -37,12 +37,18 @@
 		__VA_ARGS__ \
 		if (result != ref("nothing")) { ctx.link(ref("result"), result); } \
 	});
-	#define _macro_habit_argnameref(name, tok) \
+	#define _macro_habit_argnameref(name, tok, ...) \
 		ref(#name)
-	#define _macro_habit_commaargnameref(name, tok) \
+	#define _macro_habit_commaargnameref(name, tok, ...) \
 		, ref(#name)
-	#define _macro_habit_set_posarg(name, tok) \
-		ref tok = ctx[ref(#name)];
+	#define _macro_habit_set_posarg(name, tok, ...) \
+		if ((#__VA_ARGS__)[0] == 0 && !ctx.linked(ref(#name))) { \
+			throw an(ref("habit-context-missing-information")).link \
+				(ref("habit"), self, \
+				 ref("context"), ctx, \
+				 ref("missing-information"), ref(#name)); \
+		} \
+		ref tok = ctx.linked(ref(#name)) ? ctx[ref(#name)] : ref(#__VA_ARGS__);
 	
 	// seed random number generator statically, for habit delay
 	namespace _macro_habit {
