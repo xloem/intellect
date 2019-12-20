@@ -50,12 +50,34 @@ static int __init = ([]()->int{
 		s.link(t, dst);
 	});
 
-	decls(linked)
-	ahabit(linked, ((source, s), (type, t), (target, dst)),
+	decls(linked, anything);
+	ahabit(linked, ((source, s), (type, t), (target, dst, anything)),
 	{
-		// i'd like to make target optional
-		// i wonder how to upgrade macro for
-		// could also use preprocessing stage
+		if (dst == anything) {
+			result = s.linked(t);
+		} else {
+			result = s.linked(t, dst);
+		}
+	});
+
+	decls(unlink);
+	ahabit(unlink, ((source, s), (type, t), (target, dst, anything)),
+	{
+		if (dst == anything) {
+			result = s.unlink(t);
+		} else {
+			result = s.unlink(t, dst);
+		}
+	});
+
+	ahabit(get, ((source, s), (type, t)),
+	{
+		result = s.get(t);
+	});
+
+	ahabit(set, ((source, s), (type, t), (target, dst)),
+	{
+		
 	});
 
 	// we want the habits expressive enough to code efficiently in.
@@ -82,7 +104,7 @@ static int __init = ([]()->int{
 	});
 
 	// separate habits and behaviors.
-	// behaviors are modifiableb data run hy immutable habits.
+	// behaviors are modifiable data run hy immutable habits.
 	// they use translation maps to move concepts between
 	// subhabits.
 	// 	translation map is just list of equivalent pairs
@@ -105,17 +127,53 @@ static int __init = ([]()->int{
 	decls(list, nothing, next, previous);
 	decls(make, add, to, until, each, item, in, remove, from, somewhere);
 
-	// list functiona are habits because orderes-behavior
+	// list functiona are habits because ordered-behavior
 	// would use a list
+		// lists are being handled by providing a habit that
+		// can be engaged for every item.  it responds to the item.
+		// i was thinking it could be better to respond to the next-link.
+		// 	these are roughly the same thing.
+		// when doing an ordered behavior we want to act in response to
+		// going to the next step, so we can decide to.
+		// this maps to the step list item.  if result is to stop, list
+		// stops iteration.
+		// 	may want a more meaningful exploration of list. not sure
+		// list is mostly the [first-item, last-item, next, prev] structure
+		// can be handled innumerable ways.
+	// LIST STRUCTURE PROMISE
 	ahabit(make-list, ((list, l)),
 	{
 		result = a(list, l);
 		link(result, first-item, nothing);
 		link(result, last-item, nothing);
 	});
+	ahabit(make-list-item, ((item, i), (previous, prev, nothing), (next, n, nothing)),
+	{
+		result = a(list-item);
+		link(result, item, i);
+		link(result, previous, prev);
+		link(result, next, n);
+	});
+	ahabit(list-first-item, ((list, l)),
+	{
+		result = l.get(first-item);
+	});
+	ahabit(list-last-item, ((list, l)),
+	{
+		result = l.get(last-item);
+	});
+	ahabit(listitem-next, ((item, i)),
+	{
+		result = i.get(next);
+	});
+	ahabit(listitem-previous, ((item, i)),
+	{
+		result = i.get(previous);
+	});
+
 	ahabit(add-to-list, ((item, i), (list, l)),
 	{
-		ref prev = l.get(last-item);
+		ref prev = (list-last-item)(l);
 		ref li = a(list-item);
 		li.link(item, i);
 		li.link(next, nothing);
