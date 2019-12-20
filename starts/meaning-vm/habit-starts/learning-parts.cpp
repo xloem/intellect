@@ -77,7 +77,7 @@ static int __init = ([]()->int{
 
 	ahabit(set, ((source, s), (type, t), (target, dst)),
 	{
-		
+		s.set(t, dst);
 	});
 
 	// we want the habits expressive enough to code efficiently in.
