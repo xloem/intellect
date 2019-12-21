@@ -10,7 +10,7 @@ using level0::concept;
 template <typename T> struct baseref;
 struct ref;
 
-namespace concepts { extern ref nothing; }
+namespace concepts { extern ref nothing; extern ref name; }
 
 }
 }

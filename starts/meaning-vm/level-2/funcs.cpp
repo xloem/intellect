@@ -4,7 +4,6 @@
 #include "ref.hpp"
 #include "concepts.hpp"
 
-
 namespace intellect {
 using namespace level1;
 namespace level2 {
@@ -17,40 +16,65 @@ ref & context()
 	return ctx;
 }
 
-ref makehabit(ref name, std::initializer_list<ref> argnames, std::initializer_list<ref> defaults, std::function<void(ref)> code)
+ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(ref)> code)
 {
 	ref habit = level1::a(concepts::habit, name);
-	ref posarg = habit;
+	ref infn = a(habit-information-needed);
+	habit.set(information-needed, infn);
+	ref posinf = infn;
 	for (auto argname : argnames) {
-		ref nextarg = a(positional-argument);
-		nextarg.set(argument, argname);
-		posarg.set(next-positional-argument, nextarg);
-		posarg = nextarg;
+		ref nextinf = a(habit-information);
+		nextinf.set(information, argname);
+		posinf.set(next-information, nextinf);
+		posinf = nextinf;
+		if (!infn.linked(argname)) {
+			infn.set(argname, nextinf);
+		} else {
+			if (!infn.get(argname).isa(habit-information)) {
+				throw a(bad-concepts::habit-information-concepts::name)
+					.link(concepts::name, argname)
+					.link(concepts::habit, habit);
+			}
+		}
 	}
 	habit.fun(code);
 	return habit;
 }
 
+void habitassume(ref habit, ref information, ref assumption)
+{
+	ref infn = habit.get(concepts::information-needed);
+	infn.get(information).set(assume, assumption);
+}
+
 ref dohabit(ref habit, std::initializer_list<ref> args)
 {
 	using namespace concepts;
-	ref posarg = habit;
+	ref posinf = habit.get(information-needed);
 	for (ref const & arg : args) {
-		if (!posarg.linked(next-positional-argument)) {
-			throw std::invalid_argument("wrong number of arguments to habit");
+		if (!posinf.linked(next-information)) {
+			throw an(unexpected-information).link
+				(concepts::habit, habit,
+				 information-value, arg);
 		}
-		posarg = posarg[next-positional-argument];
+		posinf = posinf[next-information];
 		// TODO: subcontexts or call instances
-		ref::context().set(posarg[argument], arg);
+		ref::context().set(posinf[information], arg);
 	}
-	if (posarg.linked(next-positional-argument)) {
-		throw std::invalid_argument("wrong number of arguments to habit");
+	while (posinf.linked(next-information)) {
+		posinf = posinf[next-information];
+		if (!posinf.linked(assume)) {
+			throw a(information-needed).link
+				(concepts::habit, habit,
+				 information, posinf);
+		}
+		ref::context().set(posinf[information], posinf[assume]);
 	}
 	habit.fun<ref>()(ref::context());
-	posarg = habit;
-	while (posarg.linked(next-positional-argument)) {
-		posarg = posarg[next-positional-argument];
-		ref::context().unlink(posarg[argument]);
+	posinf = habit.get(information-needed);
+	while (posinf.linked(next-information)) {
+		posinf = posinf[next-information];
+		ref::context().unlink(posinf[information]);
 	}
 	if (ref::context().linked(result)) {
 		ref ret = ref::context().get(result);
@@ -65,15 +89,50 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 	using namespace concepts;
 	// TODO: subcontexts or call instances
 	ref ctx = ref::context();
+	ref infn = habit.get(information-needed);
+	std::map<ref, ref> provided;
 	for (auto pair : pairs) {
 		auto second = pair.begin(); ++ second;
-		ctx.link(pair.begin(), second);
+		if (!infn.linked(*pair.begin())) {
+			throw an(unexpected-information).link
+				(concepts::habit, habit,
+				 information, *pair.begin(),
+				 information-value, *second);
+		}
+		if (provided.count(*pair.begin())) { throw "multiple instances same name not implemented here"; }
+		provided[*pair.begin()] = *second;
+	}
+	ref nextinf = infn;
+	while (nextinf.linked(next-information)) {
+		nextinf = nextinf.get(next-information);
+		ref inf = nextinf.get(information);
+		if (!provided.count(inf)) {
+			if (nextinf.get(assume)) {
+				ctx.link(inf, nextinf.get(assume));
+			} else {
+				throw a(information-needed).link
+					(concepts::habit, habit,
+					 information, inf);
+			}
+		} else {
+			ctx.link(inf, provided[inf]);
+		}
 	}
 	habit.fun<ref>()(ctx);
-	for (auto pair : pairs) {
-		auto second = pair.begin(); ++ second;
-		ctx.unlink(pair.begin(), second);
+	nextinf = infn;
+	while (nextinf.linked(next-information)) {
+		nextinf = nextinf.get(next-information);
+		ref inf = nextinf.get(information);
+		if (provided.count(inf)) {
+			ctx.unlink(inf, provided[inf]);
+		} else {
+			ctx.unlink(inf, nextinf.get(assume));
+		}
 	}
+	//for (auto pair : pairs) {
+	//	auto second = pair.begin(); ++ second;
+	//	ctx.unlink(pair.begin(), second);
+	//}
 	if (ctx.linked(result)) {
 		ref ret = ctx.get(result);
 		ctx.unlink(result, ret);

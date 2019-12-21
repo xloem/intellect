@@ -8,13 +8,17 @@ namespace level2 {
 namespace concepts {
 
 using level1::concepts::nothing;
+using level1::concepts::name;
 
 static ref context("context");
 static ref habit("habit");
 static ref next("next");
-static ref positional("positional");
-static ref argument("argument");
+static ref information("information");
+static ref needed("needed");
 static ref result("result");
+static ref assume("assume");
+static ref unexpected("unexpected");
+static ref value("value");
 
 }
 
