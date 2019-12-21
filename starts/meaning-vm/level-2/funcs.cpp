@@ -17,7 +17,7 @@ ref & context()
 	return ctx;
 }
 
-ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(ref)> code)
+ref makehabit(ref name, std::initializer_list<ref> argnames, std::initializer_list<ref> defaults, std::function<void(ref)> code)
 {
 	ref habit = level1::a(concepts::habit, name);
 	ref posarg = habit;

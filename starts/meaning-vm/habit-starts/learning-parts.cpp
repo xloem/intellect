@@ -138,43 +138,57 @@ static int __init = ([]()->int{
 		// this maps to the step list item.  if result is to stop, list
 		// stops iteration.
 		// 	may want a more meaningful exploration of list. not sure
-		// list is mostly the [first-item, last-item, next, prev] structure
+		// list is mostly the [first-entry, last-entry, next, prev] structure
 		// can be handled innumerable ways.
 	// LIST STRUCTURE PROMISE
-	ahabit(make-list, ((list, l)),
+	// should be a promise yandled by habits rather than
+	// a bunch of specific habits, but is ok for now
+	// 	is likely good for mind to discover
+	// 	promises and structures on its own
+	ahabit(know-is-list, ((list, l)),
 	{
-		result = a(list, l);
-		link(result, first-item, nothing);
-		link(result, last-item, nothing);
+		result = l;
+		(know-is)(l, list);
+		link(l, first-item, nothing);
+		link(l, last-item, nothing);
 	});
-	ahabit(make-list-item, ((item, i), (previous, prev, nothing), (next, n, nothing)),
+	ahabit(know-is-list-entry, ((list-entry, l), (item, i), (previous, prev, nothing), (next, n, nothing)),
 	{
-		result = a(list-item);
-		link(result, item, i);
-		link(result, previous, prev);
-		link(result, next, n);
+		result = l;
+		(know-is)(l, list-entry);
+		link(l, item, i);
+		link(l, previous, prev);
+		link(l, next, n);
 	});
 	ahabit(list-first-item, ((list, l)),
 	{
-		result = l.get(first-item);
+		result = get(l, first-item);
 	});
 	ahabit(list-last-item, ((list, l)),
 	{
-		result = l.get(last-item);
+		result = get(l, last-item);
 	});
-	ahabit(listitem-next, ((item, i)),
+	ahabit(list-entry-next, ((list-entry, i)),
 	{
-		result = i.get(next);
+		result = get(i, next);
 	});
-	ahabit(listitem-previous, ((item, i)),
+	ahabit(list-entry-previous, ((list-entry, i)),
 	{
-		result = i.get(previous);
+		result = get(i, previous);
+	});
+	ahabit(list-entry-item, ((list-entry, e)),
+	{
+		result = get(e, item);
 	});
 
 	ahabit(add-to-list, ((item, i), (list, l)),
 	{
 		ref prev = (list-last-item)(l);
-		ref li = a(list-item);
+		ref li = (know-is-list-entry)(
+				(make-concept)(),
+				item,
+				nothing,
+				prev);
 		li.link(item, i);
 		li.link(next, nothing);
 		li.link(previous, prev);
@@ -188,9 +202,7 @@ static int __init = ([]()->int{
 			prev.set(next, li);
 		}
 	});
-	// TODO: this is a useful function with way too much verbosity
-	// please make it simple, later.
-	ahabit(until-each-list-item-context-in-list, ((action, a), (context, c), (list, l)),
+	ahabit(each-list-entry, ((action, a), (context, c), (list, l)),
 	{
 		ref cur = l.get(first-item);
 		while (cur != nothing && result == nothing) {
@@ -198,7 +210,7 @@ static int __init = ([]()->int{
 			cur = cur.get(next);
 		}
 	});
-	ahabit(remove-from-somewhere-in-list, ((item, i), (list, l)),
+	ahabit(remove-from-list, ((item, i), (list, l)),
 	{
 		result = (until-each-list-item-context-in-list)(
 			ahabit(self-iter, ((list-item, i2), (remove-item, i)),
