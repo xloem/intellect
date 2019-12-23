@@ -2,5 +2,6 @@
 *.ii
 *.o
 *.a
+*.tmp
 level?
 habit-starts/rhythm
