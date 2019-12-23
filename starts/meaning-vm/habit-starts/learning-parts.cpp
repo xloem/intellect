@@ -234,6 +234,25 @@ static int __init = ([]()->int{
 			i, l);
 	});
 
+	using links_it = level0::baseref::links_t::iterator;
+	ahabit(populate-link-entry, ((link-entry, le)),
+	{
+		result = le;
+		result.set("source", c);
+		result.set("type", result.vget<links_t>().first);
+		result.set("target", result.vget<links_t>().second);
+	});
+	ahabit(first-link-entry, ((concept, c)),
+	{
+		result = level1::alloc(level, c.links().begin());
+		(populate-link-entry)(result);
+	});
+	ahabit(last-link-entry, ((concept, c)),
+	{
+		result = level1::alloc(level, --c.links().end());
+		(populate-link-entry)(result);
+	});
+
 	ahabit(happened-habit, ((happened, ev)),
 	{
 		if (!happened.linked(whenever-list)) { return; }

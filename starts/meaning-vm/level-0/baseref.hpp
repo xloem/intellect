@@ -108,18 +108,18 @@ private:
 
 	struct array
 	{
-		mutated_it<ref,typename concept::array::iterator> begin() { return array.begin(); }
-		mutated_it<ref,typename concept::array::iterator> end() { return array.end(); }
+		using iterator = mutated_it<ref,typename concept::array::iterator>;
+		iterator begin() { return array.begin(); }
+		iterator end() { return array.end(); }
 	
 		typename concept::array array;
 	};
 
 	struct links_t
 	{
-		mutated_it<std::pair<ref,ref>,typename decltype(concept::links)::iterator> begin()
-		{ return links.begin(); }
-		mutated_it<std::pair<ref,ref>,typename decltype(concept::links)::iterator> end()
-		{ return links.end(); }
+		using iterator = mutated_it<std::pair<ref,ref>,typename decltype(concept::links)::iterator>;
+		iterator begin() { return links.begin(); }
+		iterator end() { return links.end(); }
 
 		decltype(concept::links) & links;
 	};
