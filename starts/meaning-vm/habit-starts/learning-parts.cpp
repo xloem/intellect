@@ -238,18 +238,37 @@ static int __init = ([]()->int{
 	ahabit(populate-link-entry, ((link-entry, le)),
 	{
 		result = le;
-		result.set("source", c);
-		result.set("type", result.vget<links_t>().first);
-		result.set("target", result.vget<links_t>().second);
+		auto & it = result.vget<links_it>();
+		if (it != result["source"].links().end()) {
+			result.set("type", it->first);
+			result.set("target", it->second);
+		} else {
+			result.unlink("type");
+			result.unlink("target");
+		}
 	});
 	ahabit(first-link-entry, ((concept, c)),
 	{
 		result = level1::alloc(level, c.links().begin());
+		result.set("source", c);
 		(populate-link-entry)(result);
 	});
 	ahabit(last-link-entry, ((concept, c)),
 	{
 		result = level1::alloc(level, --c.links().end());
+		result.set("source", c);
+		(populate-link-entry)(result);
+	});
+	ahabit(next-link-entry, ((link-entry, le)),
+	{
+		result = le;
+		++result.vget<links_it>();
+		(populate-link-entry)(result);
+	});
+	ahabit(previous-link-entry, ((link-entry, le)),
+	{
+		result = le;
+		--result.vget<links_it>();
 		(populate-link-entry)(result);
 	});
 
