@@ -85,7 +85,7 @@ static int __init = ([]()->int{
 	// constructors are tentatively abolished in the low-level habit language. (new-type-instance modifies, not creates)
 	// we have one constructor of concepts, and knowledge attachment to concepts.
 	
-	decl(make, know, concept, is, group, already, in);
+	decls(make, know, concept, is, group, already, in);
 	ahabit(make-concept, (),
 	{
 		result = a(concept);
@@ -120,7 +120,7 @@ static int __init = ([]()->int{
 	// 	opencog has functions for pattern matching etc
 	// 	they arent self-modifiable, may not matter
 	
-	decls(ordered, behavior);
+	//decls(ordered, behavior);
 	// need args and result for sequence
 	//ahabit(habit-sequence, ((
 	
@@ -141,10 +141,11 @@ static int __init = ([]()->int{
 		// list is mostly the [first-entry, last-entry, next, prev] structure
 		// can be handled innumerable ways.
 	// LIST STRUCTURE PROMISE
-	// should be a promise yandled by habits rather than
-	// a bunch of specific habits, but is ok for now
+	// should be a promise handled by habits? rather than
+	// a bunch of specific habits? but is ok for now
 	// 	is likely good for mind to discover
 	// 	promises and structures on its own
+	// 		but implementing them generally might speed dev up, dunno
 	ahabit(know-is-list, ((list, l)),
 	{
 		result = l;
@@ -202,7 +203,7 @@ static int __init = ([]()->int{
 			prev.set(next, li);
 		}
 	});
-	ahabit(each-list-entry, ((action, a), (context, c), (list, l)),
+	ahabit(list-each-entry, ((list, l), (context, c), (action, a)),
 	{
 		ref cur = l.get(first-item);
 		while (cur != nothing && result == nothing) {
@@ -210,13 +211,14 @@ static int __init = ([]()->int{
 			cur = cur.get(next);
 		}
 	});
-	ahabit(remove-from-list, ((item, i), (list, l)),
+	// list-entry-remove could be pulled out
+	ahabit(list-remove, ((list, l), (item, i)),
 	{
-		result = (until-each-list-item-context-in-list)(
+		result = (list-each-entry)(l, i,
 			ahabit(self-iter, ((list-item, i2), (remove-item, i)),
 			{
 				if (i2.get(item) == i) {
-					result = true
+					result = true;
 					ref prev = i2.get(previous);
 					ref n = i2.get(next);
 					if (prev != nothing) {
@@ -230,10 +232,11 @@ static int __init = ([]()->int{
 					i2.unlink(item);
 					dealloc(i2); // hmm.  we do have an active goal of making memory allocation be habit based.  this might work here, though.
 				}
-			}),
-			i, l);
+			}));
 	});
 
+
+	/*
 	ahabit(happened-habit, ((happened, ev)),
 	{
 		if (!happened.linked(whenever-list)) { return; }
@@ -300,6 +303,7 @@ static int __init = ([]()->int{
 		// a trigger on the habit-happening habit to check if a label is set,
 		// and remove the habit if it is.
 	});
+	*/
 
 	return 0;
 })();

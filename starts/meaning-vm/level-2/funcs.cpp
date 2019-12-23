@@ -31,7 +31,7 @@ ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(
 			infn.set(argname, nextinf);
 		} else {
 			if (!infn.get(argname).isa(habit-information)) {
-				throw a(bad-concepts::habit-information-concepts::name)
+				throw a(unexpected-concepts::habit-information-concepts::name)
 					.link(concepts::name, argname)
 					.link(concepts::habit, habit);
 			}
