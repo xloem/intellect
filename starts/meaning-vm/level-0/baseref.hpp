@@ -68,6 +68,17 @@ public:
 	concept*& ptr() { return p; }
 	concept* const & ptr() const { return p; }
 
+	operator level0::ref const &() const { return *reinterpret_cast<level0::ref*>(this); }
+	operator level1::ref const &() const { return *reinterpret_cast<level1::ref*>(this); }
+	operator level2::ref const &() const { return *reinterpret_cast<level2::ref*>(this); }
+	operator level3::ref const &() const { return *reinterpret_cast<level3::ref*>(this); }
+	operator level4::ref const &() const { return *reinterpret_cast<level4::ref*>(this); }
+	operator level5::ref const &() const { return *reinterpret_cast<level5::ref*>(this); }
+	operator level6::ref const &() const { return *reinterpret_cast<level6::ref*>(this); }
+	operator level7::ref const &() const { return *reinterpret_cast<level7::ref*>(this); }
+	operator level8::ref const &() const { return *reinterpret_cast<level8::ref*>(this); }
+	operator level9::ref const &() const { return *reinterpret_cast<level9::ref*>(this); }
+
 	operator level0::ref &() { return *reinterpret_cast<level0::ref*>(this); }
 	operator level1::ref &() { return *reinterpret_cast<level1::ref*>(this); }
 	operator level2::ref &() { return *reinterpret_cast<level2::ref*>(this); }

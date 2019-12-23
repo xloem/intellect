@@ -25,7 +25,7 @@
 		ref(#name), \
 		{_macro_call(_macro_for_each_parens, _macro_habit_argnameref, _macro_habit_commaargnameref _macro_comma_remove_parens(argnametoklist))}, \
 		(std::function<void(ref)>) \
-	[=](ref ctx) \
+	[&](ref ctx) \
 	{ \
 		{ \
 			static int delay = (double(rand()) / RAND_MAX * 400000 + 200000); \

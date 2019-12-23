@@ -64,12 +64,13 @@ static int __init = ([]()->int{
 	ahabit(unlink, ((source, s), (type, t), (target, dst, anything)),
 	{
 		if (dst == anything) {
-			result = s.unlink(t);
+			s.unlink(t);
 		} else {
-			result = s.unlink(t, dst);
+			s.unlink(t, dst);
 		}
 	});
 
+	decls(get, set);
 	ahabit(get, ((source, s), (type, t)),
 	{
 		result = s.get(t);
@@ -95,7 +96,7 @@ static int __init = ([]()->int{
 		if (c.linked(is, group)) {
 			throw an(already-in-group).link
 				(habit, self,
-				 context, ctx,
+				 "context", ctx,
 				 concept, c,
 				 group, g);
 		}
@@ -124,8 +125,8 @@ static int __init = ([]()->int{
 	// need args and result for sequence
 	//ahabit(habit-sequence, ((
 	
-	decls(list, nothing, next, previous);
-	decls(make, add, to, until, each, item, in, remove, from, somewhere);
+	decls(list, nothing, next, previous, first, last, entry);
+	decls(add, to, until, each, item, remove, from, somewhere);
 
 	// list functiona are habits because ordered-behavior
 	// would use a list
@@ -182,7 +183,7 @@ static int __init = ([]()->int{
 		result = get(e, item);
 	});
 
-	ahabit(add-to-list, ((item, i), (list, l)),
+	ahabit(list-add, ((list, l), (item, i)),
 	{
 		ref prev = (list-last-item)(l);
 		ref li = (know-is-list-entry)(
@@ -203,11 +204,11 @@ static int __init = ([]()->int{
 			prev.set(next, li);
 		}
 	});
-	ahabit(list-each-entry, ((list, l), (context, c), (action, a)),
+	ahabit(list-each-entry, ((list, l), (context, c), (action, act)),
 	{
 		ref cur = l.get(first-item);
 		while (cur != nothing && result == nothing) {
-			result = a(cur, context);
+			result = act(cur, c);
 			cur = cur.get(next);
 		}
 	});
