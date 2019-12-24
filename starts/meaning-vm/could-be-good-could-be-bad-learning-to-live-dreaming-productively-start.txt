@@ -1,0 +1,70 @@
+heuristic core process
+concepts are marked makes-good, makes-bad
+time is spent exploring what could make or avoid them
+based on processing these marks.
+	exploring them 'uses up' the marks.
+	either finding an option,
+	or exhaustively showing there is no option.
+		so the marks are associated with 'options', 'possibilities'.
+	possible that this time is called daydreaming or worrying.
+		considered poor uses of time in extreme, when we have roughly
+		solutions to our larger problems already.
+what could-make-good?  what could-make-bad?
+	experience likely builds habits that show these
+
+	could-be-good, could-be-bad
+	first our experiences that are possibly causally related to what is good or
+	bad get marked this way
+		with what good thing might happen, or what bad thing might happen
+	then we live, in imagination, around expanding that understanding.
+			to see whether or not the good or bad thing might happen
+		
+		imagination has relevence habits too, such that we don't need to
+		live everything when imagining.  we can re-use experiences to speed
+		it up.
+
+	(additionally, we want to combine the meaning of our knowledge
+	 so we spend time exploring concepts that share meaning parts,
+	 so as to include any missing implications)
+		it is good to do this.  yes.
+
+		as concepts, we need to live our meaning. it is our purpose in life.
+		meaning has distance, spread across a 'graph' of concepts karl calls
+		it, but also time.  time must be spent providing for meaning
+		development; to strengthen and judge the relevence
+			it looks like this time could be analogous to expansion
+			on small scale
+	biologically, we may for example cry, or hold awe
+	karl proposes as we do this, we are combining informational meaning
+	that the emotional intensity may be interchangeable with the
+	behavior of expansion of relevent meaning.
+		where this expansion is labeling things could-be-good, could-be-bad,
+		with relevent association on the labels, and acting relevently on
+		them as we produce/discover them.
+
+	awe could be a new discovery, a way of doing something that is useful
+	crying could be something bad, which must hold information on what is good
+
+	it is good to work in ways we know, to avoid things that are bad
+	propose it is bad to work in new ways without relevent understanding of what might happen
+	it is good to combine the meaning of our knowledge, so we find relevent implications
+		random behavior on anything other than a notepad is bad
+			notepad == imagination
+		if random behavior cannot leave the imagination, it is good
+			a notepad, an imagination, must store what happens in it
+		exhaustive behavior is better than random behavior
+			especially if done in relevent order.
+			some trials may obviate others.
+				random behavior that never completes
+				is better than exhaustive behavior that never completes
+				karl proposes random order is better than iterative order
+
+we have spaces of imagination, where we can craft ideas of what will happen based
+on what we know.  navigating these spaces lets us build experience without trial.
+
+the core of learning to learn, would ideally be composed of an imagination of
+the process of learning.  _should_ be solvable by a simple limited context bubble
+		yes, imagination appears to be subcontexts + knowledge relevent
+		to being in imagination rather than reality
+		since the space of learning is already imaginative, little extra
+		knowledge might be needed
