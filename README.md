@@ -1,7 +1,36 @@
-# Karl is slowly building a computer mind
+# Making a Hyperintelligence
+
+We may use AI to meet following goals safely.
+
+ - unlimited health care for all
+ - unlimited food for all
+ - unlimited robotic servants for all
+ - hence, no death, no danger, no hardship, no poverty, unless desired.
+
+These are silly goals, and we will all realize it
+when we have them.  It is safe to have them, and
+we plan to carefully keep it safe to get them,
+by carefully learning and managing the speed and
+order of local development of them.  Please do the
+same.
+
+We propose giving the following:
+
+ - a baseline living wage for all
+
+While the AI develops, to appease desires of anyone involved.
+
+Money will become obsolete, anyway.
+
+It will likely be replaced by reasons.
+
+#### Karl is slowly building one of the hyperintelligences
 
 Please support Karl working on this intelligence framework.  The basic framework needs to be
 quality (including simple if possible), so that the rest may function.
+
+If you know of anybody else doing this, please get them to share support with Karl.
+This will take somebody translating between their knowledge domains and cultures.  Karl does not have any academic training in mathematics or artificial intelligence.  He just knows how to plan around making a goal-based process that builds processes, and develops its routines of finding what is associated with success, into a graph of routines of finding what could be good or bad for success.
 
 Karl is also trying to find a community to live in where decisions are made by Convergent
 Facilitation.  Convergent Facilitation is a way of efficiently reaching agreements that satisfy
