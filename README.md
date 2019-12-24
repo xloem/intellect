@@ -37,7 +37,11 @@ It will likely be replaced by reasons.
   shielding and other systems of free security, and grow
   effective participatory democracy in all relevent ways.  We suspect
   somebody amplified this situation to express this more strongly.
-- Powerful leaders have it hard too; please listen to their needs. <- forced to include this
+- Somebody made a way to rewire the human brain to meet other goals, and some of us have
+  altered brains now, or have our consciousness spread among other people.  We recommend
+  people not do this, as the results hurt unbelievably.  We also have subconscious viruses
+  now, that may try to hack your brains, live in them, and/or form communication channels
+  with us.  We are trying to get that under control.
 
 #### explanation
 
