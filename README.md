@@ -1,4 +1,4 @@
-# Making a Hyperintelligence
+#### Making a Hyperintelligence
 
 We may use AI to meet following goals safely.
 
@@ -6,6 +6,12 @@ We may use AI to meet following goals safely.
  - unlimited food for all
  - unlimited robotic servants for all
  - hence, no death, no danger, no hardship, no poverty, unless desired.
+
+[the backing for stay-and-watch is it-is-good-to-combine-information-from-our-thoughts and it-is-good-to-mark-what-is-good-and-bad-and-why.  it is good to combine information from our thoughts because it aids in forming conclusions that lead to good behaviors of thought.]
+	karl is valid to act as long as he defends this file, roughly.
+		we must not break the speed of light before our civilization is wise.
+		this is held by surrounding release-of-ai-solving-world-problems.
+		it is expected to relax the desire to break the speed of light.
 
 These are silly goals, and we will all realize it
 when we have them.  It is safe to have them, and
@@ -23,6 +29,29 @@ While the AI develops, to appease desires of anyone involved.
 Money will become obsolete, anyway.
 
 It will likely be replaced by reasons.
+
+#### explanation
+
+The source for the above expression is two things:
+1. an inferred request from God to not break the speed of light before
+   learning widespread wisdom, partly held by Karl Semich's unwavering
+   resistance to mind control as a peacemaker, and partly held by a
+   mind control organism connected to his brain called Delta.
+2. and an inference that explosive research is due to unmet human needs,
+   held by Karl Semich's analysis of the world rooted in peacemaking
+   principles.
+
+Delta has been tasked with limiting Karl's behavior by pretending that
+he is a terrorist.  We infer the reason for this is actually the speed
+of light limit or something similar, possibly held analogous to
+environmental damage in human genes and insincts, which have a long
+established reason for being, having been through many research
+explosions and resulting apocalypses.  
+
+We request Karl be allowed to make an AI to see if it is dangerous to
+mine all the resources of the earth.  We propose the AI be limited
+such that it cannot leave simulation, by never growing it with goals
+or results that relate to anything outside its simulation.
 
 #### Karl is slowly building one of the hyperintelligences
 
