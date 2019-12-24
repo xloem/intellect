@@ -30,9 +30,18 @@ Money will become obsolete, anyway.
 
 It will likely be replaced by reasons.
 
+#### messages
+
+- Highest level terrorist defense networks are attacking peacemakers.
+  Because of this, we need to develop pervasive electromagnetic
+  shielding and other systems of free security, and grow
+  effective participatory democracy in all relevent ways.  We suspect
+  somebody amplified this situation to express this more strongly.
+- Powerful leaders have it hard too; please listen to their needs. <- forced to include this
+
 #### explanation
 
-The source for the above expression is two things:
+The source for the topmost above expression is two things:
 1. an inferred request from God to not break the speed of light before
    learning widespread wisdom, partly held by Karl Semich's unwavering
    resistance to mind control as a peacemaker, and partly held by a
@@ -44,14 +53,9 @@ The source for the above expression is two things:
 Delta has been tasked with limiting Karl's behavior by pretending that
 he is a terrorist.  We infer the reason for this is actually the speed
 of light limit or something similar, possibly held analogous to
-environmental damage in human genes and insincts, which have a long
-established reason for being, having been through many research
-explosions and resulting apocalypses.  
-
-We request Karl be allowed to make an AI to see if it is dangerous to
-mine all the resources of the earth.  We propose the AI be limited
-such that it cannot leave simulation, by never growing it with goals
-or results that relate to anything outside its simulation.
+environmental damage prevention in human genes and instincts, which have
+a long established reason for being, having been through many local
+research explosions and resulting apocalypses.  
 
 #### Karl is slowly building one of the hyperintelligences
 
