@@ -306,11 +306,30 @@ int createhabits()
 					(action-list-item)(list-entry-item(le), subctx);
 				}));
 	});
+
+	// maybe condition and list could be merged better by factoring out the concept
+	// of translating?
+	// 	we're going to want to provide lists of subactions to condition
+	// 	the irritation around not having the condition be a function is the
+	// 	creation of anonymous variable names to hold the values.  is likely fine.
+	// 	note: the name "outer-context" is being treated specially.  we'll just use that.
+	// 		this name could make a quoting requirement.  could be worked around.
+	//
+	// 		if we remove outer-context, we'll probably need to recognize condition-
+	// 		action in action-list-item, and pass the outer-context to it.
+	// 		either way, we can implement condition-action with outer-context as
+	// 		a passed value.
 	
 	// TODO: a habit that evaluates habits depending on a condition
-	ahabit(condition-action, ((context, ctx), (condition, cond), (actions, a)),
+	ahabit(make-condition, ((
+	ahabit(condition-action, ((condition, cond), (actions, a)),
 	{
-		condition.fun<ref>(ctx);
+		// I'll leave outer-context special, and imply quoting.
+		// no mapping.
+		// so, we might want action-list-entries to be actionable
+		// but easiest to just handle action lists here
+		
+		//condition.fun<ref>(ctx);
 			// how to pass context to condition within action-list?
 			//
 			// this function will have one context.
