@@ -48,7 +48,7 @@ int createhabits()
 	// we have one constructor of concepts, and knowledge attachment to concepts.
 	// 	the purpose of this appears to be conceptual ease, not early development ease
 	
-	decls(make, unmake, know, concept, is, group, already, in);
+	decls(make, unmake, know, concept, is, group, already, in, iter);
 	ahabit(make-concept, (),
 	{
 		//result = a(concept);
@@ -138,8 +138,8 @@ int createhabits()
 	});
 
 	// a simple list primitive to aid in dev
-	decls(list, nothing, next, previous, first, last);
-	decls(add, to, until, each, item, remove, from, somewhere);
+	decls(list, nothing, next, previous, first, last, act);
+	decls(add, to, until, each, item, remove, from, somewhere, has);
 	ahabit(know-is-list, ((list, l)),
 	{
 		result = l;
@@ -207,7 +207,7 @@ int createhabits()
 	});
 	ahabit(list-has-item, ((list, l), (item, i)),
 	{
-		result = (list-each-entry)(l, i, "list-has-item-iter");
+		result = (list-each-entry)(l, i, list-has-item-iter);
 		if (result == nothing) { result = false; }
 	});
 		ahabit(list-has-item-iter, ((list-entry, le), (remove-item, i)),
@@ -216,7 +216,7 @@ int createhabits()
 		});
 	ahabit(list-item-entry-unmake, ((list, l), (item, i)),
 	{
-		result = (list-each-entry)(l, i, "list-item-entry-unmake-iter");
+		result = (list-each-entry)(l, i, list-item-entry-unmake-iter);
 		if (result == nothing) {
 			throw (make-concept)().link(
 					is, "item-missing",
@@ -305,37 +305,37 @@ int createhabits()
 		ref subctx = (make-concept)();
 		link(subctx, is, context);
 		link(subctx, "outer-context", outerctx);
-		(list-each-entry)(in, subctx,
-				ahabit(self-needed-information-iter, ((list-entry, le), ("subcontext", subctx)),
-				{
-					ref i = (list-entry-item)(le);
-					ref src = get(i, source);
-					ref dst = get(i, target);
-					ref outerctx = get(subctx, "outer-context");
-					set(subctx, dst, get(outerctx, src));
-				}));
+		(list-each-entry)(in, subctx, context-action-needed-information-iter);
 		act(action, subctx);
-		(list-each-entry)(out, subctx,
-				ahabit(self-made-information-iter, ((list-entry, le), ("subcontext", subctx)),
-				{
-					ref i = (list-entry-item)(le);
-					ref src = get(i, source);
-					ref dst = get(i, target);
-					ref outerctx = get(subctx, "outer-context");
-					set(outerctx, dst, get(subctx, src));
-				}));
+		(list-each-entry)(out, subctx, context-action-made-information-iter);
 		(unmake-concept)(subctx);
 	});
+			ahabit(context-action-needed-information-iter, ((list-entry, le), ("subcontext", subctx)),
+			{
+				ref i = (list-entry-item)(le);
+				ref src = get(i, source);
+				ref dst = get(i, target);
+				ref outerctx = get(subctx, "outer-context");
+				set(subctx, dst, get(outerctx, src));
+			});
+			ahabit(context-action-made-information-iter, ((list-entry, le), ("subcontext", subctx)),
+			{
+				ref i = (list-entry-item)(le);
+				ref src = get(i, source);
+				ref dst = get(i, target);
+				ref outerctx = get(subctx, "outer-context");
+				set(outerctx, dst, get(subctx, src));
+			});
 
 	// when we make an action list, we want to set(habit, action-list) so it may be used in other lists.
 	ahabit(action-list, ((context, subctx), (action, l)),
 	{
-		(list-each-entry)(l, subctx,
-				ahabit(self-iter, ((list-entry, le), ("subcontext", subctx)),
-				{
-					(action-list-item)(list-entry-item(le), subctx);
-				}));
+		(list-each-entry)(l, subctx, action-list-iter);
 	});
+		ahabit(action-list-iter, ((list-entry, le), ("subcontext", subctx)),
+		{
+			(action-list-item)(list-entry-item(le), subctx);
+		});
 
 	// maybe condition and list could be merged better by factoring out the concept
 	// of translating?
@@ -364,12 +364,14 @@ int createhabits()
 			} else {
 				throw (make-concept)().link(
 						is, "unknown-condition",
-						condition, cond,
-						actions, acts,
-						context, ctx);
+						"condition", cond,
+						"actions", acts,
+						context, ctx,
+						"subcontext", outerctx);
 			}
 		} else {
 			act(acts[cond], outerctx);
 		}
 	});
+	return 0;
 }
