@@ -155,6 +155,7 @@ void dealloc(ref r, ref source)
 	if (r.linked(concepts::allocator())) { return; }
 
 	try {
+		if (r.crucial()) { throw crucial_concept(r); }
 		dealloc_from(r);
 		concept * referenced = intellect::level0::referenced(r, source);
 		if (referenced) {

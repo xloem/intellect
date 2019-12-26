@@ -21,6 +21,7 @@ ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(
 	ref habit = level1::a(concepts::habit, name);
 	ref infn = a(habit-information-needed);
 	habit.set(information-needed, infn);
+	//habit.set(concepts::habit, concepts::habit);
 	ref posinf = infn;
 	for (auto argname : argnames) {
 		ref nextinf = a(habit-information);

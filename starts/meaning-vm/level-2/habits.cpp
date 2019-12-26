@@ -189,12 +189,12 @@ int createhabits()
 	ahabit(list-entry-unmake, ((list-entry, le)),
 	{
 		ref prev = (list-entry-previous)(le);
-		ref next = (list-entry-next)(le);
+		ref n = (list-entry-next)(le);
 		if (prev != nothing) {
-			set(prev, "next", next);
+			set(prev, next, n);
 		}
 		if (next != nothing) {
-			set(next, "previous", prev);
+			set(n, previous, prev);
 		}
 		(concept-unmake)(le);
 	});

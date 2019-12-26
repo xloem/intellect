@@ -75,7 +75,7 @@ void concept::unlink(concept* type)
 	unlink(ls.first);
 }
 
-void concept::unlink(decltype(links)::iterator & it)
+void concept::unlink(decltype(links)::iterator it)
 {
 	if (crucialparts.count(it)) {
 		throw crucial_link_type_target(selfref, it->first, it->second);

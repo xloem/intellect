@@ -24,7 +24,7 @@ struct concept
 	void link(concept* type, concept* target);
 	void unlink(concept* type, concept* target);
 	void unlink(concept* type);
-	void unlink(decltype(links)::iterator & it);
+	void unlink(decltype(links)::iterator it);
 
 	bool crucial() { return iscrucial || crucialparts.size(); }
 	bool crucial(concept* type, concept* target);

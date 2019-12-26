@@ -24,7 +24,7 @@ level-1/%.ii: $(wildcard level-0/*.hpp) $(wildcard level-1/*.hpp)
 level-2/%.ii: $(wildcard level-0/*.hpp) $(wildcard level-1/*.hpp) $(wildcard level-2/*.hpp)
 
 %.a:
-	ar ru $@ $^
+	ar cr $@ $^
 	ranlib $@
 
 clean:

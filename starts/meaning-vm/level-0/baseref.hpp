@@ -149,7 +149,7 @@ public:
 		decltype(concept::links) & links;
 	};
 
-	void unlink(typename links_t::iterator & it) { p->unlink(it.underlying()); }
+	void unlink(typename links_t::iterator it) { p->unlink(it.underlying()); }
 	bool crucial(typename links_t::iterator it) { return self.p->crucial(it.underlying()); }
 	void setcrucial(typename links_t::iterator it) { self.p->setcrucial(it.underlying()); }
 };

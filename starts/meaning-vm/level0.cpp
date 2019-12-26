@@ -5,7 +5,7 @@
 
 using namespace intellect::level0;
 
-#define out(name) std::cout << " " #name ":" << (long)name.ptr()
+#define out(name) std::cout << " " #name ":" << std::hex << (size_t)name.ptr() << std::dec
 
 int main()
 {
@@ -41,9 +41,34 @@ int main()
 	std::cout << "Code:  "; a.vget<std::function<void()>>(codelink)();
 
 	std::cout << allocated() << " allocated" << std::endl;
+	
+	a.get(codelink).setcrucial();
+	try {
+		dealloc(a.get(codelink), a);
+		throw "deallocd crucial concept";
+	} catch (crucial_concept e) {
+		realloc(a.get(codelink), concepts::level0allocations());
+	}
+	a.setcrucial(codelink, a.get(codelink));
+	try {
+		a.unlink(codelink);
+		throw "unlinkd crucial link";
+	} catch (crucial_link_type_target e) {
+		realloc(a, concepts::level0allocations());
+		realloc(codelink, concepts::level0allocations());
+	}
+
+	for (auto c : { a, a.get(codelink) } )
+	for (auto it = c.links().begin(); it != c.links().end();) {
+		if (!c.crucial(it) && !it->first.linked(concepts::allocator(), concepts::level0allocations())) {
+			c.unlink(it++);
+		} else {
+			++ it;
+		}
+	}
 
 	e.unlink(b, a);
-	dealloc(a, store);
+	//dealloc(a, store);
 	dealloc(store, concepts::allocations());
 
 	std::cout << allocated() << " allocated" << std::endl;
