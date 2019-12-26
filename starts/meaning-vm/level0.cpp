@@ -46,19 +46,21 @@ int main()
 	try {
 		dealloc(a.get(codelink), a);
 		throw "deallocd crucial concept";
-	} catch (crucial_concept e) {
+	} catch (crucial_concept & e) {
 		realloc(a.get(codelink), concepts::level0allocations());
 	}
 	a.setcrucial(codelink, a.get(codelink));
+	a.setcrucial(numlink, a.get(numlink));
 	try {
 		a.unlink(codelink);
 		throw "unlinkd crucial link";
-	} catch (crucial_link_type_target e) {
+	} catch (crucial_link_type_target & e) {
 		realloc(a, concepts::level0allocations());
 		realloc(codelink, concepts::level0allocations());
+		realloc(numlink, concepts::level0allocations());
 	}
 
-	for (auto c : { a, a.get(codelink) } )
+	for (auto c : { a, a.get(codelink), a.get(numlink) } )
 	for (auto it = c.links().begin(); it != c.links().end();) {
 		if (!c.crucial(it) && !it->first.linked(concepts::allocator(), concepts::level0allocations())) {
 			c.unlink(it++);
