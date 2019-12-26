@@ -10,6 +10,7 @@ using namespace concepts;
 namespace intellect {
 namespace level1 {
 
+	// no way to specify allocator
 ref a(ref group)
 {
 	static unsigned long long gid = 0;

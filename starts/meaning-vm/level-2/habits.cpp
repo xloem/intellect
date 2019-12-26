@@ -2,7 +2,9 @@
 #include "../level-1/sugar.hpp"
 #include "sugar.hpp"
 
-using namespace intellect::level2;
+namespace intellect {
+namespace level2 {
+
 int createhabits()
 {
 	decls(link, source, type, target);
@@ -374,4 +376,15 @@ int createhabits()
 		}
 	});
 	return 0;
+}
+
+void ensurehabitscreated()
+{
+	static int sentinel = createhabits();
+	(void)(sentinel);
+}
+
+static int sentinel = (ensurehabitscreated(), 1);
+
+}
 }

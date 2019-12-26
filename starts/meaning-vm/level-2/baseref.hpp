@@ -1,10 +1,8 @@
 #pragma once
 
 #include "common.hpp"
-
 #include "funcs.hpp"
-
-#include "../level-1/common.hpp"
+#include "../level-1/baseref.hpp"
 
 #include <functional>
 
@@ -21,10 +19,13 @@ struct baseref : public level1::baseref<ref>
 
 	template <typename... Refs>
 	ref operator()(ref first, Refs... rest) { return level2::dohabit(self, {first, rest...}); }
-	template <typename... Pairs>
-	ref operator()(std::initializer_list<ref> first, Pairs... rest) { return level2::dohabit(self, {first, rest...}); }
-
+	ref operator()(std::initializer_list<std::initializer_list<ref>> pairs) { return level2::dohabit(self, pairs); }
 	ref operator()() { return level2::dohabit(self); }
+
+	template <typename... Refs>
+	ref act(ref habit, Refs... rest) { return level2::dohabit(habit, {self, rest...}); }
+
+	void replace(ref other) { *self.ptr() = *other.ptr(); }
 };
 
 }
