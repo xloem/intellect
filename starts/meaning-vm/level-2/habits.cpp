@@ -246,19 +246,49 @@ int createhabits()
 					source, s,
 					target, d);
 	});
-	ahabit(make-action-list-item, ((needed-information-map, in), (made-information-map, out), (action, act)),
+	ahabit(habit, ((context, subctx), (action, act)),
+	{
+		act.fun<ref>(subctx);
+	});
+	ahabit(act, ((action, act), (context, subctx)),
+	{
+		if (linked(act, is, habit) && !linked(act, habit)) {
+			action.fun<ref>()(subctx);
+		} else if (linked(act, habit) && linked(get(act, habit), is, habit)) {
+			ref h = get(act, habit);
+			if (linked(h, habit)) {
+				ref subctx2 = (make-concept)();
+				subctx2.link(
+					"context", subctx,
+					"action", act
+				);
+				self(h, subctx2);
+				(unmake-concept)(subctx2);
+			} else {
+				h({"context", subctx}, {"action", act});
+			}
+		} else {
+			throw (make-concept)().link(
+				is, "unknown-action-type",
+				"action", act,
+				"action-list-item", i
+			);
+		}
+	})
+	ahabit(make-context-action, ((needed-information-map, in), (made-information-map, out), (action, act)),
 	{
 		result = (make-concept)().link(
+				habit, context-action,
 				needed-information-map, in,
 				made-information-map, out,
 				action, act);
 	});
-	ahabit(action-list-item, ((item, i), (outer-context, outerctx)),
+	ahabit(context-action, ((outer-context, outerctx), (context-action, ca)),
 	{
 
-		ref action = i["action"];
-		ref in = i["needed-information-map"];
-		ref out = i["made-information-map"];
+		ref action = ca["action"];
+		ref in = ca["needed-information-map"];
+		ref out = ca["made-information-map"];
 
 		ref subctx = (make-concept)()
 		link(subctx, is, context);
@@ -272,20 +302,7 @@ int createhabits()
 					ref outerctx = get(subctx, "outer-context");
 					set(subctx, dst, get(outerctx, src));
 				}));
-		// here, let's check if the action is a habit, before doing this
-		// also then we can check if it's a behavior, and do something else
-		if (linked(action, is, habit) && !linked(action, habit) {
-			action.fun<ref>()(subctx);
-		} else if (linked(action, habit) && linked(get(action, habit), is, habit)) {
-			ref habit = get(action, habit);
-			habit({"context", subctx}, {"action", action});
-		} else {
-			throw (make-concept)().link(
-				is, "unknown-action-type",
-				"action", action,
-				"action-list-item", i
-			);
-		}
+		act(action, subctx);
 		(list-each-entry)(out, subctx,
 				ahabit(self-made-information-iter, ((list-entry, le), ("subcontext", subctx)),
 				{
@@ -295,6 +312,7 @@ int createhabits()
 					ref outerctx = get(subctx, "outer-context");
 					set(outerctx, dst, get(subctx, src));
 				}));
+		(unmake-concept)(subctx);
 	});
 
 	// when we make an action list, we want to set(action, action-list) so it may be used in other lists.
@@ -322,8 +340,17 @@ int createhabits()
 	
 	// TODO: a habit that evaluates habits depending on a condition
 	ahabit(make-condition, ((
-	ahabit(condition-action, ((condition, cond), (actions, a)),
+	ahabit(condition-action, ((condition, cond), (actions, acts)),
 	{
+		if (!linked(acts, cond)) {
+			throw (make-concept)().link(
+					is, "unknown-condition",
+					condition, cond,
+					actions, acts,
+					context, ctx);
+		}
+		ref outerctx = linked(ctx, "outer-context") ? ctx["outer-context"] : ctx;
+
 		// I'll leave outer-context special, and imply quoting.
 		// no mapping.
 		// so, we might want action-list-entries to be actionable
