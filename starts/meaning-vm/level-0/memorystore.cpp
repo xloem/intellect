@@ -89,6 +89,7 @@ static concept* referenced(ref r, concept* source = 0) {
 
 void basic_dealloc(ref r)
 {
+	if (r.crucial()) { throw crucial_concept(r); }
 	auto it = index().find(r);
 	if (it == index().end()) { throw no_such_concept(r); }
 
@@ -106,6 +107,7 @@ void dealloc_from(ref source)
 
 	auto ours = source.getAll(concepts::allocates());
 	for (auto allocation : ours) {
+		if (allocation.crucial()) { throw crucial_concept(allocation); }
 		source.unlink(concepts::allocates(), allocation);
 		allocation.unlink(concepts::allocator(), source);
 		if (allocation.linked(concepts::allocator())) { continue; }

@@ -13,8 +13,8 @@ namespace level0 {
 template <typename ref>
 class baseref
 {
-	struct array; struct links_t;
 public:
+	struct array; struct links_t;
 	baseref(concept *p)
 	: p(p)
 	{
@@ -63,6 +63,9 @@ public:
 	T& val() { return p->val<T>(); }
 	template <typename T>
 	void val(T const & v) { p->val<T>(v); }
+	bool hasval() { return p->hasval(); }
+	template <typename T>
+	bool hasvalof() { return p->hasvalof<T>(); }
 
 	operator concept*() const { return p; }
 	concept*& ptr() { return p; }
@@ -91,8 +94,14 @@ public:
 	operator level9::ref &() { return *reinterpret_cast<level9::ref*>(this); }
 
 	bool operator==(ref const & other) const { return self.p == other.p; }
-	bool operator!=(ref const & other) const { return self.p == other.p; }
+	bool operator!=(ref const & other) const { return self.p != other.p; }
 	bool operator<(ref const & other) const { return self.p < other.p; }
+
+	bool crucial() { return self.p->crucial(); }
+	bool crucial(ref type, ref target) { return self.p->crucial(type.p, target.p); }
+
+	void setcrucial() { self.p->setcrucial(); }
+	void setcrucial(ref type, ref target) { self.p->setcrucial(type.p, target.p); }
 
 protected:
 	concept * p;
@@ -107,16 +116,21 @@ private:
 
 		mutit & operator++() { ++ self.it; return self; }
 		mutit operator++(int i) { return self.it.operator++(i); }
+		mutit & operator--() { -- self.it; return self; }
+		mutit operator--(int i) { return self.it.operator--(i); }
 		bool operator==(mutit const & other) const { return self.it == other.it; }
 		bool operator!=(mutit const & other) const { return self.it != other.it; }
 
 		val & operator*() { return *(val*)&self.it.operator*(); }
 		val * operator->() { return (val*)self.it.operator->(); }
 
+		It & underlying() { return it; }
+
 	private:
 		It it;
 	};
 
+public:
 	struct array
 	{
 		using iterator = mutated_it<ref,typename concept::array::iterator>;
@@ -134,6 +148,10 @@ private:
 
 		decltype(concept::links) & links;
 	};
+
+	void unlink(typename links_t::iterator & it) { p->unlink(it.underlying()); }
+	bool crucial(typename links_t::iterator it) { return self.p->crucial(it.underlying()); }
+	void setcrucial(typename links_t::iterator it) { self.p->setcrucial(it.underlying()); }
 };
 
 template <typename ref>

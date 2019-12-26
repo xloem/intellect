@@ -16,16 +16,49 @@ void concept::link(concept* type, concept* target)
 	links.insert({type, target});
 }
 
-void concept::unlink(concept* type, concept* target)
+bool concept::crucial(concept* type, concept* target)
+{
+	auto ls = links.equal_range(type);
+	bool wascrucial = false;
+	bool wasnotcrucial = false;
+	for (auto l = ls.first; l != ls.second; ++ l) {
+		if (l->second == target) {
+			if (crucialparts.count(l)) { wascrucial = true; }
+			else { wasnotcrucial = true; }
+		}
+	}
+	if (wascrucial && wasnotcrucial) { throw link_type_not_unique(selfref, type); }
+	if ((!wascrucial) && (!wasnotcrucial)) { throw no_such_link_type(selfref, type); }
+	return wascrucial;
+}
+
+void concept::setcrucial(concept* type, concept* target)
 {
 	auto ls = links.equal_range(type);
 	for (auto l = ls.first; l != ls.second; ++ l) {
 		if (l->second == target) {
+			if (!crucialparts.count(l)) {
+				setcrucial(l);
+				return;
+			}
+		}
+	}
+	throw no_such_link_type(selfref, type);
+}
+
+void concept::unlink(concept* type, concept* target)
+{
+	auto ls = links.equal_range(type);
+	bool wascrucial = false;
+	for (auto l = ls.first; l != ls.second; ++ l) {
+		if (l->second == target) {
+			if (crucialparts.count(l)) { wascrucial = true; continue; }
 			links.erase(l);
 			return;
 		}
 	}
-	throw no_such_link_type_target(selfref, type, target);
+	if (wascrucial) { throw crucial_link_type_target(selfref, type, target); }
+       	throw no_such_link_type_target(selfref, type, target);
 }
 
 void concept::unlink(concept* type)
@@ -39,7 +72,15 @@ void concept::unlink(concept* type)
 	if (mid != ls.second) {
 		throw link_type_not_unique(selfref, type);
 	}
-	links.erase(ls.first);
+	unlink(ls.first);
+}
+
+void concept::unlink(decltype(links)::iterator & it)
+{
+	if (crucialparts.count(it)) {
+		throw crucial_link_type_target(selfref, it->first, it->second);
+	}
+	links.erase(it++);
 }
 
 bool concept::linked(concept* type) const

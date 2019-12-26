@@ -32,6 +32,30 @@ struct no_such_link_type_target : public std::out_of_range
 	concept* const target;
 };
 
+struct crucial_link_type_target : public std::out_of_range
+{
+	crucial_link_type_target(concept* source, concept* type, concept* target)
+	: std::out_of_range("concept part is crucial"),
+	  source(source),
+	  type(type),
+	  target(type)
+	{ }
+
+	concept* const source;
+	concept* const type;
+	concept* const target;
+};
+
+struct crucial_concept : public std::invalid_argument
+{
+	crucial_concept(concept* topic)
+	: std::invalid_argument("concept is crucial"),
+	  topic(topic)
+	{ }
+
+	concept* const topic;
+};
+
 struct link_type_not_unique : public std::invalid_argument
 {
 	link_type_not_unique(concept* source, concept* type)

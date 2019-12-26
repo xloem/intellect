@@ -4,6 +4,7 @@
 
 #include <any>
 #include <map>
+#include <unordered_set>
 #include <vector>
 
 namespace intellect {
@@ -23,6 +24,14 @@ struct concept
 	void link(concept* type, concept* target);
 	void unlink(concept* type, concept* target);
 	void unlink(concept* type);
+	void unlink(decltype(links)::iterator & it);
+
+	bool crucial() { return iscrucial || crucialparts.size(); }
+	bool crucial(concept* type, concept* target);
+	bool crucial(decltype(links)::iterator it) { return crucialparts.count(it); }
+	void setcrucial() { iscrucial = true; }
+	void setcrucial(concept* type, concept* target);
+	void setcrucial(decltype(links)::iterator it) { crucialparts.insert(it); }
 
 	bool linked(concept* type) const;
 	bool linked(concept* type, concept* target) const;
@@ -41,6 +50,23 @@ struct concept
 
 	template <typename T>
 	void val(T const & v) { data = v; }
+
+	bool hasval() { return data.has_value(); }
+
+	template <typename T>
+	bool hasvalof() { return hasval() && data.type() == typeid(T); }
+
+private:
+	// for permanence
+	bool iscrucial;
+	struct linksit_hash
+	{
+		size_t operator()(decltype(links)::iterator const &it) const
+		{
+			return std::hash<decltype(&*it)>()(&*it);
+		}
+	};
+	std::unordered_set<decltype(links)::iterator, linksit_hash> crucialparts;
 };
 
 }
