@@ -1,6 +1,8 @@
+#include "ref.hpp"
 #include "../level-1/sugar.hpp"
 #include "sugar.hpp"
 
+using namespace intellect::level2;
 int createhabits()
 {
 	decls(link, source, type, target);
@@ -40,13 +42,6 @@ int createhabits()
 		s.set(t, dst);
 	});
 
-	ahabit(copy, ((concept, c)),
-	{
-		// copies data too
-		result = (make-concept)();
-		*result.p = *concept.p;
-	});
-
 	// we want the habits expressive enough to code efficiently in.
 
 	// constructors are tentatively abolished in the low-level habit language. (new-type-instance modifies, not creates)
@@ -59,18 +54,25 @@ int createhabits()
 		//result = a(concept);
 		result = intellect::level0::basic_alloc();
 	}); 
+	ahabit(make-copy, ((concept, c)),
+	{
+		// copies data too
+		result = (make-concept)();
+		result.replace(c);
+	});
 	ahabit(concept-unmake, ((concept, c)),
 	{
 		intellect::level0::basic_dealloc(c);
 	});
 
+	decls(habit, context);
 	ahabit(know-is, ((concept, c), (group, g)),
 	{
 		if (c.linked(is, group)) {
 			throw (make-concept)().link
 				(is, already-in-group,
 				 habit, self,
-				 "context", ctx,
+				 context, ctx,
 				 concept, c,
 				 group, g);
 		}
@@ -80,17 +82,18 @@ int createhabits()
 
 	// a way to iterate or inspect the links of a concept
 
-	using links_it = level0::baseref::links_t::iterator;
+	using links_it = intellect::level0::baseref<ref>::links_t::iterator;
+	decls(populate, entry);
 	ahabit(populate-link-entry, ((link-entry, le)),
 	{
 		result = le;
-		auto & it = result.vget<links_it>();
-		if (it != result["source"].links().end()) {
-			set(result, "type", it->first);
-			set(result, "target", it->second);
+		auto & it = result.val<links_it>();
+		if (it != result[source].links().end()) {
+			set(result, type, it->first);
+			set(result, target, it->second);
 		} else {
-			unlink(result, "type");
-			unlink(result, "target");
+			unlink(result, type);
+			unlink(result, target);
 		}
 	});
 	ahabit(know-is-first-link-entry, ((link-entry, le), (concept, c)),
@@ -98,44 +101,44 @@ int createhabits()
 		if (le.hasval()) { throw (make-concept)().link(
 				is, "already-has-value",
 				concept, le,
-				"context", ctx); }
+				context, ctx); }
 		(know-is)(le, link-entry);
-		le.set<link_it>(c.links().begin());
-		le.set("source", c);
+		le.val<links_it>(c.links().begin());
+		le.set(source, c);
 		(populate-link-entry)(le);
 		result = le;
 	});
-	ahabit(know-is-last-link-entry, ((concept, c)),
+	ahabit(know-is-last-link-entry, ((link-entry, le), (concept, c)),
 	{
 		if (le.hasval()) { throw (make-concept)().link(
 				is, "already-has-value",
 				concept, le,
-				"context", ctx); }
+				context, ctx); }
 		(know-is)(le, link-entry);
-		le.set<link_it>(--c.links().end());
-		le.set("source", c);
+		le.val<links_it>(--c.links().end());
+		le.set(source, c);
 		(populate-link-entry)(le);
 		result = le;
 	});
 	ahabit(next-link-entry, ((link-entry, le)),
 	{
-		++le.vget<links_it>();
+		++le.val<links_it>();
 		(populate-link-entry)(le);
 		result = le;
 	});
 	ahabit(previous-link-entry, ((link-entry, le)),
 	{
-		--le.vget<links_it>();
+		--le.val<links_it>();
 		(populate-link-entry)(le);
 		result = le;
 	});
 	ahabit(same-link-entry, ((link-entry-A, lea), (link-entry-B, leb)),
 	{
-		return lea.vget<links_it>() == leb.vget<links_t>();
+		return lea.val<links_it>() == leb.val<links_it>();
 	});
 
 	// a simple list primitive to aid in dev
-	decls(list, nothing, next, previous, first, last, entry);
+	decls(list, nothing, next, previous, first, last);
 	decls(add, to, until, each, item, remove, from, somewhere);
 	ahabit(know-is-list, ((list, l)),
 	{
@@ -204,23 +207,16 @@ int createhabits()
 	});
 	ahabit(list-has-item, ((list, l), (item, i)),
 	{
-		result = (list-each-entry)(l, i,
-			ahabit(self-iter, ((list-entry, le), (remove-item, i)),
-			{
-				if ((list-entry-item)(le) == i) { result = true; }
-			}));
+		result = (list-each-entry)(l, i, "list-has-item-iter");
 		if (result == nothing) { result = false; }
 	});
+		ahabit(list-has-item-iter, ((list-entry, le), (remove-item, i)),
+		{
+			if ((list-entry-item)(le) == i) { result = true; }
+		});
 	ahabit(list-item-entry-unmake, ((list, l), (item, i)),
 	{
-		result = (list-each-entry)(l, i,
-			ahabit(self-iter, ((list-entry, le), (remove-item, i)),
-			{
-				if ((list-entry-item)(le) == i) {
-					result = true;
-					(list-entry-unmake)(le);
-				}
-			}));
+		result = (list-each-entry)(l, i, "list-item-entry-unmake-iter");
 		if (result == nothing) {
 			throw (make-concept)().link(
 					is, "item-missing",
@@ -230,6 +226,13 @@ int createhabits()
 					);
 		}
 	});
+		ahabit(list-item-entry-unmake-iter, ((list-entry, le), (remove-item, i)),
+		{
+			if ((list-entry-item)(le) == i) {
+				result = true;
+				(list-entry-unmake)(le);
+			}
+		});
 
 	// make lists as an expression:
 	// (make-concept)()
@@ -239,7 +242,7 @@ int createhabits()
 	// 	...;
 
 	// a habit that evaluates a sequence of other habits
-	decls(action,map);
+	decls(action, map);
 	ahabit(make-map-item, ((source, s), (target, d)),
 	{
 		result = (make-concept)().link(
@@ -248,33 +251,42 @@ int createhabits()
 	});
 	ahabit(habit, ((context, subctx), (action, act)),
 	{
-		act.fun<ref>(subctx);
+		act.fun<ref>()(subctx);
 	});
+	// call a habit-like action with the provided context
 	ahabit(act, ((action, act), (context, subctx)),
 	{
 		if (linked(act, is, habit) && !linked(act, habit)) {
-			action.fun<ref>()(subctx);
+			act.fun<ref>()(subctx);
 		} else if (linked(act, habit) && linked(get(act, habit), is, habit)) {
 			ref h = get(act, habit);
 			if (linked(h, habit)) {
 				ref subctx2 = (make-concept)();
+				// i reviewed this once enough to satisfy me it seemed correct
+				// for the instance of using action-lists as habit links.
+				// i did not examine all parts when doing this, deeming it
+				// unnecessary.
 				subctx2.link(
+					is, context,
+					"outer-context", ctx,
 					"context", subctx,
 					"action", act
 				);
 				self(h, subctx2);
 				(unmake-concept)(subctx2);
 			} else {
-				h({"context", subctx}, {"action", act});
+				h({{context, subctx}, {action, act}});
 			}
 		} else {
 			throw (make-concept)().link(
 				is, "unknown-action-type",
 				"action", act,
-				"action-list-item", i
+				"inner-context", subctx,
+				"context", ctx
 			);
 		}
 	})
+	decls(needed, made, information);
 	ahabit(make-context-action, ((needed-information-map, in), (made-information-map, out), (action, act)),
 	{
 		result = (make-concept)().link(
@@ -290,7 +302,7 @@ int createhabits()
 		ref in = ca["needed-information-map"];
 		ref out = ca["made-information-map"];
 
-		ref subctx = (make-concept)()
+		ref subctx = (make-concept)();
 		link(subctx, is, context);
 		link(subctx, "outer-context", outerctx);
 		(list-each-entry)(in, subctx,
@@ -315,7 +327,7 @@ int createhabits()
 		(unmake-concept)(subctx);
 	});
 
-	// when we make an action list, we want to set(action, action-list) so it may be used in other lists.
+	// when we make an action list, we want to set(habit, action-list) so it may be used in other lists.
 	ahabit(action-list, ((context, subctx), (action, l)),
 	{
 		(list-each-entry)(l, subctx,
@@ -338,57 +350,26 @@ int createhabits()
 	// 		either way, we can implement condition-action with outer-context as
 	// 		a passed value.
 	
-	// TODO: a habit that evaluates habits depending on a condition
-	ahabit(make-condition, ((
+	ahabit(nothing, (), {});
+	link(nothing, habit, nothing);
+
+	// does acts[cond] in outer-context.
+	// uses acts[anything] if there is no acts[cond].
 	ahabit(condition-action, ((condition, cond), (actions, acts)),
 	{
-		if (!linked(acts, cond)) {
-			throw (make-concept)().link(
-					is, "unknown-condition",
-					condition, cond,
-					actions, acts,
-					context, ctx);
-		}
 		ref outerctx = linked(ctx, "outer-context") ? ctx["outer-context"] : ctx;
-
-		// I'll leave outer-context special, and imply quoting.
-		// no mapping.
-		// so, we might want action-list-entries to be actionable
-		// but easiest to just handle action lists here
-		
-		//condition.fun<ref>(ctx);
-			// how to pass context to condition within action-list?
-			//
-			// this function will have one context.
-			// propose condition and actions are special.
-			// or, we could handle specially in other function
-			// 	we want to be able to use values from our context, in the
-			// 	habit called.
-			// so it's almost like we want two maps
-			// 	what would be needed to do this separate subcontext?
-			// 		would need more boilerplate for mapping into it
-			// 		current map code only places into normal context.
-			// 		so, context would get value of local variable,
-			// 		as whole context.
-			// 	what would we want ideally?
-			// 		we want context to be primarily mapped, maybe
-			// 			really it can go anyway since we plan to wrap
-			// 			with macro
-			// 		and then condition and actions have their own special
-			// 		mapping.
-			// 		
-			// 		would like condition and actions to not shadow contents
-			// 		of context.
-			// 		maybe a tag inside map
-			// 		what is also interesting is that inside actions,
-			// 		we want the same outer context to the list run.
-			//
-			// NOTE!! DEAL WITH LATER!! dohabit() uses the thread-local global context.  unlinks locals when done.
-		// actions is again a set of pairs
-		// index is the result of the condition
-		// value is action to do
-		// is pretty conducive to just a flat concept here
-		// where types are condition-result
-		// and targets are action-to-do
+		if (!linked(acts, cond)) {
+			if (linked(acts, "anything")) {
+				act(acts["anything"], outerctx);
+			} else {
+				throw (make-concept)().link(
+						is, "unknown-condition",
+						condition, cond,
+						actions, acts,
+						context, ctx);
+			}
+		} else {
+			act(acts[cond], outerctx);
+		}
 	});
 }
