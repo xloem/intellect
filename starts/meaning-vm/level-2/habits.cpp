@@ -13,6 +13,16 @@ int createhabits()
 		s.link(t, dst);
 	});
 
+	ahabit(link-crucial, ((souce, s), (type, t), (target, dst)),
+	{
+		result = s.crucial(t, dst);
+	});
+
+	ahabit(link-set-crucial, ((source, s), (type, t), (target, dst)),
+	{
+		s.setcrucial(t, dst);
+	});
+
 	decls(linked, anything);
 	ahabit(linked, ((source, s), (type, t), (target, dst, anything)),
 	{
@@ -65,6 +75,14 @@ int createhabits()
 	ahabit(concept-unmake, ((concept, c)),
 	{
 		intellect::level0::basic_dealloc(c);
+	});
+	ahabit(concept-crucial, ((concept, c)),
+	{
+		result = c.crucial();
+	});
+	ahabit(concept-set-crucial, ((concept, c)),
+	{
+		c.setcrucial();
 	});
 
 	decls(habit, context);
@@ -138,6 +156,20 @@ int createhabits()
 	{
 		return lea.val<links_it>() == leb.val<links_it>();
 	});
+	ahabit(link-entry-unlink, ((link-entry, le)),
+	{
+		le.get(source).unlink(le.val<links_it>()++);
+		(populate-link-entry)(le);
+		result = le;
+	});
+	ahabit(link-entry-crucial, ((link-entry, le)),
+	{
+		result = le.get(source).crucial(le.val<links_it>());
+	});
+	ahabit(link-entry-set-crucial, ((link-entry, le)),
+	{
+		le.get(source).setcrucial(le.val<links_it>());
+	});
 
 	// a simple list primitive to aid in dev
 	decls(list, nothing, next, previous, first, last, act);
@@ -185,6 +217,8 @@ int createhabits()
 			l.set(last-item, le);
 			prev.set(next, le);
 		}
+
+		result = list;
 	});
 	ahabit(list-entry-unmake, ((list-entry, le)),
 	{
@@ -197,15 +231,19 @@ int createhabits()
 			set(n, previous, prev);
 		}
 		(concept-unmake)(le);
+		result = n;
 	});
 
-	ahabit(list-each-entry, ((list, l), (context, c), (action, act)),
+	ahabit(list-each-entry, ((list, l), (context, c), (action, a)),
 	{
-		ref cur = (list-first-entry)(l);
-		while (cur != nothing && result == nothing) {
-			result = act(cur, c);
-			cur = (list-next-entry)(cur);
+		ref subctx = (make-concept());
+		subctx.set(context, c);
+		subctx.set(list-entry, (list-first-entry)(l));
+		while (subctx.get(list-entry) != nothing && result == nothing) {
+			result = act(a, subctx);
+			subctx.set(list-entry, (list-entry-next)(subctx.get(list-entry)));
 		}
+		(unmake-concept)(subctx);
 	});
 	ahabit(list-has-item, ((list, l), (item, i)),
 	{
@@ -260,6 +298,7 @@ int createhabits()
 	{
 		if (linked(act, is, habit) && !linked(act, habit)) {
 			act.fun<ref>()(subctx);
+			result = subctx.get("result");
 		} else if (linked(act, habit) && linked(get(act, habit), is, habit)) {
 			ref h = get(act, habit);
 			if (linked(h, habit)) {
@@ -275,9 +314,10 @@ int createhabits()
 					"action", act
 				);
 				self(h, subctx2);
+				result = subctx2.get("result");
 				(unmake-concept)(subctx2);
 			} else {
-				h({{context, subctx}, {action, act}});
+				result = h({{context, subctx}, {action, act}});
 			}
 		} else {
 			throw (make-concept)().link(
@@ -297,7 +337,7 @@ int createhabits()
 				made-information-map, out,
 				action, act);
 	});
-	ahabit(context-action, ((outer-context, outerctx), (context-action, ca)),
+	ahabit(context-action, ((context, outerctx), (action, ca)),
 	{
 
 		ref action = ca["action"];
@@ -339,24 +379,12 @@ int createhabits()
 			(action-list-item)(list-entry-item(le), subctx);
 		});
 
-	// maybe condition and list could be merged better by factoring out the concept
-	// of translating?
-	// 	we're going to want to provide lists of subactions to condition
-	// 	the irritation around not having the condition be a function is the
-	// 	creation of anonymous variable names to hold the values.  is likely fine.
-	// 	note: the name "outer-context" is being treated specially.  we'll just use that.
-	// 		this name could make a quoting requirement.  could be worked around.
-	//
-	// 		if we remove outer-context, we'll probably need to recognize condition-
-	// 		action in action-list-item, and pass the outer-context to it.
-	// 		either way, we can implement condition-action with outer-context as
-	// 		a passed value.
-	
 	ahabit(nothing, (), {});
 	link(nothing, habit, nothing);
 
 	// does acts[cond] in outer-context.
 	// uses acts[anything] if there is no acts[cond].
+	
 	ahabit(condition-action, ((condition, cond), (actions, acts)),
 	{
 		ref outerctx = linked(ctx, "outer-context") ? ctx["outer-context"] : ctx;

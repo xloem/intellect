@@ -119,7 +119,7 @@ int main()
 #endif
 	ahabit(wait-habit, (),
 	{
-		usleep(micros);
+		sugar::usleep(micros);
 	});
 
 	(keep-doing-habit)(start-beat);

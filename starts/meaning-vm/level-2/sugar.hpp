@@ -1,10 +1,14 @@
 #pragma once
 
-#include <stdlib.h> // int rand(); void srand(int seed);
-#include <time.h> // int time(0); int clock_gettime(CLOCK_REALTIME, struct timespec *tp{tv_sec,tv_nsec})
-#include <unistd.h> // usleep(unsigned int usecs)
-
 #undef self
+
+namespace intellect {
+namespace level2 {
+
+namespace sugar {
+	void usleep(unsigned int usecs);
+	double rand(double min, double max);
+}
 
 // habits have a structure such that they contain information about their positional
 // arguments.  they are made with a macro that turns the args into local variables.
@@ -28,8 +32,8 @@
 	[&](ref ctx) \
 	{ \
 		{ \
-			static int delay = (double(rand()) / RAND_MAX * 400000 + 200000); \
-			usleep(delay); \
+			static int delay = sugar::rand(200000, 400000); \
+			sugar::usleep(delay); \
 		} \
 		ref self = ref(#name); (void)self; \
 		ref result("nothing"); (void)result; \
@@ -55,10 +59,6 @@
 		ref tok = ctx.linked(ref(#name)) ? ctx[ref(#name)] : ref(#__VA_ARGS__);
 	#define _macro_habit_assume(info, tok, ...) \
 		if ((#__VA_ARGS__)[0] != 0) { intellect::level2::habitassume(_macro_habit_name, ref(#info), ref(#__VA_ARGS__)); }
-	
-	// seed random number generator statically, for habit delay
-	namespace _macro_habit {
-	static struct timespec tp;
-	static int timeres = clock_gettime(CLOCK_REALTIME, &tp);
-	static int seed = (srand(tp.tv_nsec), tp.tv_nsec);
-	}
+
+}
+}
