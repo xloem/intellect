@@ -15,6 +15,8 @@ as you but with a different set of inner habits.
 	 discovering a false assumption (like data all processed
 	 to have a structure) midway through a task, fixing it,
 	 and continuing on withouy restarting the task.
+	- stop pursuing a goal midway, and then resume it precisely after doing
+	  something else for a bit
 
 Level 0 should be low level enough to provide for arbitrary flexibility.
 There shouldn't be decision-making challenges with regard to exposing

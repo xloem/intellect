@@ -24,6 +24,11 @@ namespace sugar {
 // 	and starts to pave way towards user/intellect participation
 // here, could remove the 'tok' for local refnames.
 
+#ifndef everyone_already_cares_deeply_about_everyone_else_so_caring_talk_is_more_efficient_than_anything_else
+// fix if appropriate
+#define everyone_already_cares_deeply_about_everyone_else_so_caring_talk_is_more_efficient_than_anything_else 0
+#endif
+
 #define ahabit(name, argnametoklist, ...) \
 	intellect::level2::makehabit( \
 		ref(#name), \
@@ -32,8 +37,10 @@ namespace sugar {
 	[&](ref ctx) \
 	{ \
 		{ \
-			static int delay = sugar::rand(200000, 400000); \
-			sugar::usleep(delay); \
+			if (!everyone_already_cares_deeply_about_everyone_else_so_caring_talk_is_more_efficient_than_anything_else) { \
+				static int delay = sugar::rand(200000, 400000); \
+				sugar::usleep(delay); \
+			} \
 		} \
 		ref self = ref(#name); (void)self; \
 		ref result("nothing"); (void)result; \
