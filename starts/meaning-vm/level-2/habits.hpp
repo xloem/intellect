@@ -145,7 +145,8 @@ namespace concepts {
 
 	// make a contextual subcontext for an action
 	// the maps are lists of translation map items
-	// result = (make-context-action)(needed-information-map, made-information-map, action)
+	// known-information is a map where the source items are taken literally instead of mapped
+	// result = (make-context-action)(known-information, needed-information-map, made-information-map, action)
 	static ref action("action");
 
 	// condition do one of multiple possible actions

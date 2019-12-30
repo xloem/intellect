@@ -16,6 +16,8 @@ ref & context()
 	return ctx;
 }
 
+//ref makehabit(ref name, std::list<ref> argnames, std::any 
+
 ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(ref)> code)
 {
 	ref habit = level1::a(concepts::habit, name);
@@ -71,6 +73,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		}
 		ref::context().set(posinf[information], posinf[assume]);
 	}
+	ref::context().set("self", habit);
 	habit.fun<ref>()(ref::context());
 	posinf = habit.get(information-needed);
 	while (posinf.linked(next-information)) {
