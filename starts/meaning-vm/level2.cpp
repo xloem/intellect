@@ -34,7 +34,7 @@ ref makelist(std::initializer_list<ref> items)
 //		order here matters not.  continue.
 
 // helper function for making a codeline
-ref makestep(ref habit, ref result, std::initializer_list<ref> ins)
+ref makestep(ref habit, std::initializer_list<ref> resultandins)
 {
 	// build needed-information-map, made-information-map, action
 	// then pass to make-context-action.
@@ -44,7 +44,8 @@ ref makestep(ref habit, ref result, std::initializer_list<ref> ins)
 		(make-next-list-entry)(mim, (make-map-item)("result", result));
 	}
 	ref infn = habit.get(information-needed);
-	for (ref in : ins) {
+	bool gotresult = false;
+	for (ref in : resultandins) {
 		infn = infn.get(next-information);
 		std::string n = (name-of)(in).val<std::string>();
 		if (n.c_str()[0] == '`') {
@@ -73,16 +74,21 @@ ref knowisactionlist(ref src, std::initializer_list<ref> steps)
 #define symboltostr(sym) #sym
 #define commasymboltostr(sym) , #sym
 
-ref makestep(ref last, ref action, ref result, std::initializer_list<char const *> ins)
+ref makestep(ref last, ref action, std::initializer_list<char const *> resultandins)
 {
 	ref lits = (make-concept)();
 	ref vars = (make-concept)();
 	ref outs = (make-concept)();
-	if (result != nothing) {
-		outs.set("result", result);
-	}
 	ref infn = action.get(information-needed);
-	for (auto str : ins) {
+	bool processedresult = false;
+	for (auto str : resultandins) {
+		if (!processedresult) {
+			if (ref(str) != nothing) {
+				outs.set("result", str);
+			}
+			processedresult = true;
+			continue;
+		}
 		infn = infn.get(next-information);
 		// need to walk needed-information
 		if (str[0] == '`') {
@@ -102,14 +108,14 @@ ref makestep(ref last, ref action, ref result, std::initializer_list<char const 
 // make functions and macros to make behaviors
 #define begin(name) { ref BEHAVIOR(#name); ref last = BEHAVIOR;
 #define end(nam) assert(BEHAVIOR.name() == #nam); }
-#define rewire(name) last = name
+#define rewire(name) last = name; last.unlink("next-step");
 #define wire(name) last.set("next-step", name)
 #define label(name) ref name = 
-#define step(action, ...) last = makestep(last, ref(#action), ref("nothing"), { symbolstostrs(__VA_ARGS__) })
-#define assign(result, action, ...) last = makestep(last, ref(#action), ref(#result), { symbolstostrs(__VA_ARGS__) })
+#define step(action, ...) last = makestep(last, ref(#action), { symbolstostrs(nothing,##__VA_ARGS__) })
+#define assign(result, action, ...) last = makestep(last, ref(#action),  { symbolstostrs(result,##__VA_ARGS__) })
 #define jmpeq(var, cnst, label) last = ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref(#cnst), label, ref("anything"), ref("nothing"))
 #define jmpne(var, cnst, label) last = ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref(#cnst), ref("nothing"), ref("anything"), label)
-#define cond(var) last = nothing; ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref("anything"), ref("nothing")))
+#define cond(var) last = ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref("anything"), ref("nothing")))
 #define condadd(cond, val, step) ref("condition-action-add")(cond, ref(#val), step)
 //#define ifelse(var, cnst, ifcond, elsecond)
 	// make sequence for ifcond
@@ -138,6 +144,7 @@ ref makestep(ref last, ref action, ref result, std::initializer_list<char const 
 
 int main()
 {
+	createhabits();
 	decls(dump, name, of, is, nothing);
 	ahabit(name-of, ((concept, c)),
 	{

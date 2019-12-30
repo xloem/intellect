@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ref.hpp"
+#include "../level-1/concepts.hpp"
 
 namespace intellect {
 namespace level2 {

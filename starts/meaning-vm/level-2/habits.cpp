@@ -46,7 +46,7 @@ void contextmapinto(ref c1, ref m, ref c2)
 	}
 }
 
-int createhabits()
+void createhabits()
 {
 	// making new information should delay, for learning with good curve.
 	decls(link, source, type, target);
@@ -413,6 +413,7 @@ int createhabits()
 	});
 
 	decls(order, steps);
+	// make steps doesn't allow for name, and isn't used in level2.cpp <====
 	ahabit(make-steps, ((information-order, io, nothing)),
 	{
 		result = makeconcept();
@@ -514,7 +515,7 @@ int createhabits()
 		// because this sets active-state's next-step instead of calling something,
 		// a subcontext is not opened for the steps unless they have one.
 		ref next = nothing;
-		if (!linked(steps, cond)) {
+		if (!steps.linked(cond)) {
 			if (linked(steps, "anything")) {
 				next = steps["anything"];
 			} else {
@@ -742,16 +743,15 @@ int createhabits()
 		// STUB acts on acts with actctx straight
 	});
 	*/
-	return 0;
 }
 
-void ensurehabitscreated()
-{
-	static int sentinel = createhabits();
-	(void)(sentinel);
-}
+//void createhabits()
+//{
+//	static int sentinel = createhabits();
+//	(void)(sentinel);
+//}
 
-static int sentinel = (ensurehabitscreated(), 1);
+//static int sentinel = (ensurehabitscreated(), 1);
 
 }
 }

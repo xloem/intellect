@@ -2,6 +2,8 @@
 
 #undef self
 
+#include <iostream>
+
 namespace intellect {
 namespace level2 {
 
@@ -29,12 +31,12 @@ namespace sugar {
 #define everyone_already_cares_deeply_about_everyone_else_so_caring_talk_is_more_efficient_than_anything_else 0
 #endif
 
-#define ahabit(name, argnametoklist, ...) \
+#define ahabit(nam, argnametoklist, ...) \
 	intellect::level2::makehabit( \
-		ref(#name), \
+		ref(#nam), \
 		{_macro_call(_macro_for_each_parens, _macro_habit_argnameref, _macro_habit_commaargnameref _macro_comma_remove_parens(argnametoklist))}, \
 		(std::function<void(ref)>) \
-	[&](ref ctx) \
+	[=](ref ctx) mutable \
 	{ \
 		{ \
 			if (!everyone_already_cares_deeply_about_everyone_else_so_caring_talk_is_more_efficient_than_anything_else) { \
@@ -44,26 +46,29 @@ namespace sugar {
 		} \
 		ref self = ctx.get(ref("self")); (void)self; \
 		ref result("nothing"); (void)result; \
+		std::cerr << self.name(); \
 		_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
+		std::cerr << std::endl; \
 		__VA_ARGS__ \
 		if (result != ref("nothing")) { ctx.link(ref("result"), result); } \
 	}); \
 	{ \
-		ref _macro_habit_name(#name); \
+		ref _macro_habit_name(#nam); \
 		_macro_call(_macro_for_each_parens, _macro_habit_assume, _macro_habit_assume _macro_comma_remove_parens(argnametoklist)) \
 	}
 	#define _macro_habit_argnameref(name, tok, ...) \
 		ref(#name)
 	#define _macro_habit_commaargnameref(name, tok, ...) \
 		, ref(#name)
-	#define _macro_habit_set_posarg(name, tok, ...) \
-		if ((#__VA_ARGS__)[0] == 0 && !ctx.linked(ref(#name))) { \
+	#define _macro_habit_set_posarg(nam, tok, ...) \
+		if ((#__VA_ARGS__)[0] == 0 && !ctx.linked(ref(#nam))) { \
 			throw an(ref("habit-context-missing-information")).link \
 				(ref("habit"), self, \
 				 ref("context"), ctx, \
-				 ref("missing-information"), ref(#name)); \
+				 ref("missing-information"), ref(#nam)); \
 		} \
-		ref tok = ctx.linked(ref(#name)) ? ctx[ref(#name)] : ref(#__VA_ARGS__);
+		ref tok = ctx.linked(ref(#nam)) ? ctx[ref(#nam)] : ref(#__VA_ARGS__); \
+		std::cerr << " " << #nam << ":" << tok.name(); 
 	#define _macro_habit_assume(info, tok, ...) \
 		if ((#__VA_ARGS__)[0] != 0) { intellect::level2::habitassume(_macro_habit_name, ref(#info), ref(#__VA_ARGS__)); }
 

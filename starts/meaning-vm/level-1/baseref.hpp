@@ -58,7 +58,7 @@ private:
 		{
 			std::initializer_list<ref const *>({&args...});
 			f(args...);
-			return concepts::nothing;
+			return "nothing";
 		};
 	}
 };
