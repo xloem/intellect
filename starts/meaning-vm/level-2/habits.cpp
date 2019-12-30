@@ -1,14 +1,18 @@
 #include "ref.hpp"
 #include "../level-1/sugar.hpp"
 #include "sugar.hpp"
+#include "concepts.hpp"
 
 namespace intellect {
 namespace level2 {
 
+using namespace intellect::level1::concepts;
+using namespace concepts;
+
 ref makeconcept()
 {
 	//result = a(concept);
-	result = intellect::level0::basic_alloc();
+	return intellect::level0::basic_alloc();
 }
 
 void conceptunmake(ref c)
@@ -19,24 +23,24 @@ void conceptunmake(ref c)
 using links_it = intellect::level0::baseref<ref>::links_t::iterator;
 void poplinkentry(ref le)
 {
-	result = le;
-	auto & it = result.val<links_it>();
-	if (it != result[source].links().end()) {
-		set(result, type, it->first);
-		set(result, target, it->second);
+	auto & it = le.val<links_it>();
+	if (it != le["source"].links().end()) {
+		le.set("type", it->first);
+		le.set("target", it->second);
 	} else {
-		unlink(result, type);
-		unlink(result, target);
+		le.unlink("type");
+		le.unlink("target");
 	}
-};
+}
 
-void contextmapinto = [](ref c1, ref m, ref c2)
+void contextmapinto(ref c1, ref m, ref c2)
 {
-	for (auto link : m.get(translation)) {
+	decl(translation); decl(known); decl(nothing);
+	for (auto link : m.get(translation).links()) {
 		c2.set(link.second, c1.get(link.first));
 	}
-	if (m.linked(known) and m.get(known) != nothing) {
-		for (auto link : m.get(known)) {
+	if (m.linked(known) && m.get(known) != nothing) {
+		for (auto link : m.get(known).links()) {
 			c2.set(link.second, link.first);
 		}
 	}
@@ -74,9 +78,9 @@ int createhabits()
 	ahabit(data-type, ((concept, c)),
 	{
 		if (c.ptr()->data.has_value()) {
-			return ref(c.ptr()->data.type().name());
+			result = ref(c.ptr()->data.type().name());
 		} else {
-			return nothing;
+			result = nothing;
 		}
 	});
 
@@ -140,13 +144,17 @@ int createhabits()
 
 	// a way to iterate or inspect the links of a concept
 
+	decl(entry);
 	ahabit(make-first-link-entry, ((concept, c)),
 	{
-		if (le.hasval()) { throw makeconcept().link(
-				is, "already-has-value",
-				concept, le,
-				context, ctx); }
-		ref le = makeconcept().link(is, link-entry);
+		// left over from when allocation was handled by separate function, which
+		// I'd like to return to
+		//if (le.hasval()) { throw makeconcept().link(
+		//		is, "already-has-value",
+		//		concept, le,
+		//		context, ctx); }
+		ref le = makeconcept();
+		le.link(is, link-entry);
 		le.val<links_it>(c.links().begin());
 		le.set(source, c);
 		poplinkentry(le);
@@ -154,10 +162,10 @@ int createhabits()
 	});
 	ahabit(make-last-link-entry, ((concept, c)),
 	{
-		if (le.hasval()) { throw makeconcept().link(
-				is, "already-has-value",
-				concept, le,
-				context, ctx); }
+		//if (le.hasval()) { throw makeconcept().link(
+		//		is, "already-has-value",
+		//		concept, le,
+		//		context, ctx); }
 		ref le = makeconcept();
 		le.link(is, link-entry);
 		le.val<links_it>(--c.links().end());
@@ -361,11 +369,11 @@ int createhabits()
 		}
 	})
 	*/
-	decls(needed, made, known, information);
-	// TODO: comment out lists; no longer used
+	decls(needed, made, known, information, translation);
 	ahabit(make-translation-map, ((translation-map, m), (known-map, k, nothing)),
 	{
-		result = makeconcept().link(
+		result = makeconcept();
+		result.link(
 			//habit, translation-map,
 			translation, m
 		);
@@ -391,41 +399,45 @@ int createhabits()
 		result = outer;
 	});
 	*/
+	decls(step, previous);
 	ahabit(make-context-action, ((previous-step, ps), (known-information, literals), (needed-information-map, in), (made-information-map, out), (action, act)),
 	{
-		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, previous-step-already-has-next-step, previous-step, ps, context, ctx); }
-		result = makeconcept().link(
-				//habit, context-action,
-				needed-map, (make-translation-map)(needed-information-map, known-information),
-				made-map, (make-translation-map)(made-information-map)
-				action, act);
+		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
+		result = makeconcept();
+		result.link(
+			//habit, context-action,
+			needed-map, (make-translation-map)(in, literals),
+			made-map, (make-translation-map)(out),
+			action, act);
 		if (ps != nothing) { ps.set(next-step, result); }
 	});
 
+	decls(order, steps);
 	ahabit(make-steps, ((information-order, io, nothing)),
 	{
 		result = makeconcept();
-		ref infn = a(habit-information-needed);
+		ref infn = intellect::level1::a(habit-information-needed);
 		result.set(information-needed, infn);
 		ref posinf = infn;
-		for (auto pair : io.getAll(information-order)) {
-			ref nextinf = a(habit-information);
-			nextinf.set(information, pair.second);
+		for (auto inf : io.getAll(information-order)) {
+			ref nextinf = intellect::level1::a(habit-information);
+			nextinf.set(information, inf);
 			posinf.set(next-information, nextinf);
 			posinf = nextinf;
-			if (!infn.linked(argname)) {
-				infn.set(argname, nextinf);
+			if (!infn.linked(inf)) {
+				infn.set(inf, nextinf);
 			} else {
-				if (!infn.get(argname).isa(habit-information)) {
-					throw a(unexpected-concepts::habit-information-concepts::name)
-						.link(concepts::name, argname)
-						.link(concepts::habit, habit);
+				if (!infn.get(inf).isa(habit-information)) {
+					throw intellect::level1::a("unexpected-habit-information-name")
+						.link(concepts::name, inf)
+						.link(context, ctx);
 				}
 			}
 		}
 		result.ptr()->data = steps.ptr()->data;
 	});
 
+	decls(active, outer);
 	ahabit(steps, (),
 	{
 		ref s = self;
@@ -457,11 +469,11 @@ int createhabits()
 		while (state.linked(next-step) && state.get(next-step) != nothing) {
 			s = state.get(next-step);
 			state.set(active-step, s);
-			state.set(next-step, s.linked(next-step) ? s.get(next-step) : nothing);
+			state.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
 			// if needed-map, load subcontext
 			ref subctx = c;
 			if (s.linked(needed-map)) {
-				subctx = makeconcept()
+				subctx = makeconcept();
 				contextmapinto(c, s.get(needed-map), subctx);
 				subctx.set(outer-context, c);
 				subctx.set(active-state, state);
@@ -469,10 +481,7 @@ int createhabits()
 				subctx.set(self, action);
 				state.set(context, subctx);
 			}
-			state.get(action).fun<ref>(subctx); // <-- maybe we should check arguments
-				// i think that might exzclude user-defined funcs
-				// one moment: do subcontexts work with user-defined funcs?
-				// we'll need a reference to our own subcontext to make that work
+			state.get(action).fun<ref>()(subctx); // <-- maybe we should check arguments
 			if (s.linked(made-map)) {
 				contextmapinto(subctx, s.get(made-map), c);
 			}
@@ -482,12 +491,13 @@ int createhabits()
 			}
 		}
 		conceptunmake(state);
-		if (cleanupcontxt) { conceptunmake(c); }
+		if (cleanupcontext) { conceptunmake(c); }
 	});
+	decls(condition);
 	// steps must be actual steps, not a list of steps
 	ahabit(make-condition-action, ((previous-step, ps), (condition, cond), (steps, s, nothing)),
 	{
-		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, previous-step-already-has-next-step, previous-step, ps, context, ctx); }
+		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
 		if (s == nothing) { s = makeconcept(); }
 		result = makeconcept().link(
 			needed-map, (make-translation-map)(makeconcept().link(cond, condition), makeconcept().link(next-steps, s)),
@@ -515,7 +525,7 @@ int createhabits()
 						context, ctx);
 			}
 		} else {
-			next = acts[cond];
+			next = steps[cond];
 		}
 
 		if (next != nothing) {

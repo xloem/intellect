@@ -11,6 +11,26 @@ namespace level1 {
 
 using namespace concepts;
 
+// for generalizing unique data references.  not used yet, could replace conceptsByName,
+// but note this doesn't use a type link, and conceptsByName does.
+template <typename T>
+ref conceptByData(T const& data, concept* con = nullptr, concept* allocator = nullptr)
+{
+	static std::map<T, ref> conceptsByData; // std::map works for typeid data
+	auto res = conceptsByData.find(data);
+	if (res != conceptsByData.end()) {
+		if (con != nullptr) { throw std::logic_error("unique data concept already specified"); }
+		return res->second;
+	} else {
+		if (con == nullptr) {
+			if (allocator == nullptr) { allocator = level0::concepts::allocations(); }
+			con = level0::alloc(allocator);
+		}
+		conceptsByData.emplace(data, con);
+		return con;
+	}
+}
+
 // ensure name link and backing structure are created prior to first use
 static auto & namestruct()
 {

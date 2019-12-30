@@ -95,17 +95,18 @@ ref makestep(ref last, ref action, ref result, std::initializer_list<char const 
 			vars.link(infn[information], str);
 		}
 	}
-	return (make-context-action)(last, lits, vars, outs, action);
+	return ref("make-context-action")(last, lits, vars, outs, action);
 }
 
+#include <cassert>
 // make functions and macros to make behaviors
 #define begin(name) { ref BEHAVIOR(#name); ref last = BEHAVIOR;
-#define end(name) assert(BEHAVIOR.name() == #name); }
+#define end(nam) assert(BEHAVIOR.name() == #nam); }
 #define rewire(name) last = name
-#define wire(name) last.set(next-step, name)
+#define wire(name) last.set("next-step", name)
 #define label(name) ref name = 
-#define step(action, ...) last = makestep(last, action, ref("nothing"), { symbolstorefs(__VA_ARGS__) })
-#define assign(result, action, ...) last = makestep(last, action, ref(#result), { symbolstorefs(__VA_ARGS__) })
+#define step(action, ...) last = makestep(last, ref(#action), ref("nothing"), { symbolstostrs(__VA_ARGS__) })
+#define assign(result, action, ...) last = makestep(last, ref(#action), ref(#result), { symbolstostrs(__VA_ARGS__) })
 #define jmpeq(var, cnst, label) last = ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref(#cnst), label, ref("anything"), ref("nothing"))
 #define jmpne(var, cnst, label) last = ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref(#cnst), ref("nothing"), ref("anything"), label)
 #define cond(var) last = nothing; ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref("anything"), ref("nothing")))
@@ -168,11 +169,11 @@ int main()
 	});
 	ahabit(in-set, ((concept, c)),
 	{
-		result = linked(the-set, c);
+		result = linked("the-set", c);
 	});
 	ahabit(put-in-set, ((concept, c)),
 	{
-		link(the-set, c, true);
+		link("the-set", c, true);
 	});
 	// I guess I'd better code dump as a behavior.
 	begin(dump);
@@ -213,6 +214,7 @@ int main()
 				// ALL IT NEEDS IS TO WORK
 				step(dump, link-target);
 				step(next-link-entry, link-entry);
+				wire(whilelabel2);
 			rewire(whilecond2);
 			step(concept-unmke, link-entry);
 	end(dump);
@@ -237,5 +239,6 @@ int main()
 			(unmake-concept)(le);
 		}
 	});
+	*/
 	dump(dump);
 }
