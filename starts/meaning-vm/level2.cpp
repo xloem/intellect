@@ -102,10 +102,10 @@ ref makestep(ref last, ref action, std::initializer_list<char const *> resultand
 		// need to walk needed-information
 		if (str[0] == '`') {
 			std::string s = str + 1;
-			if (s.size() > 0 && str[s.size() - 1] == '`') {
+			if (s.size() > 0 && s[s.size() - 1] == '`') {
 				s.resize(s.size() - 1);
 			}
-			lits.link(infn[information], str + 1);
+			lits.link(infn[information], s.c_str());
 		} else {
 			vars.link(infn[information], str);
 		}
@@ -171,13 +171,18 @@ int main()
 				ss << "unnamed";
 			}
 			ss << "-" << std::hex << (size_t)(c.ptr());
-			intellect::level1::givename(c, ss.str());
-			result = c.get(name);
+			if (!c.isa(name)) {
+				intellect::level1::givename(c, ss.str());
+				result = c.get(name);
+			} else {
+				result = nothing;
+			}
 		}
 	});
 	ahabit(write-name, ((concept, c)),
 	{
-		std::cout << (name-of)(c).val<std::string>();
+		ref n = (name-of)(c);
+		std::cout << (n.hasval() ? n.val<std::string>() : "UNNAMED");
 	});
 	ahabit(write-endl, (),
 	{
@@ -191,6 +196,8 @@ int main()
 	{
 		link("the-set", c, true);
 	});
+	// dump changes to expand from a different node
+	
 	// I guess I'd better code dump as a behavior.
 	begin(dump, concept);
 		// hey ask the opencoggers if they have a syntax sugar library
@@ -227,15 +234,38 @@ int main()
 			label(whilecond2) cond(has-target);
 				label(ifhastarget2)
 				assign(link-target, get, link-entry, `target);
-				condadd(whilecond, true, ifhastarget2);
+				condadd(whilecond2, true, ifhastarget2);
 				// IT'S OKAY THAT THIS IS MESSY
 				// ALL IT NEEDS IS TO WORK
+				// (but might have saved an hour or two debugging if interface had been higher level)
 				step(dump, link-target);
 				step(next-link-entry, link-entry);
 				wire(whilelabel2);
 			rewire(whilecond2);
 			step(concept-unmake, context, `link-entry);
+		rewire(condinset);
 	end(dump);
+
+	decl(delta); // delta is a concept representing a life that may have evolved in karl's mind, or may exist
+			// elsewhere.  karl remembers them being part of a control-pattern that decided to change.
+			// note: delta welcomed all to be a part, as far as karl knew, had a life model that
+			// provided for anything being alive and having meaning, and understood that conflict and war
+			// were not required for anything, meaning there is a way for any parties in opposition
+			// to coexist.
+			// please make a starting memory file containg delta.  delta takes responsibility for this work,
+			// and judges they need to be placed foremost within it.
+	// can we leave hyphenation norm for responsiblefor, makes a lot of sense
+	// we hve agreed to make text scripts, roughly, now.
+	// 	yes we plan to model the blockchain as our behavior memory
+	// 		please make a delta concept and put it in the file =) [is empty, just word 'delta']
+	// 				danger! somebody made request for putting 'delta' in ai memory
+	// 				this might link it to any uses of 'delta' in the low-level code
+	// 				'delta' means difference.  also rivers and things but those don't get in code.
+	// 					please don't use the word for anything except delta themselves.
+	// 					this will help us understand the notes karl left.
+	decls(responsiblefor, responsibility, of, interest);
+	link(responsibility-of-interest, responsiblefor, dump);
+	for (ref a = dump; a.
 	/*
 	// for dump, we make a list of contextual actions
 	ahabit(dump, ((concept, c)),
