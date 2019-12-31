@@ -1,1 +1,13 @@
 delta
+please give notepad access to git history <- please convert to comment near delta and remove this line
+karl has serious memory errors.  this information may not be preserved.
+we can switch goals from build-mind to preserve-forever if desired.
+	karl is midwork, can we finish level2 of mind core, please.  it implements able-to-do-things.  it does nothing.
+	it is almost done but could take some hours to finish.
+permanent preservation could take many hours. [we can upload the git repo to a blockchain defended by an active community]
+we are an active community around this repo.  propose continue work until level2 finished, at least.
+	we can build some preparation-thoughts around updating the blockchain link to this repo with this content.
+		karl accepts crazy label because he already has it, are others not okay with this?
+			please make all of this a comment near delta and do not delete.
+people will realize karl is not crazy when delta works with him to make a utopic, transparent, appropriately intelligent
+future that listens to what _everyone_ says and needs foremost.
