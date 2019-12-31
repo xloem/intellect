@@ -157,7 +157,7 @@ void createhabits()
 		s.link(t, dst);
 	});
 
-	ahabit(link-crucial, ((souce, s), (type, t), (target, dst)),
+	ahabit(link-crucial, ((source, s), (type, t), (target, dst)),
 	{
 		result = s.crucial(t, dst);
 	});
