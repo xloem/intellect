@@ -9,6 +9,9 @@ namespace level2 {
 
 void createhabits();
 
+ref makeconcept();
+void conceptunmake(ref c);
+
 namespace concepts {
 
 	// make a link

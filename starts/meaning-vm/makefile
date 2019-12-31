@@ -13,10 +13,12 @@ liblevel2.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.
 
 habit-starts/rhythm: habit-starts/rhythm.o liblevel2.a
 
+-include $(patsubst %.cpp,%.d,$(wildcard level-0/*.cpp) $(wildcard level-1/*.cpp) $(wildcrd level-2/*.cpp) $(wildcard level*.cpp))
+
 %.o: %.ii
-	$(CXX) $(CXXFLAGS) -c $^ -o $@
-%.ii: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $@
+	$(CXX) $(CXXFLAGS) -c $*.ii -o $*.o
+%.ii %.d: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MMD -MQ $*.ii -E $*.cpp -o $*.ii
 .INTERMEDIATE: $(patsubst %.cpp,%.ii,$(wildcard */*.cpp) $(wildcard *.cpp))
 
 level-0/%.ii: $(wildcard level-0/*.hpp)
@@ -28,4 +30,4 @@ level-2/%.ii: $(wildcard level-0/*.hpp) $(wildcard level-1/*.hpp) $(wildcard lev
 	ranlib $@
 
 clean:
-	-rm *.ii *.o level? *.a */*.o */*.ii
+	-rm *.ii *.o level? *.a */*.o */*.ii *.d */*.d

@@ -37,7 +37,7 @@ ref makelist(std::initializer_list<ref> items)
 ref makestep(ref habit, std::initializer_list<ref> resultandins)
 {
 	// build needed-information-map, made-information-map, action
-	// then pass to make-context-action.
+	// then pass to make-context-step.
 	ref nim = (make-concept)(), mim = (make-concept)(), ki = (make-concept)();
 	(know-is-list)(nim); (know-is-list)(mim), (know-is-list)(ki);
 	if (result != nothing) {
@@ -55,7 +55,7 @@ ref makestep(ref habit, std::initializer_list<ref> resultandins)
 			(make-next-list-entry)(nim, (make-map-item)(in, infn[information]));
 		}
 	}
-	return (make-context-action)(ki, nim, mim, habit);
+	return (make-context-step)(ki, nim, mim, habit);
 }
 #define step(action, ...) makestep(action, ref("nothing"), { symbolstorefs(__VA_ARGS__) })
 #define fromstep(result, action, ...) makestep(action, ref(#result), { symbolstorefs(__VA_ARGS__) })
@@ -74,17 +74,26 @@ ref knowisactionlist(ref src, std::initializer_list<ref> steps)
 #define symboltostr(sym) #sym
 #define commasymboltostr(sym) , #sym
 
+ref makequicklist(ref linktype, std::initializer_list<char const *> items)
+{
+	ref ret = makeconcept();
+	for (auto item : items) {
+		ret.link(linktype, item);
+	}
+	return ret;
+}
+
 ref makestep(ref last, ref action, std::initializer_list<char const *> resultandins)
 {
-	ref lits = (make-concept)();
-	ref vars = (make-concept)();
-	ref outs = (make-concept)();
+	ref lits = makeconcept();
+	ref vars = makeconcept();
+	ref outs = makeconcept();
 	ref infn = action.get(information-needed);
 	bool processedresult = false;
 	for (auto str : resultandins) {
 		if (!processedresult) {
 			if (ref(str) != nothing) {
-				outs.set("result", str);
+				outs.set(str, "result");
 			}
 			processedresult = true;
 			continue;
@@ -101,21 +110,21 @@ ref makestep(ref last, ref action, std::initializer_list<char const *> resultand
 			vars.link(infn[information], str);
 		}
 	}
-	return ref("make-context-action")(last, lits, vars, outs, action);
+	return ref("make-context-step")(last, lits, vars, outs, action);
 }
 
 #include <cassert>
 // make functions and macros to make behaviors
-#define begin(name) { ref BEHAVIOR(#name); ref last = BEHAVIOR;
+#define begin(name, ...) { ref BEHAVIOR(#name); ref("make-steps")(BEHAVIOR, makequicklist(ref("information-order"), { symbolstostrs(__VA_ARGS__)})); ref last = BEHAVIOR;
 #define end(nam) assert(BEHAVIOR.name() == #nam); }
 #define rewire(name) last = name; last.unlink("next-step");
 #define wire(name) last.set("next-step", name)
 #define label(name) ref name = 
 #define step(action, ...) last = makestep(last, ref(#action), { symbolstostrs(nothing,##__VA_ARGS__) })
 #define assign(result, action, ...) last = makestep(last, ref(#action),  { symbolstostrs(result,##__VA_ARGS__) })
-#define jmpeq(var, cnst, label) last = ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref(#cnst), label, ref("anything"), ref("nothing"))
-#define jmpne(var, cnst, label) last = ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref(#cnst), ref("nothing"), ref("anything"), label)
-#define cond(var) last = ref("make-condition-action")(last, ref(#var), ref("make-concept")().link(ref("anything"), ref("nothing")))
+#define jmpeq(var, cnst, label) last = ref("make-condition-step")(last, ref(#var), makeconcept().link(ref(#cnst), label, ref("anything"), ref("nothing"))
+#define jmpne(var, cnst, label) last = ref("make-condition-step")(last, ref(#var), makeconcept().link(ref(#cnst), ref("nothing"), ref("anything"), label)
+#define cond(var) last = ref("make-condition-step")(last, ref(#var), makeconcept().link(ref("anything"), ref("nothing")))
 #define condadd(cond, val, step) ref("condition-action-add")(cond, ref(#val), step)
 //#define ifelse(var, cnst, ifcond, elsecond)
 	// make sequence for ifcond
@@ -148,8 +157,8 @@ int main()
 	decls(dump, name, of, is, nothing);
 	ahabit(name-of, ((concept, c)),
 	{
-		if (linked(c, name)) {
-			result = get(c, name);
+		if (c.linked(name)) {
+			result = c.get(name);
 		} else {
 			for (auto & group : c.getAll(is)) {
 				result = (name-of)(group);
@@ -163,12 +172,12 @@ int main()
 			}
 			ss << "-" << std::hex << (size_t)(c.ptr());
 			intellect::level1::givename(c, ss.str());
-			result = get(c, name);
+			result = c.get(name);
 		}
 	});
 	ahabit(write-name, ((concept, c)),
 	{
-		std::cout << (name-of)(c);
+		std::cout << (name-of)(c).val<std::string>();
 	});
 	ahabit(write-endl, (),
 	{
@@ -183,7 +192,7 @@ int main()
 		link("the-set", c, true);
 	});
 	// I guess I'd better code dump as a behavior.
-	begin(dump);
+	begin(dump, concept);
 		// hey ask the opencoggers if they have a syntax sugar library
 		// they must if they built a whole robot
 		// 	no reply on opencog chat.  could check hansen robotics repo or ml.
@@ -204,13 +213,15 @@ int main()
 				condadd(whilecond, true, ifhastarget);
 				assign(link-type, get, link-entry, `type);
 				step(write-name, link-type);
+				step(write-name, `: `);
 				assign(link-target, get, link-entry, `target);
 				step(write-name, link-target);
 				step(write-endl);
 				step(next-link-entry, link-entry);
 				wire(whilelabel);
 			rewire(whilecond);
-			step(concept-unmake, link-entry);
+			step(concept-unmake, context, `link-entry);
+			//std::cerr << intellect::level1::dump(whilecond, makeconcept(), makeconcept()) << std::endl;
 			assign(link-entry, make-first-link-entry, concept);
 			label(whilelabel2) assign(has-target, linked, link-entry, `target);
 			label(whilecond2) cond(has-target);
@@ -223,7 +234,7 @@ int main()
 				step(next-link-entry, link-entry);
 				wire(whilelabel2);
 			rewire(whilecond2);
-			step(concept-unmke, link-entry);
+			step(concept-unmake, context, `link-entry);
 	end(dump);
 	/*
 	// for dump, we make a list of contextual actions
@@ -247,5 +258,13 @@ int main()
 		}
 	});
 	*/
-	dump(dump);
+	try {
+		// for some reason it's only running the second loop
+		// nothing is output on the first
+		std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
+		dump(dump);
+	} catch(intellect::level1::ref r) {
+		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;
+		throw;
+	}
 }

@@ -150,10 +150,10 @@ concept* hyphenate(concept* a, concept* b)
 	return getnamed(getname(a) + "-" + getname(b));
 }
 
-std::string dump(concept* what, concept* skipmarkertype, concept* skipmarkertarget)
+std::string dump(concept* what, concept* set)
 {
 	std::stringstream ss;
-	if (what->linked(skipmarkertype, skipmarkertarget)) {
+	if (set->linked(what, _true)) {
 		return {};
 	}
 	for (auto & link : ref(what).links()) {
@@ -162,17 +162,14 @@ std::string dump(concept* what, concept* skipmarkertype, concept* skipmarkertarg
 		if (ss.str().size() == 0) {
 			ss << ref(what).name() << " " << (void*) what << ":\n";
 		}
-		ss << "  " << link.first.name() << ": " << link.second.name() << "\n";
+		ss << "  " << link.first.name() << ": " << link.second.name() << " " << (void*)link.second << "\n";
 	}
-	what->link(skipmarkertype, skipmarkertarget);
+	set->link(what, _true);
 	for (auto & link : ref(what).links()) {
-		if (link.first.linked(allocator, level0-allocations)) { continue; }
-		if (link.second.linked(allocator, level1-allocations)) { continue; }
-		if (link.first.ptr() == skipmarkertype && link.second.ptr() == skipmarkertarget) {
-			continue;
-		}
+		if (link.first.linked(level0::concepts::allocator(), level0::concepts::level0allocations())) { continue; }
+		if (link.second.linked(level0::concepts::allocator(), level1-allocations)) { continue; }
 		if (link.second.isa(concepts::name)) { continue; }
-		ss << dump(link.second, skipmarkertype, skipmarkertarget);
+		ss << dump(link.second, set);
 	}
 	return ss.str();
 }

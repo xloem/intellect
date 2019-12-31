@@ -1,6 +1,7 @@
 .*
 *.ii
 *.o
+*.d
 *.a
 *.tmp
 level?

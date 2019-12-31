@@ -3,6 +3,7 @@
 #include "../level-1/sugar.hpp"
 #include "ref.hpp"
 #include "concepts.hpp"
+#include "habits.hpp"
 
 namespace intellect {
 using namespace level1;
@@ -54,8 +55,13 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 {
 	using namespace concepts;
 	ref posinf = habit.get(information-needed);
+	ref subctx = makeconcept();
+	subctx.link("outer-context", ref::context());
+	ref::context() = subctx;
 	for (ref const & arg : args) {
 		if (!posinf.linked(next-information)) {
+			ref::context() = subctx.get("outer-context");
+			conceptunmake(subctx);
 			throw an(unexpected-information).link
 				(concepts::habit, habit,
 				 information-value, arg);
@@ -67,6 +73,8 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	while (posinf.linked(next-information)) {
 		posinf = posinf[next-information];
 		if (!posinf.linked(assume)) {
+			ref::context() = subctx.get("outer-context");
+			conceptunmake(subctx);
 			throw a(information-needed).link
 				(concepts::habit, habit,
 				 information, posinf);
@@ -80,24 +88,30 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		posinf = posinf[next-information];
 		ref::context().unlink(posinf[information]);
 	}
+	ref ret = nothing;
 	if (ref::context().linked(result)) {
-		ref ret = ref::context().get(result);
+		ret = ref::context().get(result);
 		ref::context().unlink(result, ret);
-		return ret;
 	}
-	return nothing;
+	ref::context() = subctx.get("outer-context");
+	conceptunmake(subctx);
+	return ret;
 }
 
 ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 {
 	using namespace concepts;
 	// TODO: subcontexts or call instances
-	ref ctx = ref::context();
+	ref ctx = makeconcept();
+	ctx.link("outer-context", ref::context());
+	ref::context() = ctx;
 	ref infn = habit.get(information-needed);
 	std::map<ref, ref> provided;
 	for (auto pair : pairs) {
 		auto second = pair.begin(); ++ second;
 		if (!infn.linked(*pair.begin())) {
+			ref::context() = ctx.get("outer-context");
+			conceptunmake(ctx);
 			throw an(unexpected-information).link
 				(concepts::habit, habit,
 				 information, *pair.begin(),
@@ -114,6 +128,8 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 			if (nextinf.get(assume)) {
 				ctx.link(inf, nextinf.get(assume));
 			} else {
+				ref::context() = ctx.get("outer-context");
+				conceptunmake(ctx);
 				throw a(information-needed).link
 					(concepts::habit, habit,
 					 information, inf);
@@ -137,12 +153,14 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 	//	auto second = pair.begin(); ++ second;
 	//	ctx.unlink(pair.begin(), second);
 	//}
+	ref ret = nothing;
 	if (ctx.linked(result)) {
-		ref ret = ctx.get(result);
+		ret = ctx.get(result);
 		ctx.unlink(result, ret);
-		return ret;
 	}
-	return nothing;
+	ref::context() = ctx.get("outer-context");
+	conceptunmake(ctx);
+	return ret;
 }
 
 }

@@ -48,7 +48,7 @@ struct baseref : public level0::baseref<ref>
 	template <typename... Ref>
 	ref operator()(Ref... args) { return self.template fun<Ref...>()(args...); }
 
-	std::string dump(ref skipmarkertype, ref skipmarkertarget) { return level1::dump(self, skipmarkertype, skipmarkertarget); };
+	std::string dump(ref set) { return level1::dump(self, set); };
 
 private:
 	template <typename... Refs>

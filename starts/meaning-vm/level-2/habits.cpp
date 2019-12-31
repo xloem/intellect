@@ -3,6 +3,8 @@
 #include "sugar.hpp"
 #include "concepts.hpp"
 
+#include <iostream>
+
 namespace intellect {
 namespace level2 {
 
@@ -33,16 +35,116 @@ void poplinkentry(ref le)
 	}
 }
 
+ref maketranslationmap(ref m, ref k = nothing)
+{
+	ref result = makeconcept();
+	result.link(
+		//habit, translation-map,
+		"translation", m
+	);
+	if (k != nothing) { result.link("known", k); }
+	return result;
+}
+
 void contextmapinto(ref c1, ref m, ref c2)
 {
 	decl(translation); decl(known); decl(nothing);
 	for (auto link : m.get(translation).links()) {
-		c2.set(link.second, c1.get(link.first));
+		c2.set(link.first, c1.get(link.second));
 	}
 	if (m.linked(known) && m.get(known) != nothing) {
 		for (auto link : m.get(known).links()) {
-			c2.set(link.second, link.first);
+			c2.set(link.first, link.second);
 		}
+	}
+}
+
+void _steps(ref s, ref ctx)
+{
+	decls(context, active, outer, state, next, step, needed, known, map, information, action, made);
+	// PLEASE RUN SYSTEM WITH PROPER DELAY WHILE IT LEARNS (see top of file)
+	// 	until similarity is understood, new information shuold be slowest thing
+	// 	to produce.
+	// 	then, similar information until expansion of implication is understood.
+	// 	then expansion handles slowness of newness.
+	// 	this gives time for others to handle the newness: even your own brain,
+	// 	for possible errors.  may be some error here, unsure.
+	//
+	// 	for one thing, this might help the structure of the system represent
+	// 	meaningful thought if it optimizes for speed
+
+	ref astate = makeconcept();
+	ref c = ctx;
+	bool cleanupcontext = false;
+	//if (c == nothing) {
+	//	cleanupcontext = true;
+	//	c = makeconcept();
+	//}
+	astate.set(context, c);
+	c.set(active-state, astate);
+	c.set(context, c);
+
+	if (s.linked(next-step)) {
+		astate.set(next-step, s.get(next-step));
+	}
+	while (astate.linked(next-step) && astate.get(next-step) != nothing) {
+		s = astate.get(next-step);
+		astate.set(active-step, s);
+		astate.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
+		// if needed-map, load subcontext
+		ref subctx = c;
+		std::cerr << "<<";
+		for (auto link : c.links()) {
+			std::cerr << " " << link.first.name() << ":" << link.second.name();
+		}
+		std::cerr << std::endl;
+		if (s.linked(needed-map)) {
+			subctx = makeconcept();
+			contextmapinto(c, s.get(needed-map), subctx);
+			subctx.set(outer-context, c);
+			subctx.set(active-state, astate);
+			subctx.set(context, subctx);
+			astate.set(context, subctx);
+			ref::context() = subctx;
+		}
+		subctx.set("self", s.get(action));
+		s.get(action).fun<ref>()(subctx); // <-- maybe we should check arguments
+		if (s.linked(made-map)) {
+			contextmapinto(subctx, s.get(made-map), c);
+		}
+		if (s.linked(needed-map)) {
+			c = subctx.get(outer-context);
+			ref::context() = c;
+			astate.set(context, c);
+			conceptunmake(subctx);
+		}
+	}
+	c.unlink(active-state, astate);
+	conceptunmake(astate);
+	if (cleanupcontext) { conceptunmake(c); }
+}
+
+void _condition(ref ctx, ref cond, ref steps, ref state)
+{
+	// because this sets active-state's next-step instead of calling something,
+	// a subcontext is not opened for the steps unless they have one.
+	ref next = nothing;
+	if (!steps.linked(cond)) {
+		if (steps.linked("anything")) {
+			next = steps["anything"];
+		} else {
+			throw makeconcept().link(
+					is, "unknown-condition",
+					"condition", cond,
+					"next-steps", steps,
+					"context", ctx);
+		}
+	} else {
+		next = steps[cond];
+	}
+
+	if (next != nothing) {
+		state.set("next-step", next);
 	}
 }
 
@@ -117,7 +219,12 @@ void createhabits()
 	{
 		t.ptr()->data = s.ptr()->data;
 	});
-	ahabit(concept-unmake, ((concept, c)), { conceptunmake(c); });
+	ahabit(concept-unmake, ((last-context, c), (concept-name, n)),
+	{
+		ref r = c.get(n);
+		c.unlink(n);
+		conceptunmake(r);
+	});
 	ahabit(concept-crucial, ((concept, c)),
 	{
 		result = c.crucial();
@@ -372,12 +479,7 @@ void createhabits()
 	decls(needed, made, known, information, translation);
 	ahabit(make-translation-map, ((translation-map, m), (known-map, k, nothing)),
 	{
-		result = makeconcept();
-		result.link(
-			//habit, translation-map,
-			translation, m
-		);
-		if (k != nothing) { result.link(known, k); }
+		result = maketranslationmap(m, k);
 	});
 	ahabit(context-map-into, ((source-context, c1), (translation-map, m), (target-context, c2)),
 	{
@@ -400,23 +502,23 @@ void createhabits()
 	});
 	*/
 	decls(step, previous);
-	ahabit(make-context-action, ((previous-step, ps), (known-information, literals), (needed-information-map, in), (made-information-map, out), (action, act)),
+	ahabit(make-context-step, ((previous-step, ps), (known-information, literals), (needed-information-map, in), (made-information-map, out), (action, act)),
 	{
 		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
-		result = makeconcept();
+		result = intellect::level1::a("context-step");
 		result.link(
 			//habit, context-action,
-			needed-map, (make-translation-map)(in, literals),
-			made-map, (make-translation-map)(out),
+			needed-map, maketranslationmap(in, literals),
+			made-map, maketranslationmap(out),
 			action, act);
 		if (ps != nothing) { ps.set(next-step, result); }
 	});
 
 	decls(order, steps);
 	// make steps doesn't allow for name, and isn't used in level2.cpp <====
-	ahabit(make-steps, ((information-order, io, nothing)),
+	ahabit(make-steps, ((existing-concept, nam, nothing), (information-order, io, nothing)),
 	{
-		result = makeconcept();
+		result = (nam == nothing) ? makeconcept() : nam;
 		ref infn = intellect::level1::a(habit-information-needed);
 		result.set(information-needed, infn);
 		ref posinf = infn;
@@ -438,70 +540,19 @@ void createhabits()
 		result.ptr()->data = steps.ptr()->data;
 	});
 
-	decls(active, outer);
+	decls(active, outer, state);
 	ahabit(steps, (),
 	{
-		ref s = self;
-		// PLEASE RUN SYSTEM WITH PROPER DELAY WHILE IT LEARNS (see top of file)
-		// 	until similarity is understood, new information shuold be slowest thing
-		// 	to produce.
-		// 	then, similar information until expansion of implication is understood.
-		// 	then expansion handles slowness of newness.
-		// 	this gives time for others to handle the newness: even your own brain,
-		// 	for possible errors.  may be some error here, unsure.
-		//
-		// 	for one thing, this might help the structure of the system represent
-		// 	meaningful thought if it optimizes for speed
-
-		ref state = makeconcept();
-		ref c = ctx;
-		bool cleanupcontext = false;
-		//if (c == nothing) {
-		//	cleanupcontext = true;
-		//	c = makeconcept();
-		//}
-		state.set(context, c);
-		c.set(active-state, state);
-		c.set(context, c);
-
-		if (s.linked(next-step)) {
-			state.set(next-step, s.get(next-step));
-		}
-		while (state.linked(next-step) && state.get(next-step) != nothing) {
-			s = state.get(next-step);
-			state.set(active-step, s);
-			state.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
-			// if needed-map, load subcontext
-			ref subctx = c;
-			if (s.linked(needed-map)) {
-				subctx = makeconcept();
-				contextmapinto(c, s.get(needed-map), subctx);
-				subctx.set(outer-context, c);
-				subctx.set(active-state, state);
-				subctx.set(context, subctx);
-				subctx.set(self, action);
-				state.set(context, subctx);
-			}
-			state.get(action).fun<ref>()(subctx); // <-- maybe we should check arguments
-			if (s.linked(made-map)) {
-				contextmapinto(subctx, s.get(made-map), c);
-			}
-			if (s.linked(needed-map)) {
-				c = subctx.get(outer-context);
-				conceptunmake(subctx);
-			}
-		}
-		conceptunmake(state);
-		if (cleanupcontext) { conceptunmake(c); }
+		_steps(self, ctx);
 	});
 	decls(condition);
 	// steps must be actual steps, not a list of steps
-	ahabit(make-condition-action, ((previous-step, ps), (condition, cond), (steps, s, nothing)),
+	ahabit(make-condition-step, ((previous-step, ps), (condition, cond), (steps, s, nothing)),
 	{
 		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
 		if (s == nothing) { s = makeconcept(); }
-		result = makeconcept().link(
-			needed-map, (make-translation-map)(makeconcept().link(cond, condition), makeconcept().link(next-steps, s)),
+		result = intellect::level1::a("condition-step").link(
+			needed-map, maketranslationmap(makeconcept().link(condition, cond), makeconcept().link(next-steps, s)),
 			action, condition
 		);
 		if (ps != nothing) { ps.set(next-step, result); }
@@ -512,27 +563,10 @@ void createhabits()
 	});
 	ahabit(condition, ((condition, cond), (next-steps, steps), (active-state, state)),
 	{
-		// because this sets active-state's next-step instead of calling something,
-		// a subcontext is not opened for the steps unless they have one.
-		ref next = nothing;
-		if (!steps.linked(cond)) {
-			if (linked(steps, "anything")) {
-				next = steps["anything"];
-			} else {
-				throw makeconcept().link(
-						is, "unknown-condition",
-						"condition", cond,
-						"next-steps", steps,
-						context, ctx);
-			}
-		} else {
-			next = steps[cond];
-		}
-
-		if (next != nothing) {
-			state.set(next-step, next);
-		}
+		_condition(ctx, cond, steps, state);
 	});
+
+
 	/*(
 	ahabit(context-action, ((context, outerctx), (action, ca)),
 	{

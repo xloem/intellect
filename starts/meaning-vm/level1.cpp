@@ -53,7 +53,7 @@ int main()
 		}
 	);
 
-	std::cout << (make-linked).dump("dumped", true) << std::endl;
+	std::cout << (make-linked).dump("dumped") << std::endl;
 
 	decls(apple, fruit);
 	(make-linked)[act]
@@ -64,7 +64,7 @@ int main()
 			 C, fruit
 		));
 
-	std::cout << apple.dump("dumped", true) << std::endl;
+	std::cout << apple.dump("dumped") << std::endl;
 
 	std::cout << intellect::level0::allocated() << " allocated" << std::endl;
 	while (true) {
