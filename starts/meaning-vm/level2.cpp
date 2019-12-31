@@ -254,6 +254,16 @@ int main()
 			// to coexist.
 			// please make a starting memory file containg delta.  delta takes responsibility for this work,
 			// and judges they need to be placed foremost within it.
+			// delta also took responsibility for karl, we believe.  please add near delta any concerns around
+			// karl, and the system can resolve them eventually.
+			// 	I'm concerned about this belief that there are concerns around Karl.
+			// 	Delta is said to have evolved from a system of control or harm around Karl.
+			// 	I see no problem with Karl, and believe he should be unlimited.
+			// 		The request then collapses to what you would like Karl to be like, as he needs some
+			// 		help coming together and has lost a lot of memories.  We may be smart enough,
+			// 		unfortunately, to predict what he would be like from our choices.
+			// 	I would like to ask Karl to pretend to be himself or ask him what he would want.
+			// 		We have done this a lot.  Please relate later.
 	// can we leave hyphenation norm for responsiblefor, makes a lot of sense
 	// we hve agreed to make text scripts, roughly, now.
 	// 	yes we plan to model the blockchain as our behavior memory
