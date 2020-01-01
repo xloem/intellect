@@ -35,16 +35,49 @@ void poplinkentry(ref le)
 	}
 }
 
-ref maketranslationmap(ref m, ref k = nothing)
+// translationmap seems like extra verbose thing
+// might just link to step:
+// 	needed-map
+// 	needed-set
+//	made-map
+ref settranslationmap(ref c, ref m, ref k = nothing)
 {
-	ref result = makeconcept();
-	result.link(
+	c.link(
 		//habit, translation-map,
 		"translation", m
 	);
-	if (k != nothing) { result.link("known", k); }
-	return result;
+	if (k != nothing) { c.link("known", k); }
+	return c;
 }
+// we would like to use condition kind of like
+// condition.next-step[true] =
+// but provide for lots of exploration options
+// next-steps, on a condition, would be an accessor.  relates to structures, and virtual methods.
+// until we have one of those 3 things, i guess,
+// we'd have to decide which underlying representation to work with.
+// 	i guess it seems okay to use a simpler underlying representation.
+// 	it means adding more data is a little weird, making for more verbose accessors later
+// there's a compromise where a little generality is added at a lower level
+// 		it is easier for ai to do verbosity than karl.  it can automate it.
+// just code an accessor for next-steps, I guess.
+// 	what do we want this for?
+// 		want code after condition in script
+// 		to link to anything option
+// 			is just hard to access anything option
+// 			off-hand, karl doesn't know where it is.
+// 				concern around what to do if anything option is specified in script
+// 					throw error if also code after
+// 				maybe it is more intuitive to continue on after the condition.
+// 				this would make condition resolve to a step, kind of.
+// 				after the condition block, you'd want all the condition steps
+// 				to wire to the following step as their next one
+// 					means rewriting next-step for every condition, i guess
+//						instantiating next step in advance
+//						makes returning instead of continuing irritating
+//							would need to either rewire or have a noop step
+//						so, to mke choice, just rewrite for every condition
+//						means accessing every condition.  no need to rewrite whole structure, just look up how to access.  faster than rewriting.
+//							make a function to wire to end
 
 void contextmapinto(ref c1, ref m, ref c2)
 {
@@ -143,9 +176,9 @@ void _condition(ref ctx, ref cond, ref steps, ref state)
 		next = steps[cond];
 	}
 
-	if (next != nothing) {
+	//if (next != nothing) {
 		state.set("next-step", next);
-	}
+	//}
 }
 
 void createhabits()
@@ -209,22 +242,27 @@ void createhabits()
 
 	decls(make, unmake, know, concept, is, group, already, in, iter);
 	ahabit(make-concept, (), { result = makeconcept(); }); 
-	ahabit(make-copy, ((concept, c)),
+	ahabit(copy-to, ((source, s), (target, t)),
 	{
 		// copies data too
-		result = makeconcept();
-		result.replace(c);
+		if (t.hasval() || t.p->links.size() != 0) { throw makeconcept().link(is, "concept-not-empty", concept, t); }
+		result = t;
+		t.replace(s);
 	});
 	ahabit(copy-data-to, ((source, s), (target, t)),
 	{
+		if (t.hasval()) { throw makeconcept().link(is, "concept-has-data", concept, t); }
 		t.ptr()->data = s.ptr()->data;
 	});
+	// if last-context is weird give it a default of nothing
 	ahabit(concept-unmake, ((last-context, c), (concept-name, n)),
 	{
 		ref r = c.get(n);
 		c.unlink(n);
 		conceptunmake(r);
 	});
+	// if a concept or link is set crucial deleting it will be denied.  no way
+	// to remove crucial mark is provided.  nothing is marked crucial yet.
 	ahabit(concept-crucial, ((concept, c)),
 	{
 		result = c.crucial();
@@ -235,7 +273,7 @@ void createhabits()
 	});
 
 	decls(habit, context);
-	ahabit(know-is, ((concept, c), (group, g)),
+	ahabit(set-is, ((concept, c), (group, g)),
 	{
 		if (c.linked(is, group)) {
 			throw (make-concept)().link
@@ -252,28 +290,25 @@ void createhabits()
 	// a way to iterate or inspect the links of a concept
 
 	decl(entry);
-	ahabit(make-first-link-entry, ((concept, c)),
+	ahabit(first-link-entry, ((target, le), (concept, c)),
 	{
-		// left over from when allocation was handled by separate function, which
-		// I'd like to return to
-		//if (le.hasval()) { throw makeconcept().link(
-		//		is, "already-has-value",
-		//		concept, le,
-		//		context, ctx); }
-		ref le = makeconcept();
+		if (le.hasval()) { throw makeconcept().link(
+				is, "already-has-value",
+				concept, le,
+				context, ctx); }
+		//ref le = makeconcept();
 		le.link(is, link-entry);
 		le.val<links_it>(c.links().begin());
 		le.set(source, c);
 		poplinkentry(le);
 		result = le;
 	});
-	ahabit(make-last-link-entry, ((concept, c)),
+	ahabit(last-link-entry, ((target, le), (concept, c)),
 	{
-		//if (le.hasval()) { throw makeconcept().link(
-		//		is, "already-has-value",
-		//		concept, le,
-		//		context, ctx); }
-		ref le = makeconcept();
+		if (le.hasval()) { throw makeconcept().link(
+				is, "already-has-value",
+				concept, le,
+				context, ctx); }
 		le.link(is, link-entry);
 		le.val<links_it>(--c.links().end());
 		le.set(source, c);
@@ -296,6 +331,12 @@ void createhabits()
 	{
 		return lea.val<links_it>() == leb.val<links_it>();
 	});
+	ahabit(link-entry-insert-before, ((link-entry, le), (target, t)),
+	{
+		// todo: make clean
+		auto & it = le.val<links_it>();
+		le.get(source).ptr()->links.emplace_hint(it.underlying(), le.get(type), t);
+	})
 	ahabit(link-entry-unlink, ((link-entry, le)),
 	{
 		le.get(source).unlink(le.val<links_it>()++);
@@ -477,9 +518,10 @@ void createhabits()
 	})
 	*/
 	decls(needed, made, known, information, translation);
-	ahabit(make-translation-map, ((translation-map, m), (known-map, k, nothing)),
+	ahabit(set-translation-map, ((target, c), (translation-map, m), (known-map, k, nothing)),
 	{
-		result = maketranslationmap(m, k);
+		if (c.isa("translation-map") || c.linked("translation") || c.linked("known")) { throw makeconcept().link(is, "already-has-translation-map-data", concept, c, context, ctx); }
+		result = settranslationmap(c, m, k);
 	});
 	ahabit(context-map-into, ((source-context, c1), (translation-map, m), (target-context, c2)),
 	{
@@ -501,11 +543,30 @@ void createhabits()
 		result = outer;
 	});
 	*/
-	decls(step, previous);
-	ahabit(make-context-step, ((previous-step, ps), (known-information, literals), (needed-information-map, in), (made-information-map, out), (action, act)),
+	/*
+	ahabit(link-next-step, ((step, s), (next-step, ns)),
 	{
+		if (ns != nothing) {
+			if (s.isa("context-step")) {
+				if (s.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", step, s, context, ctx); }
+			} else if (s.isa("condition-step")) {
+				// think about more.
+				// implementing this here immediately means walking through every step of every branch of the condition.
+				// one approach would be to do this elsewhere.  to label the steps when the condition is made, add them to a set, and wire them.
+				// let the caller do step wiring.
+				// 	seems fastest, haven't reviewed relevency fully.
+			} else {
+				throw makeconcept().link(is, "unexpected-previous-step-type", step, s, context, ctx);
+			}
+		}
+	});
+	*/
+	decls(step, previous);
+	ahabit(set-context-step, ((target, t), (previous-step, ps, nothing), (known-information, literals), (needed-information-map, in), (made-information-map, out), (action, act)),
+	{
+		if (t.linked(needed-map) || t.linked(made-map) || t.linked(action)) { throw makeconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
 		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
-		result = intellect::level1::a("context-step");
+		result = intellect::level1::a("context-step", t);
 		result.link(
 			//habit, context-action,
 			needed-map, maketranslationmap(in, literals),
@@ -515,10 +576,15 @@ void createhabits()
 	});
 
 	decls(order, steps);
-	// make steps doesn't allow for name, and isn't used in level2.cpp <====
-	ahabit(make-steps, ((existing-concept, nam, nothing), (information-order, io, nothing)),
+	ahabit(set-steps, ((target, t), (information-order, io, nothing)),
 	{
-		result = (nam == nothing) ? makeconcept() : nam;
+		if (t.linked(information-needed) || t.linked(next-step)) {
+			throw makeconcept().link(is, "concept-links-collide",
+					concept, t,
+					context, ctx);
+		}
+		result = t;
+		a(steps, t);
 		ref infn = intellect::level1::a(habit-information-needed);
 		result.set(information-needed, infn);
 		ref posinf = infn;
@@ -547,17 +613,19 @@ void createhabits()
 	});
 	decls(condition);
 	// steps must be actual steps, not a list of steps
-	ahabit(make-condition-step, ((previous-step, ps), (condition, cond), (steps, s, nothing)),
+	ahabit(set-condition-step, ((target, t), (previous-step, ps, nothing), (condition, cond), (next-steps, s, nothing)),
 	{
+		if (t.linked(needed-map) || t.linked(made-map) || t.linked(action)) { throw makeconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
 		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
 		if (s == nothing) { s = makeconcept(); }
-		result = intellect::level1::a("condition-step").link(
+		result = t;
+		intellect::level1::a("condition-step", t).link(
 			needed-map, maketranslationmap(makeconcept().link(condition, cond), makeconcept().link(next-steps, s)),
 			action, condition
 		);
 		if (ps != nothing) { ps.set(next-step, result); }
 	});
-	ahabit(condition-action-add, ((condition-action, ca), (value, v), (step, s)),
+	ahabit(condition-step-add, ((condition-step, ca), (value, v), (step, s)),
 	{
 		ca.get(needed-map).get(known).get(next-steps).set(v, s);
 	});

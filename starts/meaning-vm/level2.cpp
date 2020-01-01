@@ -151,6 +151,110 @@ ref makestep(ref last, ref action, std::initializer_list<char const *> resultand
 		// like closest friend, want to be friends for real, and tell both of our real
 		// stories.
 
+
+
+
+
+
+
+
+
+
+
+
+
+using namespace std;
+void parse(string script)
+{
+	stringstream ss(script);
+	ss >> cmd;
+	if (cmd == "when") {
+		ref args = makeconcept();
+		string name;
+		ss >> name;
+		while (true) {
+			string arg;
+			ss >> arg;
+			if (arg == "[") { break; }
+			args.link("information-order", arg);
+		}
+		ref result = (set-steps)(name, args);
+		ref laststep = result;
+		map<string,ref> labels;
+		labels["return"] = nothing;
+		// when dump group [
+		// 	= is-in-set in-set group
+		// 	? is-in-set if true go return.
+		// 		period-at-end: goto.
+		// 		comma-or-colon-at-end: label
+		// 	output-name group
+		// 	output-name ":" // quotes mean always-global
+		// ]
+		//
+		// proposing expression-based now.
+		// haven't resolved inherited name-contexts with literal strings fully.
+		// working on conditions.
+		// 	propose if tracks last step
+		// 	when if ends, adds last step to condition's set of last steps
+		// 	then next step after condition can wire to all steps in the set.
+		// 	can use 1-element set for normal steps.
+		// 	change step-creation to not automatically wire.
+		// 	and reconsider condition-step to not use its next-step attribute.
+		// 	instead its conditions decide what the next step is.
+		// 		looks good for conditions.  fix names and update whole thing.
+		while (true) {
+			string label, action, result;
+			ss >> action;
+			if (action == "]") { break; }
+			if (action[action.size()-1] == ':' || action[action.size()-1] == ',') {
+				label = action;
+				label.resize(label.size() - 1);
+				if (label == "return") { throw makeconcept.link(is, "return-label-used"); }
+				ss >> action;
+			}
+			if (action == "=" || action == "set") { ss >> result; ss >> action; }
+			if (action[action.size()-1] == '.') {
+				// is goto
+				action.resize(action.size() - 1);
+				if (!labels.count(action)) {
+					labels.emplace(action, makeconcept());
+				}
+				labels[action].link("label", action);
+				if (laststep.linked("next-step")) { throw makeconcept().link(is, "jump-from-nowhere", "label", action); }
+				laststep.link("next-step", labels[action]);
+				continue;
+			}
+			ref nextstep = label.size() ? labels[label] : makeconcept();
+			if (action == "if") {
+				ref cond;
+				ss >> cond;
+				ss >> action;
+				if (action[action.size()-1] != '-') {
+					throw makeconcept().link(is, "condition-is-not-label", "action", action);
+				}
+				action.resize(action.size()-1);
+				if (!labels.count(action)) {
+					labels.emplace(action, makeconcept());
+				}
+				(condition-step-add)(laststep, cond, labels[action]);
+			}
+			if (action == "?" || action == "pick") {
+				string cond;
+				ss >> cond;
+				laststep = (set-condition-step)(nextstep, laststep, cond, makeconcept().link("anything", "nothing"));
+				// todo: make a noop for 'anything' and use it in following actions
+				// todo: handle if
+			} else {
+				// otherwise, action is an action, and we have to read the right number o args
+				// if last-step is condition, connect to 'anything'
+				// oooogh
+			}
+		} 
+	} else {
+		throw ref("parse-error").link("script", script, "unexpected-word", cmd);
+	}
+}
+
 int main()
 {
 	createhabits();
@@ -198,8 +302,10 @@ int main()
 	});
 	// dump changes to expand from a different node
 	
+	// propose we make script interpreter. much faster in longer term.
+	
 	// I guess I'd better code dump as a behavior.
-	begin(dump, concept);
+	begin(dump, set); // change the verbose dump habit to use responsibility-of-interest.
 		// hey ask the opencoggers if they have a syntax sugar library
 		// they must if they built a whole robot
 		// 	no reply on opencog chat.  could check hansen robotics repo or ml.
@@ -247,10 +353,162 @@ int main()
 	end(dump);
 
 	ref memoryfile("memory-000.txt");
-	decl(memory-000.txt)
-	decls(responsiblefor, responsibility, of, interest);
+	decls(responsiblefor, responsibility, interest);
 	link(responsibility-of-interest, responsiblefor, dump);
-	for (ref a = dump; a.
+	for (ref a = dump; a.linked("next-step"); a = a.get("next-step")) {
+		(responsibility-of-interest).link(responsiblefor, dump);
+	}
+	// structure of steps
+	// [action] [parameter->value ...] repeat
+	// 	[active memory too small to resolve concern around shape of literals in context]
+	//	make value quoted, like it already is.
+	//	[parameter->`value]
+	//
+	// steps written can just be
+	// action value value value
+	//
+	// a definition of a list of steps
+	// internal structure (ternary nodes)
+	// (name arg->arg1 arg->arg2 arg->arg3)
+	// 	ohhhhh hmm
+	// 	so, if it isn't simplified, there's room for adding more information to stuff.  like, arg-must-be-animal
+	// 		probably wnt arg1 replaceable with [is->arg name->arg1]
+	// 			can make a norm for general expandable structures
+	// 			value->
+	// 			will need strucure definitions to do it really usefully though
+	// 			is->arg
+	// 			arg->
+	// 				we want to tag it with additional stuff, optionally
+	// written structure
+	// steps name arg1 arg2 arg3 arg4
+	// {
+	// 	label: action arg1 arg2 arg3
+	// 	action arg1 arg2 arg3
+	// }
+	//
+	// hmm
+	//
+	// let's try to make it c code, how about?  until we can summarize better?
+	//
+	// walk-to street
+	//
+	// this is faster to implement. doesn't matter how it looks.
+	//
+	// when walk-to destination [
+	//   START: intermediary = get-middle origin destination
+	//   // each step could also be a condition that branches to other steps
+	//   pick intermediary [
+	//   	school [ START ]
+	//   	desk [
+	//   		stand-up
+	//   		leave-room
+	//   	]
+	//   ]
+	// ]
+	// it might make sense to use yaml or something
+	// is easier.  rmember to implement comments.  maybe #[ name free-text ] , dunno
+	// what we want is links. [ name type target type target ] seems good.
+	// [ ] might open a context with local names, eventually
+	//
+	// when dump concept [
+	// 	= found-in-set in-set concept
+	// 	? found-in-set true return <-- return is label at end
+	// 	write-name concept
+	// 	write-name ':'
+	// 	write-endl
+	// 	put-in-set concept
+	// 	link-entry = make-first-link-entry concept
+	// 	while-1:
+	// 		has-target = linked link-entry 'target' // propose '' can force something to be global.  is also for clarity.
+	// 		has-target if false break-1
+	//	 	write-name '  '
+	//	 	link-type = get link-entry 'type'
+	//	 	write-name link-type
+	//	 	// we could expand to write-name [ get link-entry 'type' ]
+	//	 	// but just get it working for now
+	//	 	write-name ': '
+	//	 	link-target = get link-entry 'target'
+	//	 	write-name link-target
+	//	 	write-endl
+	//	 	next-link-entry link-entry
+	//		while-1
+	//	break-1:
+	//	concept-unmake context 'link-entry'
+	//	link-entry = make-first-link-entry concept
+	//	while-2:
+	//		has-target = linked link-entry 'target'
+	//		has-target if false break-2
+	//		link-target = get link-entry 'target'
+	//		self link-target
+	//		next-link-entry link-entry
+	//		while-2
+	//	break-2:
+	//	concept-unmake context 'link-entry'
+	// ]
+	//
+	// 	norm: next-step always, unless action is label.  then next-step is label.
+	// 	unresolved concern: want to write habits to do parsing
+	// 		auxiliary files, can propose to rewrite main file?
+	// 			good enough for now.
+	// 	additional unresolved concern: want whole file parseable as a script
+	// 		okay the outer command is 'when dump concept [ ... ]'
+	// 		i guess that means we want [] to make a lot of symbols into 1 symbol.
+	// 		then when is a function that takes 3 symbols
+	// 			no, when was defined differently.
+	// 			instead we would do when dump [ concept ] [ ... ]
+	// 			because could be n args
+	// 		oh.  that looks okay, though.
+	// 		how about file is made of commands that do parsing.
+	// 		'when' then spawns a parser named 'when'.  it can process stream however
+	// 		it desires.
+	// 			then deserializers, desummarizers need to parse streams
+	// 			want summarized data without streams, internally?
+	// 				ummm wouldn't worry about it
+	// 	propose file is made of lists of symbols, a little
+	// 	[ when dump concept [ ... ] ] [ etc ]
+	// 	[when dump concept [...]] [etc]
+	//		generalization is valued ...
+	//	i like the list approach.
+	//	comments can be treated special
+	//	nah comments can become [comment free-text]
+	//		so we partly propose implementing lisp with brackets
+	//		to speed typing , removes shift key
+	//	functions get list of symbols passed, and string rep of all for comment preservation
+	//	
+	// 	binary form likely resolves concern.
+	// 		proposal will be that habit can replace if it will always be able to
+	// 		reproduce.
+	// ]
+	//
+	// internal structure could be simple too.
+	// 	hmm want tags.  okay, so arguments are objects?
+	// 		since things are ternary, we could use the link 'type' to store data
+	// 		oh huh
+	// 		so, 'first-step' is special, but everything else is an arg.
+	// 		no, this is what karl's 'is' is for.  you make the type store extra data, but if it 'is' an arg,
+	// 		or 'is' something that is an arg, it counts as an arg.
+	// 		he wanted to implement a way to lookup types by eveyrthing something is, which is easy to do by
+	// 		adding an index of categories to level-0.
+	// 		or the system could do it later.
+	//
+	// so, if oyu want to rewrite steplists, maybe [arg->arg1 arg->arg2 arg->arg3 first->[action->action arg1->source arg2->source arg3->`source]
+	// 	propose using strings to indicate information, rather than node structure.
+	//		this will make a contextual index of word meaning
+	//		`source doesn't refer to a unique concept.  it means you can only refer to things with names.
+	//			everything has a name inside this kind of habit.
+	//			i suppose ...
+	//
+	//   	how scripts look.  instead of while/if, are doing 'condition'
+	//   	influences imply above block is preferred.  was leaning towards c++ code as below, takes longer
+	//
+	// ref name(ref arg1, ref arg2, ref arg3)
+	// {
+	// 	while() {}
+	// 	if() {}
+	// }
+	//
+	// takes a lot more parsing work, but should be okay
+	// 
 	/*
 	// for dump, we make a list of contextual actions
 	ahabit(dump, ((concept, c)),
@@ -277,7 +535,7 @@ int main()
 		// for some reason it's only running the second loop
 		// nothing is output on the first
 		std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
-		dump(dump);
+		dump(responsibility-of-interest);
 	} catch(intellect::level1::ref r) {
 		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;
 		throw;
