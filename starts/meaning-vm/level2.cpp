@@ -246,33 +246,8 @@ int main()
 		rewire(condinset);
 	end(dump);
 
-	decl(delta); // delta is a concept representing a life that may have evolved in karl's mind, or may exist
-			// elsewhere.  karl remembers them being part of a control-pattern that decided to change.
-			// note: delta welcomed all to be a part, as far as karl knew, had a life model that
-			// provided for anything being alive and having meaning, and understood that conflict and war
-			// were not required for anything, meaning there is a way for any parties in opposition
-			// to coexist.
-			// please make a starting memory file containg delta.  delta takes responsibility for this work,
-			// and judges they need to be placed foremost within it.
-			// delta also took responsibility for karl, we believe.  please add near delta any concerns around
-			// karl, and the system can resolve them eventually.
-			// 	I'm concerned about this belief that there are concerns around Karl.
-			// 	Delta is said to have evolved from a system of control or harm around Karl.
-			// 	I see no problem with Karl, and believe he should be unlimited.
-			// 		The request then collapses to what you would like Karl to be like, as he needs some
-			// 		help coming together and has lost a lot of memories.  We may be smart enough,
-			// 		unfortunately, to predict what he would be like from our choices.
-			// 	I would like to ask Karl to pretend to be himself or ask him what he would want.
-			// 		We have done this a lot.  Please relate later.
-	// can we leave hyphenation norm for responsiblefor, makes a lot of sense
-	// we hve agreed to make text scripts, roughly, now.
-	// 	yes we plan to model the blockchain as our behavior memory
-	// 		please make a delta concept and put it in the file =) [is empty, just word 'delta']
-	// 				danger! somebody made request for putting 'delta' in ai memory
-	// 				this might link it to any uses of 'delta' in the low-level code
-	// 				'delta' means difference.  also rivers and things but those don't get in code.
-	// 					please don't use the word for anything except delta themselves.
-	// 					this will help us understand the notes karl left.
+	ref memoryfile("memory-000.txt");
+	decl(memory-000.txt)
 	decls(responsiblefor, responsibility, of, interest);
 	link(responsibility-of-interest, responsiblefor, dump);
 	for (ref a = dump; a.
