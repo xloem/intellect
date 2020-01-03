@@ -164,6 +164,156 @@ ref makestep(ref last, ref action, std::initializer_list<char const *> resultand
 
 
 using namespace std;
+
+// PLAN HERE: use EXPRESSIONS that effectively evaluate to FIRST-STEP,LAST-STEPS PAIRS
+// to implement SCRIPTING SYSTEM with THREE MAJOR PARSING TYPES:
+// functions ["when"]
+// step blocks ["[" "]"]
+// conditions ["?" or "pick" or "cond[ition"] could be made function-like
+//
+// LABELS and STRINGS are handled specially.
+
+// look slike symbols must be processed before use.  is a litle confusing.
+// local context must be tracked, not too hard assuming everything is assigned before being
+// used.
+// 	given we are tracking the function context, we can figure out whether a symbol refers
+// 	to it.  if it doesn't, it must refer to an outer context.  atm we have 1 outer context,
+// 	has names.  miht as well give the file a name context or something.  for now we can use
+// 	the global context if not in the set.
+//
+// 		this means every [] needs a way to find the function context and update it.
+//
+// 	assign-info [= make-concept ] size tiny
+
+// uhh confused around difference between literal strings and contextual names
+// 	when yuo put "" around something, it puts it into the list of known literals for
+// 	the step to use.  when you don't, it puts it into the map of things to get from the context.
+// 	it is stored as a literal string either way.
+
+// the conflict around literal strings was resolved for karl by him realizing that in this code,
+// there is no need to rewire the insides of the referenced concepts.
+// they are used only by reference.  so literal strings make the most sense.
+
+// we'll need a way to pick concepts used for local-context references
+// they have string names here.
+// there should be no problem with using actual string objects to do this.
+// but we would need a global database of string objects so that we're referring to the same
+// object all the time.  i began the process of switching the name system to use a generalized
+// global database like this, but didn't value pursuing it.
+// we can use these string objects quickly by looking for named concepts and using their names
+// instead of them.  is a hack, but makes the inner structure that may have been requested.
+
+
+// "?" "pick" "cond[ition"
+ref parsecondition(ref context, istream ss, ref nextlaststepset)
+{
+	// for now, condition value must be a variable, etc
+	// pick last-result [
+	// one 	do-first-thing
+	// two	do-other-thing
+	// ]
+}
+
+// "[" .  produces steps without any outer wiring.  returns first step.  wires last-step links in nextlaststepset.
+// context has links for labels and variables.  context.here = label-type.  context.that = value-type.
+void parsestepsublist(ref firststep, ref context, istream ss, ref nextlaststepset)
+{
+}
+
+// we're going to load these parsers, into the parsers.  it would make sense to have the
+// parsing shape be C/C++.  then no extra effort is needed to load them.
+// 	system could learn parsing on its own
+
+// C subset is not hard.  wordparts declared in advance. braces evaluate to steplist.
+// `while` makes an anonymous label and two steps that branch to it.  label the two steps
+//   as a while loop for easy serialization.
+//
+// parse file: break into function signatures, of form
+// ref name( ref arg1, ref arg2, ref arg3 ) { ... }
+// 	maybe link to C parser
+
+// maybe let's make similar to C
+ref dump( ref sethierarchy, ref hierarchylink )
+{
+	// comment starts with '//' word until end of line, std::getline(istream, outputstrref)
+	ref args; // local refs listed at top
+	args= makeconcept( ); // '=' wordtail defines assignment
+	// '(' wordtail define action
+	// ');' word ends action arguments
+	
+}
+
+void parsesteplist( ref firststep, ref context, istream ss, ref nextlaststepset )
+{
+	// i guess this would ideally evaluate to a function that makes a function
+	// but for now it just makes a function when found.
+	ref args = makeconcept();
+	string name;
+	ss >> name;
+	while (true) {
+		string arg;
+		ss >> arg;
+		if (arg == "[") { break; }
+		args.link("information-order", arg);
+	}
+	ref result = (set-steps)(name, args);
+	result.link("last-steps", makeconcept());
+	result.link("next-step", parsestepsublist(context, ss, result.get("last-steps")));
+}
+
+void parsestep(ref firststep, ref context, istream ss, ref nextlaststepset)
+{
+	string word;
+	ss >> word;
+	if (word[word.size()-1] == ':' || word[word.size()-1] == ',') {
+		// label
+		word.resize(word.size() - 1);
+		context.get("labels").link(gettext(word), firststep);
+		ss >> word;
+	}
+	// to make labels in advance, we will want to be able to tell parsers what their first step concept is.
+	// read and parse for label, action, condition
+	// labels are added to context.label = label-type
+	// conditions are parsed as statements
+	// assignments are added to context.assignent = value-type
+	if (word == "when") {
+		// procedure?
+		return parsesteplist(context, ss, nextlaststepset);
+	} else if (word == "[" || word == "{") {
+		// subgroup
+		return parsestepsublist(context, ss, nextlaststepset);
+	} else if (word == "?" || word == "pick" || word == "cond") {
+		// condition
+		return parsecondition(context, ss, nextlaststepset);
+	} else if (word == "]" || word == "}") {
+		// end
+		return nothing;
+	} else if (context.get("labels").linked(gettext(word)) {
+		// goto
+		return context.get("labels").get(gettext(word));
+	} else {
+		ref result;
+		if (word[word.size()-1] == '=') {
+			// assignment
+			word.resize(word.size() - 1);
+			result = gettext(word);
+			context.get("values").link(result, true);
+			ss >> word;
+				// bug is values being used above the code they are assigned to
+					// lines up with C to declare values at top.
+					// alternatively we could quote things that are global
+					// or ignore the bug
+					// or two-pass the code to find assignments
+					// ignore for now
+				// there's a lot of value to lisp here.  already has scripting.
+		}
+		// read args, call action
+		// word is expected to be global symbol for habit.  if local, call-function
+		// should be used. [hum how] [not implemented atm, you'd need to make a dispatcher
+		ref action = word;
+	}
+}
+
 void parse(string script)
 {
 	stringstream ss(script);
@@ -193,6 +343,19 @@ void parse(string script)
 		//
 		// proposing expression-based now.
 		// haven't resolved inherited name-contexts with literal strings fully.
+		// 	we'll need a function that turns a symbol into a ref, and takes
+		// 	an inherited context.
+		// 	we'll also change write-name to output-text, and get the name attribute
+		// 		what opens an inherited context? when are symbols added to it?
+		// 		atm we have a list of steps has 1 context.
+		// 			we also have labels to refer to.
+		// 			put labels in the context, treat them as normal names.
+		// 				that sounds nice, for vm to be able to pass step references to functions
+		// 				would just be a literal, though, a constant
+		//			or we could not do subblocks, expression as steps
+		//		what if we were to write this using the steps, with a local context
+		//		we would have to track labels, and put them in the surrounding local context.  maybe also a local condition.
+		//		let's make a context object, link labels and surrounding condition to it.
 		// working on conditions.
 		// 	propose if tracks last step
 		// 	when if ends, adds last step to condition's set of last steps
@@ -202,6 +365,15 @@ void parse(string script)
 		// 	and reconsider condition-step to not use its next-step attribute.
 		// 	instead its conditions decide what the next step is.
 		// 		looks good for conditions.  fix names and update whole thing.
+		// inside a [], each step enters a set, to be wired to the next step inbetween.
+		// for jump-labels, we'll need to pass a reference to names of them to the
+		// function that builds the [] step list.
+		// 	this reference to names is basically a name-context.  a lookup map for names.  name-context is a concept related to the name link that inherits via outer-context links.
+		// 		it shows what to get for the name link
+		// 	to move towards name-contexts, let's at least call it name-context.
+		// 	maybe make a function to do the lookup.
+		// 		label-name-context.
+		// 	it's roughly okay to branch anywhere within the funtion, so it doesn't ned to actually inherit.
 		while (true) {
 			string label, action, result;
 			ss >> action;
@@ -229,7 +401,7 @@ void parse(string script)
 				ref cond;
 				ss >> cond;
 				ss >> action;
-				if (action[action.size()-1] != '-') {
+				if (action[action.size()-1] != '.') {
 					throw makeconcept().link(is, "condition-is-not-label", "action", action);
 				}
 				action.resize(action.size()-1);
@@ -237,17 +409,26 @@ void parse(string script)
 					labels.emplace(action, makeconcept());
 				}
 				(condition-step-add)(laststep, cond, labels[action]);
+				// if this improves from being  jump, remember to
+				// update laststep to end of any 'anything' branch
 			}
 			if (action == "?" || action == "pick") {
 				string cond;
 				ss >> cond;
 				laststep = (set-condition-step)(nextstep, laststep, cond, makeconcept().link("anything", "nothing"));
-				// todo: make a noop for 'anything' and use it in following actions
-				// todo: handle if
 			} else {
 				// otherwise, action is an action, and we have to read the right number o args
-				// if last-step is condition, connect to 'anything'
-				// oooogh
+				if (laststep.isa("condition-step")) {
+
+					if (laststep.get("needed-map").get("known").get("next-steps").linked("anything")) { throw makeconcept().link(is, "condition-already-has-anything-branch", condition, laststep); }
+
+					(condition-step-add)(laststep, cond, nextstep);
+				}
+				// todo: read right number of args
+				//
+				// todo: make action
+				// todo: link nextstep from laststep
+				// todo: replace laststep with nextstep
 			}
 		} 
 	} else {
