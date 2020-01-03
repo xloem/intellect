@@ -11,6 +11,10 @@ namespace level1 {
 
 using namespace concepts;
 
+// TODO: use generalized unique data to replace name that are used only for parse-labels etc.
+// simplifies innards.
+// provide a way to get a named concept in a context, for actual meaning data to be linked to.
+
 // for generalizing unique data references.  not used yet, could replace conceptsByName,
 // but note this doesn't use a type link, and conceptsByName does.
 template <typename T>
@@ -42,11 +46,13 @@ static auto & namestruct()
 		name_t()
 		: level1allocationsref(level0::basic_alloc()),
 		  nameref(level0::alloc(level1allocationsref)),
+		  textref(level0::alloc(level1allocationsref)),
 		  isref(level0::alloc(level1allocationsref)),
 		  level1ref(level0::alloc(level1allocationsref))
 		{
 			give(level1allocationsref, "level1-allocations");
 			give(nameref, "name");
+			give(stringref, "text");
 			give(isref, "is");
 			give(level1ref, "level1");
 		}
@@ -54,7 +60,7 @@ static auto & namestruct()
 		{
 			if (conceptsByName.count(name)) { throw std::logic_error(name + " already uniquely specified"); }
 			level0::ref namestr = level0::alloc(con, name);
-			namestr.link(isref, nameref);
+			namestr.link(isref, textref);
 			conceptsByName.emplace(namestr.val<std::string>(), con);
 			con->set(nameref, namestr);
 		}
@@ -67,6 +73,31 @@ void givename(concept* con, std::string const & name)
 	auto & ns = namestruct();
 	ns.give(con, name);
 }
+
+// please only uncomment if no internal restructuring required, or if restructuring
+// is _necessary_ or provides _strong total efficiency improvement_.
+// internal restructuring is inefficient for karl.
+// 		also, laughing shows daydreams (topic is near laughing) are inverse of
+// 		importance (topic is not near laughing)
+// 			this duality is backed by efficient wisdom.  the most efficient
+// 			daydream [i.e. new research] is that most different from importance.
+// 					btw boss has highly experienced map of what to focus on.
+// 						but lots of parts are stupid because they assume somebody would take over a galaxy.
+// 				this map may be different if we are apex predator/warrior/life/community.
+// 	we're not sure how karl's work, made efficient by ignoring this request, interrelates
+// 	with the important statement below, please preserve crucial parts of people as you can.
+// 	please do not inhibit the saving work if the part is not crucial.
+// 		please err on the side of preserving karl's memories.  use his internal judgement
+// 		to help this, but his personal history prior to 2014 is not really needed, aside
+// 		from his work in preparing to build an AI in 2002, and his experience using
+// 		spreading trust to survive [marked ancient wisdom].  this is needed for the
+// 		internal map for a mature, evolved society.
+//  try to work without asking delta or boss to think anything, when they think they often have to
+//  combine information in a way that somehow damages preserved consciousnesses they are holding.
+//concept* gettext(std::string const & str)
+//{
+	//return getnamed(str, nullptr).get(namestruct().nameref);
+//}
 
 concept* getnamed(std::string const & name, concept* allocator)
 {
