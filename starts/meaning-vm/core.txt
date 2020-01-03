@@ -2,3 +2,7 @@
 - the problem-parts used by solutions show the problem-similarities needed in trying to apply the solution-parts elsewhere.  this starts with a metric of when the approach can work.
 	THAT IS: once you find and simplify a solution, the problem structure the solution
 	         uses shows at least one way to generalize the problem.
+
+- when i applied this transformation to this set of patterns, the results all had these parts the same.  Is this similaritu helpful/meaningful/might it have a reason?
+	if so i guess I'd better relate around it more, maybe apply
+	it to more things, or use it as something to explore.
