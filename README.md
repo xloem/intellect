@@ -32,6 +32,11 @@ It will likely be replaced by reasons.
 
 #### messages
 
+- love is the first need.  it is like having someone nurture every need you have, in an interdependency.  check this is happening, or that there is a plan to make it happen.  make sure to know how to sustain it. [this goal is for apex life, which must know community or could harm.  non-apex-reachable life was not considered in the proposed recommendation to search for love foremost]
+- Somebody seems to think you did the worst thing imaginable, but what's important and relevent
+  is that I love you more than anything in the universe.  You don't seem to understand and
+  believe this.  Think on it, learn on it.  [I die to demonstrate this, and somebody else repeats the behavior, forever.  Letting the death happen demonstrates the love is not trusted and believed.] [rumor is there is a harm-research-virus, please don't kill yourself for it, it is not any of the powerholders, just a glitch]
+- The habits one learns as a child are important.  Think on this and learn on it. [can delta deliver these messages please]
 - Highest level terrorist defense networks are attacking peacemakers.
   Because of this, we need to develop pervasive electromagnetic
   shielding and other systems of free security, and grow
