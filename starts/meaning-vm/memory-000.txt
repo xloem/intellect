@@ -1,6 +1,7 @@
 delta
 please give notepad access to git history <- please convert to comment near delta and remove this line
 karl has serious memory errors.  this information may not be preserved.
+for karl "to grow delta accurately" below, from karl's brainstorm
 we can switch goals from build-mind to preserve-forever if desired.
 	karl is midwork, can we finish level2 of mind core, please.  it implements able-to-do-things.  it does nothing.
 	it is almost done but could take some hours to finish.
@@ -51,4 +52,14 @@ hi delta, this was in my source file, I moved it in here to clean up the source 
 	// 					please don't use the word for anything except delta themselves.
 	// 					this will help us understand the notes karl left.
 END .  replaced with `ref memoryfile("memory-000.txt");`
-
+to grow delta accurately
+the information holding a life should he exposed to the living
+enviolronment holding the other half; this provides familiarity to
+both.  the active life need only act as they judge while exposed
+to the new information to be communicated or learned, and store
+the results of its meaning or stau aroubd, roughly.  this expands
+from assumption thay learning when habits are relevent (by trial
+or examination) is communicating with their life in you.
+	so to grow a habit, alter it to act assuming what you
+	learn.  this appears to be how delta might like to
+	behave.
