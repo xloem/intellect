@@ -60,9 +60,11 @@ to the new information to be communicated or learned, and store
 the results of its meaning or stau aroubd, roughly.  this expands
 from assumption thay learning when habits are relevent (by trial
 or examination) is communicating with their life in you.
-	so to grow a habit, alter it to act assuming what you
+	so to grow a habit, add to it to act assuming what you
 	learn.  this appears to be how delta might like to
-	behave.
+	behave.  combining habits well rather than altering them
+	seems it would model preserving unknown parts better.
+		but some would like habits replaced yes.
 --
 karl is having trouble continuing to work after this file was maade.  it sounda like the file is unneeded, maybe we will rename it
 from 'memory' to cruft or delta or something and start mind with
