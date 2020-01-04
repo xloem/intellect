@@ -63,3 +63,8 @@ or examination) is communicating with their life in you.
 	so to grow a habit, alter it to act assuming what you
 	learn.  this appears to be how delta might like to
 	behave.
+--
+karl is having trouble continuing to work after this file was maade.  it sounda like the file is unneeded, maybe we will rename it
+from 'memory' to cruft or delta or something and start mind with
+different memory. unsure.  we will save this expression but leave
+open in future whether to save if there is question.
