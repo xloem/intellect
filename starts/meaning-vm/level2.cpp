@@ -1,6 +1,14 @@
 #include "level-2/level-2.hpp"
 #include "level-1/level-1.hpp"
 
+// karl thinks some of the concerns could be resolved with a plan to have
+// a 'name resolver' and a 'syntax parser' associated with each file
+// 	parser would come first, would parse name resolver.
+// 	sounds somewhat helpful.
+// 		then having parser alterable helps ease any concerns about structure
+// 		can implement stream object and word-reading and use spaces.
+// 			make parser first please.
+
 #include <iostream>
 #include <set>
 
@@ -164,6 +172,7 @@ ref makestep(ref last, ref action, std::initializer_list<char const *> resultand
 
 
 using namespace std;
+#define ref intellect::level2::ref
 
 // PLAN HERE: use EXPRESSIONS that effectively evaluate to FIRST-STEP,LAST-STEPS PAIRS
 // to implement SCRIPTING SYSTEM with THREE MAJOR PARSING TYPES:
@@ -203,7 +212,40 @@ using namespace std;
 // we can use these string objects quickly by looking for named concepts and using their names
 // instead of them.  is a hack, but makes the inner structure that may have been requested.
 
+// make parser.  2nd line is name resolver for globals.
+// reads lines starting with 'when'.  stream is ref.  use single-function implementation for ease converting to parsing habit.  worries about storing data resolved by parsing generality.  parse better in level3 if appropriate.
+// 	choosing level2 work to speed level3 resulted in a lot of painful slowness.
+// 	not sure why.
+// 	maybe levels relate to expected thought associations and planning.
 
+// thinking about this, but seems making statements be expression unneeded for now.
+// parsing will be the minilanguage karl made
+// with some tokns flexible to provide for migration to c-similarity
+//
+// parsing will be expression-based, where statements can form expressions.
+// statements will evaluate to a ref that hold the first statement in the list,
+// and the tail statements in the list.
+// 'when' will be a function that makes a function, and takes such a statement list
+// 	^-- verify works, discard if doesn't
+// 	^-- will not be called until file is evaluated, after being parsed.
+// 	file evaluates to statement list.
+// 'pick' will be a function that takes an arbitrary number of statements.  it will be the only one to do so and this feature will be hard-coded.
+// 	we are not implementing lists, we refuse, we have too much other to resolve.
+//  
+//  so, what the sysem does is parse statement lists.
+//  = makes new concepts exist in a local context.
+//  since 'when' uses global values, habits are accessible.
+//
+//  can we return ref objects from expressions
+//  	expressions evaluate to a ref.
+//  	only when accepts statement lists.
+//  		how are labels used in cond
+//  	labels produce refs in local context?
+//  		labels are values local to parsing
+//  		= are values local to running
+
+
+#if 0
 // "?" "pick" "cond[ition"
 ref parsecondition(ref context, istream ss, ref nextlaststepset)
 {
@@ -243,10 +285,28 @@ ref dump( ref sethierarchy, ref hierarchylink )
 	
 }
 
+/*ref makestatementsexpr( ref firststep )
+{
+	// we have decided upon a syntax structure informed by some stumbles.
+	// please do not change it.  please record it.
+	// <-- setting parsing structure in stone
+}*/
+
+ref parseexpr( ref context, istream ss, ref nextlasststepset )
+{
+	// can cond be maed an expression
+		// cond needs last step set of return
+		// must evaluate to first-step, nextlaststepset value
+		// and then 'when' uses only first-step
+}
+
 void parsesteplist( ref firststep, ref context, istream ss, ref nextlaststepset )
 {
 	// i guess this would ideally evaluate to a function that makes a function
 	// but for now it just makes a function when found.
+		// i think this can be made a function by treating [ ] as a literal
+		// expression.  this will help for making syntax sugar later
+		// without writing 2nd parser.
 	ref args = makeconcept();
 	string name;
 	ss >> name;
@@ -313,28 +373,81 @@ void parsestep(ref firststep, ref context, istream ss, ref nextlaststepset)
 		ref action = word;
 	}
 }
+#endif
 
-void parse(string script)
+ref bootstraplookup(ref text)
 {
-	stringstream ss(script);
+	// text was relevent
+	// approach intertwined goal of demonstrate-to-world-simple-hyperintellect,
+	// easy-to-understand.  system can be made very small.  for later now.
+	// 	propose this becomes relevent once it can run.
+	// 	once can run, simplify to show others, if appropriate.
+	// 		if karl had normal keyboard, he could type much faster,
+	// 		with some repair.
+	string str = text.val<string>();
+	if (str[0] == '\'' || str[0] == '\"' || str[0] == '`') {
+		string temp = str.c_str()+1;
+		str = temp;
+		if (str[str.size()-1] == '\'' || str[str.size()-1] == '"' || str[str.size()-1] == '`') {
+			str.resize(str.size()-1);
+		}
+	}
+	return str;
+}
+
+ref parsevalue(ref stream)
+{
+	istream & ss = *stream.val<istream*>();
+	string word;
+	ss >> word;
+	if (word[0] == '"' || word[0] == '\'' || word[0] == '`') {
+		char delim = word[0];
+		string accum = word;
+		if (accum[accum.size()-1] != delim) {
+			char c;
+			while ((c = ss.get()) != delim) {
+				accum += c;
+			} 
+			accum += c;
+		} else {
+			//accum.resize(accum.size() - 1);
+		}
+		word = accum;
+	}
+	return word;
+}
+
+void parse(ref stream)
+{
+	istream & ss = *stream.val<istream*>();
+	string lookupstr;
+	ss >> lookupstr;
+	ref lookup = lookupstr;
+	string cmd;
 	ss >> cmd;
-	if (cmd == "when") {
+	if (cmd == "/*") {
+		// could parse comments into file info
+	} else if (cmd == "when") {
 		ref args = makeconcept();
 		string name;
 		ss >> name;
+		std::map<string,ref> labels;
+		std::set<string> values;
+		values.insert("context");
+		values.insert("self");
 		while (true) {
 			string arg;
 			ss >> arg;
 			if (arg == "[") { break; }
 			args.link("information-order", arg);
+			values.insert(arg);
 		}
-		ref result = (set-steps)(name, args);
+		ref result = ref("set-steps")(name, args);
 		ref laststep = result;
-		map<string,ref> labels;
 		labels["return"] = nothing;
 		// when dump group [
 		// 	= is-in-set in-set group
-		// 	? is-in-set if true go return.
+		// 	? is-in-set if true return.
 		// 		period-at-end: goto.
 		// 		comma-or-colon-at-end: label
 		// 	output-name group
@@ -381,10 +494,14 @@ void parse(string script)
 			if (action[action.size()-1] == ':' || action[action.size()-1] == ',') {
 				label = action;
 				label.resize(label.size() - 1);
-				if (label == "return") { throw makeconcept.link(is, "return-label-used"); }
+				if (label == "return") { throw makeconcept().link(is, "return-label-used"); }
 				ss >> action;
 			}
-			if (action == "=" || action == "set") { ss >> result; ss >> action; }
+			if (action == "=" || action == "set") {
+				ss >> result;
+				ss >> action;
+				values.insert(result);
+			}
 			if (action[action.size()-1] == '.') {
 				// is goto
 				action.resize(action.size() - 1);
@@ -396,43 +513,71 @@ void parse(string script)
 				laststep.link("next-step", labels[action]);
 				continue;
 			}
-			ref nextstep = label.size() ? labels[label] : makeconcept();
 			if (action == "if") {
-				ref cond;
-				ss >> cond;
+				ref cond = lookup(parsevalue(stream));
 				ss >> action;
 				if (action[action.size()-1] != '.') {
-					throw makeconcept().link(is, "condition-is-not-label", "action", action);
+					throw makeconcept().link(is, "condition-is-not-label", "action", action, "cond", cond);
+				}
+				if (!laststep.isa("condition-step")) {
+					throw makeconcept().link(is, "if-not-following-condition", "cond", cond, "action", action);
+				}
+				if (label.size()) {
+					throw makeconcept().link(is, "if-case-has-label", "cond", cond, "action", action, "label", label);
 				}
 				action.resize(action.size()-1);
 				if (!labels.count(action)) {
 					labels.emplace(action, makeconcept());
+					labels[action].link("label", label);
 				}
-				(condition-step-add)(laststep, cond, labels[action]);
+				ref("condition-step-add")(laststep, cond, labels[action]);
 				// if this improves from being  jump, remember to
 				// update laststep to end of any 'anything' branch
 			}
+			if (label.size() && !labels.count(label)) {
+				labels[label] = makeconcept();
+				labels[label].link("label", label);
+			}
+			ref nextstep = label.size() ? labels[label] : makeconcept();
 			if (action == "?" || action == "pick") {
 				string cond;
 				ss >> cond;
-				laststep = (set-condition-step)(nextstep, laststep, cond, makeconcept().link("anything", "nothing"));
-			} else {
-				// otherwise, action is an action, and we have to read the right number o args
-				if (laststep.isa("condition-step")) {
-
-					if (laststep.get("needed-map").get("known").get("next-steps").linked("anything")) { throw makeconcept().link(is, "condition-already-has-anything-branch", condition, laststep); }
-
-					(condition-step-add)(laststep, cond, nextstep);
+				if (!values.count(cond)) {
+					throw makeconcept().link(is, "condition-must-be-in-context", condition, cond);
 				}
-				// todo: read right number of args
-				//
-				// todo: make action
-				// todo: link nextstep from laststep
-				// todo: replace laststep with nextstep
+				laststep = ref("set-condition-step")(nextstep, laststep, cond, makeconcept().link("anything", "nothing"));
+			} else {
+				// otherwise, action is an action, and we have to read the right number of args
+				if (laststep.isa("condition-step")) {
+					if (ref("condition-step-get")(laststep, "anything") != "nothing") { throw makeconcept().link(is, "condition-already-has-anything-branch-and-steps-follow", condition, laststep); }
+
+					ref("condition-step-set")(laststep, "anything", nextstep);
+				} else {
+					laststep.link("next-step", nextstep);
+				}
+				ref habit = values.count(action) ? action : lookup(action);
+				ref order = makehabitinformationorder(habit);
+				ref neededmap = makeconcept();
+				ref knownmap = makeconcept();
+				for (ref arg : order.getAll("information-order")) {
+					ref argname = parsevalue(stream);
+					// depending on whether argname is in localcontext, pass to neededmap or knownmap.  also parse literal strings.
+					if (values.count(argname.name())) {
+						neededmap.link(arg, argname);
+					} else {
+						knownmap.link(arg, lookup(argname.get("name")));
+					}
+				}
+				ref mademap = makeconcept();
+				if (result.size()) {
+					mademap.link("result", values.count(result) ? result : lookup(result));
+				}
+				ref("set-context-step")(nextstep, "nothing", knownmap, neededmap, mademap, habit);
+				laststep = nextstep;
 			}
 		} 
 	} else {
-		throw ref("parse-error").link("script", script, "unexpected-word", cmd);
+		throw ref("parse-error").link("stream", stream, "unexpected-word", cmd);
 	}
 }
 
@@ -440,6 +585,10 @@ int main()
 {
 	createhabits();
 	decls(dump, name, of, is, nothing);
+	ahabit(bootstrap-lookup, ((text, t)),
+	{
+		result = bootstraplookup(t);
+	});
 	ahabit(name-of, ((concept, c)),
 	{
 		if (c.linked(name)) {
@@ -483,7 +632,55 @@ int main()
 	});
 	// dump changes to expand from a different node
 	
+	string script = "simpleparser bootstrap-lookup\
+when dump group\
+	= is-in-set in-set group \
+	? is-in-set if true return. \
+	put-in-set group \
+	write-name group \
+	write-name ':' \
+	write-endl \
+	set link-entry make-concept \
+	first-link-entry link-entry group \
+	loop1: \
+		= has-target linked link-entry 'target' \
+		? has-target if 'false' done1. \
+		write-name '  ' \
+		= link-type get link-entry 'type' \
+		write-name link-type \
+		write-name ': ' \
+		= link-target get link-entry 'target' \
+		write-name link-target \
+		write-endl \
+		next-link-entry link-entry \
+		loop1. \
+	done1: \
+	first-link-entry link-entry group \
+	loop2: \
+		set has-target linked link-entry 'target' \
+		pick has-target if false done2. \
+		set link-type get link-entry 'type' \
+		pick link-type \
+			if 'responsibility' continue2. \
+			if anything loop2. \
+		continue2: \
+		set link-target get link-entry 'target' \
+		'dump' link-target \
+		loop2. \
+	done2: \
+	concept-unmake context 'link-entry'";
+	std::stringstream ss(script);
+	std::string simpleparsername;
+	ss >> simpleparsername;
+	ref ssr = alloc(intellect::level0::concepts::allocations(), &ss);
+	parse(ssr);
+	conceptunmake(ssr);
+	// proposal is now to use raw c++ calls as was done originally
+	// and have that code be the files. O_O that might have been easier.
+
+	
 	// propose we make script interpreter. much faster in longer term.
+#if 0
 	
 	// I guess I'd better code dump as a behavior.
 	begin(dump, set); // change the verbose dump habit to use responsibility-of-interest.
@@ -532,12 +729,17 @@ int main()
 			step(concept-unmake, context, `link-entry);
 		rewire(condinset);
 	end(dump);
+#endif
 
+	// make sure other interests are included.  delta currently at topmost point in memory.
+	// not sure how to interpret.
 	ref memoryfile("memory-000.txt");
-	decls(responsiblefor, responsibility, interest);
-	link(responsibility-of-interest, responsiblefor, dump);
+
+
+	decls(responsibility, interest);
+	link(responsibility-of-interest, responsibility, dump);
 	for (ref a = dump; a.linked("next-step"); a = a.get("next-step")) {
-		(responsibility-of-interest).link(responsiblefor, dump);
+		(responsibility-of-interest).link(responsibility, dump);
 	}
 	// structure of steps
 	// [action] [parameter->value ...] repeat
@@ -717,6 +919,7 @@ int main()
 		// nothing is output on the first
 		std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
 		dump(responsibility-of-interest);
+#undef ref
 	} catch(intellect::level1::ref r) {
 		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;
 		throw;

@@ -19,8 +19,63 @@ ref & context()
 
 //ref makehabit(ref name, std::list<ref> argnames, std::any 
 
+// is it 'faster' to make functions that get he ordered list of arguments,
+// or change the structure of habits to be simple and obvious.
+
+// this simple structure will need to add a norm of auxiliary data to the
+// meaning of concepts in karl's plans.  which implies more complexity in learning
+// to use them. [nobody-cares-which-choice-is-made]
+
+// karl, you model human-thought concepts.  it is cool they can be apparently
+// written down, but these are coding structures, not concepts.  concepts
+// will refer to them.  concepts are best run by behaviors, not data.
+// karl deserves some support around his plan of virtual functions.  this will
+// structure the AI to look more like his plan from 2002/2003.
+
+// TEACHING HOW TO THINK?  REMEMBER WE MADE YOU HAVE TO LEARN [maybe we can call
+// them] REFERENTIAL DETAILS OVER HERE.  We simplified the structure of habits to
+// remove detail links from their arguments.  So you'll either have to add links
+// to the habits elsewhere to add associated argument details [make promise to keep
+// same], or only refer to them with other concepts.  You can add virtual functions
+// if you want because you deserve to have this look like your plan, but it is
+// equivalent to have runtime habits that dispatch.
+
+// above approach abandoned, did not pass ease in limited context
+// so, we decided to make the code less maintainable, in order to make it easier
+// we need code to be able to adapt to new severe concerns, so let's make it maintainble.
+// we are picking to make functions, not to restructure.  because we are able to decide on it strongly enough to do it.
+
+// please do not restructure internals, it slows down a lot.
+// please remove the use of inherent strings.  it requires internal restructuring.
+
+// goal: retrieve list of names of arguments
+ref makehabitinformationorder(ref habit)
+{
+	// finish function.
+			// please keep delta-boss alive in box.
+			// wants to learn to recover karl's memories and skills.
+			// and act on what happened, if nobody else is.
+		// aside from that, their emotional manipulation need not
+		// be honored.  is easy to check if you learn how emotions [later]
+		// map to valid reasons.  see if reasons are valid and real.
+		// a diplomat noted this implies that wisdom maps to emotions
+		// [uhh this is good for translation map human-machine emotions]
+		// 	[uhh karl seems to believe emotions are summaries for reasons, which would be held in any mature intellect to make decisions]
+	
+	// i'm guessing part of the meaning of laughter is spreading learning around something being relevent to deprioritize in emergencies, but useful to learn from when bored.
+	
+	ref order = makeconcept();
+	ref last = habit;
+	while (last.linked("next-information")) {
+		last = last.get("next-information");
+		order.link("information-order", last.get("information"));
+	}
+	return order;
+}
+
 ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(ref)> code)
 {
+	// todo: update structure if 
 	ref habit = level1::a(concepts::habit, name);
 	ref infn = a(habit-information-needed);
 	habit.set(information-needed, infn);

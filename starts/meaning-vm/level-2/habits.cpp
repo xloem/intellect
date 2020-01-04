@@ -245,7 +245,7 @@ void createhabits()
 	ahabit(copy-to, ((source, s), (target, t)),
 	{
 		// copies data too
-		if (t.hasval() || t.p->links.size() != 0) { throw makeconcept().link(is, "concept-not-empty", concept, t); }
+		if (t.hasval() || t.ptr()->links.size() != 0) { throw makeconcept().link(is, "concept-not-empty", concept, t); }
 		result = t;
 		t.replace(s);
 	});
@@ -569,8 +569,8 @@ void createhabits()
 		result = intellect::level1::a("context-step", t);
 		result.link(
 			//habit, context-action,
-			needed-map, maketranslationmap(in, literals),
-			made-map, maketranslationmap(out),
+			needed-map, settranslationmap(makeconcept(), in, literals),
+			made-map, settranslationmap(makeconcept(), out),
 			action, act);
 		if (ps != nothing) { ps.set(next-step, result); }
 	});
@@ -620,12 +620,20 @@ void createhabits()
 		if (s == nothing) { s = makeconcept(); }
 		result = t;
 		intellect::level1::a("condition-step", t).link(
-			needed-map, maketranslationmap(makeconcept().link(condition, cond), makeconcept().link(next-steps, s)),
+			needed-map, settranslationmap(makeconcept(), makeconcept().link(condition, cond), makeconcept().link(next-steps, s)),
 			action, condition
 		);
 		if (ps != nothing) { ps.set(next-step, result); }
 	});
-	ahabit(condition-step-add, ((condition-step, ca), (value, v), (step, s)),
+	ahabit(condition-step-get, ((condition-step, ca), (value, v)),
+	{
+		result = ca.get(needed-map).get(known).get(next-steps).get(v);
+	});
+	ahabit(condition-step-has, ((condition-step, ca), (value, v)),
+	{
+		result = ca.get(needed-map).get(known).get(next-steps).linked(v);
+	});
+	ahabit(condition-step-set, ((condition-step, ca), (value, v), (step, s)),
 	{
 		ca.get(needed-map).get(known).get(next-steps).set(v, s);
 	});

@@ -41,7 +41,7 @@ static auto & namestruct()
 	static struct name_t
 	{
 		std::unordered_map<std::string,ref,std::hash<std::string>,std::equal_to<std::string>> conceptsByName;
-		ref level1allocationsref, nameref, isref;
+		ref level1allocationsref, nameref, textref, isref;
 		ref level1ref;
 		name_t()
 		: level1allocationsref(level0::basic_alloc()),
@@ -52,7 +52,7 @@ static auto & namestruct()
 		{
 			give(level1allocationsref, "level1-allocations");
 			give(nameref, "name");
-			give(stringref, "text");
+			give(textref, "text");
 			give(isref, "is");
 			give(level1ref, "level1");
 		}

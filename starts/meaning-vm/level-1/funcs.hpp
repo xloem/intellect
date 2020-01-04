@@ -11,6 +11,7 @@
 namespace intellect {
 namespace level1 {
 
+concept* gettext(std::string const & str);
 concept* getnamed(std::string const & name, concept* allocator = nullptr);
 std::string getname(concept* r);
 void givename(concept* con, std::string const & name);
