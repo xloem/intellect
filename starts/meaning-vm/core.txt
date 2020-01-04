@@ -6,3 +6,5 @@
 - when i applied this transformation to this set of patterns, the results all had these parts the same.  Is this similaritu helpful/meaningful/might it have a reason?
 	if so i guess I'd better relate around it more, maybe apply
 	it to more things, or use it as something to explore.
+
+not-familiar, must-have-reason
