@@ -401,10 +401,10 @@ ref parsevalue(ref stream)
 	istream & ss = *stream.val<istream*>();
 	string word;
 	ss >> word;
-	if (word[0] == '"' || word[0] == '\'' || word[0] == '`') {
+	if (word.size() > 0 && (word[0] == '"' || word[0] == '\'' || word[0] == '`')) {
 		char delim = word[0];
 		string accum = word;
-		if (accum[accum.size()-1] != delim) {
+		if (accum[accum.size()-1] != delim || accum.size() == 1) {
 			char c;
 			while ((c = ss.get()) != delim) {
 				accum += c;
@@ -571,6 +571,7 @@ void parse(ref stream)
 				ref stream2 = alloc(intellect::level0::concepts::allocations(), (istream*)&ss2);
 				for (ref arg : order.getAll("information-order")) {
 					ref argname = parsevalue(stream2);
+					if (!ss2) { break; }
 					// depending on whether argname is in localcontext, pass to neededmap or knownmap.  also parse literal strings.
 					if (values.count(argname.name())) {
 						neededmap.link(arg, argname);
