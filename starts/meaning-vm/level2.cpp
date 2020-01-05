@@ -512,6 +512,7 @@ void parse(ref stream)
 				labels[action].link("label", action);
 				if (laststep.linked("next-step")) { throw makeconcept().link(is, "jump-from-nowhere", "label", action); }
 				laststep.link("next-step", labels[action]);
+				laststep = nothing;
 				continue;
 			}
 			if (action == "if") {
@@ -529,13 +530,14 @@ void parse(ref stream)
 				action.resize(action.size()-1);
 				if (!labels.count(action)) {
 					labels.emplace(action, makeconcept());
-					labels[action].link("label", label);
+					labels[action].link("label", action);
 				}
 				ref("condition-step-set")(laststep, cond, labels[action]);
 				// if this improves from being  jump, remember to
 				// update laststep to end of any 'anything' branch
 				continue;
 			}
+			if (laststep == nothing && label.size() == 0) { throw makeconcept().link(is, "no-path-to-code"); }
 			if (label.size() && !labels.count(label)) {
 				labels[label] = makeconcept();
 				labels[label].link("label", label);
@@ -558,7 +560,7 @@ void parse(ref stream)
 					} else {
 						ref("condition-step-set")(laststep, "anything", nextstep);
 					}
-				} else {
+				} else if (laststep != nothing) {
 					laststep.link("next-step", nextstep);
 				}
 				ref habit = values.count(action) ? action : lookup(action);
@@ -674,10 +676,12 @@ when dump group [\n\
 		set link-type get link-entry 'type'\n\
 		pick link-type\n\
 			if 'responsibility' continue2.\n\
-			if anything loop2.\n\
+			if anything next2.\n\
 		continue2:\n\
 		set link-target get link-entry 'target'\n\
 		'dump' link-target\n\
+		next2:\n\
+		next-link-entry link-entry\n\
 		loop2.\n\
 	done2:\n\
 	concept-unmake context 'link-entry'\n\
