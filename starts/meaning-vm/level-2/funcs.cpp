@@ -65,7 +65,7 @@ ref makehabitinformationorder(ref habit)
 	// i'm guessing part of the meaning of laughter is spreading learning around something being relevent to deprioritize in emergencies, but useful to learn from when bored.
 	
 	ref order = makeconcept();
-	ref last = habit;
+	ref last = habit.get("information-needed");
 	while (last.linked("next-information")) {
 		last = last.get("next-information");
 		order.link("information-order", last.get("information"));

@@ -314,6 +314,7 @@ void parsesteplist( ref firststep, ref context, istream ss, ref nextlaststepset 
 		string arg;
 		ss >> arg;
 		if (arg == "[") { break; }
+		if (arg == "") { throw makeconcept().link(is, "end-of-stream"); }
 		args.link("information-order", arg);
 	}
 	ref result = (set-steps)(name, args);
@@ -384,7 +385,7 @@ ref bootstraplookup(ref text)
 	// 	once can run, simplify to show others, if appropriate.
 	// 		if karl had normal keyboard, he could type much faster,
 	// 		with some repair.
-	string str = text.val<string>();
+	string str = text.name();//val<string>();
 	if (str[0] == '\'' || str[0] == '\"' || str[0] == '`') {
 		string temp = str.c_str()+1;
 		str = temp;
@@ -530,9 +531,10 @@ void parse(ref stream)
 					labels.emplace(action, makeconcept());
 					labels[action].link("label", label);
 				}
-				ref("condition-step-add")(laststep, cond, labels[action]);
+				ref("condition-step-set")(laststep, cond, labels[action]);
 				// if this improves from being  jump, remember to
 				// update laststep to end of any 'anything' branch
+				continue;
 			}
 			if (label.size() && !labels.count(label)) {
 				labels[label] = makeconcept();
@@ -549,9 +551,13 @@ void parse(ref stream)
 			} else {
 				// otherwise, action is an action, and we have to read the right number of args
 				if (laststep.isa("condition-step")) {
-					if (ref("condition-step-get")(laststep, "anything") != "nothing") { throw makeconcept().link(is, "condition-already-has-anything-branch-and-steps-follow", condition, laststep); }
-
-					ref("condition-step-set")(laststep, "anything", nextstep);
+					if (ref("condition-step-get")(laststep, "anything") != "nothing") {
+						if (label.size() == 0) {
+							throw makeconcept().link(is, "condition-already-has-anything-branch-and-steps-follow", condition, laststep);
+						}
+					} else {
+						ref("condition-step-set")(laststep, "anything", nextstep);
+					}
 				} else {
 					laststep.link("next-step", nextstep);
 				}
@@ -559,8 +565,12 @@ void parse(ref stream)
 				ref order = makehabitinformationorder(habit);
 				ref neededmap = makeconcept();
 				ref knownmap = makeconcept();
+				string linerest;
+			       	std::getline(ss, linerest);
+				stringstream ss2(linerest);
+				ref stream2 = alloc(intellect::level0::concepts::allocations(), (istream*)&ss2);
 				for (ref arg : order.getAll("information-order")) {
-					ref argname = parsevalue(stream);
+					ref argname = parsevalue(stream2);
 					// depending on whether argname is in localcontext, pass to neededmap or knownmap.  also parse literal strings.
 					if (values.count(argname.name())) {
 						neededmap.link(arg, argname);
@@ -568,6 +578,7 @@ void parse(ref stream)
 						knownmap.link(arg, lookup(argname.get("name")));
 					}
 				}
+				dealloc(stream2, intellect::level0::concepts::allocations());
 				ref mademap = makeconcept();
 				if (result.size()) {
 					mademap.link("result", values.count(result) ? result : lookup(result));
@@ -632,49 +643,50 @@ int main()
 	});
 	// dump changes to expand from a different node
 	
-	string script = "simpleparser bootstrap-lookup\
-when dump group\
-	= is-in-set in-set group \
-	? is-in-set if true return. \
-	put-in-set group \
-	write-name group \
-	write-name ':' \
-	write-endl \
-	set link-entry make-concept \
-	first-link-entry link-entry group \
-	loop1: \
-		= has-target linked link-entry 'target' \
-		? has-target if 'false' done1. \
-		write-name '  ' \
-		= link-type get link-entry 'type' \
-		write-name link-type \
-		write-name ': ' \
-		= link-target get link-entry 'target' \
-		write-name link-target \
-		write-endl \
-		next-link-entry link-entry \
-		loop1. \
-	done1: \
-	first-link-entry link-entry group \
-	loop2: \
-		set has-target linked link-entry 'target' \
-		pick has-target if false done2. \
-		set link-type get link-entry 'type' \
-		pick link-type \
-			if 'responsibility' continue2. \
-			if anything loop2. \
-		continue2: \
-		set link-target get link-entry 'target' \
-		'dump' link-target \
-		loop2. \
-	done2: \
-	concept-unmake context 'link-entry'";
+	string script = "simpleparser bootstrap-lookup \
+when dump group [\n\
+	= is-in-set in-set group\n\
+	? is-in-set if true return.\n\
+	put-in-set group\n\
+	write-name group\n\
+	write-name ':'\n\
+	write-endl\n\
+	set link-entry make-concept\n\
+	first-link-entry link-entry group\n\
+	loop1:\n\
+		= has-target linked link-entry 'target'\n\
+		? has-target if 'false' done1.\n\
+		write-name '  '\n\
+		= link-type get link-entry 'type'\n\
+		write-name link-type\n\
+		write-name ': '\n\
+		= link-target get link-entry 'target'\n\
+		write-name link-target\n\
+		write-endl\n\
+		next-link-entry link-entry\n\
+		loop1.\n\
+	done1:\n\
+	first-link-entry link-entry group\n\
+	loop2:\n\
+		set has-target linked link-entry 'target'\n\
+		pick has-target if false done2.\n\
+		set link-type get link-entry 'type'\n\
+		pick link-type\n\
+			if 'responsibility' continue2.\n\
+			if anything loop2.\n\
+		continue2:\n\
+		set link-target get link-entry 'target'\n\
+		'dump' link-target\n\
+		loop2.\n\
+	done2:\n\
+	concept-unmake context 'link-entry'\n\
+]";
 	std::stringstream ss(script);
 	std::string simpleparsername;
 	ss >> simpleparsername;
-	ref ssr = alloc(intellect::level0::concepts::allocations(), &ss);
+	ref ssr = alloc(intellect::level0::concepts::allocations(), (istream*)&ss);
 	parse(ssr);
-	conceptunmake(ssr);
+	dealloc(ssr, intellect::level0::concepts::allocations());
 	// proposal is now to use raw c++ calls as was done originally
 	// and have that code be the files. O_O that might have been easier.
 
@@ -915,13 +927,14 @@ when dump group\
 	});
 	*/
 	try {
-		// for some reason it's only running the second loop
-		// nothing is output on the first
 		std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
 		dump(responsibility-of-interest);
 #undef ref
 	} catch(intellect::level1::ref r) {
 		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;
+		for (auto i : r.getAll("is")) {
+			std::cerr << i.name() << std::endl;
+		}
 		throw;
 	}
 }
