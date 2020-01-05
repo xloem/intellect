@@ -79,15 +79,23 @@ ref settranslationmap(ref c, ref m, ref k = nothing)
 //						means accessing every condition.  no need to rewrite whole structure, just look up how to access.  faster than rewriting.
 //							make a function to wire to end
 
-void contextmapinto(ref c1, ref m, ref c2)
+void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 {
 	decl(translation); decl(known); decl(nothing);
 	for (auto link : m.get(translation).links()) {
-		c2.set(link.first, c1.get(link.second));
+		if (reverse) {
+			c2.set(link.second, c1.get(link.first));
+		} else {
+			c2.set(link.first, c1.get(link.second));
+		}
 	}
 	if (m.linked(known) && m.get(known) != nothing) {
 		for (auto link : m.get(known).links()) {
-			c2.set(link.first, link.second);
+			if (reverse) {
+				c2.set(link.second, link.first);
+			} else {
+				c2.set(link.first, link.second);
+			}
 		}
 	}
 }
@@ -143,7 +151,7 @@ void _steps(ref s, ref ctx)
 		subctx.set("self", s.get(action));
 		s.get(action).fun<ref>()(subctx); // <-- maybe we should check arguments
 		if (s.linked(made-map)) {
-			contextmapinto(subctx, s.get(made-map), c);
+			contextmapinto(subctx, s.get(made-map), c, true);
 		}
 		if (s.linked(needed-map)) {
 			c = subctx.get(outer-context);
@@ -292,12 +300,16 @@ void createhabits()
 	decl(entry);
 	ahabit(first-link-entry, ((target, le), (concept, c)),
 	{
-		if (le.hasval()) { throw makeconcept().link(
+		if (le.hasval() && !le.hasvalof<links_it>()) {
+			throw makeconcept().link(
 				is, "already-has-value",
 				concept, le,
-				context, ctx); }
+				context, ctx);
+		}
 		//ref le = makeconcept();
-		le.link(is, link-entry);
+		if (!le.isa(link-entry)) {
+			le.link(is, link-entry);
+		}
 		le.val<links_it>(c.links().begin());
 		le.set(source, c);
 		poplinkentry(le);
@@ -305,11 +317,15 @@ void createhabits()
 	});
 	ahabit(last-link-entry, ((target, le), (concept, c)),
 	{
-		if (le.hasval()) { throw makeconcept().link(
+		if (le.hasval() && !le.hasvalof<links_it>()) {
+			throw makeconcept().link(
 				is, "already-has-value",
 				concept, le,
-				context, ctx); }
-		le.link(is, link-entry);
+				context, ctx);
+		}
+		if (!link.isa(link-entry)) {
+			le.link(is, link-entry);
+		}
 		le.val<links_it>(--c.links().end());
 		le.set(source, c);
 		poplinkentry(le);

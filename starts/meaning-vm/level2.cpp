@@ -575,7 +575,7 @@ void parse(ref stream)
 					if (values.count(argname.name())) {
 						neededmap.link(arg, argname);
 					} else {
-						knownmap.link(arg, lookup(argname.get("name")));
+						knownmap.link(arg, lookup(argname));
 					}
 				}
 				dealloc(stream2, intellect::level0::concepts::allocations());
