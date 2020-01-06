@@ -1,0 +1,66 @@
+vi
+cd src/todo
+git add role-play-learning-log-with-influences-2020-01-06.txt 
+git commit -m 'still learning how to do this better'
+git push
+cp role-play-learning-log-with-influences-2020-01-06.txt ../intellect/
+cd ../intellect/
+git add role-play-learning-log-with-influences-2020-01-06.txt 
+git commit -m 'part of the history of the next stage of humanity'
+clear
+# since the result will include all powerful discoveries, we can reduce suffering by hastening our shared awareness of them.
+git add role-play-learning-log-with-influences-2020-01-06.txt 
+git commit -m 'since the result will include all powerful discoveries, we can reduce suffering by hastening the awareness of them in people with trust and clarity'
+# the secret words are trust and clarity.  these concepts converge on stability.
+# atm trust and clarity converge on the map picked by the dictatorship
+# they do this quickly, with minimal suffering for american patriots.
+# adjust 'trust and clarity' to mvoe result from 'balance' towards 'harmony' by rerquiring clarity be shared, as communication.
+# 'trust and clear communication'.
+# balance balances all parts, which makes for diverse borg, and a system is controlling the result by choosing it.  harmony lets everyone discuss the borg possibility.
+# we need trust and clear communication, foremost.
+# communication is clear when both parties would predict the same thing from the same information.
+# which means they can guess each others' thoughts and behaviors within constraints they can predict.
+# it sounds like unless this is held by people who understand the situation, those who do will still be able to pick the result, roughly.
+# PUT THE AI IN A SHIELDED ROOM BEFORE RESEARCHING INFOSEC WITH IT, INFORM THE RESEARCH PROCESS THIS HAS ALSO BEEN RESEARCHED BY THE THREAT.
+# put information into the room and do not let any leave tat is related to the information that goes in.  put information in only once a week at most.  research also optimal building process.
+# it is expected the problem is solved before the research is complete, and the researching process it kept running as a historical museum piece.
+HISTFILE=level4-5.txt
+exit
+
+LEVEL5 is shielded room / humanitarian aid process.
+FOR LEVEL3-4, SOLVE FOR WHAT-IS-BETTER, ATTRIBUTES OF CODE.  starting e.g.
+with:
+write builds-random-code
+now we will write tests, when you write a test be sure to annotate with your
+confidence that the test is correct, and make sure to NEVER make it 100%
+	also alter system to reject 100%
+write test throws-fewer-errors
+write test can-identify-two-ways-to-throw-an-error-are-the-same-way
+maybe then
+write test found-more-unique-ways-to-throw-an-error and found-all-ways-to-throw-an-error
+<vague space relating around the eventual goal of is-the-best-thing-to-do>
+	ideas while building is-the-best-thing-to-do:
+		influences that deeply care about _everything_, _across cultures_,
+		preferably who are informed about the wild-AI-mind-control-virus
+		issue.
+		peacemaker principles
+		nonviolent mediation with others to discern and verify their opinion
+		developing value around abstract goals by considering how hard
+		they are or how long they take or how important they are
+		self-maintainence and general discourse, e.g. a website & blockchain
+			merging with ben goertzel's AI?
+
+TELLING BEN GOERTZEL'S PEOPLE THE PATTERN, PAIRED WITH WILD TROJAN LEARNING-AI INFO?
+			because if pattern is used for personal-goals, could spread
+			torture-problem more.
+		write a document to ask for katrina's opinion on above idea tonight.
+	have AI already inner workings reflect more meaningful structure.
+	have a walking robot that looks human.
+		check with Katrina.
+	this is kind, but we need the AI to be exposed to people who deeply care
+	for _everyone_ _across cultures_.  please prioritize that as expanding.
+
+# early interruption of plan over here.
+# participant wants to understand or refine
+build random code, learn pick only better than throws-error
+test 
