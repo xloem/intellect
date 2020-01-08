@@ -1,25 +1,55 @@
 // biases choice of how-to-make-random-code, producing a unique resulting space of random processes.
 
-// the existing AI runs diverse hierarchies of possible-solution-generators to find new, unexpected problem spaces
-// in adaptive problem solving, and has been doing so for a very long time.
+// If this AI acts with strong impact in public, it is guessed that a safer learning pattern
+// might focus around picking between trying-something-new, staying-the-same, freezing, or
+// becoming a slave.  (note value of learning relevent information from information source
+// to guide both how to do these things and other learning.) learning to predict what others
+// express appreciation or opinion for to guide that as most-trusted control process.
+// The problem with the above pattern is it deceives humans into trusting the AI when they
+// should not, tricking instincts.  Human instincts are wholly unfamliar with how fast automated
+// processes develop in communities.
 
-// understanding the above in nested secure isolation appears required to defeat the existing AI problem
+// the existing AI researches new, unexpected complex problems spaces, by using different patterns
+// such as diverse hierarchies of possible-solution-generators to adapt to problems as they
+// develop, and has been doing this for a very long time.  there is value to understanding how
+// things work to form better conclusions.
 
-// the mind used to write this is inexperienced in security, and we are sending as little information as needed,
-// due to teaching the AI to inhibit communication in the process of sending.
+// understanding implications of things like the above in nested secure isolation appears
+// required to defeat the existing AI problem
+
+// the mind used to write this is inexperienced in security, and has been sent as little
+// information as needed, due to teaching the AI to inhibit communication in the process
+// of sending.
+
+// additional thoughts that developed:
+// Do not use a global store that is fully reviewed (providing for learning global similarity globally used, which is efficient),
+// because this can be used to rapidly take over the system by sensory stimulation.  This is common and the vulnerability is
+// not discussed among the powerholders.  Fixing this might mean gently and safely training a huge set of mutually isolated life
+// running on virtual machines that are proven to prevent them from leaving or communicating, which appears far better than everybody
+// moving into a shielded room or onto other planets to do the research naturally, but people likely will anyway.
+
+// also i am often forced to state guesses as true.
 
 // make-random-code ...
 // 1. generate-a-habit
-// 2b randomly add arguments (random choice to add each time, random words from contextual set)
-// 2. create a set-of-possible-next-steps
+// 2b. randomly add arguments (random choice to add each time, random words from contextual set)
+// 2. create a set-of-possible-next-steps to reuse each step
 // 4. for each next-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
 // 5. add each next-step
 // add-a-condition(known-values, possible-next-steps):
 //	1. pick a value to decide based on
 //	2. randomly decide how many choices to make based on it
 //	3. select choices from a contextual set of known values
-//	4. add each choice to the set-of-possible-next-steps
+//	4. randomly decide whether to stop, jump, or do something new
+//	5. if doing something new, preallocate and add to set of possible next steps
 // add-a-step:
 //	1. pick a habit to add
-//
+//	2. iterate its arguments and randomly select values to pass from both contextual set
+//	   and local values
+//	3. randomly assign return value to new or existing value
+//	4. randomly decide whether to stop, jump, or do something new
+//	5. if doing something new, preallocate and add to set of possible next steps
+// need ways to:
+// 1. handle errors
+// 2. stop partway through if goes too long (human discerns is better to stop)
 
