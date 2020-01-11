@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <set>
+#include <list>
 
 using namespace intellect::level2;
 using namespace intellect::level2::concepts;
@@ -424,12 +425,15 @@ void parse(ref stream)
 	string lookupstr;
 	ss >> lookupstr;
 	ref lookup = lookupstr;
+	std::list<std::string> comments;
 	while (true) {
 		string cmd;
 		ss >> cmd;
 		if (!ss) { break; }
-		if (cmd == "/*") {
-			// could parse comments into file info
+		if (cmd == "//") {
+			std::string comment;
+			std::getline(ss, comment);
+			comments.push_back(comment);
 		} else if (cmd == "information") {
 			ref args = makeconcept();
 			string name;
@@ -444,6 +448,10 @@ void parse(ref stream)
 				args.link("information-order", arg);
 			}
 			ref("set-steps")(name, args);
+			for (auto comment : comments) {
+				ref(name).link("comment", comment);
+			}
+			comments.clear();
 		} else if (cmd == "when") {
 			string name;
 			ss >> name;
@@ -462,6 +470,10 @@ void parse(ref stream)
 			// need to seed values with argument names
 			ref laststep = name;
 			labels["return"] = nothing;
+			for (auto comment : comments) {
+				ref(name).link("comment", comment);
+			}
+			comments.clear();
 			// when dump group [
 			// 	= is-in-set in-set group
 			// 	? is-in-set if true return.
@@ -665,6 +677,7 @@ int main()
 	// dump changes to expand from a different node
 	
 	string script = "simpleparser bootstrap-lookup \
+// this is a line comment\n\
 information dump group linkset\n\
 information dump-expand group linkset\n\
 when dump-expand [\n\
@@ -706,11 +719,11 @@ when dump [\n\
 		pick has-target if false done2.\n\
 		set link-type get link-entry 'type'\n\
 		set link-target get link-entry 'target'\n\
-		set basic-follow linked linkset 'follow' linktype\n\
+		set basic-follow linked linkset 'follow' link-type\n\
 		pick basic-follow if 'false' next2.\n\
-		'dump' link-target\n\
+		'dump' link-target /*did-not-pass-linkset,error-not-provided*/\n\
 		next2:\n\
-		set expand linked linkset 'expand' linktype\n\
+		set expand linked linkset 'expand' link-type\n\
 		pick expand if 'false' next2b.\n\
 		dump-expand link-target linkset\n\
 		next2b:\n\
