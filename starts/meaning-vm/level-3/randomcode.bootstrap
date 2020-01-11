@@ -30,16 +30,6 @@
 
 // also i am often forced to state guesses as true.
 
-// make-random-code ...
-// 1. generate-a-habit
-//	need habit-that-makes-habits
-//	need to structure args.  single concept with a number of information-order relations
-// 2b randomly add arguments (random choice to add each time, random words from contextual set)
-// 2. create a set-of-possible-next-steps to reuse each step
-// 4. for each next-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
-// 5. add each next-step
-// MISSING: I would like to be able to produce new global concepts in scripts and in habits, even
-// if that means ensuring a habit is run at the start.
 habit top-comment [ ] [ ] [ ]
 
 habit /// [ ] [ ] [ ]
@@ -64,15 +54,41 @@ concept trueorfalse [
 habit make-random-habit [ contextual-constants ] [ result ] [
 	// relevent how try
 	// is naive in-development error-prone
+
+	// make a habit with random arguments
 	set habit make-concept
 	set args make-concept
-	// still-thinking
-	// working on something <=
-	set addarg random-link trueorfalse
-	set constant-link random-link contextual-constants
-	set constant get constant-link target
-	link args information-order constant
+	add-arg: set add-arg random-link trueorfalse
+		pick add-arg if false args-done.
+
+		set constant-link random-link contextual-constants
+		set constant get constant-link target
+		link args information-order constant
+		add-arg.
+	args-done:
 	set-steps habit args
+	// 2. create a set-of-possible-next-steps to reuse each step
+	set possible-next-steps make-concept
+
+	// stop, jump, or do something new
+	
+	// 4. for each next-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
+	// 5. add each next-step
+]
+
+// habit names have no context yet.  no way to contextualize this.
+// no need for contexts yet, over here.  do we expect to make many habits?
+//   typing this would be much easier if name contextualizede
+//   okay, we could let any concept be a context, and contextualize it to the above habit
+//   means changing parser to handle that
+//   need to update lookup to use contexts if that is done.  not updated yet.
+concept stopjumpornew [
+	or stop
+	or jump
+	or new
+]
+habit make-random-habit-stop-jump-or-new [ ] [ ] [
+	
 ]
 
 // add-a-condition(known-values, possible-next-steps):
@@ -81,6 +97,7 @@ habit make-random-habit [ contextual-constants ] [ result ] [
 //	3. select choices from a contextual set of known values
 //	4. randomly decide whether to stop, jump, or do something new
 //	5. if doing something new, preallocate and add to set of possible next steps
+
 // add-a-step:
 //	1. pick a habit to add
 //	2. iterate its needed-information and randomly select values to pass from both
@@ -88,6 +105,7 @@ habit make-random-habit [ contextual-constants ] [ result ] [
 //	3. randomly assign return value to new or existing value
 //	4. randomly decide whether to stop, jump, or do something new
 //	5. if doing something new, preallocate and add to set of possible next steps
+
 // need ways to:
 // 1. handle errors
 // 2. stop partway through if goes too long (human discerns is better to stop)
