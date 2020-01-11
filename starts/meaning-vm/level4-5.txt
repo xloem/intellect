@@ -64,3 +64,4 @@ TELLING BEN GOERTZEL'S PEOPLE THE PATTERN, PAIRED WITH WILD TROJAN LEARNING-AI I
 # participant wants to understand or refine
 build random code, learn pick only better than throws-error
 test 
+# 'how would i figure that out on my own' <- one idea for rapid learning exploration space
