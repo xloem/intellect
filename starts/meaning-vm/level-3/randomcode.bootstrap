@@ -40,11 +40,38 @@
 // 5. add each next-step
 // MISSING: I would like to be able to produce new global concepts in scripts and in habits, even
 // if that means ensuring a habit is run at the start.
-information make-random-code contextual-constants
-when make-random-habit [
+habit top-comment [ ] [ ] [ ]
+
+habit /// [ ] [ ] [ ]
+// comments are not good to do this way atm.
+// they reference only out-of-context symbols; habits have a local context.
+// we can make a //-named habit that does nothing and give it global symbols only.
+habit // [ ] [ ] [
+	/// information-names can now be iterated and passed to write-out
+	/// let's try that out and run a test
+]
+
+// would like this to be static local to make-random-habit
+// is similar to comments with knownmap property
+concept trueorfalse [
+	or true
+	or false
+]
+// we can make habitfunction that makes concepts declaratively?
+//	i suppose, but that would make a new one every call
+// but we could add one-time values to do it, too
+
+habit make-random-habit [ contextual-constants ] [ result ] [
+	// relevent how try
+	// is naive in-development error-prone
 	set habit make-concept
 	set args make-concept
+	// still-thinking
+	// working on something <=
+	set addarg random-link trueorfalse
 	set constant-link random-link contextual-constants
+	set constant get constant-link target
+	link args information-order constant
 	set-steps habit args
 ]
 
@@ -56,17 +83,12 @@ when make-random-habit [
 //	5. if doing something new, preallocate and add to set of possible next steps
 // add-a-step:
 //	1. pick a habit to add
-<<<<<<< HEAD
-//	2. enumerate needed information for the habit
-//	3. for each needed information, pick random value
-=======
-//	2. iterate its arguments and randomly select values to pass from both contextual set
-//	   and local values
+//	2. iterate its needed-information and randomly select values to pass from both
+/          contextual set and local values
 //	3. randomly assign return value to new or existing value
 //	4. randomly decide whether to stop, jump, or do something new
 //	5. if doing something new, preallocate and add to set of possible next steps
 // need ways to:
 // 1. handle errors
 // 2. stop partway through if goes too long (human discerns is better to stop)
->>>>>>> 02940d26aefee487e1d35f5016488241e7d3d057
 

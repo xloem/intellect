@@ -3,98 +3,103 @@
 namespace intellect {
 namespace level3 {
 
+ref parsevalue(ref stream)
+{
+	istream & ss = *stream.val<istream*>();
+	string word;
+	ss >> word;
+	if (word.size() > 0 && (word[0] == '"' || word[0] == '\'' || word[0] == '`')) {
+		char delim = word[0];
+		string accum = word;
+		if (accum[accum.size()-1] != delim || accum.size() == 1) {
+			char c;
+			while ((c = ss.get()) != delim) {
+				accum += c;
+			} 
+			accum += c;
+		} else {
+			//accum.resize(accum.size() - 1);
+		}
+		word = accum;
+	}
+	return word;
+}
+
 void parsebootstrap(ref stream, ref context)
 {
 	istream & ss = *stream.val<istream*>();
+	string lookupstr;
+	ss >> lookupstr;
+	ref lookup = lookupstr;
+	std::list<std::string> comments;
 	while (true) {
 		string cmd;
 		ss >> cmd;
 		if (!ss) { break; }
 		if (cmd == "//") {
-			// could parse comments into file info
-			i implmented comments.  they are missing.b
-		} else if (cmd == "information") {
-			// change to information habitname [
-			//   needs ...
-			//   makes ...
-			// ]
-			ref args = makeconcept();
+			std::string comment;
+			std::getline(ss, comment);
+			comments.push_back(comment);
+		} else if (cmd == "concept") {
 			string name;
 			ss >> name;
-			string linerest;
-			std::getline(ss, linerest);
-			stringstream ss2(linerest);
+			ref c = lookup(parsevalue(name));
+			string tok;
+			ss >> tok;
+			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-concept"); }
 			while (true) {
-				string arg;
-				ss2 >> arg;
-				if (!ss2) { break; }
-				args.link("information-order", arg);
+				string type, target;
+				ss >> type;
+				if (type == "]") { break; }
+				ss >> target;
+				c.link(lookup(parsevalue(type)), lookup(parsevalue(target)));
 			}
-			ref("set-steps")(name, args);
-		} else if (cmd == "when") {
+		} else if (cmd == "habit") {
 			string name;
 			ss >> name;
 			string tok;
 			ss >> tok;
-			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-when"); }
-			std::map<string,ref> labels;
+			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-habit-name"); }
+			ref args = makeconcept();
+			while (true) {
+				string arg;
+				ss >> arg;
+				if (ss == "]") { break; }
+				args.link("information-order", arg);
+			}
+			ss >> tok;
+			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-habit-needs"); }
 			std::set<string> values;
 			values.insert("context");
 			values.insert("self");
-			ref order = makehabitinformationorder(name);
-			for (ref arg: order.getAll("information-order")) {
+			while (true) {
+				string arg;
+				ss >> arg;
+				if (ss == "]") { break; }
+				args.link("information-made", arg);
+				// need to seed values with argument names
 				values.insert(arg.name());
+			} // information-made is unused.  is a 'stub' for if-needed-later.
+			ref("set-steps")(name, args);
+			for (auto comment : comments) {
+				ref(name).link("comment", comment);
 			}
-			conceptunmake(order);
-			// need to seed values with argument names
+			comments.clear();
+			ss >> tok;
+			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-habit-makes"); }
+			std::map<string,ref> labels;
 			ref laststep = name;
 			labels["return"] = nothing;
-			// when dump group [
-			// 	= is-in-set in-set group
-			// 	? is-in-set if true return.
-			// 		period-at-end: goto.
-			// 		comma-or-colon-at-end: label
-			// 	output-name group
-			// 	output-name ":" // quotes mean always-global
-			// ]
-			//
-			// proposing expression-based now.
-			// haven't resolved inherited name-contexts with literal strings fully.
-			// 	we'll need a function that turns a symbol into a ref, and takes
-			// 	an inherited context.
-			// 	we'll also change write-name to output-text, and get the name attribute
-			// 		what opens an inherited context? when are symbols added to it?
-			// 		atm we have a list of steps has 1 context.
-			// 			we also have labels to refer to.
-			// 			put labels in the context, treat them as normal names.
-			// 				that sounds nice, for vm to be able to pass step references to functions
-			// 				would just be a literal, though, a constant
-			//			or we could not do subblocks, expression as steps
-			//		what if we were to write this using the steps, with a local context
-			//		we would have to track labels, and put them in the surrounding local context.  maybe also a local condition.
-			//		let's make a context object, link labels and surrounding condition to it.
-			// working on conditions.
-			// 	propose if tracks last step
-			// 	when if ends, adds last step to condition's set of last steps
-			// 	then next step after condition can wire to all steps in the set.
-			// 	can use 1-element set for normal steps.
-			// 	change step-creation to not automatically wire.
-			// 	and reconsider condition-step to not use its next-step attribute.
-			// 	instead its conditions decide what the next step is.
-			// 		looks good for conditions.  fix names and update whole thing.
-			// inside a [], each step enters a set, to be wired to the next step inbetween.
-			// for jump-labels, we'll need to pass a reference to names of them to the
-			// function that builds the [] step list.
-			// 	this reference to names is basically a name-context.  a lookup map for names.  name-context is a concept related to the name link that inherits via outer-context links.
-			// 		it shows what to get for the name link
-			// 	to move towards name-contexts, let's at least call it name-context.
-			// 	maybe make a function to do the lookup.
-			// 		label-name-context.
-			// 	it's roughly okay to branch anywhere within the funtion, so it doesn't ned to actually inherit.
+			for (auto comment : comments) {
+				ref(name).link("comment", comment);
+			}
+			comments.clear();
 			while (true) {
 				string label, action, result;
 				ss >> action;
 				if (action == "]") { break; }
+				if (action == "//") {
+				}
 				if (action[action.size()-1] == ':' || action[action.size()-1] == ',') {
 					label = action;
 					label.resize(label.size() - 1);
@@ -106,6 +111,8 @@ void parsebootstrap(ref stream, ref context)
 					ss >> action;
 					values.insert(result);
 				}
+				// if (action == "concept") {
+				// }
 				if (action[action.size()-1] == '.') {
 					// is goto
 					action.resize(action.size() - 1);
@@ -170,20 +177,28 @@ void parsebootstrap(ref stream, ref context)
 					ref order = makehabitinformationorder(habit);
 					ref neededmap = makeconcept();
 					ref knownmap = makeconcept();
+					ref informationnames = makeconcept();
 					string linerest;
 				       	std::getline(ss, linerest);
 					stringstream ss2(linerest);
 					ref stream2 = alloc(intellect::level0::concepts::allocations(), (istream*)&ss2);
-					for (ref arg : order.getAll("information-order")) {
+					auto args = order.getAll("information-order");
+					auto argsit = args.begin();
+					while (true) {
 						ref argname = parsevalue(stream2);
 						if (!ss2) { break; }
 						// depending on whether argname is in localcontext, pass to neededmap or knownmap.  also parse literal strings.
-						if (values.count(argname.name())) {
-							neededmap.link(arg, argname);
-						} else {
-							knownmap.link(arg, lookup(argname));
+						informationnames.link("name", argname);
+						if (argsit != args.end()) {
+							if (values.count(argname.name())) {
+								neededmap.link(*argsit, argname);
+							} else {
+								knownmap.link(*argsit, lookup(argname));
+							}
+							++ argsit;
 						}
 					}
+					knownmap.link("information-names", informationnames);
 					conceptunmake(order);
 					dealloc(stream2, intellect::level0::concepts::allocations());
 					ref mademap = makeconcept();

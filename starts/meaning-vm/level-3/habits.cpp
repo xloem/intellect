@@ -12,6 +12,8 @@ void createhabits()
 {
 	intellect::level2::createhabits();
 
+	ahabit( // handle extra arguments
+
 	ahabit(random-link, ((concept, c)), {
 		size_t num = intellect::level2::rand(0.0, c.ptr()->links.size());
 		size_t ct = 0;
