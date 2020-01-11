@@ -6,10 +6,13 @@
 // 2. create a set-of-possible-next-steps
 // 4. for each next-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
 // 5. add each next-step
+// MISSING: I would like to be able to produce new global concepts in scripts and in habits, even
+// if that means ensuring a habit is run at the start.
 information make-random-code contextual-constants
 when make-random-habit [
 	set habit make-concept
 	set args make-concept
+	set constant-link random-link contextual-constants
 	set-steps habit args
 ]
 

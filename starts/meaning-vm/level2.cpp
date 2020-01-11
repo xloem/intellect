@@ -1,6 +1,14 @@
 #include "level-2/level-2.hpp"
 #include "level-1/level-1.hpp"
 
+// we can set local variables, and set one result atm.
+// it would be nice to set many results.
+// it would be nice to run habits at global scope and assign to global values
+// it would be nice to declaratively produce concepts <-
+// propose concept of 'context' object be more formalized
+// and be able to place concepts inside 'context' objects.
+// the script has a default one.
+
 // karl thinks some of the concerns could be resolved with a plan to have
 // a 'name resolver' and a 'syntax parser' associated with each file
 // 	parser would come first, would parse name resolver.
