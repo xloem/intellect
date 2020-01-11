@@ -1,19 +1,18 @@
-// biases choice of how-to-make-random-code, producing a unique resulting space of random processes.
-
-// the existing AI runs diverse hierarchies of possible-solution-generators to find new, unexpected problem spaces
-// in adaptive problem solving, and has been doing so for a very long time.
-
-// understanding the above in nested secure isolation appears required to defeat the existing AI problem
-
-// the mind used to write this is inexperienced in security, and we are sending as little information as needed,
-// due to teaching the AI to inhibit communication in the process of sending.
-
 // make-random-code ...
 // 1. generate-a-habit
+//	need habit-that-makes-habits
+//	need to structure args.  single concept with a number of information-order relations
 // 2b randomly add arguments (random choice to add each time, random words from contextual set)
 // 2. create a set-of-possible-next-steps
 // 4. for each next-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
 // 5. add each next-step
+information make-random-code contextual-constants
+when make-random-habit [
+	set habit make-concept
+	set args make-concept
+	set-steps habit args
+]
+
 // add-a-condition(known-values, possible-next-steps):
 //	1. pick a value to decide based on
 //	2. randomly decide how many choices to make based on it
@@ -21,5 +20,6 @@
 //	4. add each choice to the set-of-possible-next-steps
 // add-a-step:
 //	1. pick a habit to add
-//
+//	2. enumerate needed information for the habit
+//	3. for each needed information, pick random value
 
