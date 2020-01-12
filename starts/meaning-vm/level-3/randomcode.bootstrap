@@ -1,3 +1,237 @@
+habit /// [ ] [ ] [ ]
+// comments are not good to do this way atm.
+// they reference only out-of-context symbols; habits have a local context.
+// we can make a //-named habit that does nothing and give it global symbols only.
+habit // [ ] [ ] [
+	/// information-names can now be iterated and passed to write-out
+	/// let's try that out and run a test?
+]
+
+habit random-target [ concept type ] [ ] [
+	set link random-link concept
+	set result get link-target link
+]
+
+// would like this to be static local to make-random-habit
+// is similar to comments with knownmap property
+concept trueorfalse [
+	or true
+	or false
+]
+// we can make habitfunction that makes concepts declaratively?
+//	i suppose, but that would make a new one every call
+// but we could add one-time values to do it, too
+
+habit make-random-habit [ suggestions ] [ result ] [
+	// relevent how try
+	// is naive in-development error-prone
+
+	// make a habit with random arguments
+	set habit make-concept
+	set args make-concept
+	add-arg: set add-arg random-link trueorfalse
+		pick add-arg if false args-done.
+
+		set constant-link random-target suggestions
+		link args information-order constant
+		add-arg.
+	args-done:
+	set-steps habit args
+
+	// 2. create a set-of-possible-next-steps to reuse each step
+	set tail-steps make-concept
+	set all-steps make-concept
+	set values make-concept
+	link habit 'tail-steps' tail-steps
+	link habit 'all-steps' all-steps
+	link habit 'values' values
+	link habit 'suggestions' suggestions
+
+	// stop, jump, or do something new
+	set next-step make-step habit
+	link habit 'next-step' next-step
+
+	set continue linked tail-steps 'step'
+	pick continue if false return.
+
+	set step take tail-steps 'step'
+	
+	// 4. for each tail-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
+	// 5. repeat until no tail-steps
+]
+
+habit first-link-entry-of [ concept type ] [ result ] [
+	set result make-concept
+	first-link-entry result concept
+	next:
+		set more-links link-type linked link
+		pick more-links if false failure.
+		set link-type get result 'type'
+		set done same link-type type
+		pick done if true return.
+		next-link-entry result
+	failure:
+	error type-not-on-link
+]
+
+habit last-link-entry-of [ concept type ] [ result ] [
+	set result make-concept
+	last-link-entry result concept
+	next:
+		set more-links link-type linked link
+		pick more-links if false failure.
+		set link-type get result 'type'
+		set done same link-type type
+		pick done if true return.
+		previous-link-entry result
+	failure:
+	error type-not-on-link
+]
+
+habit take [ concept type ] [ result ] [
+	set link-entry first-link-entry-of concept type
+	set result get link-entry target
+	link-entry-unlink link-entry
+]
+
+habit to [ result ] [ result ] [ ]
+
+habit inner-put [ concept inner type value ] [ ] [
+	set inner get concept inner
+	put inner type value
+]
+
+habit inner-link [ concept inner type value ] [ ] [
+	set inner get concept inner
+	link inner type value
+]
+
+habit inner-get [ concept inner type ] [ result ] [
+	set inner get concept inner
+	set result get inner type
+]
+
+concept step-types [
+	or stop
+	or jump
+	or new
+]
+habit make-step [ habit ] [ result ] [
+	set choice random-of step-types or
+	pick choice
+	if stop stop.
+	if jump jump.
+	if new new.
+	if step step.
+	if pick pick.
+	error unknown-step-type
+	stop:
+		set result to nothing
+		return.
+	jump:
+		set all-steps get habit 'all-steps'
+		set result random-of all-steps 'step'
+		return.
+	new:
+		set result makeconcept
+		inner-link habit tail-steps step result
+		inner-link habit all-steps step result
+		return.
+]
+
+habit fill-step [ step habit ] [ ] [
+	set is-condition random-of true-or-false or
+	pick is-condition true condition.
+	action:
+		fill-habit-step step habit
+		return.
+	condition:
+		fill-habit-pick step habit
+		return.
+]
+
+// add-a-step:
+habit fill-habit-step [ step habit ] [ ] [
+	set values get habit 'values'
+	set suggestions get habit 'suggestions'
+	set all-habits get habit 'all-habits'
+//	1. pick a habit to add
+	set action random-of all-habits 'habit'
+//	2. iterate its needed-information and randomly select values to pass from both
+//          contextual set and local values
+	set needed-map make-concept
+	set known-map make-concept
+	set made-map make-concept
+	set last get action 'information-needed'
+information-enumeration:
+	set is-next linked last next-information
+	pick is-next if false enumeration-done.
+	set last get next-information last
+	set has-assumption linked last assume
+	pick has-assumption false not-consider-assuming.
+	set skip random-of true-or-false or
+	pick skip true information-enumeration.
+	not-consider-assuming:
+	set information-name get next-information information
+	set use-constant random-of true-or-false or
+	pick use-constant if true constant.
+	value:
+		// use value as argument
+		set value random-of values value
+		link needed-map information-name value
+		information-enumeration.
+	constant:
+		set value random-target suggestions
+		link known-map information-name value
+		information-enumeration.
+enumeration-done:
+//	3. randomly assign return value to new or existing value
+	set use-result random-of true-or-false or
+	pick use-result if false after-result.
+	set new-value random-of true-or-false or
+	pick new-value
+		if true use-new-value.
+		if false use-existing-value.
+	error new-value-neither-true-nor-false
+	use-existing-value:
+		set result-value random-of values value
+		after-result.
+	use-new-value:
+		set result-value random-target suggestions
+		link values value result-value
+	link made-map 'result' result-value
+after-result:
+	set-context-step step nothing known-map needed-map made-map action
+	set next-step make-step habit
+	link step 'next-step' next-step 
+]
+
+// add-a-condition(known-values, possible-next-steps):
+//	1. pick a value to decide based on
+//	2. randomly decide how many choices to make based on it
+//	3. select choices from a contextual set of known values
+//	4. randomly decide whether to stop, jump, or do something new
+//	5. if doing something new, preallocate and add to set of possible next steps
+concept value-or-suggestion [
+	or value
+	or suggestion
+]
+habit fill-habit-pick [ step habit ] [ result ] [
+	set values get habit 'values'
+	set condition random-of values value
+	set next-steps make-concept
+	add-option:
+		set option random-target suggestions
+		set option-step make-step habit
+		link next-steps option option-step
+		set continue random-of true-or-false or
+		pick continue if true add-option.
+	set-condition-step step nothing condiion next-steps
+]
+
+// need ways to:
+// 1. handle errors
+// 2. stop partway through if goes too long (human discerns is better to stop)
 // biases choice of how-to-make-random-code, producing a unique resulting space of random processes.
 
 // If this AI acts with strong impact in public, it is guessed that a safer learning pattern
@@ -32,81 +266,4 @@
 
 habit top-comment [ ] [ ] [ ]
 
-habit /// [ ] [ ] [ ]
-// comments are not good to do this way atm.
-// they reference only out-of-context symbols; habits have a local context.
-// we can make a //-named habit that does nothing and give it global symbols only.
-habit // [ ] [ ] [
-	/// information-names can now be iterated and passed to write-out
-	/// let's try that out and run a test
-]
-
-// would like this to be static local to make-random-habit
-// is similar to comments with knownmap property
-concept trueorfalse [
-	or true
-	or false
-]
-// we can make habitfunction that makes concepts declaratively?
-//	i suppose, but that would make a new one every call
-// but we could add one-time values to do it, too
-
-habit make-random-habit [ contextual-constants ] [ result ] [
-	// relevent how try
-	// is naive in-development error-prone
-
-	// make a habit with random arguments
-	set habit make-concept
-	set args make-concept
-	add-arg: set add-arg random-link trueorfalse
-		pick add-arg if false args-done.
-
-		set constant-link random-link contextual-constants
-		set constant get constant-link target
-		link args information-order constant
-		add-arg.
-	args-done:
-	set-steps habit args
-	// 2. create a set-of-possible-next-steps to reuse each step
-	set possible-next-steps make-concept
-
-	// stop, jump, or do something new
-	
-	// 4. for each next-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
-	// 5. add each next-step
-]
-
-// habit names have no context yet.  no way to contextualize this.
-// no need for contexts yet, over here.  do we expect to make many habits?
-//   typing this would be much easier if name contextualizede
-//   okay, we could let any concept be a context, and contextualize it to the above habit
-//   means changing parser to handle that
-//   need to update lookup to use contexts if that is done.  not updated yet.
-concept stopjumpornew [
-	or stop
-	or jump
-	or new
-]
-habit make-random-habit-stop-jump-or-new [ ] [ ] [
-	
-]
-
-// add-a-condition(known-values, possible-next-steps):
-//	1. pick a value to decide based on
-//	2. randomly decide how many choices to make based on it
-//	3. select choices from a contextual set of known values
-//	4. randomly decide whether to stop, jump, or do something new
-//	5. if doing something new, preallocate and add to set of possible next steps
-
-// add-a-step:
-//	1. pick a habit to add
-//	2. iterate its needed-information and randomly select values to pass from both
-/          contextual set and local values
-//	3. randomly assign return value to new or existing value
-//	4. randomly decide whether to stop, jump, or do something new
-//	5. if doing something new, preallocate and add to set of possible next steps
-
-// need ways to:
-// 1. handle errors
-// 2. stop partway through if goes too long (human discerns is better to stop)
 
