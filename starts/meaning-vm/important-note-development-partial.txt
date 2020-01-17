@@ -686,6 +686,10 @@ should match the whole log, entirely.
 	<considering other behaviors with attribute1.  we want to know when attribute1
 	 is likely to influence betterness, or any other pattern, so as to understand how
 	 things work for the future.>
+			this roughly means looking for more parallel-part patterns that
+			include attribute1.
+			then the pattern that describes all those together, is the relation
+			attribute1 has with our choices and their reasons, etc.
 		this would produce a set of patterns that relate attribute1 to other patterns
 		and possibly a set of patterns that relate to betterness
 
@@ -693,6 +697,148 @@ should match the whole log, entirely.
 			form arbitrary relevent patterns.  we will want to move our behaviors
 			towards effectively acting on reasons, as we find ways to do this.
 				this relates to side-effects.
+					side-effects document relations between before-state
+					and after-state, in larger contexts.
+					let's imagine a reason being present, maybe of
+					'efficient-behavior' which informs betterness
+					by e.g. fewer steps to solve new problems in old
+					contexts.
+						we could apply what-is-better to different experiences of pattern finding.
+						using our patterns for pattern finding as parts of the process.
+						we can either include reasons for the steps, or let them develop as attributes based on safe adjustment.
+							there are a lot of ways to apply every pattern to every link and produce the set that succeed.  ideally doing this is informed by the reason to do it in the first place.
+							we'd need to add reasons to the before-state, and metness to the after-state, I suppose.  chaining the ways to meet goals together lets this optimize.
+					what was found relevent is a preecise behavior log as an
+					idea, not an always thing.  the log includes every step
+					taken and all information used to take the step.
+					this is used to inform behavior.
+						we make expressions around these logs, in order
+						to guide behavior.  if there is an issue,
+						making one may help find it.
+
+need all-relevent-patterns-considered-here
+
+way to consider all-relevent-patterns is consider-all-patterns
+way to consider-all-patterns is
+		needs: way-to-accumulate-successful-patterns
+		needs: way-to-access-all-patterns
+		needs: way-to-detect-if-tried-pattern-yet
+			one way to detect if tried a pattern yet
+			is to make an empty concept, and link it when you try patterns
+			you can check the link to know if you tried
+				this should come out of before- and after- states
+				before link-[a]-[b]-[c], linked-[a]-[b]-[c] false
+				after link-[a]-[b]-[c], linked-[a]-[b]-[c] true
+
+				before e=makeconcept
+				linked-e-[f]-[g] error
+				num-concepts-before
+				after e=makeconcept
+				linked-e-[f]-[g] false
+				num-concepts-after is next-number num-concepts-before
+
+				need to know if in-this-run, tried-pattern-[d]
+
+				so if it happened, linked-e-[b]-d is true
+
+				what changes in use of try-pattern-[A] is [A].
+				we want to form a decision on use of it, to prevent re-use of A.
+				so we need a decision-source that depends on past use of A.
+				
+					this pattern needs to apply to all runs during the course
+					of execution.  this would mean logging all behavior to
+					test this, or using patterns that are equivalent.
+						the set storage is a simplification of the behavior log to only do what is needed.
+				try-pattern-[A]
+				try-pattern-[B]
+					is-not-same, [A] [B]
+						this would arise from experience doing things 
+						if this rule is included, processes complete
+						^-- set storage is for this experience, roughly.
+						we summarize it as no-repetition, try-pattern-[A]
+
+				we enforce this by check-not-in-set-[A] and add-to-set-[A]
+				whenever try-pattern-[A]
+				this makes is-not-same in all try-pattern
+				due to after-state adding a dependency
+				check-not-in-set-[A] is true only _after_
+				add-to-set-[A]
+				and each try-pattern happens after another
+					how can we show via patterns or rules that
+					making try-pattern-[A] make in-set-[A] be true
+					results in newness of try-pattern-[X]? nonrepeating?
+				repeating is when same-thing twice
+				we add thing to state when doing it
+				almost ... do-behavior match on history
+					not-same applies do-behavior parameters
+				not-same relates two states around in-set-[A]
+				in-set-[A] false, and in-set-[B] true
+				A and B different if time same
+				in-set-[A] false and in-set-[A] true
+				times different, behavior that depends on them different
+				we want A != B.  if A == B, then in-set-[A] == in-set-[B]
+				set 1 has [], set 2 has [A], set 3 has [AB]
+				adding A to set alters set.
+				before-state
+				after-state
+				newness
+				act-A, act-B
+					if act-A happened before, then results of act-A happened before.  we can discern if this has happened before if its results have already happened.
+					if act-A does not store results, we'd better make act-A-stores-results that makes results around act and A.  we can thten check them.
+				event-happened.
+						maybe this approach is not the way atm, so hard to move forward on this generlization part.
+					
+
+				we want to always do new things in same context
+				which means never-with-exactly-same-data
+					maybe if side-effects, time is data and is always newness
+				so we need a way to prevent reuse of exactly same data in same
+				way in the algorithm.
+					one way to do this is to record the data passed to every behavior.
+					another way is to record only what changes.
+				
+				
+
+				if in-past, try-pattern-[A]=>failure, then in-future,
+				   try-pattern-[A], error
+					we need to record our failures and not reproduce them.
+
+				bad:
+					before-state-of-pattern-A:
+						pattern-A-after-state
+				when building patterns, we look for differences between before-states, and prior after-states.  [i've-done-this-before -> the knowledge I gained from this last time is already present]  this difference not being present can result in eternal pointless behavior.
+					by making a link when we do our behavior
+							which is supposed to happen once to each object
+					we make a way to detect when we are repeating it
+					and a way to detect when we are doing something new
+						it is the same thing because all the information it depends on is exactly the same, and it has no side-effects (just produces information it is our job to use).  this is not something new.  we need to do new things when in the same pattern.
+
+						we'd want behaviors built around that.
+				now is a future of the past.  we don't want an error.
+				so we want to prevent try-pattern-[A] if in past-set.
+				we have code to act on try-pattern-[A].  we need to store
+				something that lasts when this happens, to prevent the behavior
+				in the future.  we need store something that depends on [A].
+					we store linked-a-b-[A] or linked-a-[A]-c.
+						this relates to how states connect over time.
+						ater-state lasts forever, only mutatd by other after-states.  every after-state is in the before-state of everything following.
+							if we have a behavior log, we can store try-pattern-[A] in it, and check.
+							but we need to make that behavior log to use it.
+				
+		needs: way-to-find-more-patterns
+			one way to find more patterns
+			is to look for nearby patterns in a pattern-space
+	need link-to-pattern-network
+	make new concept, tried-patterns
+	make new concept, more-patterns
+	link pattern to more-patterns
+	loop: get a pattern from more-patterns
+	try pattern
+	link tried-patterns to pattern
+	unlink pattern from more-patterns
+	add all nearby patterns not in tried-patterns to more-patterns
+	goto loop
+					
 	
 -- above is more important than old stuff below
 - betterness relationships between them
