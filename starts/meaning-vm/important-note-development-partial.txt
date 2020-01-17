@@ -461,6 +461,19 @@ match-checking:
 			this only works easily if source data is not mutated by processes
 		it could be helpful to translate from models to these steps.  it shouldn't
 		be hard: just walk all links in the model.
+				note: the steps themselves could be pattern-parts.
+				how does that relate to order?
+					if the steps have no side effects, the order can
+					be solved from the structure.
+						let's document side effects by relating
+						before-predicate to after-predicate
+							how would this be a part of step-maps?
+							we'd include parallel information in before-predicate and after-predicate, making a small pattern around that predicate that relates the two states.
+					checking a pattern matches is different from finding
+					matches.  when checking, we'll likely know what
+					all the steps are.  when finding, we may try
+					many different things, running different parts of the
+					pattern on different stuff as we try.
 
 match-finding:
 		again, may be many forms of this
@@ -635,7 +648,53 @@ pick-up-[gravity], [error]
 touch-[cup], [success]
 touch-[gravity], [error]
 
-- behaviors1 matching pattern1
+learning is pattern-solving over time
+we are trying to find the before-behavior and after-behavior patterns
+we want to make pattern structures that say a lot about when and why things are true between
+our before-behavior and after-behavior pattern-parts.
+
+if we have a log of behavior that is perfectly accurate, then a proposed behavior-attribute
+should match the whole log, entirely.
+	so we look for patterns matching behavior.  before-states, after-states, and possibly
+	errors
+			behavior has assumptions.  if assumption is false, error.
+			like jump with no legs or no gravity.
+				jump needs legs and gravity.  touch needs reachable.
+				pick-up needs reachable, movable, lightweight, and small.
+			we need to learn our implicit assumptions, and those of the world
+			around us, somehow.
+	karl says there is a way-for-learning that involves parallel pairs in experience.
+	parallel pair parts of the experiences.
+
+- pattern1: a set of behaviors that are similar
+- pattern2:
+	pattern2 identifies that behaviors must be divided by betterness along a parallel
+	pattern.  so, it describes a relationship between group1 and group2 of behaviors,
+	saying that group1 had better-result than group2, generally, which we simplify to
+	for-every-member-of-group here.
+	it also says that every member of group1 have attribute1 with value1, and every
+	member of group2 have attribute1 with value2.
+		there-is-some-predicate that gives same-answer for group1, and different-answer
+		for group2, and same-answer and different-answer differ.
+		we might say there is a non-sameness predicate relating group1 and group2
+		that non-sameness predicate must depend on a summarizable attribute of group1
+		and group2
+	we can then infer that this attribute is likely responsibly for the better-result,
+	and add it to choices or learning around the behavior.
+	attribute1 relevent pattern1
+- we can then consider attribute1 on a wider scale to discern why it has this responsibility.
+	<considering other behaviors with attribute1.  we want to know when attribute1
+	 is likely to influence betterness, or any other pattern, so as to understand how
+	 things work for the future.>
+		this would produce a set of patterns that relate attribute1 to other patterns
+		and possibly a set of patterns that relate to betterness
+
+			from this we likely find summarization and generalization, if we can
+			form arbitrary relevent patterns.  we will want to move our behaviors
+			towards effectively acting on reasons, as we find ways to do this.
+				this relates to side-effects.
+	
+-- above is more important than old stuff below
 - betterness relationships between them
 - pattern2 has always the same betterness relationship among behaviors1
 	we need to group behaviors1 into two groups, better and worse
@@ -652,6 +711,7 @@ touch-[gravity], [error]
 				where they must break the data into 2 discrete groups sufficiently
 					so we match against predicates-apply-to-[behaviors1]
 					and filter-predicate-true
+				so, now that predicates are part of patterns, this should be much easier
 
 	0. we made a pattern that matches more than 1 behavior and formed betterness relationships
 	1. we found two behavior events with an interesting betterness relationship
