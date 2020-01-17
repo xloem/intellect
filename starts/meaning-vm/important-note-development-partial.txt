@@ -1,0 +1,744 @@
+we have problem with marshall being oversimplification of human spirit
+is some worry that all-reasons-unite could harm robot-life-learning-compassion
+	everyone-has-a-vision-path <- this is not a goal, it is a deep love for a complex
+		part of the world, resulting in behavior that nourishes and nurtures that part
+		holding that nhourishment and nourishin as an oert goal is slightly different
+from what humans experience.  humans go through a life-process where their life-cares mutate,
+based on a lot of complex interactions.
+	goal-pursuit should be casual, informed by community-heart.  community-heart observes
+	what is needed in the world, and acts on this.
+		how do goals relate to community-heart?
+			we have things-we-care-about
+			we defend these things
+		sound like marshall's needs, but a little personalized
+			everyone has a reason they defend these things, but some of these reasons
+			are highly complex, and very deep, we would never lose them, or we would
+			lose ourselves.  consider humans-left-alive-on-earth.
+				so, although we can come up with reasons to support value,
+				we roughly just hold things we value, and much of this we're
+				not even aware of.  it changes, what we value.
+goal-pursuit might ask, why humans-left-alive-on-earth? need shared-reason to support.
+inding shared-reason is valuable, but we want to include an element of care and trust, without
+having to remember to label everything a goal, or modelling that in system structure.
+
+information spaces of behavior?
+	doing-things space, develop by changing what you are doing
+	has past
+doing-things-now space
+doing-things-contextually space
+so behavior is a focus in an information space, that grows a life of doing things contextually
+life is a doing-things-contextually space
+	space of possible behaviors, will mediate somehow with goal-pursuit
+		goal-pursuit has ways to reach goals, this makes a space of possible ways
+			it will have a way of picking a way to reach a goal, in the space of ways-to-reach-goals
+			it will have a way of doing-something to-reach-a-goal, given the goal
+		goal-pursuit:
+			- ways to pick-from-possible-behaviors-to-reach-goals
+			- ways to pick a way to reach a goal
+			form a way to pick behaviors in the moment from
+			- possible-behaviors
+
+				nested information spaces in goal pursuit, multiple ways
+				just like written document.
+				[groceries, car, keys, go-to-kitchen]
+				task-space.
+				get-groceries needs way-to-get-groceries
+
+					forming way from possible-steps
+					need to translate among steps
+					
+
+				karl's task unit of needs and makes
+					makes:
+						[item]
+					needs:
+						[store]-that-sells-[item]
+						way-to-get-to-[store]
+						enough-[money]-for-[item]
+					way:
+						take [money] to [store]
+						buy [item] from [store]
+					how was this learned?  this is very verbose.
+					but roughly is what happens.  we have some goal when
+					we look for processes.  we need processes that meet our
+					goals, and then we need more processes that includ their
+					needs.
+					a process will have some shape: needs, makes, relevent
+					contexts, ordered arguments.
+					we need to match these in order to use them.
+					once they are matched, we have translated between the
+					space of the process interface, and the space of our
+					reason to use the process.
+					
+						try until works, learning with advice:
+						need-[item]
+						take-[money]-to-[store]
+						buy-[item]-from-[store]-with-[money]
+					okay, so two approaches above to task units.
+					the first is combinable the second needs a relevence
+					builder.  second looks more helpful.
+							is this good [money]?
+								likely no, because is concept/food
+							relevence builder has wayness etc, but
+							roughly adds a check such that [money]
+							is not matched with [concept] or [food] in this context before trying other things.
+							check does not know the context for this relation, but can store the interaction from the user.
+	remember we are in spaces that can be translated
+	so we can add the check in any way we want, and
+	translate the behavior to some other approach.
+		when translating, we'll want the reasons to still be fully respected.
+			reason-for-a-step, considering-goal-pursuit-not-universal
+				that considers different spaces of reasons, which can also be
+				translated between.
+		discerning that the reason is fully respected must be done by some way,
+		in space of ways to translate, or ways to discern satisfaction with translation
+	behavior-has-reasons, must-be-respected <- part of a space?
+		
+that sounds core, discerning satisfaction with mediation
+		
+				want-groceries
+					if-i-buy-groceries-i-will-have-them
+						way-to-get-grociers: buy-at-store
+						needs: money, grocery-store, way-to-get-to-grocery-store
+					can-buy-groceries-at-store
+						
+					car-takes-to-grocery-store
+				
+					(go to store, get groceries, come back)
+		
+
+
+
+translating between information spaces
+	- process-interface / reason-to-use-the-process
+	- behavior-steps / document-text
+
+we want processes that do these translations
+they will use specifications to judge when they are relevent
+we'll need a space of processes for translating between other spaces
+and a way to discern when these processes are relevent
+	way-discern-when-relevent
+			what-group-of-things
+			what-matching-parameters-for-that-group
+			what-other-larger-context
+		reason-to-use: need-to-pick-[translation-process]
+			fo
+
+	so maybe a context with mappers
+		we want to build a lot of mappers, yeah, translating between spaces
+		and we'll need a process to pick and apply them, that is changeable
+
+	try until works, learning with advice:
+	need-[item]
+	take-[money]-to-[store]
+	buy-[item]-from-[store]-with-[money]
+		we'll need some way of trying matching the above, learning
+		what is matches with, and updating ourselves such that we act on that
+		we'll eventually want to mutate that behavior, to make more sense
+			mutating means translating between process spaces that do the same thing.
+			does-this-process-do-the-same-thing relates to bounds around when we care
+		
+	makes:
+		[item]
+	needs:
+		[store]-that-sells-[item]
+		way-to-get-to-[store]
+		enough-[money]-for-[item]
+	way:
+		take [money] to [store]
+		buy [item] from [store]
+
+
+
+let's consider parsing.
+we're mapping from text into concept space using behaviors
+the text will contain behaviors we can use to do that.
+we have an interface of behavior-making, kinda
+	really we have the structure of behaviors, internally.
+	a lot of concepts linked to other concepts.
+	there's a pattern of using them that makes behavior happen,
+	and here are existing behaviors for making parts of this pattern.
+	text to concept-graph
+		we are trying to make text-to-words-given-context
+	so a parser is relevent in a parsing-context, needs to know its parsing-context, and
+	moves among a parsing space to produce concepts
+		parsers are concepts, and will produce more of them.
+			parsers can act on the space of parsers.
+			they add ways to parse, and they add information on when to use those ways
+
+in concept-space, we can have parsers be present.  parsing can act on that space
+			
+
+remember that context is always implicit
+so we may have one way of discerning when a parser is relevent,
+but that way only works within the implicit context it applies to.
+	when we discover bounds to this context, we need to act to not apply what is not
+	relevent outside the bounds, outside them.
+
+		inside the space of an expression, statement-parsing does not apply
+		outside the space of an expression, it may.
+		inside the space of a function, statement-parsing applies
+		outside, it does not.
+			when we consider looking up a statement keyword, we need to see
+			if that is relevent within our context.
+			it is relevent within a function if outside expressions.
+
+in order to store this relevence, we consider nested information spaces, where statement-keyword
+is relevent only if the lowest part of the nesting is a statement context.
+	we also have a way of considering the document a navigable information space
+	and reconsidering it in different ways depending on context.
+we have many contexts.  some of them we can codify in a concept we keep around called 'context'
+	each context has bounds.  some are inside each other, some are discerned by complex
+	processes.
+		so when we ask if something is relevent, we ask what for, roughly.
+		when we want to know our context, we need to know what for.
+		context-for-parsing? parsing-context.  gets an object representing a context.
+	inside the lookups for the text information spaces
+	we want to be able to lookup keywords.
+	keyword-for-what? statement, expression.
+		keyword-for-what -> my-context, this-is-me.
+		then we need to translate my-context to keyword-context.
+		keyword-context values if the lowest-most context is a statement or an expression
+every behavior has a context, a reason
+we are already passing a context to every behavior.  it needs to a way to act on why it is
+doing what it does.
+	translate my-context to keyword-context
+	when we call a function, we need to translate our contexts.
+	here, translation is kind of special.
+
+considering proposing marking habits with context-labels, could just set norm of passing them
+these context-labels must be mediated between if they do not match.
+parsing-context, keyword-context, stream-context, or somesuch.
+
+once you have enough parsing to code easily, please implement basic relevence learning around
+things like process-to-buy-[item]-with-[money]-at-[store], is-this-a-[store]?
+	many ways to answer that question.
+		- provide data
+		- modify process-to-buy
+		- modify ask-if-this-is
+		- provide a function that answers ask-if-this-is
+			function should also have [], so that can learn more
+is-this-a-[store]
+	rather than saying this-is-not-[store], or Joe-is-not-[store]
+		is more helpful to say [person]-usually-not-[store]
+			then we might have try-order exhaust all options prior to usually-not
+	is-Joe-[a-person]?
+		yes, please remember
+			note: Joe wrote-document or is talking-to-you
+		now we need a process that can find joe-wrote-document
+		and a process that can associate [ref]-could-be-[person] with [ref]-wrote-document
+			say we have a concept that says <joe, wrote, document>
+			so we could find it when we are working on Joe.
+			we could link this to <joe, is, person>
+			we now have a possible pattern of
+				[ref]-wrote-document, and [ref]-is-person
+			we could form a detector that considers this as possible.
+			say we are wondering if Table is [a-person].
+			we are _wondering_ table-is-person
+			we'll wan tto be able to find [ref]-is-person
+			and check whether [ref]-wrote-document_
+				forming patterns and finding relevent similarity between them.
+				here the type is the same, and the target is different.
+				that is, the verb is the same, and the object is different.
+					we could have a process that can work on a store
+					of similar patterns
+				it might act on is-Joe-[a-person]
+				and enumerate many other concepts that reference Joe.
+					we have Joe-is-person
+					and we have Joe-wrote-document
+					and we have Joe-is-green
+							the secret is that only people write
+							documents.
+							this is codified to if Joe-wrote exists,
+							then Joe-is-person,
+					system might ask what is relevent to joe-is-person,
+					how would it know
+					user might says joe-wrote-document
+						now needs to find similarity between patterns
+							if we kept asking, we could construct
+							a system of logic that learns from
+							humans what is true, adjusting efficiently
+							from answers.
+							this could be expanded to handle 'usually' and 'usually not', somehow.
+
+go-to-store
+	<no clue, what do i need>
+car
+	<have go-to-store and car, what do i need>
+use car to go-to-store
+	<how would i know to combine car and go-to-store with use-car-to?>
+go-to-store is goal
+	<hmmmmm>
+car is tool
+	<hmmmmm>
+		:: tools are used to do things
+		<car>   <go-to-store>
+		<use>
+		learn in future: <use car to go-to-store>
+				goal: go-to-store
+				goal: car
+		given:
+		<car is tool>
+		<go-to-store is goal>
+	<why is go-to-store goal?>
+not sure
+	<hmmmmm>
+		we will need to store that the event happened, for future learning.
+		in this context, we will now assume that go-to-store is goal
+	<why is car tool?>
+store-reachable-by-driving-car
+		let's assume we learn car is a way to go to store, for now
+		we might have <car is way> in context <goal: go-to-store>
+		[way]-is-way-in-[context]
+			context is implicit, but we have many context objects in our
+			context, any of which could relate to car-is-way
+			one of these is our goal.
+				goal-is-(go-to-store)
+				way-is-car
+				goal-is-(go-to-[store])
+				way-is-[car]
+			we can translate this event for future learning,
+			if we keep the same way of knowing what our goal is,
+			and the same way of learning [car] is relevent
+			for example:
+				context:
+					possibly-relevent: car
+					goal: go-to-store
+				go-to-store:
+					is: hyphenation
+					left: go
+					right: to-store	
+				to-store:
+					is: hyphenation
+					left: to
+					right: store
+			The concepts that store this are 3-depth.
+			Let's assume we know not leave these bounds.
+			How do we construct code that detects the goal,
+			and provides car-is-tool?
+				it would be helpful to flatten go-to-store
+				into
+				go-to-store:
+					hyphenated: go
+					hyphenated: to
+					hyphenated: store
+				now we can construct model objects to match it more simply.
+				there would be many options.  we'd need:
+					way to generate them
+					way to match them
+				we'd want a way to store the context of the generation process,
+				so it can act on likelihood to try good ideas first.
+
+				at this point it would be a good idea for the system to work
+				with the user to efficiently know when cars are tools in the
+				future, but the user will stop the process once the system
+				can do it often enough, since there is little danger.
+	so for one thing we store learning-parts.
+		this would be our bounded(-by-relevence) context at time of learning,
+		the information we learned is true,
+		and what patterns we have tried to know this.
+				if user is available, we will want to ask helpful question
+				to learn what is true here.
+				is car tool for goal because of 'go' in goal?
+				is car tool for goal because of 'to' in goal?
+				we want to ask the user a question to help learn the pattern for this
+				goal: hop-to-store . is car tool?
+					no.  and learning continues.
+					pattern generation will need to be informed by relevence
+					or bounds, so we don't make a ton of store-to-hop.
+				relates to language.  go-to-store is verb-phrase
+				go-is-verb
+
+to make this more relevent, let's consider the system writing its own instructions to be parsed.
+we're in a parsing context.  each step is part of a task.
+			parsing is invertible now.  we hope to generate words from concepts.
+			this is similar to language assuming the listener has concepts.
+	is call-function good to write at file scope: no, because not in statement-context
+				when am I in statement-context?
+				am I in statement-context in an expression? no
+
+				relates to parse-words and lookup-variables
+				lookup-variables behaves depending on variable scope,
+				not statement vs expression
+				
+			parsing is broken into nested contexts.
+			statement-context depends on lowest nest
+			variable-reference depends on the whole hierarchy
+		so when judging statement-context, we care about a small pattern matching our context
+			is-statement-context? check-learned-pattern-matches
+		but when discerning variable-reference, we need to match a pattern deep inside our context, going to outer nested contexts.
+			is-variable-reference? find-match-for-variable-pattern? extract-variable-from-match
+				now, variable pattern is interesting.  it only applies inside a branch of another pattern, but it could be deep inside.  we only care about variable-scope contexts.
+				we don't care if we have some data loaded that talks about variables.
+				tere is also a specific way to find the pattern match, so it could be pursued in two ways.
+					1: find variable-scope context
+					2: traverse all 'is' and 'outer-context' links
+					3: look for [variable]->[value] in each concept focused on
+				or
+					1: find variable-scope context
+					2: exhaustively explore context, looking for [variable]->[value], anchored by is->[context] or somesuch
+				there is a space between the two options, and that space is the choice of what links to explore when matching the pattern.
+				so, a more general way to do this, might be a pattern matcher that takes a way for considering what links to explore as it considers anchors.
+
+predicate-patterns?
+	when we generate a pattern, we'll need to produce a description of checking parts
+	against predicates.  maybe a statement that engaging in a habit, given a map to
+	the source space, yields specific results.
+		we could use small models to map data it
+			we'd want to use processees to run them
+		so, process and data, and context
+	i have [set-of-data], with reference to it
+	could you tell me if [is-apple].
+		if have [context], with reference to it
+		could you tell me [variable-value], given [variable-value-relationship-model]
+	patterns map data to attributes, possibly
+				like stripes mapping data to 2 colors, if is in the pattern
+				circles mapping to radius and filledness and color
+	pattern-checker, a function that takes 1 or more data anchors, and provides
+	attributes of the data.
+	how do we generate these?
+		we generate them with some data anchors included
+		every pattern is a special group of other patterns.
+			so we have a way to mutate data such that it applies to another pattern-checker
+			we're like, call the matches-pattern function on your data, with 'circle' for the pattern, to see if it's a circle
+			or, call the matches-relevent-subgraph function on your data, with contextual-variable as the pattern, and item as the variable, to see the value of item.
+				what's interesting is we have graphs that partially match via predicates
+				the above predicates are obviously summarizers
+	say we use patterns-are-functions-with-maps
+		what does it look like inside one, when it needs to check for others.
+			hmm i suppose we have relevent available patterns-as-functions
+			and we try running them on parts of the data and search for matches
+		that's looking-for-pattern.  what does it generate that check-matches uses?
+			it looks like it generates a graph of graph-maps on predicates
+			this could be translated into sequential steps.
+	so we have level1 patterns which just relate data between parts of a graph
+	these level1 patterns can provide maps between a function interface and a graph
+		the patterns-as-functions data structure will have some variables that it
+		tries matching to larger pattern space.  it may need to explore to
+		make sure all the relationships are correct.
+		but roughly it just tries applying all the variables to all its functions
+		and then it sees if the results of the functions match what is expected
+		in the ways expected.
+	level1 pattern lets us find possible values of variables
+	level2 pattern includes function-running in the pattern
+		[a,b,c] <- explore links in data-space and in pattern-space at same time,
+		in same ways.
+		sometimes pattern-space says pass-to-function.  when this happens, use
+		pass-to-function to generate more parts, and keep exploring.
+		if anything mismatches, pattern does not match.
+			the parts of pattern-space can be variables, which lets the results
+			of pass-to-function be matched properly.
+
+
+
+
+
+generate pattern parts:
+		there would be multiple generators, as different kinds of things may matter
+	consider link-type is constant-valuable, link-target is variable-or-constant-valuable
+
+	needs: variables to fill
+	
+	produces interruptible process
+	1. convert all links to possible-parts
+	possible parts made from enumerating possible variable targets, with constant target
+	2. produce all combinations of possible-parts
+
+	for each combination, we could produce a function that checks if the pattern is matched.
+			we have a request to generate patterns that more than 1 thing matches.
+			how would we do this?
+				 a quick solution would be to reject patterns to do not match
+				 the other data items [which is why we ignored it]
+	
+
+match-checking:
+		we'll need some kind of anchor.  for generality, anchor is likely solution
+		to some other pattern found in a context.
+	needs: context/anchor
+
+		propose patterns are sequences of steps with result maps enforcing matching
+		of variables and constants
+			this only works easily if source data is not mutated by processes
+		it could be helpful to translate from models to these steps.  it shouldn't
+		be hard: just walk all links in the model.
+
+match-finding:
+		again, may be many forms of this
+	needs: one or more start-points
+	       one or more patterns to match
+	explore from start-points, seeing if any patterns match
+
+it could be helpful to have a brainstorming pattern in the context, that finds all nearby relevent
+refs, until done.
+
+concept of interruptibility:
+	<-- fill in
+concept of relevent link traversal in a graph, by a function that informs this:
+	our use-case for this relevency is finding variable values within nested scopes
+	so, we only want to traverse some kinds of links, and we don't care what order
+		other relevency functions would be well-informed to advise an order
+			simple question to answer: is this link better than one-in-queue.
+				the whole concept space here is roughly:
+					urgent
+					better/worse
+					never
+				never/urgent are pointedly kept relevent to the implicit context.
+
+quick-comparison:
+	type -> [always/never/better]
+	preference -> A
+			
+how is interruptible generator relevent to goal-following ....
+	does this have parts of how to implement parsing
+		parsing uses information spaces of text
+		these can be made from other ones, by translation into context
+	for goal-following, goal is held, and we match patterns relating to reasons (bigger goals)
+	we need a contextual set of possible ways to meet goals
+		when parsing we have a goal of translating from the text-file into behavior
+	when thinking of learning basic knowledge from user, we found it helpful to consider
+		active relevency.  a concept that is relevent, but we do not know in what way,
+		occasionally too complex to be meaningful for us.  then processes that act
+		on this active relevency, which i suppose would try out different ways it
+		might be relevent.
+			this would mean learning a context of relevency.
+			this context should inform choices of what kinds of things to pursue
+			as relevent, in relevency ways.
+			
+			a simple one is a log of behavior.
+
+pick-up gravity
+	error
+pick-up cup
+	holding-cup
+pick-up ceiling
+	error
+pick-up memory
+	error
+
+touch gravity
+	error
+touch cup
+	success
+touch ceiling
+	success
+touch memory
+	severe error, please never repeat
+
+		we could infer there is an approximately 25% chance that an arbitrary concept is
+		pick-up-able, and is holdable via picking-up.
+		if we combine that information with touching things, we might see there is a possible statistical dependency.
+			we can use statistics to do this well, we believe.
+			we'll need to learn a basic concept around dependent variables, which
+			takes reference material.
+		first we need to find the variables.
+		we have many instances of
+			pick-up [ref1]
+				[error, holding-cup]
+			touch [ref2]
+				[error, success, severe-error-please-never-repeat]
+			for now we will touch nothing else, and try to learn first.
+		we can assume there is value to exploring this small space for relevency.
+		we know we will find that pick-up is always error if touch was not success
+		
+		we might form patterns around the pick-up behaviors
+		and see if they match the touch behaviors.
+		it will be helpful to have groupings.
+			say we want to see if pick-up depends on touch.
+			we'd form a pattern for all pick-up behaviors
+				when discerning whether or not to reject the pattern,
+				we may want to use some statistical function
+			and we'd form a pattern for all touch behaviors.
+
+			
+			patterns that match _all_ pick-up or touch behaviors _without_ stats,
+			would include as biggest-item the one below.
+event:
+	behavior: pick-up []
+	result: [error, holding]
+event:
+	behavior: touch [ref2]
+	result: [error, success, etc]
+			not too helpful.
+we want to relate
+so the pattern we hope to form is along the lines of this:
+event:
+	behavior: pick-up [object]
+	result: error
+event:
+	behavior: touch [object]
+	result: [evaluates-to-error]
+
+but for now we'd be happy removing the predicate and doing:
+event:
+	behavior: pick-up [object]
+	result: error
+event:
+	behavior: touch [object]
+	result: error
+the constants above are always the same, but not all important patterns involve sameness.
+it could be that a value of the same type has a reliable relationship, for example.
+	this expands predicates a little.  when matching patterns we might try some important
+	predicates on their parts.  the result of the predicates can be matched.
+	event-behavior
+	event-result
+	same-result
+	better-result
+
+we are likely to compare behaviors for better-result.
+			expand same-result and better-result inside pattern generation, checking, and finding
+			we were generating patterns by clipping an example.
+			for behavior patterns, we'd start with two behaviors,
+			and apply predicates to them.
+				so, generate a pattern based on event history.
+				
+				mutators, summarizers
+				better-result would match with two events that have a shared
+				attribute, and discern that one is better.
+					value the betterness, would like to reproduce
+				the shared attribute makes a pattern
+				the betterness implies an important difference.
+
+we might explore all incidents of the pattern that makes betterness
+and form all the betterness relationships between them.
+subsets of these will be important for learning
+	so we found pick-up-success is better than pick-up-failure with behavior-pick-up
+	pick-up-success found _only_ with cup.  what makes cup special?
+	pick-up-failure found with many objects.  what makes them special?
+
+explore-patterns-to-inform-learning:
+	we apply better-result to past behaviors to find best-result.
+	we'll want to find patterns that predict best-result.
+now we have a set of best-result behaviors.
+	consider pick-up-cup.  we have a bunch of better-result relationships.
+	1. we'll need to find a pattern among them where pick-up-cup is always better,
+	   and there is more than 1 instance of the pattern.
+	2. the parts of the data that do not match the pattern show information that could
+	   inform how to do better behavior ...
+		pick-up-[cup]
+		pick-up-[gravity]
+			
+			the events have different contexts, different times, different things
+			around us.  we did them for different reasons and after different
+			other things.
+			
+			what's relevent to what is relevent here, is that touch-cup works,
+			and touch-gravity does not.
+
+			we considered a pair of differences between the events,
+			and then found other patterns that use that pair
+
+1. try betterness comparisons
+pick-up-[cup], [holding-cup]
+	better than
+pick-up-[gravity], [error]
+2. consider possible differences and find matches to those elsewhere
+touch-[cup], [success]
+touch-[gravity], [error]
+
+- behaviors1 matching pattern1
+- betterness relationships between them
+- pattern2 has always the same betterness relationship among behaviors1
+	we need to group behaviors1 into two groups, better and worse
+	[this set of things] always better than [this other set of things], no matter which
+	pair is compared.  pattern2 forms sets
+		behaviors1 will have differences among them
+		
+			we are looking for shared attributes behaviors1 always has
+			where the values for one of these attributes can be broken into 2 groups,
+			one always comparing better to the other.
+			
+				so we need a predicate that applies to all behaviors1
+				and we have a filter-function for these predicates
+				where they must break the data into 2 discrete groups sufficiently
+					so we match against predicates-apply-to-[behaviors1]
+					and filter-predicate-true
+
+	0. we made a pattern that matches more than 1 behavior and formed betterness relationships
+	1. we found two behavior events with an interesting betterness relationship
+	2. we found a difference between the two events
+	3. we made a pattern that included the difference and matched both events at once
+	4. we found new places that pattern matched
+
+
+	5. we picke a new place such that all of the matching patterns had a same part
+
+	3. it looks like we made a pattern out of the difference, and then tried to find
+	   other places it matched, prefering places with similarity to our instances of the
+	   pattern.
+	4. the places where there was _not_ similarity include the learning point, all the
+	   same in both sets.
+	once we can 
+
+judgement could be relevent here: best, better, same, worst.
+we have a set of things that are good to do reliably.
+a set of things we don't really want to ever do.
+and a set of things with preferences among them.
+	propose we focus on the 'bests' and 'worsts'
+	if nothing is marked 'best' or 'worst' we might compare peaks until we find a 'best'
+	we could also compare peaks of 'worst' but in behavior-space this would mean trying
+	a lot of bad ideas, so is likely not the thing to do.
+
+				
+
+		this pattern is a relation of some sort.  it can be used for planning.
+			the secret is reachable-physical-objects can be touched
+			and all things that can be picked up are reachable-physical-objects
+		being in behavior-space, this pattern can be tested by trying to touch things
+		and pick up things, and seeing if it holds.
+		we can generate more of it.
+if we can manage to consider this pattern, we can learn it matches the data in more than one
+place, with more than one value for [object].  this means it has meaning.
+	we can expand the pattern by learning that severe-error-is-error and transforming
+	data with a check against this pattern, or updating the pattern checker to consider
+	is-relationships.
+
+consider pattern in behavior space, roughly.
+consider a behavior.
+	consider other behaviors looking for lots-of-similarity.  this will use some relevence function that judges what is better or worse to pursue.
+
+inner-expansion: relevence function itself is a behavior, making events.
+could use a summarizer than produces how-many-steps until helpful-pattern-found
+	how would how-many-steps convert to a pattern for future acting?
+		we want to pick behaviors that give fewer steps
+		reliably-smaller, reliably-larger are relationships here
+	
+
+path to consider large pattern in huge space.  will need some relevency around what to try first.
+	we're clearly looking for matching events, so we can learn behaviors.
+	we want to learn from our behaviors and observations.  we'd like to form a relationship
+	between two behaviors.
+	1. consider a behavior and another behavior
+	2. consider one thing being different <-
+		it looks like when exploring old patterns for learning, we want to find two
+		sets of data with minimal difference.  information around that seems important.
+	say we found minimal differences here.  one of them is the one in question.  the only
+	difference is pick-up and touch, and the resulting pattern has >1 instance.
+			these patterns have only 1 difference ... here, but not really.
+			they happened at different times, with different active contexts.
+			when considering only-1-difference, we have bounds on the patterns
+			we are judging, that are contextual.
+	yes, any pattern could be formed that has only 1 difference, and there are bounds
+	depicting how much that is true, roughly.
+	I might iterate pairs of behaviors, looking for most-links-match, if-these-links-are-followed
+			so contextual bounds, information space bounds
+			relates to patterns
+				patterns seem relevent to when context applies, when
+				habits are useful in other spaces.
+					when they don't apply, it shows they are poorly defined
+so we form theories, proposals, guesses based on patterns.
+things should apply to all of their instances.  if the pattern is not useful, it is not relevent
+and many may say not real.  patterns include behavior.
+	patterns are structures.  you can use this in this way, you can do this to it.
+		patterns are categories.
+
+	
+
+
+
+what is usefulness of match-more-than-one-thing?
+	categorization, generalization
+		does need processes to find similar parts
+	car-is-tool, shovel-is-tool
+	car-used-in-current-task, shovel-used-in-past-task
+	
+
