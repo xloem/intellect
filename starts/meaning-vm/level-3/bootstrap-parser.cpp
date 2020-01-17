@@ -486,6 +486,11 @@ void loadhabits()
 	// c++ streams have multiple ways of being parsed
 	// keep-stream is for rewindable and peekable streams.
 	// tokenization streams don't need this, nor do c++ sstreams
+	
+	aHabit("make-c++-stream-from-filename", ((filename, fn)), {
+		std::iostream * stm = new std::fstream(fn);
+		result = ref("make-c++-stream")(stm);
+	})
 
 	aHabit("make-c++-stream", ((source, stm)), {
 		result = makeconcept();
@@ -495,6 +500,12 @@ void loadhabits()
 		result.link("do-next-word", "c++-stream-next-word");
 	});
 
+	aHabit("c++-stream-unmake", ((stream, stm)), {
+		iostream * ss = stm.get("source").val<iostream*>();
+		conceptunmake(stm);
+		delete ss;
+	});
+
 	aHabit("make-c++-word-stream", ((source, stm)), {
 		result = ref("make-c++-stream");
 		result.link("do-next", result.get("do-next-word"));
@@ -502,7 +513,7 @@ void loadhabits()
 
 	aHabit("make-c++-letter-stream", ((source, stm)), {
 		result = ref("make-c++-stream");
-		result.link("do-next", result.get("do-next-word"));
+		result.link("do-next", result.get("do-next-letter"));
 	});
 
 	// We HAVE a stream, and we want to CHANGE what the delimiter is.
@@ -624,14 +635,14 @@ void loadhabits()
 
 
 	aHabit("c++-stream-next-letter", ((source, stm)), {
-		istream & ss = *stm.get("source").val<istream*>();
+		iostream & ss = *stm.get("source").val<iostream*>();
 		char c[2] = { ss.get(), 0 };
 		if (!ss) { throw makeconcept().link("is", "end-of-stream", "stream", stm); }
 		stm.set("value", txt2ref(c));
 	});
 
 	aHabit("c++-stream-next-word", ((source, stm)), {
-		istream & ss = *stm.get("source").val<istream*>();
+		iostream & ss = *stm.get("source").val<iostream*>();
 		std::string s;
 		ss >> s;
 		if (!ss) { throw makeconcept().link("is", "end-of-stream", "stream", stm); }
@@ -680,6 +691,10 @@ void loadhabits()
 		ret.link("do-next", "keep-stream-next");
 		ret.link("do-previous", "keep-stream-previous");
 		return ret;
+	});
+	aHabit("keep-stream-unmake", ((keep-stream, stm)), {
+		conceptunmake(stm.get("entry"));
+		conceptunmake(stm);
 	});
 	aHabit("keep-stream-value", ((keep-stream, stm)), {
 		return stm.get("entry").get("value");
@@ -818,8 +833,45 @@ void loadhabits()
 	// raw stream, word stream.
 	// 	investment says, make them both use 
 	// 		yes this work will need to be done anyway.
-	aHabit("parse-contextual-stream-word", ((context, ctx)), {
-		ctx.get("parse-word"
+	
+	aHabit("parse-contextual-stream-word", ((stream, stm), (word-context, wctx)), {
+		wctx.get("parse-word")(stm);
+	});
+
+	aHabit("parse-file", ((filename, fn), (file-context, fctx, bootstrap-file-context)), {
+		ref wctx, pctx;
+		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
+		if (!fctx.linked("word-context")) {
+			wctx = makeconcept();
+			fctx.link("word-context", wctx);
+		} else {
+			wctx = fctx.get("word-context");
+		}
+		if (!fctx.linked("parse-context")) {
+			pctx = makeconcept();
+			fctx.link("parse-context", pctx);
+		} else {
+			pctx = fctx.get("word-context");
+		}
+
+		// TODO: implement just-do-one-step in level-2, to move towards using
+		// relevence here
+		
+		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
+		ref letterspace = ref("make-keep-stream")(cxxstm);
+		ref parserstm = ref("make-parser-stream")(letterspace, "whitespace-word");
+		ref wordspace = ref("make-keep-stream")(parerstm);
+			// note: rewinding wordspace won't rewind letterspace at this time
+
+		
+		
+		conceptunmake(parserstm);
+		ref("keep-stream-unmake")(letterspace);
+		ref("c++-stream-unmake")(cxxstm);
+	})
+/*
+	aHabit("parse-contextual-stream-word", ((stream, stm), (word-context, wctx)), {
+		wctx.get("parse-word")(stm);
 	});
 
 	// we hvae parsing contexts with abstract functions like parse-until-delimiter.
@@ -833,6 +885,7 @@ void loadhabits()
 	aHabit("parse-spaces-until-delimiter", ((context, ctx), (stream, stm), (delimiter, delim)), {
 		
 	});
+	*/
 }
 
 void parsespaces(ref context, ref stream, ref parsertxt)
