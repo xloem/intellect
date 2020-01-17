@@ -54,3 +54,26 @@ be a decision-making influence guiding learning, like experiences having had bet
 
 Patterns can be made the same as code, if the result-states from predicates are asserted to map
 to the prior-states in set ways.
+---
+roughly we need to explore writing our own code
+from a place of reasons, relevence, and learning
+
+so we need rewritable patterns for using relevence, learning from the past, and combining
+goals or reasons together, into behavior parts.
+	these patterns need to combine in a way that works well enough to construct better ways.
+
+- behavior log of each step, seems helpful for learning from past
+- combining goals and reasons: it sounds like there is basic matching that happens
+	between the start and end of steps, but this hasn't been flushed out
+	then we iterate through available options and try all he matches
+	-> we'll need a way to unwind behaviors, to try others.
+	it might be easier to create bubbles that clean themselves up, than to instrument
+	everything to be unwindable.
+- relevence
+	this could probably be fudged by making triggers or global pattern matchers that
+	move things in and out of relevent-sets, and linking them together.
+	doing things would be guided by walking the relevent-sets first, doing near-stuff first.
+
+what we're missing is all of this being inspectable and copyable so as to learn off it, hence
+scripting.  opencog also has no scripting language, but does store things in inspectable and
+copyable ways.
