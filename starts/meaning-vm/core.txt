@@ -34,3 +34,20 @@ then a process of increasing that state.  Come to a place of peace
 before making actions of importance means to meditate before influencing,
 and implies that unexpected behaviors map to emotions, and something I forgot.
 The pattern of unexpected behaviors relates us to the larger system.
+
+------
+We consider information-spaces as a basic concept to relate around, and
+communication is cast as acting on disparate information spaces to their satisfaction.
+
+We consider the space of processes that pursue goals.  These processes relate to other
+processes: ways to reach goals.  Intentional processes exist as language that can be
+translated: interrelated parts from the space of process steps and parts, forming parts of a
+space of processes.
+Goals are held for reasons: other goals.  They are met if their reason is met.
+
+We consider pattern matching, and the idea of pairs of groups that differ based on two attributes,
+one being useful for informing the other.  One might be a summary of similarities, another might
+be a decision-making influence guiding learning, like experiences having had better results.
+
+Patterns can be made the same as code, if the result-states from predicates are asserted to map
+to the prior-states in set ways.
