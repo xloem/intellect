@@ -5,18 +5,26 @@ namespace level3 {
 
 // must support syntax-sugar
 
+// LATER, UPDATE LEVEL-1: believe name lookup should happen by a function stored on thread context
+// this function will likely use the thread context to do lookup, possibly hierarchically.
+
 /*
-MISSING: goal-pursuit pattern matching as translation from document to life-behavior.
+ * PATTERNS ARE CODE.  If a result-map fails, an assumption was false.
+ * We believe the core structure is built fully by including side-effects in patterns as
+ * relations over time.
+MISSING: goal-pursuit pattern matching as translation from a document to life-behavior.
 we are planning to write core and parsing together.  parsing then moves through code towards
 language, as has been expected.
 -> interruptible pattern generator
-	produces parts of a concept set that could be patterns relevent to it
+	produces parts of a concept set that could be patterns relevent to it, as code-patterns
 	is easy to discard ones not matching other sets.
 -> match-checker
 	given one or more assumed-similarities, identifies if other parts of a pattern match
-	data.
+	data, by running the pattern.
 -> match-finder
-	iterates parts of data to see if matches are found
+	iterates parts of data to sje if matches are found
+	this may require trying different predicates (steps with maps) inside the pattern, when
+	those predicates/steps are variables the pattern implies.
 	takes relevency function that may provide always/never/better relationship between checks
 	can feed a queue
  */
@@ -416,6 +424,52 @@ void parseprefix(ref context, ref stream, ref prefix)
 // which-words-are-special
 // context of specialness (expression ctx, statement ctx)
 
+class ConceptException
+{
+public:
+	template <typename Rs...>
+	ConceptException(std::string type, Rs... rs)
+	: r(makeconcept().link("is", type, rs...))
+	{ }
+
+	ConceptException(ConceptException &) = delete;
+	ConceptException(ConceptException && other)
+	{
+		r = other.r;
+		other.r = 0;
+	}
+
+	operator ref() { return r; }
+
+	~ConceptException()
+	{
+		if (r) { conceptunmake(r); }
+	}
+
+	ref r;
+}
+
+class StreamSentinel
+{
+public:
+	StreamSentinel(ref S)
+	: ct(0), S(S)
+	{ }
+
+	ref value() { return S["do-value"](S); }
+	void next() { S["do-next"](S); ++ ct; }
+	void previous() { S["do-previous"](S); -- ct; }
+
+	~StreamSentinel(ref S)
+	{
+		while (ct > 0) { previous(); }
+		while (ct < 0) { next(); }
+	}
+
+private:
+	ref S;
+	int ct;
+};
 
 void loadhabits()
 {
@@ -451,31 +505,9 @@ void loadhabits()
 		result.link("do-next", result.get("do-next-word"));
 	});
 
-	// GRRRRRRRRRRRR not quite right.
 	// We HAVE a stream, and we want to CHANGE what the delimiter is.
 	// We want to GET the delimited values as a stream.
 	// 1. make delimiting by hand
-	// 2. wrap c++ streams in a generalized way
-	// stream would contain c++ stream
-	// and do-next would change, to different functions that handle the stream
-	// it sounds like you want to do word-parsing by hand, which isn't hard.
-	// 	word-parsing by hand, can use different stream wrappers
-	// 	do-next changing means fiddling with inside of sream for different contexts
-	// 	ideally context change is useed to change delimiter
-	// 		context would provide function that gets next word from stream
-	// 	we want context to provide a word-stream for others to look at
-	// 	we want contexts to be move-between-able, rapidly, without doing-stuff, ideally
-	// 		that doesn't work with keep-stream.
-	// 			it sounds like ideally we'd want a letter stream that is seekable
-	// 			and then 'ways' for interpreting that within 'bounds'
-	// 			so we nest streams on top of the seekable stream, not below
-	// celebrating our ability to design generic runtime interfaces.
-	// keep-stream-style: has do-next, do-previous, do-value, and both random access and random seeking that work on general streams that match that interface.
-	// we are proposing a parsing-stream-idea that is roughly list-based
-	// has bounds, can randomly seek within them, and defines what a word is.
-	// it sits on top of a keep-stream-style.
-	//
-	// so, keep-stream-style: list of letters in a file.
 	// parsing generates parsed substreams, we're proposing.
 	// 	to provide for midway work we'll want to allow for a bound to be undefined.
 	// 	and to generate words from what-a-word-is as we move forward.
@@ -615,7 +647,7 @@ void loadhabits()
 		ret.link("do-next", "parser-stream-next");
 		ret.link("do-value", "stream-value");
 		ret.get("do-next")(ret);
-		result ret;
+		result = ret;
 	});
 	
 	aHabit("parser-stream-next", ((source, stm)), {
@@ -634,7 +666,7 @@ void loadhabits()
 		result = stm.get("value");
 	});
 	
-	aHabit("make-keep-stream", ((source, stm)), { // TODO: stm is an istream, has do-value do-next
+	aHabit("make-keep-stream", ((source, stm)), {
 		ref ret = makeconcept();
 		ret.link("is", "keep-stream");
 		ret.link("is", "stream");
@@ -672,6 +704,51 @@ void loadhabits()
 			throw makeconcept().link("is", "start-of-stream", "stream", stm);
 		}
 		stm.set("entry", cur.get("previous"));
+	});
+
+	// keep-stream of letters.  make keep-stream of words.
+	// we have parser stream that can be wrapped in keep stream, but is confusing
+	// is less confusing to make parser stream also be a keep stream.
+	// 	we could use patterns here.
+	
+	// this doesn't note the bounds of the word, but does advance the stream from one end
+	// of the word, to the other.  the bounds are kept in the before-state and after-state
+	// due to the advancement, I guess.
+	aHabit("whitespace-word", ((letter-stream, stm)), {
+		StreamSentinel s(stm);
+		std::string concat;
+		ref letter;
+		int count = 0;
+		try {
+			while (true) {
+				letter = s.value();
+				if (letter == " " || letter == "\r" || letter == "\n" || letter == "\t") {
+					s.next();
+					continue;
+				}
+				break;
+			}
+			while (true) {
+				letter = s.value();
+				if (letter == " " || letter == "\r" || letter == "\n" || letter == "\t") {
+					break;
+				}
+				concat += ref2txt(letter);
+				s.next();
+				}
+			}
+		} catch(ref r) {
+			if (r.isa("end-of-stream")) {
+				conceptunmake(r);
+				break;
+			} else {
+				throw r;
+			}
+		}
+		if (concat.size() == 0) {
+			throw makeconcept().link("is","pattern-failure", "pattern", self);
+		}
+		result = txt2ref(concat);
 	});
 
 	aHabit("parse-relative-index", ((index-text, txt)), {

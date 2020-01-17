@@ -1,3 +1,6 @@
+- each step is a behavior to learn around and decide how to continue
+- steps are parts of patterns
+- life continue as pattern exploration, shifting focuses, building more patterns
 
 - the problem-parts used by solutions show the problem-similarities needed in trying to apply the solution-parts elsewhere.  this starts with a metric of when the approach can work.
 	THAT IS: once you find and simplify a solution, the problem structure the solution
