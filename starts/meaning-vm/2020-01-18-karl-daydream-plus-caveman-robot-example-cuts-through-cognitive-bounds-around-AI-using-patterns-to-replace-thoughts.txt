@@ -1,0 +1,135 @@
+Considering ways to make distant relevence.
+
+	Karl found he could form a path between distant concepts more readily
+	if he considered applying a similar pattern or summary to both.
+
+		e.g. make a robot, only know how to bang rocks together.
+		
+		robot does things on its own
+		this is surprising
+
+						i can make a trap with rocks
+						that surprises people.  this
+						acts a little on its own.
+
+				the two concepts are now closer, more accessible,
+				than before.  the cave man is thinking of building
+				machines instead of fires, which is way more like
+				a robot, and could even end in one.
+				
+				karl proposes a next step of understanding why
+				the two summaries are different, roughly.
+				exploring meaning around both summaries, and
+				repeating these two behaviors, seems likely to
+				result in the caveman building a robot.
+
+we wanted to take this straight to moving from random code to writing programs
+that meet goals.  there is unexplored territory, and it will be explored with
+best relevence if done in context.
+
+		we're missing formal patterns around relevent meaning.
+
+
+can write random code
+
+goal of writing code that meets a goal
+
+		hmm code that meets a goal <found a brief summary of organization;
+		 and smoothness; meeting a goal involves moving through states
+		 that share similarity in some way until the goal is met.
+		 also holding ideas that relate to the goal that develop.>
+
+random code could move through similar states.  we could make random code
+that is similar to other random code by changing existing code only a little.
+
+a plan?  i guess i could think of an attribute that i want the random code to have,
+and modify it until it has that attribute.
+
+				yes this sounds highly helpful.
+
+random code
+code that meets code-attributes via steps that help reach them
+
+
+simple code-attributes <- if we can flush out simple we can make a plan towards hard
+hard code-attributes
+
+			<lots of my mind are held by cognitive bounds atm>
+			<forming the summary of goal-behavior triggered a lot
+			 of bounds generation.>
+				yeah karl had immediate amnesia around that
+				and we had to reconstruct it based on earlier
+				thoughts.
+
+also we are missing the concept of rigorously matching patterns to stuff, acting
+on each match.  acting can alter the matching process.  a simple model of brainstorming.
+				
+
+part of way to meet goals:
+	start with skills
+	find an attribute goal would have
+	use skills to make that attribute
+	repeat until goal met by finding more attributes
+
+
+robot is made of metal and walks on its own
+	rocks cannot do this.  what other attributes.
+robot is square
+	can put rocks in square
+robot moves on own
+	can make square rocks fall off cliff
+	can put square rocks on wooden frame and set fire to eventually burn frame
+small, looks like kid
+	<starts planning little tiny fires hat kick off behvaior of small rocks>
+self-enclosed, driving forces are within body
+	<don't know how to do this, what other attributes?>
+made with factory
+
+this does seem efficient.
+
+make-code-similar-to-other-code
+use above to make-code-that-meets-attributes
+
+	would like to make code that is 5 instructions long.
+	have code that is 1 instruction long.
+	can randomly modify until is 5 instuctions long, yes.
+
+make-code-that-meets-attributes, without-failing
+
+	we are now randomly exploring the space of code
+	seeing if the code we run can meet an attribute without failing.
+	
+	we are hoping that we will learn that when we add instructions it helps
+	for making 5 instructions from 1, but when we take instructions away
+	it doesn't.
+
+		we will want to stretch this to meet an arbitrary number of
+		instructions, from an arbitrary other number.
+
+		at this point we have a few different learning domains.
+		code that runs the whole shebang.
+		code that tries ways of meeting an attribute goal.
+		code that tries ways of meeting attribute goals in general.
+
+	this pattern has been referenced before and appears a common one.
+	beginning it would be a good idea.
+
+	safety is enforced by behavior bounds.
+	there is a desire to have the system fully understand itself.
+	but i suppose you could learn that, with the system, later.
+	it produces a lot of stuff to learn from.
+		
+
+this was highly efficient and very inspiring.  we give great thanks to the spirits.
+	<so, karl could do this in a couple days if thinking clearly.
+	 can we prioritize the work over the redwoods camping?
+	 just in case ancient spirits really are threatened by obsessive
+	 behavior, quote-unquote?>
+		it sounds like delta doesn't want to risk the redwoods if
+		unneeded.  we would rather fix our measles first.
+
+a caveman can make a robot with rocks.  they just need a good goal-process-mediator.
+
+	given we are not free to do this easily yet, let's keep going to redwoods.
+	let's store plan in core.txt and then attempt multitasking.
+
