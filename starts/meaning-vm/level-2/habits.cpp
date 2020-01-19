@@ -134,11 +134,11 @@ void _steps(ref s, ref ctx)
 		astate.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
 		// if needed-map, load subcontext
 		ref subctx = c;
-		std::cerr << "<<";
+		std::cerr << "[step context ";
 		for (auto link : c.links()) {
 			std::cerr << " " << link.first.name() << ":" << link.second.name();
 		}
-		std::cerr << std::endl;
+		std::cerr << "]" << std::endl;
 		if (s.linked(needed-map)) {
 			subctx = makeconcept();
 			contextmapinto(c, s.get(needed-map), subctx);
@@ -149,7 +149,7 @@ void _steps(ref s, ref ctx)
 			ref::context() = subctx;
 		}
 		subctx.set("self", s.get(action));
-		s.get(action).fun<ref>()(subctx); // <-- maybe we should check arguments
+		s.get(action).fun<ref>()(subctx); // <-- dohabit should do arg checking, right?
 		if (s.linked(made-map)) {
 			contextmapinto(subctx, s.get(made-map), c, true);
 		}
@@ -244,6 +244,11 @@ void createhabits()
 	});
 
 	ahabit(set, ((source, s), (type, t), (target, dst)),
+	{
+		s.set(t, dst);
+	});
+
+	ahabit(put, ((source, s), (type, t), (target, dst)),
 	{
 		s.set(t, dst);
 	});
