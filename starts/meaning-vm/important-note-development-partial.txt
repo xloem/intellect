@@ -429,7 +429,30 @@ predicate-patterns?
 			the parts of pattern-space can be variables, which lets the results
 			of pass-to-function be matched properly.
 
-
+generating patterns is similar to finding pattern matches.
+	both move through information spaces, looking for things that are valuable.
+		for link-matching, we build a pattern as we check it.
+			seems helpful to be able to make a frozen copy of contextual information
+			and/or patterns.
+		we match pattern-parts to our state to move forward.
+		finding patterns roughly will apply workable predicates to data
+			how-to-turn-links-into-predicates?
+				we have to match the predicate pattern to the link, which i guess
+				means referencing link-entry space for the concept in question.
+				luckily concepts are likely already iterated with link-entries.
+			can we simplify link-entry iteration to is-linked stuff ??? way more
+			relevent than exactly-equal.
+				hmm ... link-entry iteration makes precise structure check.
+				as we learn structure, we learn other predicates that might
+				apply to the whole pattern.
+					link-entry-type [le] [A]
+						-
+					linked [link-entry-source [le]] [A]
+				we can apply above equivalence to try different pattern.
+				all it needs is link-entry-source [le] and [A], it doesn't need [le]
+		mutation-behaviors.  i don't think we need to equate these behaviors at this time.
+		in other relevence, interruptibility is valued and a way to do it is under-the-hood, by providing for freezing and moving contexts around.  then anything can be interrupted.
+		some parent process may need to load a list of possible child processes, and pick which one to do as interruption is valued.
 
 
 
@@ -444,11 +467,14 @@ generate pattern parts:
 	possible parts made from enumerating possible variable targets, with constant target
 	2. produce all combinations of possible-parts
 
-	for each combination, we could produce a function that checks if the pattern is matched.
-			we have a request to generate patterns that more than 1 thing matches.
-			how would we do this?
-				 a quick solution would be to reject patterns to do not match
-				 the other data items [which is why we ignored it]
+	for predicates, it looks like possible-parts become predicate calls.
+	so the goal is roughly completed sooner.
+	we can also try applying predicates to chunks of the pattern.  this might be more useful
+	if other data were available, to compare results with.
+
+	in order to make general patterns, we'll want to match our behavior against itself.
+	we'll want to consider the parts of the patterns we generate to be patterns,
+	and look to simplify the whole thing by making use of repetition.
 	
 
 match-checking:
