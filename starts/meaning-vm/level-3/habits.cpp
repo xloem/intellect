@@ -12,7 +12,9 @@ void createhabits()
 {
 	intellect::level2::createhabits();
 
-	ahabit( // handle extra arguments
+	ahabit(same, ((concept-a, a), (concept-b, b)), {
+		result = (a == b);
+	});
 
 	ahabit(random-link, ((concept, c)), {
 		size_t num = intellect::level2::rand(0.0, c.ptr()->links.size());
@@ -24,6 +26,12 @@ void createhabits()
 			++ ct;
 		}
 		result = link;
+	});
+	
+	ahabit(random-of, ((concept, c), (type, t)), {
+		auto links = c.getAll(t);
+		size_t num = intellect::level2::rand(0.0, links.size());
+		result = links[num];
 	});
 }
 
