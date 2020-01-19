@@ -84,8 +84,24 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 	decl(translation); decl(known); decl(nothing);
 	for (auto link : m.get(translation).links()) {
 		if (reverse) {
+			if (!c1.linked(link.first)) {
+				throw makeconcept().link(
+						"is", "not-in-context",
+						"value", link.first,
+						"context", c1,
+						"map", m
+						);
+			}
 			c2.set(link.second, c1.get(link.first));
 		} else {
+			if (!c1.linked(link.second)) {
+				throw makeconcept().link(
+						"is", "not-in-context",
+						"value", link.second,
+						"context", c1,
+						"map", m
+						);
+			}
 			c2.set(link.first, c1.get(link.second));
 		}
 	}
@@ -149,7 +165,22 @@ void _steps(ref s, ref ctx)
 			ref::context() = subctx;
 		}
 		subctx.set("self", s.get(action));
-		s.get(action).fun<ref>()(subctx); // <-- dohabit should do arg checking, right?
+		ref habit = s.get(action);
+		{ // check arguments
+			ref infn = habit.get("information-needed");
+			for (auto link : infn.links()) {
+				if (!link.second.linked("information", link.first)) { continue; }
+				if (subctx.linked(link.first)) { continue; }
+				if (!link.second.linked("assume")) {
+					throw makeconcept().link(
+							"is", "information-needed",
+							"habit", habit,
+							"information", link.second);
+				}
+				subctx.link(link.first, link.second.get("assume"));
+			}
+		}
+		habit.fun<ref>()(subctx);
 		if (s.linked(made-map)) {
 			contextmapinto(subctx, s.get(made-map), c, true);
 		}
