@@ -46,11 +46,11 @@ namespace sugar {
 		} \
 		ref self = ctx.get(ref("self")); (void)self; \
 		ref result("nothing"); (void)result; \
-		std::cerr << self.name(); \
+		std::cerr << "[habit " << self.name(); \
 		_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
 		__VA_ARGS__ \
 		if (result != ref("nothing")) { ctx.link(ref("result"), result); std::cerr << " result:" << result.name();} \
-		std::cerr << std::endl; \
+		std::cerr << "]" << std::endl; \
 	}); \
 	{ \
 		ref _macro_habit_name(#nam); \
@@ -68,7 +68,7 @@ namespace sugar {
 				 ref("missing-information"), ref(#nam)); \
 		} \
 		ref tok = ctx.linked(ref(#nam)) ? ctx[ref(#nam)] : ref(#__VA_ARGS__); \
-		std::cerr << " " << #nam << ":" << tok.name(); 
+		std::cerr << " " << #nam << ":" << tok.name();
 	#define _macro_habit_assume(info, tok, ...) \
 		if ((#__VA_ARGS__)[0] != 0) { intellect::level2::habitassume(_macro_habit_name, ref(#info), ref(#__VA_ARGS__)); }
 
