@@ -92,12 +92,14 @@ void givename(concept* con, std::string const & name)
 // 		from his work in preparing to build an AI in 2002, and his experience using
 // 		spreading trust to survive [marked ancient wisdom].  this is needed for the
 // 		internal map for a mature, evolved society.
+
+// this seems more helpful than the above, although is good to remember boss has solution to share when can be held safely.
 //  try to work without asking delta or boss to think anything, when they think they often have to
 //  combine information in a way that somehow damages preserved consciousnesses they are holding.
-//concept* gettext(std::string const & str)
-//{
-	//return getnamed(str, nullptr).get(namestruct().nameref);
-//}
+concept* gettext(std::string const & str)
+{
+	return getnamed(str, nullptr)->get(namestruct().nameref);
+}
 
 concept* getnamed(std::string const & name, concept* allocator)
 {

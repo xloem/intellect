@@ -658,8 +658,7 @@ int main()
 			}
 			ss << "-" << std::hex << (size_t)(c.ptr());
 			if (!c.isa(name)) {
-				intellect::level1::givename(c, ss.str());
-				result = c.get(name);
+				result = intellect::level1::gettext(ss.str());
 			} else {
 				result = nothing;
 			}

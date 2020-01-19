@@ -86,6 +86,7 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 	for (auto link : m.get(translation).links()) {
 		std::cerr << " ";
 		if (reverse) {
+			std::cerr << link.second.name() << ":" << link.first.name() << "=";
 			if (!c1.linked(link.first)) {
 				throw makeconcept().link(
 						"is", "not-in-context",
@@ -95,8 +96,9 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 						);
 			}
 			c2.set(link.second, c1.get(link.first));
-			std::cerr << link.second.name() << ":" << link.first.name() << "=" << c1.get(link.first).name();
+			std::cerr << c1.get(link.first).name();
 		} else {
+			std::cerr << link.first.name() << ":" << link.second.name() << "=";
 			if (!c1.linked(link.second)) {
 				throw makeconcept().link(
 						"is", "not-in-context",
@@ -106,7 +108,7 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 						);
 			}
 			c2.set(link.first, c1.get(link.second));
-			std::cerr << link.first.name() << ":" << link.second.name() << "=" << c1.get(link.second).name();
+			std::cerr << c1.get(link.second).name();
 		}
 	}
 	if (m.linked(known) && m.get(known) != nothing) {
@@ -157,7 +159,7 @@ void _steps(ref s, ref ctx)
 		astate.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
 		// if needed-map, load subcontext
 		ref subctx = c;
-		std::cerr << "[next-step " << s.get(action) << "]" << std::endl;
+		std::cerr << "[next-step " << s.get(action).name() << "]" << std::endl;
 		std::cerr << "[step-context ";
 		for (auto link : c.links()) {
 			std::cerr << " " << link.first.name() << ":" << link.second.name();
