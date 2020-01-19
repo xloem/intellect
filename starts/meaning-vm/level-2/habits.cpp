@@ -165,6 +165,11 @@ void _steps(ref s, ref ctx)
 			ref::context() = subctx;
 		}
 		subctx.set("self", s.get(action));
+		std::cerr << "[subcontext ";
+		for (auto link : subctx.links()) {
+			std::cerr << " " << link.first.name() << ":" << link.second.name();
+		}
+		std::cerr << "]" << std::endl;
 		ref habit = s.get(action);
 		{ // check arguments
 			ref infn = habit.get("information-needed");
