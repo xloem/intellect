@@ -82,7 +82,9 @@ ref settranslationmap(ref c, ref m, ref k = nothing)
 void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 {
 	decl(translation); decl(known); decl(nothing);
+	std::cerr << "[context-map";
 	for (auto link : m.get(translation).links()) {
+		std::cerr << " ";
 		if (reverse) {
 			if (!c1.linked(link.first)) {
 				throw makeconcept().link(
@@ -93,6 +95,7 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 						);
 			}
 			c2.set(link.second, c1.get(link.first));
+			std::cerr << link.second.name() << ":" << link.first.name() << "=" << c1.get(link.first).name();
 		} else {
 			if (!c1.linked(link.second)) {
 				throw makeconcept().link(
@@ -103,17 +106,21 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 						);
 			}
 			c2.set(link.first, c1.get(link.second));
+			std::cerr << link.first.name() << ":" << link.second.name() << "=" << c1.get(link.second).name();
 		}
 	}
 	if (m.linked(known) && m.get(known) != nothing) {
 		for (auto link : m.get(known).links()) {
 			if (reverse) {
+				std::cerr << " " << link.second.name() << ":" << link.first.name();
 				c2.set(link.second, link.first);
 			} else {
+				std::cerr << " " << link.first.name() << ":" << link.second.name();
 				c2.set(link.first, link.second);
 			}
 		}
 	}
+	std::cerr << "]" << std::endl;
 }
 
 void _steps(ref s, ref ctx)
@@ -150,7 +157,8 @@ void _steps(ref s, ref ctx)
 		astate.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
 		// if needed-map, load subcontext
 		ref subctx = c;
-		std::cerr << "[step context ";
+		std::cerr << "[next-step " << s.get(action) << "]" << std::endl;
+		std::cerr << "[step-context ";
 		for (auto link : c.links()) {
 			std::cerr << " " << link.first.name() << ":" << link.second.name();
 		}
@@ -165,11 +173,6 @@ void _steps(ref s, ref ctx)
 			ref::context() = subctx;
 		}
 		subctx.set("self", s.get(action));
-		std::cerr << "[subcontext ";
-		for (auto link : subctx.links()) {
-			std::cerr << " " << link.first.name() << ":" << link.second.name();
-		}
-		std::cerr << "]" << std::endl;
 		ref habit = s.get(action);
 		{ // check arguments
 			ref infn = habit.get("information-needed");

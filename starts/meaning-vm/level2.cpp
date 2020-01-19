@@ -729,7 +729,7 @@ when dump [\n\
 		set link-target get link-entry 'target'\n\
 		set basic-follow linked linkset 'follow' link-type\n\
 		pick basic-follow if 'false' next2.\n\
-		'dump' link-target /*did-not-pass-linkset,error-not-provided*/\n\
+		'dump' link-target linkset\n\
 		next2:\n\
 		set expand linked linkset 'expand' link-type\n\
 		pick expand if 'false' next2b.\n\
@@ -994,6 +994,12 @@ when dump [\n\
 		std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
 		dump(dump, linksofinterest);
 #undef ref
+	} catch(intellect::level2::ref r) {
+		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;
+		for (auto i : r.getAll("is")) {
+			std::cerr << i.name() << std::endl;
+		}
+		throw;
 	} catch(intellect::level1::ref r) {
 		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;
 		for (auto i : r.getAll("is")) {
