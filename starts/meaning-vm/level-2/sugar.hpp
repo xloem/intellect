@@ -46,10 +46,13 @@ namespace sugar {
 		} \
 		ref self = ctx.get(ref("self")); (void)self; \
 		ref result("nothing"); (void)result; \
-		std::cerr << "[habit " << self.name(); \
-		_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
-		__VA_ARGS__ \
-		if (result != ref("nothing")) { ctx.link(ref("result"), result); std::cerr << " result:" << result.name();} \
+		result = ([=]() mutable ->ref {\
+			std::cerr << "[habit " << self.name(); \
+			_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
+			__VA_ARGS__ \
+			return result; \
+		})(); \
+		ctx.link(ref("result"), result); std::cerr << " result:" << result.name(); \
 		std::cerr << "]" << std::endl; \
 	}); \
 	{ \

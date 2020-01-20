@@ -151,9 +151,9 @@ std::string nameforany(concept* c)
 
 std::string getname(concept* r)
 {
-	try {
+	if (r->linked(namestruct().nameref)) {
 		return r->vget<std::string>(namestruct().nameref);
-	} catch(level0::no_such_link_type&) {
+	} else{
 		if (r->data.has_value()) { return nameforany(r); }
 		return "UNNAMED";
 	}

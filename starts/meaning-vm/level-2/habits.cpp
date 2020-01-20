@@ -29,7 +29,7 @@ void poplinkentry(ref le)
 	if (it != le["source"].links().end()) {
 		le.set("type", it->first);
 		le.set("target", it->second);
-	} else {
+	} else if (le.linked("type")) {
 		le.unlink("type");
 		le.unlink("target");
 	}
