@@ -12,6 +12,7 @@ using level1::concepts::nothing;
 using level1::concepts::name;
 
 static ref context("context");
+static ref root("root");
 static ref habit("habit");
 static ref next("next");
 static ref information("information");

@@ -172,6 +172,7 @@ void _steps(ref s, ref ctx)
 			subctx.set(active-state, astate);
 			subctx.set(context, subctx);
 			astate.set(context, subctx);
+			subctx.set(concepts::root, ref::context().get(concepts::root));
 			ref::context() = subctx;
 		}
 		subctx.set("self", s.get(action));
@@ -229,6 +230,18 @@ void _condition(ref ctx, ref cond, ref steps, ref state)
 		state.set("next-step", next);
 	//}
 }
+
+/*
+ * notepad bounds planning.
+ * it looks like notepad may be unneccessary, due to general system structure,
+ * but it provides blanket protections on top of a mish-mash domain that is not
+ * fully reviewed.
+ * 	also provides for AI more easily learning to safely imagine by trial,
+ * 	if generalized.
+ */
+
+// we'll want a contextual notepad.  this can be thread-local I suppose.
+// link thread-local contexts to their root, so we can find it easily.
 
 void createhabits()
 {

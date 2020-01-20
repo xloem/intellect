@@ -14,6 +14,10 @@ using namespace concepts;
 ref & context()
 {
 	static thread_local auto ctx = a(concepts::context);
+	if (!ctx.linked(concepts::root)) {
+		if (ctx.linked("outer-context")) { throw makeconcept().link("is", "context-root-link-missing"); }
+		ctx.link(concepts::root, ctx);
+	}
 	return ctx;
 }
 
@@ -112,6 +116,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	ref posinf = habit.get(information-needed);
 	ref subctx = makeconcept();
 	subctx.link("outer-context", ref::context());
+	subctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = subctx;
 	for (ref const & arg : args) {
 		if (!posinf.linked(next-information)) {
@@ -159,6 +164,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 	// TODO: subcontexts or call instances
 	ref ctx = makeconcept();
 	ctx.link("outer-context", ref::context());
+	ctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = ctx;
 	ref infn = habit.get(information-needed);
 	std::map<ref, ref> provided;
