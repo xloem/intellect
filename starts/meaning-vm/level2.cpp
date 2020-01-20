@@ -432,6 +432,7 @@ ref parsevalue(ref stream)
 
 void parse(ref stream)
 {
+	ref makeconcept("make-concept");
 	istream & ss = *stream.val<istream*>();
 	string lookupstr;
 	ss >> lookupstr;
@@ -458,6 +459,7 @@ void parse(ref stream)
 				if (!ss2) { break; }
 				args.link("information-order", arg);
 			}
+			enternotepad(name);
 			ref("set-steps")(name, args);
 			for (auto comment : comments) {
 				ref(name).link("comment", comment);
@@ -678,11 +680,11 @@ int main()
 	});
 	ahabit(in-set, ((concept, c)),
 	{
-		result = linked("the-set", c);
+		result = ref("the-set").linked(c);
 	});
 	ahabit(put-in-set, ((concept, c)),
 	{
-		link("the-set", c, true);
+		ref("the-set").link(c, true);
 	});
 	// dump changes to expand from a different node
 	
@@ -994,6 +996,7 @@ when dump [\n\
 	*/
 	try {
 		std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
+		enternotepad(dump.context());
 		dump(dump, linksofinterest);
 #undef ref
 	} catch(intellect::level2::ref r) {

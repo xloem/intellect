@@ -11,6 +11,7 @@ namespace level2 {
 void createhabits();
 
 ref makeconcept();
+ref notepadconcept();
 void conceptunmake(ref c);
 
 namespace concepts {

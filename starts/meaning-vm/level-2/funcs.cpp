@@ -5,6 +5,8 @@
 #include "concepts.hpp"
 #include "habits.hpp"
 
+#include <set>
+
 namespace intellect {
 using namespace level1;
 namespace level2 {
@@ -15,10 +17,58 @@ ref & context()
 {
 	static thread_local auto ctx = a(concepts::context);
 	if (!ctx.linked(concepts::root)) {
-		if (ctx.linked("outer-context")) { throw makeconcept().link("is", "context-root-link-missing"); }
+		if (ctx.linked("outer-context")) { throw noteconcept().link("is", "context-root-link-missing"); }
 		ctx.link(concepts::root, ctx);
 	}
 	return ctx;
+}
+
+std::map<ref, std::set<ref>> notepads;
+
+ref notepad()
+{
+	ref ctx = level2::context();
+	while (!ctx.linked(concepts::notepad)) {
+		ref outer("outer-context");
+		if (!ctx.linked(outer)) {
+			return "initial-notepad";
+		}
+		ctx = ctx.get(outer);
+	}
+	return ctx.get(concepts::notepad);
+}
+
+ref noteconcept()
+{
+	ref result = makeconcept();
+	enternotepad(result);
+	return result;
+}
+
+void checknotepad(ref concept)
+{
+	ref pad = level2::notepad();
+	if (!notepads[pad].count(concept)) {
+		throw noteconcept().link("is", "concept-not-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
+	}
+}
+
+void leavenotepad(ref concept)
+{
+	ref pad = intellect::level2::notepad();
+	if (!notepads[pad].count(concept)) {
+		throw noteconcept().link("is", "concept-not-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
+	}
+	notepads[pad].erase(concept);
+}
+
+void enternotepad(ref concept)
+{
+	ref pad = intellect::level2::notepad();
+	if (notepads[pad].count(concept)) {
+		throw noteconcept().link("is", "already-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
+	}
+	notepads[pad].insert(concept);
 }
 
 //ref makehabit(ref name, std::list<ref> argnames, std::any 
@@ -68,7 +118,7 @@ ref makehabitinformationorder(ref habit)
 	
 	// i'm guessing part of the meaning of laughter is spreading learning around something being relevent to deprioritize in emergencies, but useful to learn from when bored.
 	
-	ref order = makeconcept();
+	ref order = noteconcept();
 	ref last = habit.get("information-needed");
 	while (last.linked("next-information")) {
 		last = last.get("next-information");
@@ -94,7 +144,8 @@ ref makehabit(ref name, std::initializer_list<ref> argnames, std::function<void(
 			infn.set(argname, nextinf);
 		} else {
 			if (!infn.get(argname).isa(habit-information)) {
-				throw a(unexpected-concepts::habit-information-concepts::name)
+				throw noteconcept()
+					.link("is", unexpected-concepts::habit-information-concepts::name)
 					.link(concepts::name, argname)
 					.link(concepts::habit, habit);
 			}
@@ -113,8 +164,9 @@ void habitassume(ref habit, ref information, ref assumption)
 ref dohabit(ref habit, std::initializer_list<ref> args)
 {
 	using namespace concepts;
+	if (!habit.linked(information-needed)) { throw noteconcept().link("is","not-a-habit"); }
 	ref posinf = habit.get(information-needed);
-	ref subctx = makeconcept();
+	ref subctx = noteconcept();
 	subctx.link("outer-context", ref::context());
 	subctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = subctx;
@@ -122,8 +174,9 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		if (!posinf.linked(next-information)) {
 			ref::context() = subctx.get("outer-context");
 			conceptunmake(subctx);
-			throw an(unexpected-information).link
-				(concepts::habit, habit,
+			throw noteconcept().link
+				(is, unexpected-information,
+				 concepts::habit, habit,
 				 information-value, arg);
 		}
 		posinf = posinf[next-information];
@@ -135,8 +188,9 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		if (!posinf.linked(assume)) {
 			ref::context() = subctx.get("outer-context");
 			conceptunmake(subctx);
-			throw a(information-needed).link
-				(concepts::habit, habit,
+			throw noteconcept().link
+				("is", information-needed,
+				 concepts::habit, habit,
 				 information, posinf);
 		}
 		ref::context().set(posinf[information], posinf[assume]);
@@ -161,8 +215,9 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 {
 	using namespace concepts;
+	if (!habit.linked(information-needed)) { throw noteconcept().link("is","not-a-habit"); }
 	// TODO: subcontexts or call instances
-	ref ctx = makeconcept();
+	ref ctx = noteconcept();
 	ctx.link("outer-context", ref::context());
 	ctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = ctx;
@@ -173,12 +228,21 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 		if (!infn.linked(*pair.begin())) {
 			ref::context() = ctx.get("outer-context");
 			conceptunmake(ctx);
-			throw an(unexpected-information).link
-				(concepts::habit, habit,
+			throw noteconcept().link
+				("is", unexpected-information,
+				 concepts::habit, habit,
 				 information, *pair.begin(),
 				 information-value, *second);
 		}
-		if (provided.count(*pair.begin())) { throw "multiple instances same name not implemented here"; }
+		if (provided.count(*pair.begin())) {
+			ref::context() = ctx.get("outer-context");
+			conceptunmake(ctx);
+			throw noteconcept().link
+				("is", "multiple-instances-same-name-not-implemented",
+				 concepts::habit, habit,
+				 information, *pair.begin(),
+				 information-value, *second);
+	       	}
 		provided[*pair.begin()] = *second;
 	}
 	ref nextinf = infn;
@@ -191,8 +255,9 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 			} else {
 				ref::context() = ctx.get("outer-context");
 				conceptunmake(ctx);
-				throw a(information-needed).link
-					(concepts::habit, habit,
+				throw noteconcept().link
+					("is", information-needed,
+					 concepts::habit, habit,
 					 information, inf);
 			}
 		} else {
@@ -222,6 +287,68 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 	ref::context() = ctx.get("outer-context");
 	conceptunmake(ctx);
 	return ret;
+}
+
+using namespace intellect::level0;
+void rethrowref()
+{
+	try {
+		throw;
+	} catch(level1::ref r) {
+		throw level2::ref(r.ptr());
+	} catch(level2::ref r) {
+		throw;
+	} catch(no_such_link_type const & e) {
+		throw noteconcept().link(
+			"is", "no-such-concept-link-type",
+			"source", e.source,
+			"type", e.type
+			);
+	} catch(no_such_link_type_target const & e) {
+		throw noteconcept().link(
+			"is", "no-such-concept-link-type-and-target",
+			"source", e.source,
+			"type", e.type,
+			"target", e.target
+			);
+	} catch(crucial_link_type_target const & e) {
+		throw noteconcept().link(
+			"is", "concept-part-is-crucial",
+			"source", e.source,
+			"type", e.type,
+			"target", e.target
+			);
+	} catch(crucial_concept const & e) {
+		throw noteconcept().link(
+			"is", "concept-is-crucial",
+			"topic", e.topic
+			);
+	} catch(link_type_not_unique const & e) {
+		throw noteconcept().link(
+			"is", "more-than-one-such-concept-link-type",
+			"source", e.source,
+			"type", e.type
+			);
+	} catch(still_referenced_by const & e) {
+		throw noteconcept().link(
+			"is", "concept-is-still-referenced",
+			"topic", e.topic,
+			"referrer", e.referrer
+			);
+	} catch(no_such_concept const & e) {
+		throw noteconcept().link(
+			"is", "no-such-concept-reference",
+			"topic", e.topic
+			);
+	} catch(null_reference const & e) {
+		throw noteconcept().link(
+			"is", "null-reference"
+			);
+	} catch(...) {
+		throw noteconcept().link(
+			"is", "system-exception"
+			);
+	}
 }
 
 }

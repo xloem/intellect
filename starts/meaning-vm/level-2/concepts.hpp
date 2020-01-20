@@ -13,6 +13,8 @@ using level1::concepts::name;
 
 static ref context("context");
 static ref root("root");
+static ref notepad("notepad");
+static ref changeable("changeable");
 static ref habit("habit");
 static ref next("next");
 static ref information("information");

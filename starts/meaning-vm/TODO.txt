@@ -1,0 +1,12 @@
+
+extra possibly:
+- [ ] assert that tasks can run without memory leaks
+- [ ] make a steps-caller that does only 1 step, leaving the context available
+      to optionally continue.
+
+done:
+- [X] wrap non-notepad errors to provide for throwing.
+- [X] make sure errors are thrown with notepad concepts universally in level-2
+- [X] clean-up todo list in level-2/funcs.cpp
+- [X] conceptunmake calls leavenotepad now.  remove excess calls prior to unmaking.
+- [X] make tests pass

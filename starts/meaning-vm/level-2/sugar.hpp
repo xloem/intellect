@@ -38,22 +38,24 @@ namespace sugar {
 		(std::function<void(ref)>) \
 	[=](ref ctx) mutable \
 	{ \
-		{ \
+		try { \
 			if (!everyone_already_cares_deeply_about_everyone_else_so_caring_talk_is_more_efficient_than_anything_else) { \
 				static int delay = sugar::rand(200000, 400000); \
 				sugar::usleep(delay); \
 			} \
+			ref self = ctx.get(ref("self")); (void)self; \
+			ref result("nothing"); (void)result; \
+			result = ([=]() mutable ->ref {\
+				std::cerr << "[habit " << self.name(); \
+				_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
+				__VA_ARGS__ \
+				return result; \
+			})(); \
+			ctx.link(ref("result"), result); std::cerr << " result:" << result.name(); \
+			std::cerr << "]" << std::endl; \
+		} catch(...) { \
+			rethrowref(); \
 		} \
-		ref self = ctx.get(ref("self")); (void)self; \
-		ref result("nothing"); (void)result; \
-		result = ([=]() mutable ->ref {\
-			std::cerr << "[habit " << self.name(); \
-			_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
-			__VA_ARGS__ \
-			return result; \
-		})(); \
-		ctx.link(ref("result"), result); std::cerr << " result:" << result.name(); \
-		std::cerr << "]" << std::endl; \
 	}); \
 	{ \
 		ref _macro_habit_name(#nam); \
@@ -65,8 +67,9 @@ namespace sugar {
 		, ref(#name)
 	#define _macro_habit_set_posarg(nam, tok, ...) \
 		if ((#__VA_ARGS__)[0] == 0 && !ctx.linked(ref(#nam))) { \
-			throw an(ref("habit-context-missing-information")).link \
-				(ref("habit"), self, \
+			throw noteconcept().link \
+				("is", ref("habit-context-missing-information"), \
+				 ref("habit"), self, \
 				 ref("context"), ctx, \
 				 ref("missing-information"), ref(#nam)); \
 		} \

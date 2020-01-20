@@ -19,12 +19,14 @@ ref makeconcept()
 
 void conceptunmake(ref c)
 {
+	leavenotepad(c);
 	intellect::level0::basic_dealloc(c);
 }
 
 using links_it = intellect::level0::baseref<ref>::links_t::iterator;
 void poplinkentry(ref le)
 {
+	checknotepad(le);
 	auto & it = le.val<links_it>();
 	if (it != le["source"].links().end()) {
 		le.set("type", it->first);
@@ -81,6 +83,7 @@ ref settranslationmap(ref c, ref m, ref k = nothing)
 
 void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 {
+	checknotepad(c2);
 	decl(translation); decl(known); decl(nothing);
 	std::cerr << "[context-map";
 	for (auto link : m.get(translation).links()) {
@@ -88,7 +91,7 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 		if (reverse) {
 			std::cerr << link.second.name() << ":" << link.first.name() << "=";
 			if (!c1.linked(link.first)) {
-				throw makeconcept().link(
+				throw noteconcept().link(
 						"is", "not-in-context",
 						"value", link.first,
 						"context", c1,
@@ -100,7 +103,7 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 		} else {
 			std::cerr << link.first.name() << ":" << link.second.name() << "=";
 			if (!c1.linked(link.second)) {
-				throw makeconcept().link(
+				throw noteconcept().link(
 						"is", "not-in-context",
 						"value", link.second,
 						"context", c1,
@@ -139,12 +142,13 @@ void _steps(ref s, ref ctx)
 	// 	for one thing, this might help the structure of the system represent
 	// 	meaningful thought if it optimizes for speed
 
-	ref astate = makeconcept();
+	checknotepad(ctx);
+	ref astate = noteconcept();
 	ref c = ctx;
 	bool cleanupcontext = false;
 	//if (c == nothing) {
 	//	cleanupcontext = true;
-	//	c = makeconcept();
+	//	c = noteconcept();
 	//}
 	astate.set(context, c);
 	c.set(active-state, astate);
@@ -166,7 +170,7 @@ void _steps(ref s, ref ctx)
 		}
 		std::cerr << "]" << std::endl;
 		if (s.linked(needed-map)) {
-			subctx = makeconcept();
+			subctx = noteconcept();
 			contextmapinto(c, s.get(needed-map), subctx);
 			subctx.set(outer-context, c);
 			subctx.set(active-state, astate);
@@ -175,6 +179,7 @@ void _steps(ref s, ref ctx)
 			subctx.set(concepts::root, ref::context().get(concepts::root));
 			ref::context() = subctx;
 		}
+		checknotepad(subctx);
 		subctx.set("self", s.get(action));
 		ref habit = s.get(action);
 		{ // check arguments
@@ -183,7 +188,7 @@ void _steps(ref s, ref ctx)
 				if (!link.second.linked("information", link.first)) { continue; }
 				if (subctx.linked(link.first)) { continue; }
 				if (!link.second.linked("assume")) {
-					throw makeconcept().link(
+					throw noteconcept().link(
 							"is", "information-needed",
 							"habit", habit,
 							"information", link.second);
@@ -199,9 +204,12 @@ void _steps(ref s, ref ctx)
 			c = subctx.get(outer-context);
 			ref::context() = c;
 			astate.set(context, c);
+			checknotepad(subctx);
 			conceptunmake(subctx);
 		}
 	}
+	checknotepad(c);
+	checknotepad(astate);
 	c.unlink(active-state, astate);
 	conceptunmake(astate);
 	if (cleanupcontext) { conceptunmake(c); }
@@ -209,6 +217,7 @@ void _steps(ref s, ref ctx)
 
 void _condition(ref ctx, ref cond, ref steps, ref state)
 {
+	checknotepad(state);
 	// because this sets active-state's next-step instead of calling something,
 	// a subcontext is not opened for the steps unless they have one.
 	ref next = nothing;
@@ -216,7 +225,7 @@ void _condition(ref ctx, ref cond, ref steps, ref state)
 		if (steps.linked("anything")) {
 			next = steps["anything"];
 		} else {
-			throw makeconcept().link(
+			throw noteconcept().link(
 					is, "unknown-condition",
 					"condition", cond,
 					"next-steps", steps,
@@ -243,12 +252,23 @@ void _condition(ref ctx, ref cond, ref steps, ref state)
 // we'll want a contextual notepad.  this can be thread-local I suppose.
 // link thread-local contexts to their root, so we can find it easily.
 
+
+
 void createhabits()
 {
-	// making new information should delay, for learning with good curve.
+	ahabit(set-notepad, ((notepad, n)),
+	{
+		ctx.get("outer-context").set(concepts::notepad, n);
+	});
+	ahabit(notepad, (),
+	{
+		return intellect::level2::notepad();
+	});
+
 	decls(link, source, type, target);
 	ahabit(link, ((source, s), (type, t), (target, dst)),
 	{
+		checknotepad(s);
 		s.link(t, dst);
 	});
 
@@ -259,6 +279,7 @@ void createhabits()
 
 	ahabit(link-set-crucial, ((source, s), (type, t), (target, dst)),
 	{
+		checknotepad(s);
 		s.setcrucial(t, dst);
 	});
 
@@ -284,6 +305,7 @@ void createhabits()
 	decls(unlink);
 	ahabit(unlink, ((source, s), (type, t), (target, dst, anything)),
 	{
+		checknotepad(s);
 		if (dst == anything) {
 			s.unlink(t);
 		} else {
@@ -299,32 +321,42 @@ void createhabits()
 
 	ahabit(set, ((source, s), (type, t), (target, dst)),
 	{
+		checknotepad(s);
 		s.set(t, dst);
 	});
 
 	ahabit(put, ((source, s), (type, t), (target, dst)),
 	{
+		checknotepad(s);
 		s.set(t, dst);
 	});
 
 	decls(make, unmake, know, concept, is, group, already, in, iter);
-	ahabit(make-concept, (), { result = makeconcept(); }); 
+	ahabit(make-concept, (),
+	{
+		return noteconcept();
+	}); 
 	ahabit(copy-to, ((source, s), (target, t)),
 	{
+		checknotepad(t);
 		// copies data too
-		if (t.hasval() || t.ptr()->links.size() != 0) { throw makeconcept().link(is, "concept-not-empty", concept, t); }
+		if (t.hasval() || t.ptr()->links.size() != 0) { throw noteconcept().link(is, "concept-not-empty", concept, t); }
 		result = t;
 		t.replace(s);
 	});
 	ahabit(copy-data-to, ((source, s), (target, t)),
 	{
-		if (t.hasval()) { throw makeconcept().link(is, "concept-has-data", concept, t); }
+		checknotepad(t);
+		if (t.hasval()) { throw noteconcept().link(is, "concept-has-data", concept, t); }
 		t.ptr()->data = s.ptr()->data;
 	});
 	// if last-context is weird give it a default of nothing
+	// 	huh we could detect the context, not let it be passed
 	ahabit(concept-unmake, ((last-context, c), (concept-name, n)),
 	{
+		checknotepad(c);
 		ref r = c.get(n);
+		checknotepad(r);
 		c.unlink(n);
 		conceptunmake(r);
 	});
@@ -343,13 +375,14 @@ void createhabits()
 	ahabit(set-is, ((concept, c), (group, g)),
 	{
 		if (c.linked(is, group)) {
-			throw (make-concept)().link
+			throw noteconcept().link
 				(is, already-in-group,
 				 habit, self,
 				 context, ctx,
 				 concept, c,
 				 group, g);
 		}
+		checknotepad(c);
 		c.link(is, group);
 		result = c;
 	});
@@ -359,13 +392,14 @@ void createhabits()
 	decl(entry);
 	ahabit(first-link-entry, ((target, le), (concept, c)),
 	{
+		checknotepad(le);
 		if (le.hasval() && !le.hasvalof<links_it>()) {
-			throw makeconcept().link(
+			throw noteconcept().link(
 				is, "already-has-value",
 				concept, le,
 				context, ctx);
 		}
-		//ref le = makeconcept();
+		//ref le = noteconcept();
 		if (!le.isa(link-entry)) {
 			le.link(is, link-entry);
 		}
@@ -376,8 +410,9 @@ void createhabits()
 	});
 	ahabit(last-link-entry, ((target, le), (concept, c)),
 	{
+		checknotepad(le);
 		if (le.hasval() && !le.hasvalof<links_it>()) {
-			throw makeconcept().link(
+			throw noteconcept().link(
 				is, "already-has-value",
 				concept, le,
 				context, ctx);
@@ -392,12 +427,14 @@ void createhabits()
 	});
 	ahabit(next-link-entry, ((link-entry, le)),
 	{
+		checknotepad(le);
 		++le.val<links_it>();
 		poplinkentry(le);
 		result = le;
 	});
 	ahabit(previous-link-entry, ((link-entry, le)),
 	{
+		checknotepad(le);
 		--le.val<links_it>();
 		poplinkentry(le);
 		result = le;
@@ -408,13 +445,17 @@ void createhabits()
 	});
 	ahabit(link-entry-insert-before, ((link-entry, le), (target, t)),
 	{
+		ref s = le.get(source);
+		checknotepad(s);
 		// todo: make clean
 		auto & it = le.val<links_it>();
-		le.get(source).ptr()->links.emplace_hint(it.underlying(), le.get(type), t);
+		s.ptr()->links.emplace_hint(it.underlying(), le.get(type), t);
 	})
 	ahabit(link-entry-unlink, ((link-entry, le)),
 	{
-		le.get(source).unlink(le.val<links_it>()++);
+		ref s = le.get(source);
+		checknotepad(s);
+		s.unlink(le.val<links_it>()++);
 		poplinkentry(le);
 		result = le;
 	});
@@ -424,7 +465,9 @@ void createhabits()
 	});
 	ahabit(link-entry-set-crucial, ((link-entry, le)),
 	{
-		le.get(source).setcrucial(le.val<links_it>());
+		ref s = le.get(source);
+		checknotepad(s);
+		s.setcrucial(le.val<links_it>());
 	});
 
 	// a simple list primitive to aid in dev
@@ -433,6 +476,7 @@ void createhabits()
 	decls(add, to, until, each, item, remove, from, somewhere, has);
 	ahabit(know-is-list, ((list, l)),
 	{
+		checknotepad(l);
 		result = l;
 		(know-is)(l, list);
 		link(l, first-entry, nothing);
@@ -461,7 +505,7 @@ void createhabits()
 	ahabit(make-next-list-entry, ((list, l), (item, i)),
 	{
 		ref prev = (list-last-item)(l);
-		ref le = (make-concept)();
+		ref le = noteconcept();
 		(know-is)(le, list-entry);
 		set(le, item, i);
 		set(le, next, nothing);
@@ -479,6 +523,7 @@ void createhabits()
 	});
 	ahabit(list-entry-unmake, ((list-entry, le)),
 	{
+		checknotepad(le);
 		ref prev = (list-entry-previous)(le);
 		ref n = (list-entry-next)(le);
 		if (prev != nothing) {
@@ -493,14 +538,14 @@ void createhabits()
 
 	ahabit(list-each-entry, ((list, l), (context, c), (action, a)),
 	{
-		ref subctx = (make-concept());
+		ref subctx = noteconcept();
 		subctx.set(context, c);
 		subctx.set(list-entry, (list-first-entry)(l));
 		while (subctx.get(list-entry) != nothing && result == nothing) {
 			result = act(a, subctx);
 			subctx.set(list-entry, (list-entry-next)(subctx.get(list-entry)));
 		}
-		(unmake-concept)(subctx);
+		(concept-unmake)(subctx);
 	});
 	ahabit(list-has-item, ((list, l), (item, i)),
 	{
@@ -515,7 +560,7 @@ void createhabits()
 	{
 		result = (list-each-entry)(l, i, list-item-entry-unmake-iter);
 		if (result == nothing) {
-			throw (make-concept)().link(
+			throw noteconcept().link(
 					is, "item-missing",
 					item, i,
 					list, l,
@@ -532,7 +577,7 @@ void createhabits()
 		});
 
 	// make lists as an expression:
-	// (make-concept)()
+	// noteconcept()
 	// 	.act(know-is-list)
 	// 	.act(make-next-list-entry, i1)
 	// 	.act(make-next-list-entry, i2)
@@ -548,7 +593,7 @@ void createhabits()
 	/*
 	ahabit(make-map-item, ((source, s), (target, d)),
 	{
-		result = (make-concept)().link(
+		result = noteconcept().link(
 					source, s,
 					target, d);
 	});
@@ -565,7 +610,7 @@ void createhabits()
 		} else if (linked(act, habit) && linked(get(act, habit), is, habit)) {
 			ref h = get(act, habit);
 			if (linked(h, habit)) {
-				ref subctx2 = (make-concept)();
+				ref subctx2 = noteconcept();
 				// i reviewed this once enough to satisfy me it seemed correct
 				// for the instance of using action-lists as habit links.
 				// i did not examine all parts when doing this, deeming it
@@ -583,7 +628,7 @@ void createhabits()
 				result = h({{context, subctx}, {action, act}});
 			}
 		} else {
-			throw (make-concept)().link(
+			throw noteconcept().link(
 				is, "unknown-action-type",
 				"action", act,
 				"inner-context", subctx,
@@ -595,23 +640,26 @@ void createhabits()
 	decls(needed, made, known, information, translation);
 	ahabit(set-translation-map, ((target, c), (translation-map, m), (known-map, k, nothing)),
 	{
-		if (c.isa("translation-map") || c.linked("translation") || c.linked("known")) { throw makeconcept().link(is, "already-has-translation-map-data", concept, c, context, ctx); }
+		checknotepad(c);
+		if (c.isa("translation-map") || c.linked("translation") || c.linked("known")) { throw noteconcept().link(is, "already-has-translation-map-data", concept, c, context, ctx); }
 		result = settranslationmap(c, m, k);
 	});
 	ahabit(context-map-into, ((source-context, c1), (translation-map, m), (target-context, c2)),
 	{
+		checknotepad(c2);
 		contextmapinto(c1, m, c2);
 	});
 	/*
 	ahabit(make-translated-context, ((translation-map, m), (context, c)),
 	{
-		ref subctx = (make-concept)();
+		ref subctx = noteconcept();
 		(context-map-into)(c, m, subctx);
 		subctx.set(outer-context, c);
 		result = subctx;
 	});
 	ahabit(translated-context-unmake, ((context, c), (translation-map, m)),
 	{
+		checknotepad(c);
 		ref outer = c.get(outer-context);
 		(context-map-into)(c, m, outer);
 		(concept-unmake)(c);
@@ -621,9 +669,10 @@ void createhabits()
 	/*
 	ahabit(link-next-step, ((step, s), (next-step, ns)),
 	{
+		checknotepad(s);
 		if (ns != nothing) {
 			if (s.isa("context-step")) {
-				if (s.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", step, s, context, ctx); }
+				if (s.linked(next-step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", step, s, context, ctx); }
 			} else if (s.isa("condition-step")) {
 				// think about more.
 				// implementing this here immediately means walking through every step of every branch of the condition.
@@ -631,7 +680,7 @@ void createhabits()
 				// let the caller do step wiring.
 				// 	seems fastest, haven't reviewed relevency fully.
 			} else {
-				throw makeconcept().link(is, "unexpected-previous-step-type", step, s, context, ctx);
+				throw noteconcept().link(is, "unexpected-previous-step-type", step, s, context, ctx);
 			}
 		}
 	});
@@ -639,13 +688,16 @@ void createhabits()
 	decls(step, previous);
 	ahabit(set-context-step, ((target, t), (previous-step, ps, nothing), (known-information, literals), (needed-information-map, in), (made-information-map, out), (action, act)),
 	{
-		if (t.linked(needed-map) || t.linked(made-map) || t.linked(action)) { throw makeconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
-		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
-		result = intellect::level1::a("context-step", t);
+		checknotepad(t);
+		if (ps != nothing) { checknotepad(ps); }
+		if (t.linked(needed-map) || t.linked(made-map) || t.linked(action)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
+		if (ps != nothing && ps.linked(next-step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
+		result = t;
 		result.link(
+			is, context-step,
 			//habit, context-action,
-			needed-map, settranslationmap(makeconcept(), in, literals),
-			made-map, settranslationmap(makeconcept(), out),
+			needed-map, settranslationmap(noteconcept(), in, literals),
+			made-map, settranslationmap(noteconcept(), out),
 			action, act);
 		if (ps != nothing) { ps.set(next-step, result); }
 	});
@@ -653,18 +705,19 @@ void createhabits()
 	decls(order, steps);
 	ahabit(set-steps, ((target, t), (information-order, io, nothing)),
 	{
+		checknotepad(t);
 		if (t.linked(information-needed) || t.linked(next-step)) {
-			throw makeconcept().link(is, "concept-links-collide",
+			throw noteconcept().link(is, "concept-links-collide",
 					concept, t,
 					context, ctx);
 		}
 		result = t;
 		a(steps, t);
-		ref infn = intellect::level1::a(habit-information-needed);
+		ref infn = noteconcept().link(is, habit-information-needed);
 		result.set(information-needed, infn);
 		ref posinf = infn;
 		for (auto inf : io.getAll(information-order)) {
-			ref nextinf = intellect::level1::a(habit-information);
+			ref nextinf = noteconcept().link(is, habit-information);
 			nextinf.set(information, inf);
 			posinf.set(next-information, nextinf);
 			posinf = nextinf;
@@ -672,7 +725,8 @@ void createhabits()
 				infn.set(inf, nextinf);
 			} else {
 				if (!infn.get(inf).isa(habit-information)) {
-					throw intellect::level1::a("unexpected-habit-information-name")
+					throw noteconcept()
+						.link(is, "unexpected-habit-information-name")
 						.link(concepts::name, inf)
 						.link(context, ctx);
 				}
@@ -690,12 +744,15 @@ void createhabits()
 	// steps must be actual steps, not a list of steps
 	ahabit(set-condition-step, ((target, t), (previous-step, ps, nothing), (condition, cond), (next-steps, s, nothing)),
 	{
-		if (t.linked(needed-map) || t.linked(made-map) || t.linked(action)) { throw makeconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
-		if (ps != nothing && ps.linked(next-step)) { throw makeconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
-		if (s == nothing) { s = makeconcept(); }
+		checknotepad(t);
+		if (ps != nothing) { checknotepad(ps); }
+		if (t.linked(needed-map) || t.linked(made-map) || t.linked(action)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
+		if (ps != nothing && ps.linked(next-step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
+		if (s == nothing) { s = noteconcept(); }
 		result = t;
-		intellect::level1::a("condition-step", t).link(
-			needed-map, settranslationmap(makeconcept(), makeconcept().link(condition, cond), makeconcept().link(next-steps, s)),
+		t.link(
+			is, "condition-step",
+			needed-map, settranslationmap(noteconcept(), noteconcept().link(condition, cond), noteconcept().link(next-steps, s)),
 			action, condition
 		);
 		if (ps != nothing) { ps.set(next-step, result); }
@@ -710,10 +767,13 @@ void createhabits()
 	});
 	ahabit(condition-step-set, ((condition-step, ca), (value, v), (step, s)),
 	{
-		ca.get(needed-map).get(known).get(next-steps).set(v, s);
+		ref ns = ca.get(needed-map).get(known).get(next-steps);
+		checknotepad(ns);
+		ns.set(v, s);
 	});
 	ahabit(condition, ((condition, cond), (next-steps, steps), (active-state, state)),
 	{
+		checknotepad(state);
 		_condition(ctx, cond, steps, state);
 	});
 
@@ -723,6 +783,7 @@ void createhabits()
 	{
 		ref action = ca[action];
 		ref state = outerctx.get(active-state);
+		checknotepad(state);
 		ref subctx = (make-translated-context)(ca[needed-map]);
 		//state.set(context, subctx);
 
@@ -735,6 +796,7 @@ void createhabits()
 
 		act(action, subctx);
 
+		checknotepad(subctx);
 		outerctx = (translated-context-unmake)(subctx, ca[made-map]);
 		assert(outerctx == state.get(context)); // feel free to remove
 	});
@@ -743,6 +805,7 @@ void createhabits()
 			ref i = (list-entry-item)(le);
 			ref src = get(i, source);
 			ref dst = get(i, target);
+			checknotepad(subctx);
 			set(subctx, dst, src);
 		});
 		ahabit(context-action-needed-information-iter, ((list-entry, le), ("subcontext", subctx)),
@@ -751,6 +814,7 @@ void createhabits()
 			ref src = get(i, source);
 			ref dst = get(i, target);
 			ref outerctx = get(subctx, "outer-context");
+			checknotepad(subctx);
 			set(subctx, dst, get(outerctx, src));
 		});
 		ahabit(context-action-made-information-iter, ((list-entry, le), ("subcontext", subctx)),
@@ -759,6 +823,7 @@ void createhabits()
 			ref src = get(i, source);
 			ref dst = get(i, target);
 			ref outerctx = get(subctx, "outer-context");
+			checknotepad(outerctx);
 			set(outerctx, dst, get(subctx, src));
 		});
 	
@@ -774,7 +839,8 @@ void createhabits()
 	/*
 	ahabit(make-steps-state, ((steps, s), (context, c)),
 	{
-		ref state = (make-concept)()
+		ref state = noteconcept();
+		checknotepad(state);
 		(know-is)(state, steps-state);
 		state.set(context, c);
 		state.set(next-step, s.get(first-step));
@@ -784,6 +850,7 @@ void createhabits()
 
 	ahabit(steps-state-unmake, ((state, s)),
 	{
+		checknotepad(s);
 		(concept-unmake)(s);
 	});
 
@@ -829,6 +896,7 @@ void createhabits()
 
 	ahabit(steps-state, ((context, c), (action, s)),
 	{
+		checknotepad(s);
 		c.set(active-state, s);
 		ref step = s.get(next-step);
 		s.set(active-step, step);
@@ -846,10 +914,9 @@ void createhabits()
 	*/
 
 	ahabit(nothing, (), {});
-	link(nothing, habit, nothing);
+	nothing.link(habit, nothing);
 
-	// does acts[cond] in outer-context.
-	// uses acts[anything] if there is no acts[cond].
+	// does acts[cond]
 	
 	/*
 	ahabit(condition-action, ((context, c), (action, condition)),
@@ -871,7 +938,7 @@ void createhabits()
 			if (linked(acts, "anything")) {
 				next = acts["anything"];
 			} else {
-				throw (make-concept)().link(
+				throw noteconcept().link(
 						is, "unknown-condition",
 						"condition", cond,
 						"actions", acts,
@@ -879,9 +946,10 @@ void createhabits()
 						"subcontext", outerctx);
 			}
 		} else {
-			next = acts[cond]
+			next = acts[cond];
 		}
 		if (outerctx.linked(active-state)) {
+			checknotepad(outerctx.get(active-state));
 			outerctx.get(active-state).set(next-step, next);
 		} else {
 			act(next, outerctx);
@@ -889,7 +957,7 @@ void createhabits()
 	});
 	ahabit(make-condition-action, ((condition, c), (actions, acts)),
 	{
-		result = (make-concept)();
+		result = noteconcept();
 		result.link(
 			condition, c,
 			actions, acts
@@ -904,7 +972,7 @@ void createhabits()
 			if (linked(acts, "anything")) {
 				next = acts["anything"];
 			} else {
-				throw (make-concept)().link(
+				throw noteconcept().link(
 						is, "unknown-condition",
 						"condition", cond,
 						"actions", acts,
@@ -915,6 +983,7 @@ void createhabits()
 			next = acts[cond]
 		}
 		if (outerctx.linked(active-state)) {
+			checknotepad(outerctx.get(active-state));
 			outerctx.get(active-state).set(next-step, next);
 		} else {
 			act(next, outerctx);
