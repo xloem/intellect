@@ -1,8 +1,8 @@
-- [X] make notepads be actual refs in bootstrap space
-- [X] make new notepads only exist relative to old, to enforce hierarchy of responsibility.  this means the way to make a new notepad requires an old notepad.
+- [ ] make bootstrap space be initial-notepad, rename it bootstrap-space,
+      nodes not in any notepad are assumed to be in it.
+- [ ] make level2.cpp run scripts inside a subnotepad
 - [ ] provide for steps running in a sub-notepad.  can pass notepad argument to specify.
 - [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
-	^-- this would certainly be aided by adding concepts to a subnotepad
 
 extra possibly:
 - [ ] assert that tasks can run without memory leaks
@@ -16,9 +16,17 @@ are these worthwhile?
 	pro: would have sped up implementation and use of link iterators.
 	  links could have been made special nodes.
 	con: requires rewrite of parts of level-0
-	- would this help with translation between model-structure and meaning-structure?  (maybe links could auto-translate based on context?)
+	- would this help with translation between model-structure and meaning-structure?  (maybe links could auto-translate based on context? remember domain context determined by e.g. special link from other-domain context)
+		it sounds like abstract links _almost_ solve predicates but
+		associate the predicate with the data it processes more than
+		desired.  what's missing is how the structure of a concept is
+		determined by what is using it.  concepts offer interfaces and
+		these are translated.  [after that is solved we have behavior-
+		is-a-pattern and brainstorming next]  DISTRACTING!
 
 done:
+- [X] make notepads be actual refs in bootstrap space
+- [X] make new notepads only exist relative to old, to enforce hierarchy of responsibility.  this means the way to make a new notepad requires an old notepad.
 - [X] wrap non-notepad errors to provide for throwing.
 - [X] make sure errors are thrown with notepad concepts universally in level-2
 - [X] clean-up todo list in level-2/funcs.cpp
