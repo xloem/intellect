@@ -2,11 +2,21 @@
 - [X] make new notepads only exist relative to old, to enforce hierarchy of responsibility.  this means the way to make a new notepad requires an old notepad.
 - [ ] provide for steps running in a sub-notepad.  can pass notepad argument to specify.
 - [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
+	^-- this would certainly be aided by adding concepts to a subnotepad
 
 extra possibly:
 - [ ] assert that tasks can run without memory leaks
 - [ ] make a steps-caller that does only 1 step, leaving the context available
       to optionally continue.
+
+are these worthwhile?
+- [ ] implement abstract links
+	pro: would have sped up implementation of general notepads.  bootstrap space
+	  could have been made a special notepad.
+	pro: would have sped up implementation and use of link iterators.
+	  links could have been made special nodes.
+	con: requires rewrite of parts of level-0
+	- would this help with translation between model-structure and meaning-structure?  (maybe links could auto-translate based on context?)
 
 done:
 - [X] wrap non-notepad errors to provide for throwing.
