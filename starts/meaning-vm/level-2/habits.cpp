@@ -19,7 +19,7 @@ ref makeconcept()
 
 void conceptunmake(ref c)
 {
-	leavenotepad(c);
+	leavenotepad(c, level2::notepad());
 	intellect::level0::basic_dealloc(c);
 }
 

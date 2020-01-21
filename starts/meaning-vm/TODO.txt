@@ -1,3 +1,7 @@
+- [X] make notepads be actual refs in bootstrap space
+- [X] make new notepads only exist relative to old, to enforce hierarchy of responsibility.  this means the way to make a new notepad requires an old notepad.
+- [ ] provide for steps running in a sub-notepad.  can pass notepad argument to specify.
+- [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
 
 extra possibly:
 - [ ] assert that tasks can run without memory leaks

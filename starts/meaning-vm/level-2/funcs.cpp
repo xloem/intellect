@@ -23,52 +23,99 @@ ref & context()
 	return ctx;
 }
 
-std::map<ref, std::set<ref>> notepads;
-
-ref notepad()
+ref & notepad()
 {
-	ref ctx = level2::context();
-	while (!ctx.linked(concepts::notepad)) {
-		ref outer("outer-context");
-		if (!ctx.linked(outer)) {
-			return "initial-notepad";
-		}
-		ctx = ctx.get(outer);
-	}
-	return ctx.get(concepts::notepad);
+	// the reason to let vm set notepad is so it can spawn threads in notepads.
+	static thread_local auto notes = ref("initial-notepad").link("is","notepad");
+	return notes;
 }
+
+ref newnotepad(ref name) 
+{
+	if (level2::notepad().linked(name)) {
+		throw noteconcept().link("is","notepad-already-linked", "notepad", level2::notepad(), "link", name);
+	}
+		// makeconcept instead of noteconcept because we don't want
+		// random things from outer read-only context added
+	ref newnotes = makeconcept();
+	// any additional links must be blocked in subnotepad()
+	newnotes.link("is", "notepad");
+	newnotes.link("outer", level2::notepad());
+	newnotes.link("name", name.get("name"));
+	level2::notepad().link(name, newnotes); // linked by name to find easily when used
+	return newnotes;
+}
+
+ref subnotepad(ref name)
+{
+	if (name == "is" || name == "name" || name == "outer" || !level2::notepad().linked(name)) {
+		throw noteconcept().link("is","subnotepad-does-not-exist", "notepad", level2::notepad(), "subnotepad", name);
+	}
+	ref result = level2::notepad().get(name);
+
+	// this attempts to defend against other internal links being treated as
+	// notepads. assumption is such links would be in bootstrap space and not
+	// modifiable by runtime to add the 'is notepad' relationship.
+	if (!result.linked("is", "notepad")) { throw noteconcept().link("is","subnotepad-not-notepad", "notepad", level2::notepad(), "subnotepad", result, "name", name); }
+	return result;
+}
+
+/*
+ref outernotepad()
+{
+	return level2::notepad().get("outer");
+}
+*/
 
 ref noteconcept()
 {
 	ref result = makeconcept();
-	enternotepad(result);
+	level2::notepad().link(concepts::changeable, result);
 	return result;
 }
-
 void checknotepad(ref concept)
 {
 	ref pad = level2::notepad();
-	if (!notepads[pad].count(concept)) {
+	if (!pad.linked(concepts::changeable,concept)) {
 		throw noteconcept().link("is", "concept-not-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
 	}
 }
 
-void leavenotepad(ref concept)
+void leavenotepad(ref concept, ref pad)
 {
-	ref pad = intellect::level2::notepad();
-	if (!notepads[pad].count(concept)) {
+	ref check = pad;
+	while (check != level2::notepad()) {
+		if (!check.linked("outer")) {
+			throw noteconcept().link("is", "not-a-subnotepad", "subnotepad", pad, "notepad", level2::notepad(), "context", level2::context());
+		}
+		check = check.get("outer");
+	}
+	if (!pad.linked(concepts::changeable,concept)) {
 		throw noteconcept().link("is", "concept-not-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
 	}
-	notepads[pad].erase(concept);
+	pad.unlink(concepts::changeable,concept);
 }
 
+/* there should be no need for this because all the concepts in our notepad
+ * either came from an outer notepad with their permission, or were made by us.
 void enternotepad(ref concept)
 {
 	ref pad = intellect::level2::notepad();
-	if (notepads[pad].count(concept)) {
+	if (pad.linked(concepts::changeable,concept) {
 		throw noteconcept().link("is", "already-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
 	}
-	notepads[pad].insert(concept);
+	pad.link(concepts::changeable, concept);
+}
+*/
+
+void entersubnotepad(ref concept, ref name)
+{
+	checknotepad(concept);
+	ref pad = subnotepad(name);
+	if (pad.linked(concepts::changeable,concept)) {
+		throw noteconcept().link("is", "already-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
+	}
+	pad.link(concepts::changeable, concept);
 }
 
 //ref makehabit(ref name, std::list<ref> argnames, std::any 
