@@ -1,18 +1,22 @@
-- [ ] make bootstrap space be initial-notepad, rename it bootstrap-space,
-      nodes not in any notepad are assumed to be in it.
-- [ ] make level2.cpp run scripts inside a subnotepad
+NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
+      This is just like learning if you are tiny and new =)
+
+- [/] make level2.cpp run scripts inside a subnotepad
 - [ ] provide for steps running in a sub-notepad.  can pass notepad argument to specify.
 - [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
 
 extra possibly:
+- [ ] make bootstrap space be initial-notepad, rename it bootstrap-space,
+	use that assumption to handle concepts not in any notepad in notepad funcs.
 - [ ] assert that tasks can run without memory leaks
 - [ ] make a steps-caller that does only 1 step, leaving the context available
       to optionally continue.
 
 are these worthwhile?
 - [ ] implement abstract links
-	pro: would have sped up implementation of general notepads.  bootstrap space
-	  could have been made a special notepad.
+	pro: could have sped up implementation of general notepads.  bootstrap space
+	  could have been made a special notepad. (this ended up being easy anyway,
+	  but quick solution means bootstrap space has hidden concepts in it now)
 	pro: would have sped up implementation and use of link iterators.
 	  links could have been made special nodes.
 	con: requires rewrite of parts of level-0
