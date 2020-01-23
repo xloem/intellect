@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ref.hpp"
+
 #undef self
 
 #include <iostream>
@@ -11,6 +13,33 @@ namespace sugar {
 	void usleep(unsigned int usecs);
 	double rand(double min, double max);
 }
+
+class restorenotepad
+{
+public:
+	restorenotepad(ref ctx)
+	: outernotepad(intellect::level2::notepad()),
+	  ctx(ctx)
+	{
+		if (!ctx.linked("notepad")) { return; }
+		ref inner = ctx.get("notepad");
+		if (inner == "nothing") { return; }
+		innernotepad = subnotepad(inner);
+		entersubnotepad(ctx, inner);
+		intellect::level2::notepad() = innernotepad;
+       	}
+	~restorenotepad()
+	{
+		if (innernotepad == "nothing") { return; }
+		leavenotepad(ctx, innernotepad);
+		//if (intellect::level2::notepad() != innernotepad) { return; }
+		intellect::level2::notepad() = outernotepad;
+	}
+private:
+	ref outernotepad;
+	ref innernotepad;
+	ref ctx;
+};
 
 // habits have a structure such that they contain information about their positional
 // arguments.  they are made with a macro that turns the args into local variables.
@@ -43,6 +72,7 @@ namespace sugar {
 				static int delay = sugar::rand(200000, 400000); \
 				sugar::usleep(delay); \
 			} \
+			restorenotepad notepadrestoration(ctx); \
 			ref self = ctx.get(ref("self")); (void)self; \
 			ref result("nothing"); (void)result; \
 			result = ([=]() mutable ->ref {\

@@ -696,8 +696,9 @@ int main()
 	
 	string script = "simpleparser bootstrap-lookup \
 // this is a line comment\n\
-information dump group linkset\n\
+information dump group linkset notepad\n\
 information dump-expand group linkset\n\
+information link-self notepad\n\
 when dump-expand [\n\
 	set link-entry make-concept\n\
 	first-link-entry link-entry group\n\
@@ -705,12 +706,14 @@ when dump-expand [\n\
 		= has-target linked link-entry 'target'\n\
 		? has-target if 'false' return.\n\
 		= link-target get link-entry 'target'\n\
-		dump link-target linkset\n\
+		dump link-target linkset 'nothing'\n\
 		next-link-entry link-entry\n\
 		loop.\n\
 ]\n\
+when link-self [\n\
+	link 'link-self' 'type' 'target'\n\
+]\n\
 when dump [\n\
-	link 'link' 'type' 'target'\n\
 	= is-in-set in-set group\n\
 	? is-in-set if true return.\n\
 	put-in-set group\n\
@@ -740,7 +743,7 @@ when dump [\n\
 		set link-target get link-entry 'target'\n\
 		set basic-follow linked linkset 'follow' link-type\n\
 		pick basic-follow if 'false' next2.\n\
-		'dump' link-target linkset\n\
+		'dump' link-target linkset 'nothing'\n\
 		next2:\n\
 		set expand linked linkset 'expand' link-type\n\
 		pick expand if 'false' next2b.\n\
@@ -1002,12 +1005,24 @@ when dump [\n\
 	});
 	*/
 	try {
-		std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
+
+		//std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
 		//bootstrap2notepad(dump.context());
 		ref outernotepad = intellect::level2::notepad();
-		intellect::level2::notepad() = intellect::level2::newnotepad("runtime");
-		dump(dump, linksofinterest);
-		intellect::level2::notepad() = outernotepad;
+		intellect::level2::newnotepad("runtime");
+		try {
+			ref("link-self")("runtime");
+			throw noteconcept().link("is","link-out-of-notepad-did-not-throw");
+		// TODO INTEGRITY SAFETY SECURITY NATURE: this causes a compilation error and should not, whereas plain 'ref' should be ambiguous but compiles.
+		// /gnu/store/qd75mw84p2lgsn8cjj7qy2rd5ymw0af9-gcc-toolchain-9.2.0/bin/gcc
+		// system: Karl Semich's OLPC XO 1.5, Fedora 18
+		//} catch(intellect::level2::ref r) {
+		} catch(ref r) {
+			if(!r.isa("concept-not-in-notepad")) { throw r; }
+			//conceptunmake(r); // TODO: deallocation from subnotepad
+		}
+		dump(dump, linksofinterest, "runtime");
+		assert(intellect::level2::notepad() == outernotepad);
 #undef ref
 	} catch(intellect::level2::ref r) {
 		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;

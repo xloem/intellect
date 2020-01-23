@@ -2,8 +2,8 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
       This is just like learning if you are tiny and new =)
 
 - [X] make level2.cpp run scripts inside a subnotepad
-	-> i tested by adding instruction to link out of notepad, and is working.
 - [ ] provide for steps running in a sub-notepad.  can pass notepad argument to specify.
+	// in ahabit, context must be in subnotepad.
 - [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
 
 extra possibly:
