@@ -1,9 +1,6 @@
 NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
       This is just like learning if you are tiny and new =)
 
-- [X] make level2.cpp run scripts inside a subnotepad
-- [ ] provide for steps running in a sub-notepad.  can pass notepad argument to specify.
-	// in ahabit, context must be in subnotepad.
 - [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
 
 extra possibly:
@@ -30,6 +27,9 @@ are these worthwhile?
 		is-a-pattern and brainstorming next]  DISTRACTING!
 
 done:
+- [X] make level2.cpp run scripts inside a subnotepad
+- [X] migrate errors out of subnotepads when thrown
+- [X] provide for steps running in a sub-notepad.  can pass notepad argument to specify.
 - [X] make notepads be actual refs in bootstrap space
 - [X] make new notepads only exist relative to old, to enforce hierarchy of responsibility.  this means the way to make a new notepad requires an old notepad.
 - [X] wrap non-notepad errors to provide for throwing.

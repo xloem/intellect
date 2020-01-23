@@ -52,9 +52,9 @@ ref newnotepad(ref name)
 	return newnotes;
 }
 
-ref subnotepad(ref name)
+ref subnotepad(ref name, bool allowouter)
 {
-	if (name == "is" || name == "name" || name == "outer" || name == "names" || !level2::notepad().linked(name)) {
+	if (name == "is" || name == "name" || (name == "outer" && !allowouter) || name == "names" || !level2::notepad().linked(name)) {
 		throw noteconcept().link("is","subnotepad-does-not-exist", "notepad", level2::notepad(), "subnotepad", name);
 	}
 	ref result = level2::notepad().get(name);
@@ -82,9 +82,14 @@ ref noteconcept()
 void checknotepad(ref concept)
 {
 	ref pad = level2::notepad();
-	if (!pad.linked(concepts::changeable,concept) && pad != bootstrapnotepad()) {
+	if (!innotepad(concept, pad)) {
 		throw noteconcept().link("is", "concept-not-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
 	}
+}
+
+bool innotepad(ref concept, ref pad)
+{
+	return pad.linked(concepts::changeable,concept) || pad == bootstrapnotepad();
 }
 
 void leavenotepad(ref concept, ref pad)
@@ -162,10 +167,10 @@ void bootstrap2notepad(std::string name)
 }
 */
 
-void entersubnotepad(ref concept, ref name)
+void entersubnotepad(ref concept, ref name, bool allowouter)
 {
 	checknotepad(concept);
-	ref pad = subnotepad(name);
+	ref pad = subnotepad(name, allowouter);
 	if (pad.linked(concepts::changeable,concept)) {
 		throw noteconcept().link("is", "already-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
 	}

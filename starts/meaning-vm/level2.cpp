@@ -26,6 +26,7 @@
 
 using namespace intellect::level2;
 using namespace intellect::level2::concepts;
+#define ref intellect::level2::ref
 
 /*
 // makes a list in one call =)
@@ -184,7 +185,7 @@ ref makestep(ref last, ref action, std::initializer_list<char const *> resultand
 
 
 using namespace std;
-#define ref intellect::level2::ref
+//#define ref intellect::level2::ref
 
 // PLAN HERE: use EXPRESSIONS that effectively evaluate to FIRST-STEP,LAST-STEPS PAIRS
 // to implement SCRIPTING SYSTEM with THREE MAJOR PARSING TYPES:
@@ -1013,13 +1014,11 @@ when dump [\n\
 		try {
 			ref("link-self")("runtime");
 			throw noteconcept().link("is","link-out-of-notepad-did-not-throw");
-		// TODO INTEGRITY SAFETY SECURITY NATURE: this causes a compilation error and should not, whereas plain 'ref' should be ambiguous but compiles.
-		// /gnu/store/qd75mw84p2lgsn8cjj7qy2rd5ymw0af9-gcc-toolchain-9.2.0/bin/gcc
-		// system: Karl Semich's OLPC XO 1.5, Fedora 18
-		//} catch(intellect::level2::ref r) {
 		} catch(ref r) {
 			if(!r.isa("concept-not-in-notepad")) { throw r; }
-			//conceptunmake(r); // TODO: deallocation from subnotepad
+			leavenotepad(r, subnotepad("runtime"));
+			checknotepad(r);
+			conceptunmake(r);
 		}
 		dump(dump, linksofinterest, "runtime");
 		assert(intellect::level2::notepad() == outernotepad);

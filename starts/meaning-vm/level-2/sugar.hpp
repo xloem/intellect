@@ -17,28 +17,56 @@ namespace sugar {
 class restorenotepad
 {
 public:
-	restorenotepad(ref ctx)
+	restorenotepad(ref ctx = "nothing")
 	: outernotepad(intellect::level2::notepad()),
 	  ctx(ctx)
 	{
-		if (!ctx.linked("notepad")) { return; }
-		ref inner = ctx.get("notepad");
-		if (inner == "nothing") { return; }
-		innernotepad = subnotepad(inner);
-		entersubnotepad(ctx, inner);
-		intellect::level2::notepad() = innernotepad;
+		enter();
        	}
+	void switchwith(ref ctx)
+	{
+		leave();
+		this->ctx = ctx;
+		enter();
+	}
+	void rethrow(ref e)
+	{
+		if (innernotepad != "nothing") {
+			e.link("notepad", innernotepad);
+			entersubnotepad(e, "outer", true);
+			leave();
+		}
+		throw e;
+	}
 	~restorenotepad()
 	{
-		if (innernotepad == "nothing") { return; }
-		leavenotepad(ctx, innernotepad);
-		//if (intellect::level2::notepad() != innernotepad) { return; }
-		intellect::level2::notepad() = outernotepad;
+		// TODO: this can throw, ideally errors thrown by destructors would be combined with errors triggering the destruction up the stack.
+		leave();
 	}
 private:
 	ref outernotepad;
 	ref innernotepad;
 	ref ctx;
+
+	void leave()
+	{
+		if (innernotepad == "nothing") { return; }
+		if (intellect::level2::notepad() != innernotepad) { throw noteconcept().link("is", "not-in-correct-subnotepad", "notepad", intellect::level2::notepad, "inner-notepad", innernotepad, "outer-notepad", outernotepad); }
+		leavenotepad(ctx, innernotepad);
+		intellect::level2::notepad() = outernotepad;
+		innernotepad = "nothing";
+	}
+	void enter()
+	{
+		if (ctx == "nothing") { return; }
+		if (!ctx.linked("notepad")) { return; }
+		ref inner = ctx.get("notepad");
+		if (inner == "nothing") { return; }
+		innernotepad = subnotepad(inner);
+		entersubnotepad(ctx, inner);
+		if (innernotepad.get("outer") != outernotepad) { throw noteconcept().link("is","not-subnotepad-of-outer","inner-notepad",innernotepad,"outer-notepad",outernotepad,"name",inner,"context",ctx); }
+		intellect::level2::notepad() = innernotepad;
+	}
 };
 
 // habits have a structure such that they contain information about their positional
@@ -67,24 +95,30 @@ private:
 		(std::function<void(ref)>) \
 	[=](ref ctx) mutable \
 	{ \
-		try { \
+		restorenotepad notepadrestoration; \
+		try { try { \
 			if (!everyone_already_cares_deeply_about_everyone_else_so_caring_talk_is_more_efficient_than_anything_else) { \
 				static int delay = sugar::rand(200000, 400000); \
 				sugar::usleep(delay); \
 			} \
-			restorenotepad notepadrestoration(ctx); \
-			ref self = ctx.get(ref("self")); (void)self; \
+			notepadrestoration.switchwith(ctx); \
 			ref result("nothing"); (void)result; \
-			result = ([=]() mutable ->ref {\
+			result = ([&]() mutable ->ref {\
+				ref self = ctx.get(ref("self")); (void)self; \
 				std::cerr << "[habit " << self.name(); \
 				_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
 				__VA_ARGS__ \
 				return result; \
 			})(); \
+			if (innotepad(result, intellect::level2::notepad()) && !innotepad(result, subnotepad("outer", true))) { \
+				entersubnotepad(result, "outer", true); \
+			} \
 			ctx.link(ref("result"), result); std::cerr << " result:" << result.name(); \
 			std::cerr << "]" << std::endl; \
 		} catch(...) { \
 			rethrowref(); \
+		} } catch(decltype(intellect::level2::notepad()) const & e) { \
+			notepadrestoration.rethrow(e); \
 		} \
 	}); \
 	{ \
