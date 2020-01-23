@@ -13,6 +13,9 @@ template <typename ref>
 struct baseref : public level1::baseref<ref>
 {
 	using level1::template baseref<ref>::baseref;
+	/*
+	baseref(std::string & name, bool create = false) : baseref(getnamed(name, create)) { }
+	*/
 
 	// thread-local context
 	static ref & context() { return level2::context(); }

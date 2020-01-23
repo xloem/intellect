@@ -23,10 +23,16 @@ ref & context()
 	return ctx;
 }
 
+ref const & bootstrapnotepad()
+{
+	static auto notes = ref("bootstrap-space").link("is","notepad");
+	return notes;
+}
+
 ref & notepad()
 {
 	// the reason to let vm set notepad is so it can spawn threads in notepads.
-	static thread_local auto notes = ref("initial-notepad").link("is","notepad");
+	static thread_local auto notes = bootstrapnotepad();
 	return notes;
 }
 
@@ -48,7 +54,7 @@ ref newnotepad(ref name)
 
 ref subnotepad(ref name)
 {
-	if (name == "is" || name == "name" || name == "outer" || !level2::notepad().linked(name)) {
+	if (name == "is" || name == "name" || name == "outer" || name == "names" || !level2::notepad().linked(name)) {
 		throw noteconcept().link("is","subnotepad-does-not-exist", "notepad", level2::notepad(), "subnotepad", name);
 	}
 	ref result = level2::notepad().get(name);
@@ -76,7 +82,7 @@ ref noteconcept()
 void checknotepad(ref concept)
 {
 	ref pad = level2::notepad();
-	if (!pad.linked(concepts::changeable,concept)) {
+	if (!pad.linked(concepts::changeable,concept) && pad != bootstrapnotepad()) {
 		throw noteconcept().link("is", "concept-not-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
 	}
 }
@@ -96,12 +102,60 @@ void leavenotepad(ref concept, ref pad)
 	pad.unlink(concepts::changeable,concept);
 }
 
-/* there should be no need for this because all the concepts in our notepad
- * either came from an outer notepad with their permission, or were made by us.
-void enternotepad(ref concept)
+void givename(ref context, ref concept, std::string const & name, bool contextisnotepad)
+{
+	ref tname = gettext(name);
+	if (!contextisnotepad || context != level2::notepad()) { checknotepad(context); }
+	checknotepad(concept);
+	ref names;
+	if (!context.linked("names")) {
+		names = noteconcept();
+		context.link("names", names);
+	} else {
+		names = context.get("names");
+	}
+	names.set(tname, concept);
+	concept.set("name", tname);
+}
+
+ref namelookup(std::string name, ref context, ref outerlink, bool makelocal, bool contextisnotepad)
+{
+	ref tname = gettext(name);
+	ref checks = context;
+	while (true) {
+		for (ref names : checks.getAll("names")) {
+			if (names.linked(tname)) { return names.get(tname); }
+		}
+		if (!checks.linked(outerlink) || makelocal) { break; }
+		checks = checks.get(outerlink);
+	}
+	if (makelocal) {
+		ref ret = noteconcept();
+		givename(level2::notepad(), ret, name, contextisnotepad);
+		return ret;
+	} else {
+		return level1::getnamed(name);
+	}
+
+
+	//throw noteconcept().link("is","name-not-known","name",tname,"context",context,"outer-link",outerlink);
+}
+
+ref getnamed(std::string name, bool create)
+{
+	return namelookup(name, level2::notepad(), "outer", create, true);
+}
+
+/*
+void bootstrap2notepad(std::string name)
 {
 	ref pad = intellect::level2::notepad();
-	if (pad.linked(concepts::changeable,concept) {
+	ref concept = name;
+	// a()'s are given level0::concepts::allocations, name, is-group, is-anonymous
+	// an alternative approach would be to allocate in our notepad a concept that has the given name
+	// (we could also provide a name lookup for the notepad, would be good for parsing)
+	
+	if (pad.linked(concepts::changeable,concept)) {
 		throw noteconcept().link("is", "already-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
 	}
 	pad.link(concepts::changeable, concept);

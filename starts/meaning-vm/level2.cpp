@@ -430,8 +430,11 @@ ref parsevalue(ref stream)
 	return word;
 }
 
-void parse(ref stream)
+void parse(ref stream, ref subnotepad)
 {
+	ref outernotepad = intellect::level2::notepad();
+	ref innernotepad = newnotepad(subnotepad);
+	intellect::level2::notepad() = innernotepad;
 	ref makeconcept("make-concept");
 	istream & ss = *stream.val<istream*>();
 	string lookupstr;
@@ -450,6 +453,9 @@ void parse(ref stream)
 			ref args = makeconcept();
 			string name;
 			ss >> name;
+			intellect::level2::notepad() = outernotepad;
+			entersubnotepad(name, subnotepad);
+			intellect::level2::notepad() = innernotepad;
 			string linerest;
 			std::getline(ss, linerest);
 			stringstream ss2(linerest);
@@ -459,8 +465,7 @@ void parse(ref stream)
 				if (!ss2) { break; }
 				args.link("information-order", arg);
 			}
-			enternotepad(name);
-			ref("set-steps")(name, args);
+			ref("set-steps")(ref(name/*, true*/), args);
 			for (auto comment : comments) {
 				ref(name).link("comment", comment);
 			}
@@ -636,6 +641,7 @@ void parse(ref stream)
 			throw ref("parse-error").link("stream", stream, "unexpected-word", cmd);
 		}
 	}
+	intellect::level2::notepad() = outernotepad;
 }
 
 int main()
@@ -704,6 +710,7 @@ when dump-expand [\n\
 		loop.\n\
 ]\n\
 when dump [\n\
+	link 'link' 'type' 'target'\n\
 	= is-in-set in-set group\n\
 	? is-in-set if true return.\n\
 	put-in-set group\n\
@@ -748,7 +755,7 @@ when dump [\n\
 	std::string simpleparsername;
 	ss >> simpleparsername;
 	ref ssr = alloc(intellect::level0::concepts::allocations(), (istream*)&ss);
-	parse(ssr);
+	parse(ssr, "ssr");
 	dealloc(ssr, intellect::level0::concepts::allocations());
 	// proposal is now to use raw c++ calls as was done originally
 	// and have that code be the files. O_O that might have been easier.
@@ -996,8 +1003,11 @@ when dump [\n\
 	*/
 	try {
 		std::cerr << intellect::level1::dump(dump, makeconcept()) << std::endl;
-		enternotepad(dump.context());
+		//bootstrap2notepad(dump.context());
+		ref outernotepad = intellect::level2::notepad();
+		intellect::level2::notepad() = intellect::level2::newnotepad("runtime");
 		dump(dump, linksofinterest);
+		intellect::level2::notepad() = outernotepad;
 #undef ref
 	} catch(intellect::level2::ref r) {
 		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;

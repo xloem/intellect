@@ -15,9 +15,13 @@ ref newnotepad(ref name);
 ref subnotepad(ref name);
 ref noteconcept();
 void checknotepad(ref concept);
-//void enternotepad(ref concept);
 void leavenotepad(ref concept, ref pad);
 void entersubnotepad(ref concept, ref name);
+//void givename(ref context, ref concept, std::string const & name, bool contextisnotepad = false);
+//ref namelookup(std::string name, ref context, ref outerlink, bool makelocal, bool contextisnotepad = false);
+//ref getnamed(std::string name, bool create = false);
+
+//void bootstrap2notepad(std::string name);
 
 ref makehabit(ref name, std::initializer_list<ref> infonames, std::function<void(ref)> code);
 ref makehabitinformationorder(ref habit);
