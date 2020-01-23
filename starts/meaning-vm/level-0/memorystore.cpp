@@ -3,11 +3,21 @@
 #include "errors.hpp"
 #include "ref.hpp"
 
+#include <cassert>
+#include <cstdlib>
+#include <list>
 #include <memory>
+#include <mutex>
 #include <unordered_map>
 
 namespace intellect {
 namespace level0 {
+
+static auto & guid()
+{
+	static std::unordered_map<ref, uint64_t, std::hash<concept*>> guid;
+	return guid;
+}
 
 static auto & index()
 {
@@ -38,11 +48,64 @@ struct init { init()
 	concepts::level0allocations().link(concepts::allocates(), concepts::level0allocations());
 } } _init;
 
+/*
+ * this is a nice pool idea i guess.  can use sysconf(_SC_PAGE_SIZE) to get pagesize
+ * possibly.  but did not implement deallocation using pointer chain, so not usable
+ * yet.  could just use concept links to do chain.
+template <typename T>
+class pool {
+public:
+	static constexpr size_t pagesize() { return 4096*1024; }
+	static constexpr size_t rowlength() { return pagesize() / sizeof(T); }
+	static constexpr size_t alignment() { return pagesize(); }
+	pool()
+	{
+		lastct = 0;
+		newrow();
+	}
+	T* alloc()
+	{
+		if (idx >= rowlength()) {
+			newrow();
+		}
+		return &(*last)[idx ++];
+	}
+	uint64_t id(T* v)
+	{
+		uintptr_t addr = v;
+		uintptr_t offset = v % alignment();
+		uintptr_t base = addr - offset;
+		return lookup[base] + (offset / sizeof(T));
+	}
+private:
+	void newrow()
+	{
+		last = new(std::aligned_alloc(alignment(), alignment())) std::array<T,rowlength()>();
+		//storage.emplace_back();
+		//last = &storage.back();
+		idx = 0;
+		assert(uintptr_t(last) % alignment() == 0);
+		lookup[uintptr_t(last)] = lastct;
+		lastct += rowlength();
+	}
+	size_t idx;
+	uint64_t lastct;
+	std::array<T,rowlength()> * last;
+	std::unordered_map<uintptr_t,uint64_t> lookup;
+};
+*/
+
+std::mutex indices;
+
 ref basic_alloc(std::any data)
 {
-	ref r = new concept();
+	//static pool<concept> concept_pool;
+	ref r = new concept();//concept_pool.alloc();//new concept();
 	r.ptr()->data = data;
+	std::lock_guard lk(indices);
 	index().emplace(r, r.ptr());
+	static uint64_t lastguid = 0;
+	guid().emplace(r, lastguid++);
 	return r;
 }
 
@@ -98,11 +161,14 @@ void basic_dealloc(ref r)
 		throw still_referenced_by(r, referenced);
 	}
 
+	std::lock_guard lk(indices);
+	guid().erase(it->first);
 	index().erase(it);
 }
 
 void dealloc_from(ref source)
 {
+	std::lock_guard lk(indices);
 	std::remove_reference<decltype(index())>::type forgotten;
 
 	auto ours = source.getAll(concepts::allocates());
@@ -162,6 +228,8 @@ void dealloc(ref r, ref source)
 			throw still_referenced_by(r, referenced);
 		}
 
+		std::lock_guard lk(indices);
+		guid().erase(it->first);
 		index().erase(it);
 	} catch(...) {
 		source.link(concepts::allocates(), r);
