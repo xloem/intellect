@@ -881,7 +881,21 @@ void loadhabits()
 			// note: rewinding wordspace won't rewind letterspace at this time
 			// too bad!
 
-		wordspace.get("
+		while (true) {
+			ref word;
+			wordspace.get("do-next")(wordspace);
+			word = wordspace.get("do-value")(wordspace);
+			if (wctx.linked(word)) {
+				// propose we parse into a notepad
+				// we can include a list of file contents if
+				// we desire to.
+			} else {
+				// TODO: store as free text?
+				// TODO: store references to underlying data.
+				// 	this means including locations in the
+				// 	spaces.
+			}
+		} 
 
 		// we have file context, word context, and parse context.
 
