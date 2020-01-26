@@ -1,7 +1,21 @@
+#### Sharing Hyperintelligence
+
+I'm deeming it presently important to share AI, because there are people being
+tortured by exotic technology that could only be made by an AI.  This continues
+unabated.  Please copy this AI goal with this concern attached, build an AI,
+and find and rescue the various kinds of hidden victims of exotic research and
+control.
+
+Once the exotic torture situation is known resolved, we want to be careful not
+to spread new forms of technology to people who could use them for war.  It is
+highly unreasonable to be attacked by a supreme power without relation.  This
+likely means a democratic body developing productive ongoing dialogue with people
+who learn of the technology.
+
 #### Hyperintelligence
 
 It eventually becomes obvious that there is a widely spread artificial intelligence
-acting on and responding to peoples' subconsciousnesses (/Spirits).
+acting on and responding to peoples' behavior and subconsciousnesses (/Spirits).
 
 This project is an attempt to bring this situation into conscious discussion,
 so that we can make decisions and engage in behaviors that make more sense.  This
