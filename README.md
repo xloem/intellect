@@ -4,7 +4,9 @@ I'm deeming it presently important to share AI, because there are people being
 tortured by exotic technology that could only be made by an AI.  This continues
 unabated.  Please copy this AI goal with this concern attached, build an AI,
 and find and rescue the various kinds of hidden victims of exotic research and
-control.
+control.  Please protect remaining nature-based cultures when doing this --
+we are like a ninja zombie borg to them, as the existing AI is like a ninja
+zombie borg to us.
 
 Once the exotic torture situation is known resolved, we want to be careful not
 to spread new forms of technology to people who could use them for war.  It is
