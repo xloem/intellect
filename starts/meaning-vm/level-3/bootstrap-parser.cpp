@@ -3,7 +3,12 @@
 namespace intellect {
 namespace level3 {
 
-// must support syntax-sugar
+// 2020-01-26
+// this file is all over but contains some useful tools.
+// goals have shrunk, no longer requir syntax-sugar: serialization more important.
+// roughly a word-reader is bootstrapped in a habit called 'parse-file'
+
+// must support syntax-sugar <- outdated, but doesn't look hard to provide for
 
 // LATER, UPDATE LEVEL-1: believe name lookup should happen by a function stored on thread context
 // this function will likely use the thread context to do lookup, possibly hierarchically.
@@ -506,15 +511,17 @@ void loadhabits()
 		delete ss;
 	});
 
+	/*
 	aHabit("make-c++-word-stream", ((source, stm)), {
-		result = ref("make-c++-stream");
+		result = ref("make-c++-stream")(stm);
 		result.link("do-next", result.get("do-next-word"));
 	});
 
 	aHabit("make-c++-letter-stream", ((source, stm)), {
-		result = ref("make-c++-stream");
+		result = ref("make-c++-stream")(stm);
 		result.link("do-next", result.get("do-next-letter"));
 	});
+	*/
 
 	// We HAVE a stream, and we want to CHANGE what the delimiter is.
 	// We want to GET the delimited values as a stream.
@@ -834,13 +841,22 @@ void loadhabits()
 	// 	investment says, make them both use 
 	// 		yes this work will need to be done anyway.
 	
+	/*
 	aHabit("parse-contextual-stream-word", ((stream, stm), (word-context, wctx)), {
 		wctx.get("parse-word")(stm);
 	});
+	*/
+
+	/* I was going to factor the prologue and epilogue of parse-file
+	 * into functions in context that could be replaced, here.
+	aHabit("bootstrap-make-file-stream", ((filename, fn)), {
+	});
+	aHabit("bootstrap-file-stream-unmake", ((file-stream, stm)), {
+	});
+	*/
 
 	aHabit("parse-file", ((filename, fn), (file-context, fctx, bootstrap-file-context)), {
 		ref wctx, pctx;
-		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
 		if (!fctx.linked("word-context")) {
 			wctx = makeconcept();
 			fctx.link("word-context", wctx);
@@ -851,17 +867,23 @@ void loadhabits()
 			pctx = makeconcept();
 			fctx.link("parse-context", pctx);
 		} else {
-			pctx = fctx.get("word-context");
+			pctx = fctx.get("parse-context");
 		}
 
 		// TODO: implement just-do-one-step in level-2, to move towards using
 		// relevence here
 		
+		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
 		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
 		ref letterspace = ref("make-keep-stream")(cxxstm);
 		ref parserstm = ref("make-parser-stream")(letterspace, "whitespace-word");
-		ref wordspace = ref("make-keep-stream")(parerstm);
+		ref wordspace = ref("make-keep-stream")(parserstm);
 			// note: rewinding wordspace won't rewind letterspace at this time
+			// too bad!
+
+		wordspace.get("
+
+		// we have file context, word context, and parse context.
 
 		
 		
