@@ -850,13 +850,33 @@ void loadhabits()
 	});
 	*/
 
-	/* I was going to factor the prologue and epilogue of parse-file
-	 * into functions in context that could be replaced, here.
-	aHabit("bootstrap-make-file-stream", ((filename, fn)), {
+	aHabit("bootstrap-make-file-stream", ((filename, fn), (parse-context, pctx)), {
+		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
+		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
+		pctx.set("c++-stream", cxxstm);
+		ref letterspace = ref("make-keep-stream")(cxxstm);
+		pctx.set("letterspace", letterspace);
+		ref parserstm = ref("make-parser-stream")(letterspace, "whitespace-word");
+		pctx.set("parser-stream", parserstm);
+		ref wordspace = ref("make-keep-stream")(parserstm);
+		pctx.set("wordspace", wordspace);
+		
 	});
-	aHabit("bootstrap-file-stream-unmake", ((file-stream, stm)), {
+	aHabit("bootstrap-file-stream-unmake", ((parse-context, pctx)), {
+		ref("keep-stream-unmake")(pctx.get("wordspace"));
+		conceptunmake(pctx.get("parser-stream"));
+		ref("keep-stream-unmake")(pctx.get("letterspace"));
+		ref("c++-stream-unmake")(pctx.get("c++-stream"));
+		pctx.unlink("wordspace");
+		pctx.unlink("parser-stream");
+		pctx.unlink("letterspace");
+		pctx.unlink("c++-stream");
 	});
-	*/
+	aHabit("bootstrap-file-stream-next-value", ((parse-context, pctx)), {
+		ref wordspace = pctx.get("wordspace");
+		wordspace.get("do-next")(wordspace);
+		return wordspace.get("do-value")(wordspace);
+	});
 
 	aHabit("parse-file", ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
 		ref wctx, pctx;
