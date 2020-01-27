@@ -7,6 +7,9 @@ namespace level3 {
 // this file is all over but contains some useful tools.
 // goals have shrunk, no longer requir syntax-sugar: serialization more important.
 // roughly a word-reader is bootstrapped in a habit called 'parse-file'
+// it takes a file-contxt object, and indexes its word-context attribute, calling
+// attributes of that as it encounters words in the file, passing the stream as
+// 'space'.  nonte are implemented yet.
 
 // must support syntax-sugar <- outdated, but doesn't look hard to provide for
 
@@ -855,7 +858,7 @@ void loadhabits()
 	});
 	*/
 
-	aHabit("parse-file", ((filename, fn), (file-context, fctx, bootstrap-file-context)), {
+	aHabit("parse-file", ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
 		ref wctx, pctx;
 		if (!fctx.linked("word-context")) {
 			wctx = makeconcept();
@@ -873,6 +876,8 @@ void loadhabits()
 		// TODO: implement just-do-one-step in level-2, to move towards using
 		// relevence here
 		
+		
+		
 		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
 		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
 		ref letterspace = ref("make-keep-stream")(cxxstm);
@@ -881,11 +886,20 @@ void loadhabits()
 			// note: rewinding wordspace won't rewind letterspace at this time
 			// too bad!
 
+		// to fully generalize we would just move the parsing behavior
+		// into the parse context.  this would probably be 'setup',
+		// 'teardown', and 'next-value'.  we would love a universe where
+		// we implement that as recreation.
 		while (true) {
 			ref word;
 			wordspace.get("do-next")(wordspace);
 			word = wordspace.get("do-value")(wordspace);
 			if (wctx.linked(word)) {
+				// notepad quick-implemented by passin the filename as the notepad name!
+				wctx.get(word)({{"focus", word}, {"space", wordspace}, {"word-context", wctx}, {"parse-context", pctx});
+				// call word-handler.
+				// want-to-send: word, wordspace, file-context, output notepad.
+				// it might make sense if we all operatd on file-context and stored our shareds in there.
 				// propose we parse into a notepad
 				// we can include a list of file contents if
 				// we desire to.
