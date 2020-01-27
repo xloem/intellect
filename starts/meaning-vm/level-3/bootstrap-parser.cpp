@@ -5,11 +5,13 @@ namespace level3 {
 
 // 2020-01-26
 // this file is all over but contains some useful tools.
-// goals have shrunk, no longer requir syntax-sugar: serialization more important.
-// roughly a word-reader is bootstrapped in a habit called 'parse-file'
-// it takes a file-contxt object, and indexes its word-context attribute, calling
-// attributes of that as it encounters words in the file, passing the stream as
-// 'space'.  nonte are implemented yet.
+// Let's copy from level2.cpp into around line 904 now.
+
+// I'm noticing a lot of confusion around the use of text strings and names.
+// It could be worthwhile to make use of name contexts, using text, globally, in
+// level 2 or 3.  That could mean a ton of fixups.  We could also drop text and just
+// use bootstrap names entirely.  We could also switch from names to text without
+// contexts: we'd ned a way to get a unique ref for text.
 
 // must support syntax-sugar <- outdated, but doesn't look hard to provide for
 
@@ -878,8 +880,35 @@ void loadhabits()
 		return wordspace.get("do-value")(wordspace);
 	});
 
-	aHabit("parse-file", ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
+	ref("bootstrap-file-context").link("word-context", "bootstrap-word-context");
+	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
+
+	ahabit(bootstrap-parse-brace, ((result, file), (space, ws)),
+	{
+		if (ref2txt(ws.get("do-value")) != "[") { throw noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+		result = noteconcept();
+		while (true) {
+			ws.get("do-next")(ws);
+			if (ref2txt(ws.get("do-value")) == "]") { break; }
+			result.link("word", ws.get("do-value"));
+		}
+		return result;
+	});
+	ref("bootstrap-word-context").link(txt2ref("["), "bootstrap-parse-brace");
+
+	ahabit(bootstrap-parse-habit, ((result, file), (space, ws), (word-context, wctx)), {
+		if (ws.get("do-value") != "habit") { throw noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+		ref habit = (ws.get("do-next")(ws), ws.get("do-value")(ws));
+		ws.get("do-next")(ws);
+		ref args = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+		ref results = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+		ref steps = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+		// now we copy from level2.cpp
+	});
+
+	ahabit(parse-file, ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
 		ref wctx, pctx;
+		ref file = noteconcept();
 		if (!fctx.linked("word-context")) {
 			wctx = makeconcept();
 			fctx.link("word-context", wctx);
@@ -916,7 +945,7 @@ void loadhabits()
 			word = wordspace.get("do-value")(wordspace);
 			if (wctx.linked(word)) {
 				// notepad quick-implemented by passin the filename as the notepad name!
-				wctx.get(word)({{"focus", word}, {"space", wordspace}, {"word-context", wctx}, {"parse-context", pctx});
+				wctx.get(word)({{"focus", word}, {"space", wordspace}, {"word-context", wctx}, {"parse-context", pctx}, {"file-context", fctx}, {"result", file});
 				// call word-handler.
 				// want-to-send: word, wordspace, file-context, output notepad.
 				// it might make sense if we all operatd on file-context and stored our shareds in there.
@@ -938,6 +967,8 @@ void loadhabits()
 		conceptunmake(parserstm);
 		ref("keep-stream-unmake")(letterspace);
 		ref("c++-stream-unmake")(cxxstm);
+
+		result = file;
 	})
 /*
 	aHabit("parse-contextual-stream-word", ((stream, stm), (word-context, wctx)), {
