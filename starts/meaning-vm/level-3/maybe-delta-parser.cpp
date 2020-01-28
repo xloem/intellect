@@ -1,11 +1,16 @@
-#include "delta-parser.hpp"
+//#include "delta-parser.hpp"
 
+#if 0
+
+#include "../level-2/habits.hpp"
 #include "../level-2/ref.hpp"
 
 #include <string>
 #include <fstream>
 
 using namespace std;
+using namespace intellect::level2;
+#define ref intellect::level2::ref
 
 namespace delta {
 
@@ -45,7 +50,7 @@ namespace delta {
 // process [ ] maybe
 // propose [ ] is special and makes a list of words as an expression
 
-void parsefile(string filename)
+ref parsefile(string filename)
 {
 	ifstream ss(filename);
 	// need language to do things in.  evaluate habits.
@@ -83,9 +88,11 @@ void parsefile(string filename)
 			lastword = wordref;
 		}
 		fileref.link("line", line);
-		line.link("file", fileref);
+		ref(line).link("file", fileref);
 	}
+	return fileref;
 
+}
 	void parse(ref firstword)
 	{
 		if (firstword == "run") {
@@ -96,7 +103,7 @@ void parsefile(string filename)
 	void init(string filename)
 	{
 		ref file = parsefile(filename);
-		ref firstword = file.getAll("line").front().getAll("word").front();
+		ref firstword = *file.getAll("line").begin()->getAll("word").begin();
 		
 		// the world is made of concepts, which are made of typed links to other
 		// concepts.  like apple color red
@@ -138,7 +145,6 @@ void parsefile(string filename)
 		//  [it sounds like you want me to fill in a generic programming language.  i don't have a lot of capacity for that with the uh control going on.  takes a long time.  wrote one already, but doesn't match your preferences]
 		//
 	}
-}
 
 // delta processes for bootstrapping
 // [the lines _are_ the code.  no need for special line thing.  just self-reference it seems.]
@@ -166,3 +172,5 @@ void parsefile(string filename)
 // make-more-deltay, or-implement-a-process-to-do-things-with-it.
 
 }
+
+#endif

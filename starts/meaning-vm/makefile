@@ -3,13 +3,15 @@
 CXXFLAGS=-pedantic -Wall -Werror -Wno-error=deprecated-declarations -Wno-gnu-zero-variadic-macro-arguments -std=gnu++17 -fno-operator-names -ggdb -O0
 LINK.o=$(LINK.cc)
 
-all: level0 level1 habit-starts/rhythm level2
+all: level0 level1 habit-starts/rhythm level2 level3
 level0: level0.o liblevel0.a
 liblevel0.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp))
 level1: level1.o liblevel1.a
 liblevel1.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-1/*.cpp))
 level2: level2.o liblevel2.a
 liblevel2.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-1/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-2/*.cpp))
+level3: level3.o liblevel3.a
+liblevel3.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-1/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-2/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-3/*.cpp))
 
 habit-starts/rhythm: habit-starts/rhythm.o liblevel2.a
 

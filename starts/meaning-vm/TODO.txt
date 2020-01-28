@@ -12,7 +12,9 @@ ONE OF:
 THEN:
 - [ ] get the system able to meet very simple goals
 	when the system cannot rapidly meet a goal, make an interim goal, and
-	use the process to meet the interim goal in the larger goal
+	use the process to meet the interim goal in the larger goal.
+	maybe think towards making small chunks of code that call and organize other
+	small chunks.
 	- do-a-task-selected-from-a-set-based-on-a-provided-input
 - [ ] use simple goal-meeting to introduce the idea of relevent associated stuff, to speed learning and develop coding-assistance
 - [ ] introduce developing and using an understanding of processes

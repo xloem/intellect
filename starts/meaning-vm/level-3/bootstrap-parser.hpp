@@ -5,9 +5,10 @@
 namespace intellect {
 namespace level3 {
 
-using ref = intellect::level2::ref;
-
-void parsebootstrap(ref stream, ref context);
+//void parsebootstrap(ref stream, ref context);
+void loadhabits();
+std::string ref2txt(intellect::level2::ref r);
+intellect::level2::ref txt2ref(std::string s);
 
 }
 }

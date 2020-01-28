@@ -17,7 +17,7 @@ void createhabits()
 	});
 
 	ahabit(random-link, ((concept, c)), {
-		size_t num = intellect::level2::rand(0.0, c.ptr()->links.size());
+		size_t num = intellect::level2::sugar::rand(0.0, c.ptr()->links.size());
 		size_t ct = 0;
 		ref link = noteconcept();
 		ref("first-link-entry")(link, c);
@@ -29,8 +29,8 @@ void createhabits()
 	});
 	
 	ahabit(random-of, ((concept, c), (type, t)), {
-		auto links = c.getAll(t);
-		size_t num = intellect::level2::rand(0.0, links.size());
+		auto links = c.ptr()->getAll(t);
+		size_t num = intellect::level2::sugar::rand(0.0, links.size());
 		result = links[num];
 	});
 }

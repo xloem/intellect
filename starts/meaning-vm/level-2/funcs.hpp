@@ -20,7 +20,7 @@ void leavenotepad(ref concept, ref pad);
 void entersubnotepad(ref concept, ref name, bool allowouter = false);
 //void givename(ref context, ref concept, std::string const & name, bool contextisnotepad = false);
 //ref namelookup(std::string name, ref context, ref outerlink, bool makelocal, bool contextisnotepad = false);
-//ref getnamed(std::string name, bool create = false);
+ref getnamed(std::string name, bool create = false);
 
 //void bootstrap2notepad(std::string name);
 

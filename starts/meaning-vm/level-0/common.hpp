@@ -54,7 +54,7 @@ struct ref;
 }
 namespace level1 { struct ref; }
 namespace level2 { struct ref; }
-namespace level3 { struct ref; }
+namespace level3 { using level2::ref; /*struct ref; remember to re-enable the casts to level3::ref in level-0/baseref.hpp */ }
 namespace level4 { struct ref; }
 namespace level5 { struct ref; }
 namespace level6 { struct ref; }

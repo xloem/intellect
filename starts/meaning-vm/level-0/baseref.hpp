@@ -74,7 +74,7 @@ public:
 	operator level0::ref const &() const { return *reinterpret_cast<level0::ref*>(this); }
 	operator level1::ref const &() const { return *reinterpret_cast<level1::ref*>(this); }
 	operator level2::ref const &() const { return *reinterpret_cast<level2::ref*>(this); }
-	operator level3::ref const &() const { return *reinterpret_cast<level3::ref*>(this); }
+	//operator level3::ref const &() const { return *reinterpret_cast<level3::ref*>(this); }
 	operator level4::ref const &() const { return *reinterpret_cast<level4::ref*>(this); }
 	operator level5::ref const &() const { return *reinterpret_cast<level5::ref*>(this); }
 	operator level6::ref const &() const { return *reinterpret_cast<level6::ref*>(this); }
@@ -85,7 +85,7 @@ public:
 	operator level0::ref &() { return *reinterpret_cast<level0::ref*>(this); }
 	operator level1::ref &() { return *reinterpret_cast<level1::ref*>(this); }
 	operator level2::ref &() { return *reinterpret_cast<level2::ref*>(this); }
-	operator level3::ref &() { return *reinterpret_cast<level3::ref*>(this); }
+	//operator level3::ref &() { return *reinterpret_cast<level3::ref*>(this); }
 	operator level4::ref &() { return *reinterpret_cast<level4::ref*>(this); }
 	operator level5::ref &() { return *reinterpret_cast<level5::ref*>(this); }
 	operator level6::ref &() { return *reinterpret_cast<level6::ref*>(this); }
