@@ -3,11 +3,10 @@
 namespace intellect {
 namespace level3 {
 
-	// left off at line 988, line 556 in level2.cpp
+	// left off at line 621, line 633 in level2.cpp
 // 2020-01-26
-// this file is all over but contains some useful tools.
-// Left out a way to do line-ends; will make \n be a word I guess. <- didthis
-// Let's copy from level2.cpp into around line 904 now.
+// this file is all over but contains some useful tools. note: \n is a word now.
+// Let's copy from level2.cpp into around line 559 now.
 
 // I'm noticing a lot of confusion around the use of text strings and names.
 // It could be worthwhile to make use of name contexts, using text, globally, in
@@ -465,6 +464,18 @@ public:
 	ref r;
 }
 
+class ConceptUnmaker
+{
+public:
+	ConceptUnmaker(ref C)
+	: C(C) { }
+	~ConceptUnmaker()
+	{
+		conceptunmake(C);
+	}
+private:
+	ref C;
+};
 class StreamSentinel
 {
 public:
@@ -509,11 +520,15 @@ ref bootstrap_parse_habit(ref file, ref ws, ref wctx)
 	ref args = wctx.get(txt2ref("[")).fun<ref>()(ctx);
 	ref results = wctx.get(txt2ref("[")).fun<ref>()(ctx);
 	ref steps = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
 	for (auto target : args.getAll("word")) {
 		args.unlink("word", target);
+		// txtref2bootstrap is used because there are still name values
+		// like "self" and "context" coming from level2
 		args.link("information-order", txtref2bootstrap(target));
 	}
 	ref("set-steps")(habit, args);
+	wctx.set(habitname, habit);
 	// now we copy from level2.cpp, noting that \n is a symbol now
 	std::map<string, ref> labels;
 	std::map<string> values;
@@ -533,8 +548,7 @@ ref bootstrap_parse_habit(ref file, ref ws, ref wctx)
 			label = word;
 			label.resize(label.size() - 1);
 			if label == "return") { throw noteconcept().link(is, "return-label-used"); }
-			++ wordsit;
-			word = ref2txt(*wordsit);
+			word = ref2txt((++ wordsit, *wordsit));
 		}
 		if (word == "=" || word == "set") {
 			++ wordsit;
@@ -556,12 +570,98 @@ ref bootstrap_parse_habit(ref file, ref ws, ref wctx)
 			continue;
 		}
 		if (word == "if") {
-			// the level2.cpp code (line ~565) here
-			// uses lookup() and parsevalue() for the first time i've noticed.
-			// i've modified bootstrap-word to parse quots like parsevalue(), now to make a bootstrap-lookup habit
+			word = ref2txt((++ wordsit, *wordsit));
+			ref cond = wctx.get(txt2ref("lookup"))(*wordsit);
+			word = ref2txt((++ wordsit, *wordsit));
+			if (word[word.size()-1] != '.') {
+				throw noteconcept().link(is, "condition-is-not-label", "action", word, "cond", cond);
+			}
+			if (!laststep.isa("condition-step")) {
+				throw noteconcept().link(is, "if-not-following-condition", "cond", cond, "action", word);
+			}
+			if (label.size()) {
+				throw noteconcept().link(is, "if-case-has-label", "cond", cond, "action", word, "label", label);
+			}
+			word.resize(word.size()-1);
+			if (!labels.count(word)) {
+				labels.emplace(word, noteconcept());
+				labels[word].link("label", word);
+			}
+			ref("condition-step-set")(laststep, cond, labels[word]);
+			// if this improves from being  jump, remember to
+			// update laststep to end of any 'anything' branch
+			continue;
+		}
+		if (laststep == nothing && label.size() == 0) { throw makeconcept().link(is, "no-path-to-code"); }
+		if (label.size() && !labels.count(label)) {
+			labels[label] = noteconcept();
+			labels[label].link("label", label);
+		}
+		ref nextstep = label.size() ? labels[label] : noteconcept();
+		if (word == "?" || word == "pick") {
+			word = ref2txt((++ wordsit, *wordsit));
+			if (!values.count(word)) {
+				throw noteconcept().link(is, "condition-must-be-in-context", "condition", cond);
+			}
+			laststep = ref("set-condition-step")(nextstep, laststep, cond, noteconcept().link("anything", "nothing"));
+		} else {
+			// otherwise, is an action, and we have to read the right number of args
+			if (laststep.isa("condition-step")) {
+				if (ref("condition-step-get")(laststep, "anything") != "nothing") {
+					if (label.size() == 0) {
+						throw noteconcept().link(is, "condition-already-has-anything-branch,-and-steps-follow", "condition", laststep);
+					}
+				} else {
+					ref("condition-step-set")(laststep, "anything", nextstep);
+				}
+			} else if (laststep != nothing) {
+				laststep.link("next-step", nextstep);
+			}
+			ref habit = wctx.get(txt2ref("lookup"))(*wordsit);
+			ref order = makehabitinformationorder(habit);
+			ref neededmap = noteconcept();
+			ref knownmap = noteconcept();
+			for (ref arg : order.getAll("information-order")) {
+				std::string argname = ref2txt((++ wordsit, *wordsit));
+				if (argname == "\n") { break; }
+				// depending on whether argname is in localcontext, pass to neededmap or knownmap.
+				if (values.count(argname)) {
+					neededmap.link(arg, txtref2bootstrap(*wordsit));
+				} else {
+					knownmap.link(arg, wctx.get(txt2ref("lookup"))(*wordsit));
+				}
+			}
+			conceptunmake(order);
+			// line 633 in level2.cpp
+			ref mademap = noteconcept();
+			if (result.size()) {
+				mademap.link("result", txtref2bootstrap(txt2ref(result)));
+			}
+			ref("set-context-step")(nextstep, "nothing", knownmap, neededmap, mademap, habit);
+			laststep = nextstep;
 		}
 	}
-	return result;
+	return habit;
+}
+
+ref bootstrap_parse_concept(ref file, ref ws, ref wctx)
+{
+	if (ws.get("do-value") != "concept") { throw noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+	ref conceptname = (ws.get("do-next")(ws), ws.get("do-value")(ws));
+	ref concept = intellect::level2::getnamed(conceptname, true);
+	ref parts = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	ConceptUnmaker partsdel(parts);
+	auto allparts = parts.getAll("word");
+	for (auto it = allparts.begin(); it != allparts.end();) {
+		while (ref2txt(*it) == "\n") { ++ it; continue; }
+		ref type = (*it);
+		++ it;
+		while (ref2txt(*it) == "\n") { ++ it; }
+		ref target = (*it);
+		concept.link(wctx.get(txt2ref("lookup"))(type), wctx.get(txt2ref("lookup"))(target));
+		++ it;
+	}
+	return concept;
 }
 
 
@@ -991,6 +1091,11 @@ void loadhabits()
 		return bootstrap_parse_habit(file, ws, wctx);
 	});
 	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
+
+	ahabit(bootstrap-parse-concept, ((result, file), (space, ws), (word-context, wctx)), {
+		return bootstrap_parse_concept(file, ws, wctx);
+	});
+	ref("bootstrap-word-context").link(txt2ref("concept"), "bootstrap-parse-concept");
 
 	ahabit(parse-file, ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
 		ref wctx, pctx;
