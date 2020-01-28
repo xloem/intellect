@@ -1,9 +1,27 @@
 NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
       This is just like learning if you are tiny and new =)
 
-- [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
+ONE OF:
+- [ ] make random code
+- [ ] modify existing code with random change
+- [ ] serialize/deserialize notepads containing code
+	please, karl, try to use a process for this that is non-recursive and
+	doesn't rely on our accommodation much. (roughly means if we can do with
+	tiny working memory, is great)
+
+THEN:
+- [ ] get the system able to meet very simple goals
+	when the system cannot rapidly meet a goal, make an interim goal, and
+	use the process to meet the interim goal in the larger goal
+	- do-a-task-selected-from-a-set-based-on-a-provided-input
+- [ ] use simple goal-meeting to introduce the idea of relevent associated stuff, to speed learning and develop coding-assistance
+- [ ] introduce developing and using an understanding of processes
+
+we want to rapidly develop a decision-making process, but we'll need small
+steps to get there.  picking-b
 
 extra possibly:
+- [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
 - [ ] make bootstrap space be initial-notepad, rename it bootstrap-space,
 	use that assumption to handle concepts not in any notepad in notepad funcs.
 - [ ] assert that tasks can run without memory leaks
