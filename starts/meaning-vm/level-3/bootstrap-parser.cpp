@@ -3,9 +3,10 @@
 namespace intellect {
 namespace level3 {
 
+	// left off at line 988, line 556 in level2.cpp
 // 2020-01-26
 // this file is all over but contains some useful tools.
-// Left out a way to do line-ends; will make \n be a word I guess.
+// Left out a way to do line-ends; will make \n be a word I guess. <- didthis
 // Let's copy from level2.cpp into around line 904 now.
 
 // I'm noticing a lot of confusion around the use of text strings and names.
@@ -486,6 +487,84 @@ private:
 	int ct;
 };
 
+ref bootstraplookup(ref text)
+{
+	std::string str = ref2txt(text);
+	if (str[0] == '\'' || str[0] == '\"' || str[0] == '`') {
+		if (str[str.size()-1] == str[0]) {
+			string temp = str.c_str()+1;
+			str = temp;
+			str.resize(str.size()-1);
+		}
+	}
+	return intellect::level2::getnamed(str);
+}
+
+ref bootstrap_parse_habit(ref file, ref ws, ref wctx)
+{
+	if (ws.get("do-value") != "habit") { throw noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+	ref habitname = (ws.get("do-next")(ws), ws.get("do-value")(ws));
+	ref habit = intellect::level2::getnamed(habitname, true);
+	ws.get("do-next")(ws);
+	ref args = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	ref results = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	ref steps = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	for (auto target : args.getAll("word")) {
+		args.unlink("word", target);
+		args.link("information-order", txtref2bootstrap(target));
+	}
+	ref("set-steps")(habit, args);
+	// now we copy from level2.cpp, noting that \n is a symbol now
+	std::map<string, ref> labels;
+	std::map<string> values;
+	values.insert("context");
+	values.insert("self");
+	values.insert("result");
+	for (auto target : args.getAll("information-order")) {
+		values.insert(arg.name());
+	}
+	ref laststep = habit;
+	labels["return"] = ref("nothing");
+	auto stepwords = steps.getAll("word");
+	for (auto wordsit = stepwords.begin(); wordsit != stepwords.end(); ++ wordsit) {
+		std::string label, result;
+		std::string word = ref2txt(*wordsit);
+		if (word[word.size()-1] == ':' || word[word.size()-1] == ',') {
+			label = word;
+			label.resize(label.size() - 1);
+			if label == "return") { throw noteconcept().link(is, "return-label-used"); }
+			++ wordsit;
+			word = ref2txt(*wordsit);
+		}
+		if (word == "=" || word == "set") {
+			++ wordsit;
+			result = ref2txt(*wordsit);
+			++ wordsit;
+			word = ref2txt(*wordsit);
+			values.insert(result);
+		}
+		if (word[word.size()-1] == '.') {
+			// is goto
+			word.resize(word.size() - 1);
+			if (!labels.count(word)) {
+				labels.emplace(word, noteconcept());
+			}
+			labels[word].link("label", word);
+			if (laststep.linked("next-step")) { throw noteconcept().link(is, "jump-from-nowhere", "label", word); }
+			laststep.link("next-step", labels[word]);
+			laststep = ref("nothing");
+			continue;
+		}
+		if (word == "if") {
+			// the level2.cpp code (line ~565) here
+			// uses lookup() and parsevalue() for the first time i've noticed.
+			// i've modified bootstrap-word to parse quots like parsevalue(), now to make a bootstrap-lookup habit
+		}
+	}
+	return result;
+}
+
+
 void loadhabits()
 {
 	// GOAL: provide for syntax sugar with ease
@@ -784,42 +863,6 @@ void loadhabits()
 		result = txt2ref(concat);
 	});
 
-	aHabit("whitespace-word-or-line-ending", ((letter-stream, stm)), {
-		StreamSentinel s(stm);
-		std::string concat;
-		ref letter;
-		int count = 0;
-		try {
-			while (true) {
-				letter = s.value();
-				if (letter == " " || letter == "\r" || letter == "\t") {
-					s.next();
-					continue;
-				}
-				break;
-			}
-			while (true) {
-				letter = s.value();
-				if (letter == " " || letter == "\r" || letter == "\t") {
-					break;
-				}
-				concat += ref2txt(letter);
-				s.next();
-				}
-			}
-		} catch(ref r) {
-			if (r.isa("end-of-stream")) {
-				conceptunmake(r);
-				break;
-			} else {
-				throw r;
-			}
-		}
-		if (concat.size() == 0) {
-			throw makeconcept().link("is","pattern-failure", "pattern", self);
-		}
-		result = txt2ref(concat);
-	});
 
 	aHabit("parse-relative-index", ((index-text, txt)), {
 		std::stringstream ss(ref2txt(txt));
@@ -901,7 +944,7 @@ void loadhabits()
 		pctx.set("c++-stream", cxxstm);
 		ref letterspace = ref("make-keep-stream")(cxxstm);
 		pctx.set("letterspace", letterspace);
-		ref parserstm = ref("make-parser-stream")(letterspace, "whitespace-word-or-line-ending");
+		ref parserstm = ref("make-parser-stream")(letterspace, "bootstrap-word");
 		pctx.set("parser-stream", parserstm);
 		ref wordspace = ref("make-keep-stream")(parserstm);
 		pctx.set("wordspace", wordspace);
@@ -924,7 +967,6 @@ void loadhabits()
 	});
 
 	ref("bootstrap-file-context").link("word-context", "bootstrap-word-context");
-	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
 
 	ahabit(bootstrap-parse-brace, ((result, file), (space, ws)),
 	{
@@ -939,25 +981,16 @@ void loadhabits()
 	});
 	ref("bootstrap-word-context").link(txt2ref("["), "bootstrap-parse-brace");
 
-	ahabit(bootstrap-parse-habit, ((result, file), (space, ws), (word-context, wctx)), {
-		if (ws.get("do-value") != "habit") { throw noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
-		ref habit = (ws.get("do-next")(ws), ws.get("do-value")(ws));
-		habit = txtref2bootstrap(habit); // <- could use a lookup habit in a context
-		ws.get("do-next")(ws);
-		ref args = wctx.get(txt2ref("[")).fun<ref>()(ctx);
-		ref results = wctx.get(txt2ref("[")).fun<ref>()(ctx);
-		ref steps = wctx.get(txt2ref("[")).fun<ref>()(ctx); // <-- this ignores line-ends.  it seems the way to go is likely bounded spaces using locations.
-		for (auto target : args.getAll("word")) {
-			args.unlink("word", target);
-			args.link("information-order", txtref2bootstrap(target));
-		}
-		ref("set-steps")(habit, args);
-		// now we copy from level2.cpp, although way-to-get-lines not exist yet
-			// opt1: search for line-end location, get words until it
-			// opt2: find underlying stream, parse line manually <-
-			// opt3: change whole stream to be line-based
-			// opt4: unify stream cursor to support multiple views
+	ahabit(bootstrap-lookup, ((text, txt)),
+	{
+		return bootstraplookup(txt);
 	});
+	ref("bootstrap-word-context").link(txt2ref("lookup"), "bootstrap-lookup");
+
+	ahabit(bootstrap-parse-habit, ((result, file), (space, ws), (word-context, wctx)), {
+		return bootstrap_parse_habit(file, ws, wctx);
+	});
+	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
 
 	ahabit(parse-file, ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
 		ref wctx, pctx;
@@ -983,7 +1016,7 @@ void loadhabits()
 		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
 		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
 		ref letterspace = ref("make-keep-stream")(cxxstm);
-		ref parserstm = ref("make-parser-stream")(letterspace, "whitespace-word");
+		ref parserstm = ref("make-parser-stream")(letterspace, "bootstrap-word");
 		ref wordspace = ref("make-keep-stream")(parserstm);
 			// note: rewinding wordspace won't rewind letterspace at this time
 			// too bad!
