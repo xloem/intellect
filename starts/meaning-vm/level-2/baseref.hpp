@@ -22,7 +22,7 @@ struct baseref : public level1::baseref<ref>
 
 	template <typename... Refs>
 	ref operator()(ref first, Refs... rest) { return level2::dohabit(self, {first, rest...}); }
-	ref operator()(std::initializer_list<std::initializer_list<ref>> pairs) { return level2::dohabit(self, pairs); }
+	ref operator()(std::initializer_list<std::initializer_list<ref>> pairs, bool extra_information = false) { return level2::dohabit(self, pairs, extra_information); }
 	ref operator()() { return level2::dohabit(self); }
 
 	template <typename... Refs>

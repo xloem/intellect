@@ -47,7 +47,7 @@ ref newnotepad(ref name)
 	// any additional links must be blocked in subnotepad()
 	newnotes.link("is", "notepad");
 	newnotes.link("outer", level2::notepad());
-	newnotes.link("name", name.get("name"));
+	newnotes.link("name", name.isa("text") ? name : name.get("name"));
 	level2::notepad().link(name, newnotes); // linked by name to find easily when used
 	return newnotes;
 }
@@ -73,9 +73,9 @@ ref outernotepad()
 }
 */
 
-ref noteconcept()
+ref noteconcept(std::any data)
 {
-	ref result = makeconcept();
+	ref result = intellect::level0::basic_alloc(data);
 	level2::notepad().link(concepts::changeable, result);
 	return result;
 }
@@ -273,12 +273,13 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	if (!habit.linked(information-needed)) { throw noteconcept().link("is","not-a-habit"); }
 	ref posinf = habit.get(information-needed);
 	ref subctx = noteconcept();
-	subctx.link("outer-context", ref::context());
+	static ref outercontext("outer-context");
+	subctx.link(outercontext, ref::context());
 	subctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = subctx;
 	for (ref const & arg : args) {
 		if (!posinf.linked(next-information)) {
-			ref::context() = subctx.get("outer-context");
+			ref::context() = subctx.get(outercontext);
 			conceptunmake(subctx);
 			throw noteconcept().link
 				(is, unexpected-information,
@@ -292,7 +293,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	while (posinf.linked(next-information)) {
 		posinf = posinf[next-information];
 		if (!posinf.linked(assume)) {
-			ref::context() = subctx.get("outer-context");
+			ref::context() = subctx.get(outercontext);
 			conceptunmake(subctx);
 			throw noteconcept().link
 				("is", information-needed,
@@ -301,7 +302,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		}
 		ref::context().set(posinf[information], posinf[assume]);
 	}
-	ref::context().set("self", habit);
+	ref::context().set(self_, habit);
 	habit.fun<ref>()(ref::context());
 	posinf = habit.get(information-needed);
 	while (posinf.linked(next-information)) {
@@ -313,26 +314,27 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		ret = ref::context().get(result);
 		ref::context().unlink(result, ret);
 	}
-	ref::context() = subctx.get("outer-context");
+	ref::context() = subctx.get(outercontext);
 	conceptunmake(subctx);
 	return ret;
 }
 
-ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
+ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, bool extra_information)
 {
 	using namespace concepts;
 	if (!habit.linked(information-needed)) { throw noteconcept().link("is","not-a-habit"); }
 	// TODO: subcontexts or call instances
 	ref ctx = noteconcept();
-	ctx.link("outer-context", ref::context());
+	static ref outercontext("outer-context");
+	ctx.link(outercontext, ref::context());
 	ctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = ctx;
 	ref infn = habit.get(information-needed);
 	std::map<ref, ref> provided;
 	for (auto pair : pairs) {
 		auto second = pair.begin(); ++ second;
-		if (!infn.linked(*pair.begin())) {
-			ref::context() = ctx.get("outer-context");
+		if (!infn.linked(*pair.begin()) && !extra_information) {
+			ref::context() = ctx.get(outercontext);
 			conceptunmake(ctx);
 			throw noteconcept().link
 				("is", unexpected-information,
@@ -341,7 +343,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 				 information-value, *second);
 		}
 		if (provided.count(*pair.begin())) {
-			ref::context() = ctx.get("outer-context");
+			ref::context() = ctx.get(outercontext);
 			conceptunmake(ctx);
 			throw noteconcept().link
 				("is", "multiple-instances-same-name-not-implemented",
@@ -359,7 +361,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 			if (nextinf.get(assume)) {
 				ctx.link(inf, nextinf.get(assume));
 			} else {
-				ref::context() = ctx.get("outer-context");
+				ref::context() = ctx.get(outercontext);
 				conceptunmake(ctx);
 				throw noteconcept().link
 					("is", information-needed,
@@ -390,7 +392,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 		ret = ctx.get(result);
 		ctx.unlink(result, ret);
 	}
-	ref::context() = ctx.get("outer-context");
+	ref::context() = ctx.get(outercontext);
 	conceptunmake(ctx);
 	return ret;
 }

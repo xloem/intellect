@@ -102,10 +102,12 @@ private:
 				intellect::level2::sugar::usleep(delay); \
 			} \
 			notepadrestoration.switchwith(ctx); \
-			ref result("nothing"); (void)result; \
+			ref result; (void)result; \
+			static ref const self(#nam);\
+			ctx.set(intellect::level2::concepts::self_, self);\
+			bool quiet = self.linked(intellect::level2::concepts::quiet); \
 			result = ([&]() mutable ->ref {\
-				ref self = ctx.get(ref("self")); (void)self; \
-				std::cerr << "[habit " << self.name(); \
+				if (!quiet) { std::cerr << "[habit " << self.name(); } \
 				_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
 				__VA_ARGS__ \
 				return result; \
@@ -113,8 +115,11 @@ private:
 			if (intellect::level2::innotepad(result, intellect::level2::notepad()) && !intellect::level2::innotepad(result, intellect::level2::subnotepad("outer", true))) { \
 				intellect::level2::entersubnotepad(result, "outer", true); \
 			} \
-			ctx.link(ref("result"), result); std::cerr << " result:" << result.name(); \
-			std::cerr << "]" << std::endl; \
+			ctx.link(intellect::level2::concepts::result, result); \
+			if (!quiet) { \
+				std::cerr << " result:" << result.name(); \
+				std::cerr << "]" << std::endl; \
+			} \
 		} catch(...) { \
 			intellect::level2::rethrowref(); \
 		} } catch(decltype(intellect::level2::notepad()) const & e) { \
@@ -138,7 +143,7 @@ private:
 				 ref("missing-information"), ref(#nam)); \
 		} \
 		ref tok = ctx.linked(ref(#nam)) ? ctx[ref(#nam)] : ref(#__VA_ARGS__); \
-		std::cerr << " " << #nam << ":" << tok.name();
+		if (!quiet) { std::cerr << " " << #nam << ":" << tok.name(); }
 	#define _macro_habit_assume(info, tok, ...) \
 		if ((#__VA_ARGS__)[0] != 0) { intellect::level2::habitassume(_macro_habit_name, ref(#info), ref(#__VA_ARGS__)); }
 

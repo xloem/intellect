@@ -23,6 +23,8 @@ static ref result("result");
 static ref assume("assume");
 static ref unexpected("unexpected");
 static ref value("value");
+static ref self_("self");
+static ref quiet("quiet");
 
 }
 
