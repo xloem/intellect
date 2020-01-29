@@ -2,8 +2,10 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
       This is just like learning if you are tiny and new =)
 
 NOW:
-- [ ] expand brace parser to handle sub-braces
-- [ ] change file parser to parse each habit until end-of-line becomes an argument, probably passing whole list as an extra argument, or tagging on extras
+- [X] expand brace parser to handle sub-braces
+- [ ] make an 'anything' link from word context that calls a habit until end of line, passing all arguments or extra arguments
+- [ ] change file parser and habit parser to use 'anything' value
+- [ ] use brace parser when parsing any word
 - [ ] turn habit into a habit that takes 3 arguments
 - [ ] turn concept into a habit that takes 1 argument, optionally make it a script
 - [ ] parse and run a bootstrap file
