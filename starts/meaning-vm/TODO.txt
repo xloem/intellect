@@ -3,11 +3,7 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
 
 NOW:
 - [X] expand brace parser to handle sub-braces
-- [ ] make an 'anything' link from word context that calls a habit until end of line, passing all arguments or extra arguments
-- [ ] change file parser and habit parser to use 'anything' value
-- [ ] use brace parser when parsing any word
-- [ ] turn habit into a habit that takes 3 arguments
-- [ ] turn concept into a habit that takes 1 argument, optionally make it a script
+- [ ] quickly write handling for comments, or pass parser args within habits
 - [ ] parse and run a bootstrap file
 
 ONE OF:
@@ -38,6 +34,16 @@ extra possibly:
 - [ ] assert that tasks can run without memory leaks
 - [ ] make a steps-caller that does only 1 step, leaving the context available
       to optionally continue.
+
+parsing small extra:
+- [ ] make brace parser spew out streams and substreams, information spaces
+	OR
+  [ ] change brace parsing to simply provide an end location
+- [ ] make an 'anything' link from word context that calls a habit until end of line, passing all arguments or extra arguments
+- [ ] change file parser and habit parser to use 'anything' value
+- [ ] use brace parser when parsing any word
+- [ ] turn habit into a habit that takes 3 arguments
+- [ ] turn concept into a habit that takes 1 argument, optionally make it a script
 
 are these worthwhile?
 - [ ] implement abstract links

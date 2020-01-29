@@ -491,22 +491,25 @@ class StreamSentinel
 {
 public:
 	StreamSentinel(ref S)
-	: ct(0), S(S)
-	{ }
+	: S(S)
+	{
+		returntohere();
+	}
 
 	ref value() { return S[dovalue](S); }
-	void next() { S[donext](S); ++ ct; }
-	void previous() { S[doprevious](S); -- ct; }
-	void returntohere() { ct = 0; }
+	void next() { S[donext](S); }
+	void previous() { S[doprevious](S); }
+	void go(ref w) { S["do-go"](S, w); }
+	ref where() { return S["do-where"](S); }
+	void returntohere() { origin = where(); }
 
 	~StreamSentinel()
 	{
-		while (ct > 0) { previous(); }
-		while (ct < 0) { next(); }
+		S["do-go"](origin);
 	}
 
 private:
-	int ct;
+	ref origin;
 	ref S;
 };
 
@@ -526,13 +529,22 @@ ref bootstraplookup(ref text)
 #undef self
 ref bootstrap_parse_habit(ref file, ref ws, ref ctx, ref self, ref wctx)
 {
+	//StreamSentinel s(ws);
 	if (ref2txt(ws.get(dovalue)(ws)) != "habit") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 	ref habitname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref habit = intellect::level2::getnamed(ref2txt(habitname), true);
 	ws.get(donext)(ws);
+	//ref startargs = ws.get("do-where")(ws);
 	ref args = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	//ref endargs = ws.get("do-where")(ws);
+	ws.get(donext)(ws);
+	//ref startresults = ws.get("do-where")(ws);
 	ref results = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	//ref endresults = ws.get("do-where")(ws);
+	ws.get(donext)(ws);
+	//ref startsteps = ws.get("do-where")(ws);
 	ref steps = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	//ref endsteps = ws.get("do-where")(ws);
 	ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
 	for (auto target : args.getAll("word")) {
 		args.unlink("word", target);
@@ -656,6 +668,18 @@ ref bootstrap_parse_habit(ref file, ref ws, ref ctx, ref self, ref wctx)
 	}
 	return habit;
 }
+/*
+ref bootstrap_parse_call(ref file, ref ws, ref ctx, ref self, ref wctx)
+{
+	// ran into issue: word-array is not a wordspace.
+	// propose making the brace parser be a stream constructor.
+	// returns stream at a location in a keep-stream, that runs
+	// into end at end of braces.
+	// 	what do we use for subbraces.
+	// 		uhh it looks like implementing will make this obvious
+	// 		streams? looks like streams.
+}
+*/
 
 ref bootstrap_parse_concept(ref file, ref ws, ref ctx, ref self, ref wctx)
 {
@@ -875,11 +899,20 @@ void loadhabits()
 		ret.link("source", stm);
 		ret.link("parser", p);
 		ret.link("do-next", "parser-stream-next");
+		ret.link("do-go", "parser-stream-go");
+		ret.link("do-where", "parser-stream-where");
 		ret.link(dovalue, "stream-value");
 		ret.get("do-next")(ret);
 		result = ret;
 	});
 	
+	ahabit(parser-stream-go, ((source, stm), (where, w)), {
+		stm.get("source").get("do-go")(w);
+		return stm;
+	});
+	ahabit(parser-stream-where, ((source, stm), (where, w)), {
+		return stm.get("source").get("do-where")();
+	});
 	ahabit(parser-stream-next, ((source, stm)), {
 		try {
 			ref item = stm.get(parser)(stm.get(source));
@@ -897,7 +930,7 @@ void loadhabits()
 		result = stm.get(value);
 	});
 	ref("stream-value").link("quiet", true);
-	
+
 	ahabit(make-keep-stream, ((source, stm)), {
 		ref ret = intellect::level2::noteconcept();
 		ret.link("is", "keep-stream");
@@ -910,6 +943,8 @@ void loadhabits()
 		ret.link(dovalue, "keep-stream-value");
 		ret.link(donext, "keep-stream-next");
 		ret.link(doprevious, "keep-stream-previous");
+		ret.link("do-go", "keep-stream-go");
+		ret.link("do-where", "keep-stream-where");
 		return ret;
 	});
 	ahabit(keep-stream-unmake, ((keep-stream, stm)), {
@@ -920,6 +955,13 @@ void loadhabits()
 		return stm.get(entry).get(value);
 	});
 	ref("keep-stream-value").link("quiet", true);
+	ahabit(keep-stream-where, ((keep-stream, stm)), {
+		return stm.get(entry);
+	});
+	ahabit(keep-stream-go, ((keep-stream, stm), (where, w)), {
+		stm.set(entry, w);
+		return stm;
+	});
 	ahabit(keep-stream-next, ((keep-stream, stm)), {
 		ref ntry = stm.get(entry);
 		if (ntry.linked(next)) {
@@ -1145,9 +1187,7 @@ void loadhabits()
 
 	ref("bootstrap-file-context").link("word-context", "bootstrap-word-context");
 
-	ahabit(bootstrap-parse-brace, ((result, file), (space, ws)),
-	{
-		ref bracetxt = ws.get(dovalue)(ws);
+	ahabit(bootstrap-matching-brace, ((brace-text, bracetxt)), {
 		std::string brace1 = ref2txt(bracetxt);
 		std::string brace2;
 		if (brace1 == "[") { brace2 = "]"; }
@@ -1159,12 +1199,29 @@ void loadhabits()
 		else if (brace1 == "((") { brace2 = "))"; }
 		else if (brace1 == "<<") { brace2 = ">>"; }
 		else if (brace1 == "begin") { brace2 = "end"; }
-		else { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
-		result = intellect::level2::noteconcept();
+		else { return "nothing"; }
+		return txt2ref(brace2);
+	});
+	ref bootstrapmatchingbrace("bootstrap-matching-brace");
+	ahabit(bootstrap-parse-brace, ((result, file), (space, ws)),
+	{
+		ref bracetxt = ws.get(dovalue)(ws);
+		ref brace2ref = bootstrapmatchingbrace(bracetxt);
+		if (brace2ref == "nothing") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+		std::string brace2 = ref2txt(brace2ref);
+		ref result = intellect::level2::noteconcept();
+		result.link("open-brace", bracetxt);
 		while (true) {
 			ws.get(donext)(ws);
-			if (ref2txt(ws.get(dovalue)(ws)) == brace2) { break; }
-			result.link("word", ws.get(dovalue)(ws));
+			ref sym = ws.get(dovalue)(ws);
+			if (ref2txt(sym) == brace2) {
+				result.link("close-brace", sym);
+				break;
+			}
+			result.link("word", sym);
+			if (bootstrapmatchingbrace(sym) != "nothing") {
+				self(file, ws);
+			}
 		}
 		return result;
 	});
@@ -1233,6 +1290,7 @@ void loadhabits()
 			ref word;
 			wordspace.get(donext)(wordspace);
 			word = wordspace.get(dovalue)(wordspace);
+			// we are changing parser to call habits in the file parser itself. [previously we called a 'habit' parser.  this will still be used.  but behavior from it will be copied into this function.  it will make sense to abstract it into a third function.  we can link it as 'anything' from the word context.
 			if (wctx.linked(word)) {
 				// notepad quick-implemented by passin the filename as the notepad name!  recommend keeping for safety, and copying data to outer notepad intentionally.
 				wctx.get(word)({{"focus", word}, {"space", wordspace}, {"word-context", wctx}, {"parse-context", pctx}, {"file-context", fctx}, {"result", file}}, true);

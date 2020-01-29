@@ -1,7 +1,7 @@
 habit /// [ ] [ ] [ ]
-// comments are not good to do this way atm.
-// they reference only out-of-context symbols; habits have a local context.
-// we can make a //-named habit that does nothing and give it global symbols only.
+/// comments are not good to do this way atm.
+/// they reference only out-of-context symbols; habits have a local context.
+/// we can make a //-named habit that does nothing and give it global symbols only.
 habit // [ ] [ ] [
 	/// information-names can now be iterated and passed to write-out
 	/// let's try that out and run a test?
