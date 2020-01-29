@@ -1,6 +1,13 @@
 NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
       This is just like learning if you are tiny and new =)
 
+NOW:
+- [ ] expand brace parser to handle sub-braces
+- [ ] change file parser to parse each habit until end-of-line becomes an argument, probably passing whole list as an extra argument, or tagging on extras
+- [ ] turn habit into a habit that takes 3 arguments
+- [ ] turn concept into a habit that takes 1 argument, optionally make it a script
+- [ ] parse and run a bootstrap file
+
 ONE OF:
 - [ ] make random code
 - [ ] modify existing code with random change
