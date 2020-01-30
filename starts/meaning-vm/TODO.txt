@@ -3,8 +3,8 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
 
 NOW:
 - [X] expand brace parser to handle sub-braces
-- [ ] quickly write handling for comments, or pass parser args within habits
-- [ ] parse and run a bootstrap file
+- [X] fix up after adding locations
+- [ ] parse and run a bootstrap file OR write randomcode without parsing
 
 ONE OF:
 - [ ] make random code
@@ -36,10 +36,11 @@ extra possibly:
       to optionally continue.
 
 parsing small extra:
-- [ ] make brace parser spew out streams and substreams, information spaces
-	OR
-  [ ] change brace parsing to simply provide an end location
 - [ ] make an 'anything' link from word context that calls a habit until end of line, passing all arguments or extra arguments
+	^-- this runs into issue of do-we-run-now for file, or do-we-store for habit
+		i think the delta-group pattern ran when parsing.
+		so the file would be held unparsed, and returned to when referenced.
+		understanding this, we could merge with this pattern better, or choose to ignore it possibly.
 - [ ] change file parser and habit parser to use 'anything' value
 - [ ] use brace parser when parsing any word
 - [ ] turn habit into a habit that takes 3 arguments
