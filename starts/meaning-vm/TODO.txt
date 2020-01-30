@@ -15,13 +15,27 @@ ONE OF:
 	tiny working memory, is great)
 
 THEN:
-- [ ] get the system able to meet very simple goals
+- [ ] Make copy-on-write notepads.  copy-writable area is another notepad.
+- [ ] Build a trial-attempt process that can alter processes.
+	Idea of habits: (remember small chunks!)
+	- [ ] find a spot in a process and return the spot
+	- [ ] find the next spot in a process
+	- [ ] insert a new behavior in the spot
+	- [ ] splice out the behavior in the spot
+	- [ ] change around the behavior in the spot
+- [ ] use trial-attempt process to improve itself
+	- [ ] make one or more learning tests
+
+	- [ ] get the system able to meet very simple goals
 	when the system cannot rapidly meet a goal, make an interim goal, and
 	use the process to meet the interim goal in the larger goal.
 	maybe think towards making small chunks of code that call and organize other
 	small chunks.
 	- do-a-task-selected-from-a-set-based-on-a-provided-input
-- [ ] use simple goal-meeting to introduce the idea of relevent associated stuff, to speed learning and develop coding-assistance
+	- [ ] OPTIONALLY use simple goal-meeting to introduce the idea of relevent associated stuff, to speed learning and develop coding-assistance
+	- [ ] produce code that can modify every instance of a habit to use an augmented habit
+	- [ ] improve to act on more general patterns, like every change to a kind of data detected by a check
+	- [ ] act on own behavior in copy-on-write notepads, to learn to meet goals better
 - [ ] introduce developing and using an understanding of processes
 
 we want to rapidly develop a decision-making process, but we'll need small
