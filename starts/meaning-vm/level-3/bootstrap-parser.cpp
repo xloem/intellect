@@ -652,8 +652,8 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			} else if (laststep != "nothing") {
 				laststep.link("next-step", nextstep);
 			}
-			ref habit = wctx.get(txt2ref("lookup"))(*wordsit);
-			ref order = makehabitinformationorder(habit);
+			ref subhabit = wctx.get(txt2ref("lookup"))(*wordsit);
+			ref order = makehabitinformationorder(subhabit);
 			ref neededmap = intellect::level2::noteconcept();
 			ref knownmap = intellect::level2::noteconcept();
 			for (ref arg : order.getAll("information-order")) {
@@ -666,13 +666,14 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 					knownmap.link(arg, wctx.get(txt2ref("lookup"))(*wordsit));
 				}
 			}
+			word = ref2txt((++ wordsit, *wordsit));
+			if (word != "\n") { throw intellect::level2::noteconcept().link("is","extra-information-for-subhabit", "subhabit", subhabit, "habit", habit); }
 			conceptunmake(order);
-			// line 633 in level2.cpp
 			ref mademap = intellect::level2::noteconcept();
 			if (result.size()) {
 				mademap.link("result", txtref2bootstrap(txt2ref(result)));
 			}
-			ref("set-context-step")(nextstep, "nothing", knownmap, neededmap, mademap, habit);
+			ref("set-context-step")(nextstep, "nothing", knownmap, neededmap, mademap, subhabit);
 			laststep = nextstep;
 		}
 	}
