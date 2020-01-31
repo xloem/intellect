@@ -524,8 +524,9 @@ ref bootstraplookup(ref text)
 	if (str[0] == '\'' || str[0] == '\"' || str[0] == '`') {
 		if (str[str.size()-1] == str[0]) {
 			std::string temp = str.c_str()+1;
+			temp.resize(temp.size()-1);
+			if (str[0] == '\"') { return txt2ref(temp); }
 			str = temp;
-			str.resize(str.size()-1);
 		}
 	}
 	return intellect::level2::getnamed(str);

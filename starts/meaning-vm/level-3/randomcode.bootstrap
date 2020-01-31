@@ -4,8 +4,8 @@ parser // [ space result ] [ ] [
 	set do-value get underlying 'do-value'
 next-word: do-next [space underlying]
 	set value do-value [space underlying]
-	pick value if '
-' return.
+	pick value if "
+" return.
 	next-word.
 ]
 // this is a comment containing the word habit that I hope will parse okay
