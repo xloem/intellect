@@ -364,6 +364,8 @@ ref parsevalue(ref stream)
 	return word;
 }
 
+static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text");
+
 // let's do contextual word lookup.  it will really ease stuff later.
 
 
@@ -373,12 +375,16 @@ ref parsevalue(ref stream)
 // instead of nothing or everything >_>
 std::string ref2txt(ref r)
 {
-	//return r.vget<std::string>("name");
+	//return r.vget<std::string>(name_);
 	return r.val<std::string>();
+}
+bool istxtref(ref r)
+{
+	return r.isa(text_);
 }
 ref txt2ref(std::string t)
 {
-	return ref(t).get("name");
+	return ref(t).get(name_);
 }
 ref txtref2bootstrap(ref txt)
 {
@@ -486,7 +492,6 @@ public:
 private:
 	ref C;
 };
-static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word");
 class StreamSentinel
 {
 public:
@@ -526,6 +531,81 @@ ref bootstraplookup(ref text)
 	return intellect::level2::getnamed(str);
 }
 
+ref bootstrapmatchingbrace(std::string brace1)
+{
+	static ref nothing("nothing");
+	//std::string brace1 = ref2txt(bracetxt);
+	std::string brace2;
+	if (brace1 == "[") { brace2 = "]"; }
+	else if (brace1 == "{") { brace2 = "}"; }
+	else if (brace1 == "(") { brace2 = ")"; }
+	else if (brace1 == "<") { brace2 = ">"; }
+	else if (brace1 == "[[") { brace2 = "]]"; }
+	else if (brace1 == "{{") { brace2 = "}}"; }
+	else if (brace1 == "((") { brace2 = "))"; }
+	else if (brace1 == "<<") { brace2 = ">>"; }
+	else if (brace1 == "begin") { brace2 = "end"; }
+	else { return nothing; }
+	return txt2ref(brace2);
+}
+
+ref bootstrap_word(ref self, ref stm, ref spc)
+{
+	StreamSentinel s(stm);
+	std::string concat;
+	std::string quote;
+	std::string letter;
+	try {
+		while (true) {
+			letter = ref2txt(s.value());
+			if (letter == " " || letter == "\r" || letter == "\t") {
+				std::cerr << "(" << letter << ")";
+				s.next();
+				continue;
+			}
+			break;
+		}
+		if (letter == "'" || letter == "\"" || letter == "`") { quote = concat = letter; s.next(); }
+		while (true) {
+			letter = ref2txt(s.value());
+			if (!quote.size()) {
+				if (letter == " " || letter == "\r" || letter == "\t") {
+					break;
+				}
+				if (concat.size() != 0 && (letter == "\n" || letter == "[" || letter == "{" || letter == "(" || letter == "<" || letter == "]" || letter == "}" || letter == ")" || letter == ">") ) {
+					// second token should end processing, but keep for next processing
+					s.previous();
+					break;
+				}
+			}
+			std::cerr << letter;
+			concat += letter;
+			if (quote.size()) {
+				if (letter == quote) {
+					break;
+				}
+			} else if (concat == "\n" || concat == "[" || concat == "{" || concat == "(" || concat == "<" || concat == "]" || concat == "}" || concat == ")" || concat == ">") {
+				break;
+			}
+			s.next();
+		}
+		std::cerr << "(" << letter << ")";
+	} catch(ref r) {
+		if (r.isa("end-of-stream") && !quote.size()) {
+			conceptunmake(r);
+			// just another way to terminate the loop
+		} else {
+			throw r;
+		}
+	}
+	if (concat.size() == 0) {
+		throw intellect::level2::noteconcept().link("is","pattern-failure", "pattern", self);
+	}
+	ref result = txt2ref(concat);
+	s.returntohere();
+	return result;
+}
+
 #undef self
 // uhh for comments, thinking about processing them inside the word-parser.
 // so, that means the stream offers tokens that _aren't_ processed by a wctx.
@@ -560,6 +640,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 		args.unlink(word, target);
 		// txtref2bootstrap is used because there are still name values
 		// like "self" and "context" coming from level2
+		if (ref2txt(target) == "\n") { continue; }
 		args.link(informationorder, txtref2bootstrap(target));
 	}
 	ref("set-steps")(habit, args);
@@ -579,6 +660,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 	for (auto wordsit = stepwords.begin(); wordsit != stepwords.end(); ++ wordsit) {
 		std::string label, result;
 		std::string word = ref2txt(*wordsit);
+		if (word == "\n") { continue; }
 		if (word[word.size()-1] == ':' || word[word.size()-1] == ',') {
 			label = word;
 			label.resize(label.size() - 1);
@@ -599,8 +681,17 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 				labels.emplace(word, intellect::level2::noteconcept());
 			}
 			labels[word].link("label", word);
-			if (laststep.linked("next-step")) { throw intellect::level2::noteconcept().link("is", "jump-from-nowhere", "label", word); }
-			laststep.link("next-step", labels[word]);
+			if (laststep.isa("condition-step")) {
+				if (ref("condition-step-get")(laststep, "anything") != "nothing") {
+					throw intellect::level2::noteconcept().link("is", "condition-already-has-anything-branch,-and-jump-follows", "condition", laststep, "label", labels[word]);
+				}
+				ref("condition-step-set")(laststep, "anything", labels[word]);
+			} else {
+				if (laststep.linked("next-step")) {
+					throw intellect::level2::noteconcept().link("is", "jump-from-nowhere", "label", word);
+				}
+				laststep.link("next-step", labels[word]);
+			}
 			laststep = ref("nothing");
 			continue;
 		}
@@ -710,7 +801,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			if (result.size()) {
 				mademap.link("result", txtref2bootstrap(txt2ref(result)));
 			}
-			ref("set-context-step")(nextstep, "nothing", knownmap, neededmap, mademap, subhabit);
+			ref("set-context-step")(nextstep, "nothing", knownmap, neededmap, mademap);
 			laststep = nextstep;
 		}
 	}
@@ -1080,58 +1171,13 @@ void loadhabits()
 		result = txt2ref(concat);
 		s.returntohere();
 	});
+	//ahabit(bootstrap-matching-brace, ((brace-text, bracetxt)), {
+	//auto bootstrapmatchingbrace = [](std::string brace1)
+	//{
+	//};//);
+	//ref bootstrapmatchingbrace("bootstrap-matching-brace");
 	ahabit(bootstrap-word, ((source, stm), (space, spc)), {
-		StreamSentinel s(stm);
-		std::string concat;
-		std::string quote;
-		std::string letter;
-		try {
-			while (true) {
-				letter = ref2txt(s.value());
-				if (letter == " " || letter == "\r" || letter == "\t") {
-					std::cerr << "(" << letter << ")";
-					s.next();
-					continue;
-				}
-				break;
-			}
-			if (letter == "'" || letter == "\"" || letter == "`") { quote = concat = letter; s.next(); }
-			while (true) {
-				letter = ref2txt(s.value());
-				if (!quote.size()) {
-					if (letter == " " || letter == "\r" || letter == "\t") {
-						break;
-					}
-					if (letter == "\n" && concat.size() != 0) {
-						// second endline should end processing
-						break;
-					}
-				}
-				std::cerr << letter;
-				concat += letter;
-				if (quote.size()) {
-					if (letter == quote) {
-						break;
-					}
-				} else if (concat == "\n") {
-					break;
-				}
-				s.next();
-			}
-			std::cerr << "(" << letter << ")";
-		} catch(ref r) {
-			if (r.isa("end-of-stream") && !quote.size()) {
-				conceptunmake(r);
-				// just another way to terminate the loop
-			} else {
-				throw r;
-			}
-		}
-		if (concat.size() == 0) {
-			throw intellect::level2::noteconcept().link("is","pattern-failure", "pattern", self);
-		}
-		result = txt2ref(concat);
-		s.returntohere();
+		return bootstrap_word(self, stm, spc);
 	});
 	ref("bootstrap-word").link("quiet", true);
 
@@ -1264,25 +1310,9 @@ void loadhabits()
 
 	ref("bootstrap-file-context").link("word-context", "bootstrap-word-context");
 
-	ahabit(bootstrap-matching-brace, ((brace-text, bracetxt)), {
-		std::string brace1 = ref2txt(bracetxt);
-		std::string brace2;
-		if (brace1 == "[") { brace2 = "]"; }
-		else if (brace1 == "{") { brace2 = "}"; }
-		else if (brace1 == "(") { brace2 = ")"; }
-		else if (brace1 == "<") { brace2 = ">"; }
-		else if (brace1 == "[[") { brace2 = "]]"; }
-		else if (brace1 == "{{") { brace2 = "}}"; }
-		else if (brace1 == "((") { brace2 = "))"; }
-		else if (brace1 == "<<") { brace2 = ">>"; }
-		else if (brace1 == "begin") { brace2 = "end"; }
-		else { return nothing; }
-		return txt2ref(brace2);
-	});
-	ref bootstrapmatchingbrace("bootstrap-matching-brace");
 	ahabit(bootstrap-parse-brace, ((focus, bracetxt), (result, file), (space, ws)),
 	{
-		ref brace2ref = bootstrapmatchingbrace(bracetxt);
+		ref brace2ref = bootstrapmatchingbrace(ref2txt(bracetxt));
 		if (brace2ref == "nothing") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 		std::string brace2 = ref2txt(brace2ref);
 		ref result = intellect::level2::noteconcept();
@@ -1291,7 +1321,7 @@ void loadhabits()
 		while (true) {
 			ws.get(donext)(ws);
 			ref sym = ws.get(dovalue)(ws);
-			if (ref2txt(sym) == brace2) {
+			if (istxtref(sym) && ref2txt(sym) == brace2) {
 				result.link(closebrace, sym);
 				break;
 			}

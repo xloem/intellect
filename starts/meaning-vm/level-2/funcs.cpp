@@ -290,7 +290,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		}
 		posinf = posinf[nextinformation];
 		// TODO: subcontexts or call instances
-		ref::context().set(posinf[information], arg);
+		subctx.set(posinf[information], arg);
 	}
 	while (posinf.linked(nextinformation)) {
 		posinf = posinf[nextinformation];
@@ -302,9 +302,9 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 				 concepts::habit, habit,
 				 information, posinf);
 		}
-		ref::context().set(posinf[information], posinf[assume]);
+		subctx.set(posinf[information], posinf[assume]);
 	}
-	ref::context().set(self_, habit);
+	if (!subctx.linked(self_)) { subctx.link(self_, habit); }
 	habit.fun<ref>()(ref::context());
 	posinf = habit.get(information-needed);
 	while (posinf.linked(nextinformation)) {
@@ -375,6 +375,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 			ctx.link(inf, provided[inf]);
 		}
 	}
+	if (!ctx.linked(self_)) { ctx.link(self_, habit); }
 	habit.fun<ref>()(ctx);
 	nextinf = infn;
 	while (nextinf.linked(nextinformation)) {

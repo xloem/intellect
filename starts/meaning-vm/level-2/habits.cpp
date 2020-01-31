@@ -692,14 +692,14 @@ void createhabits()
 		if (ps != nothing) { checknotepad(ps); }
 		if (t.linked(needed-map) || t.linked(made-map)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
 		if (ps != nothing && ps.linked(next-step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
+		int ct = (literals.linked("self")?1:0)+(in.linked("self")?1:0)+(act!=nothing?1:0);
+		if (ct > 1) {
+			throw noteconcept().link("is","conflicting-actions-specified",  "habit", self, "context", ctx);
+		} else if (ct < 1) {
+			throw noteconcept().link("is","no-actions-specified", "habit", self, "context", ctx);
+		}
 		if (act != nothing) {
-			if (literals.linked("self")) {
-				if (literals.get("self") != act) {
-					throw noteconcept().link("is","conflicting-acions-specified", "self-action", literals.get("self"), "information-action", act, "habit", self, "context", ctx);
-				}
-			} else {
-				literals.link("self", act);
-			}
+			literals.link("self", act);
 		}
 		result = t;
 		result.link(
