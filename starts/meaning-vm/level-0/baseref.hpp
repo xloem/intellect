@@ -114,6 +114,9 @@ private:
 
 		using mutit = mutated_it<val, It>;
 
+		mutated_it() { }
+		mutit & operator=(mutit const & other) { self.it = other.it; return self; }
+
 		mutit & operator++() { ++ self.it; return self; }
 		mutit operator++(int i) { return self.it.operator++(i); }
 		mutit & operator--() { -- self.it; return self; }

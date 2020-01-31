@@ -486,7 +486,7 @@ public:
 private:
 	ref C;
 };
-static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing");
+static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word");
 class StreamSentinel
 {
 public:
@@ -652,28 +652,59 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			} else if (laststep != "nothing") {
 				laststep.link("next-step", nextstep);
 			}
-			ref order = makehabitinformationorder(subhabit);
+			ref order;
+			decltype(order.getAll(order)) orderitems;
+			decltype(orderitems.begin()) orderit;
 			ref neededmap = intellect::level2::noteconcept();
 			ref knownmap = intellect::level2::noteconcept();
 			ref subhabit = *wordsit;
 			if (values.count(ref2txt(subhabit))) {
-				neededmap.link(intellect::level2::concepts::self_, txtref2bootstrap(subhabit);
+				neededmap.link(intellect::level2::concepts::self_, txtref2bootstrap(subhabit));
 			} else {
 				knownmap.link(intellect::level2::concepts::self_, wctx.get(txt2ref("lookup"))(subhabit));
+		       		order = makehabitinformationorder(subhabit);
+				orderitems = order.getAll(informationorder);
+				orderit = orderitems.begin();
 			}
-			for (ref arg : order.getAll("information-order")) {
-				std::string argname = ref2txt((++ wordsit, *wordsit));
-				if (argname == "\n") { break; }
-				// depending on whether argname is in localcontext, pass to neededmap or knownmap.
-				if (values.count(argname)) {
-					neededmap.link(arg, txtref2bootstrap(*wordsit));
-				} else {
-					knownmap.link(arg, wctx.get(txt2ref("lookup"))(*wordsit));
+			while (true) {
+				if (order != nothing && orderit == orderitems.end()) {
+					conceptunmake(order);
+					order = nothing;
 				}
+				ref arg = (++ wordsit, *wordsit);
+				if (arg.isa(bracedwords)) {
+					auto words = arg.getAll(word_);
+					auto it = words.begin();
+					ref label = txtref2bootstrap(*it);
+					if (order != nothing) {
+						if (*orderit != label) {
+							throw intellect::level2::noteconcept().link("is", "out-of-order-information", "information", label, "expected", *orderit, "habit", habit, "subhabit", subhabit);
+						}
+						++ orderit;
+					}
+					++it;
+					ref val = *it;
+					if (values.count(ref2txt(val))) {
+						neededmap.link(label, txtref2bootstrap(val));
+					} else {
+						knownmap.link(label, wctx.get(txt2ref("lookup"))(val));
+					}
+					++it;
+					if (it != words.end()) { throw intellect::level2::noteconcept().link("is", "extra-word-in-label-information-pair", "space", ws); } 
+					continue;
+				}
+				std::string argname = ref2txt(arg);
+				if (argname == "\n") { break; }
+				if (order == nothing) { throw intellect::level2::noteconcept().link("is","extra-information-for-subhabit", "subhabit", subhabit, "habit", habit, "information", arg); }
+				if (values.count(argname)) {
+					neededmap.link(*orderit, txtref2bootstrap(arg));
+				} else {
+					knownmap.link(*orderit, wctx.get(txt2ref("lookup"))(arg));
+				}
+				++ orderit;
 			}
-			word = ref2txt((++ wordsit, *wordsit));
-			if (word != "\n") { throw intellect::level2::noteconcept().link("is","extra-information-for-subhabit", "subhabit", subhabit, "habit", habit); }
-			conceptunmake(order);
+			// TODO: could check to make sure all ordered information is provided.
+			if (order != nothing) { conceptunmake(order); }
 			ref mademap = intellect::level2::noteconcept();
 			if (result.size()) {
 				mademap.link("result", txtref2bootstrap(txt2ref(result)));
@@ -722,8 +753,8 @@ void loadhabits()
 {
 	intellect::level2::createhabits();
 
-	decls(entry, previous, next, source, value, word, parser, nothing, file, focus, space);
-	ref doprevious("do-previous"), donext("do-next"), streammoverelative("stream-move-relative"), openbrace("open-brace"), closebrace("close-brace"), dogo("do-go"), dowhere("do-where"), informationorder("information-order"), filecontext("file-context"), wordcontext("word-context"), parsecontext("parse-context"), result_("result");
+	decls(entry, previous, next, source, value, word, parser, nothing, file, focus, space, is);
+	ref doprevious("do-previous"), donext("do-next"), streammoverelative("stream-move-relative"), openbrace("open-brace"), closebrace("close-brace"), dogo("do-go"), dowhere("do-where"), informationorder("information-order"), filecontext("file-context"), wordcontext("word-context"), parsecontext("parse-context"), result_("result"), bracedwords("braced-words"), word_("word");
 
 	// GOAL: provide for syntax sugar with ease
 
@@ -1254,6 +1285,7 @@ void loadhabits()
 		if (brace2ref == "nothing") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 		std::string brace2 = ref2txt(brace2ref);
 		ref result = intellect::level2::noteconcept();
+		result.link(is, bracedwords);
 		result.link(openbrace, bracetxt);
 		while (true) {
 			ws.get(donext)(ws);
