@@ -33,6 +33,7 @@ void createhabits()
 		size_t num = intellect::level2::rand(0.0, links.size());
 		result = links[num];
 	});
+
 }
 
 }
