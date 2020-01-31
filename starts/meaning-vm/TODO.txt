@@ -5,24 +5,16 @@ NOW:
 - [X] expand brace parser to handle sub-braces
 - [X] fix up after adding locations
 - [ ] parse and run a bootstrap file OR write randomcode without parsing
-
-ONE OF:
-- [ ] make random code
-- [ ] modify existing code with random change
-- [ ] serialize/deserialize notepads containing code
-	please, karl, try to use a process for this that is non-recursive and
-	doesn't rely on our accommodation much. (roughly means if we can do with
-	tiny working memory, is great)
-
-THEN:
-- [ ] Make copy-on-write notepads.  copy-writable area is another notepad.
-- [ ] Build a trial-attempt process that can alter processes.
+- [ ] modify existing code with random change using small chunk habits, maybe that take habits as arguments
 	Idea of habits: (remember small chunks!)
 	- [ ] find a spot in a process and return the spot
-	- [ ] find the next spot in a process
-	- [ ] insert a new behavior in the spot
-	- [ ] splice out the behavior in the spot
+	- [ ] find the next spot in a process after a given spot
+	- [ ] insert a new behavior in a spot
+	- [ ] splice out the behavior in a spot
 	- [ ] change around the behavior in the spot
+	- [ ] turn a range of behavior into a separate habit?
+- [ ] Make copy-on-write notepads.  copy-writable area is another notepad.
+- [ ] Build a trial-attempt process that can alter processes.
 - [ ] use trial-attempt process to improve itself
 	- [ ] make one or more learning tests
 
@@ -48,6 +40,8 @@ extra possibly:
 - [ ] assert that tasks can run without memory leaks
 - [ ] make a steps-caller that does only 1 step, leaving the context available
       to optionally continue.
+- [ ] make random code
+- [ ] serialize/deserialize notepads containing code
 
 parsing small extra:
 - [ ] make an 'anything' link from word context that calls a habit until end of line, passing all arguments or extra arguments

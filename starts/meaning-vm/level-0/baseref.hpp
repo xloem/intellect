@@ -37,7 +37,7 @@ public:
 	bool linked(ref const & type, ref const & target) const { return p->linked(type.p, target.p); }
 
 	ref get(ref const & type) const { return p->get(type.p); }
-	void set(ref const & type, ref const & target) { p->set(type.p, target.p); }
+	void set(ref const & type, ref const & target) const { p->set(type.p, target.p); }
 
 	array getAll(ref const & type) const;
 	links_t links() const;

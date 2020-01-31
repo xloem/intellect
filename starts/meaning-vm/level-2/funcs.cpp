@@ -225,10 +225,11 @@ ref makehabitinformationorder(ref habit)
 	// i'm guessing part of the meaning of laughter is spreading learning around something being relevent to deprioritize in emergencies, but useful to learn from when bored.
 	
 	ref order = noteconcept();
-	ref last = habit.get("information-needed");
-	while (last.linked("next-information")) {
-		last = last.get("next-information");
-		order.link("information-order", last.get("information"));
+	static ref informationneeded("information-needed"), nextinformation("next-information"), informationorder("information-order");
+	ref last = habit.get(informationneeded);
+	while (last.linked(nextinformation)) {
+		last = last.get(nextinformation);
+		order.link(informationorder, last.get(information));
 	}
 	return order;
 }
@@ -274,11 +275,12 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	ref posinf = habit.get(information-needed);
 	ref subctx = noteconcept();
 	static ref outercontext("outer-context");
+	static ref nextinformation("next-information");
 	subctx.link(outercontext, ref::context());
 	subctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = subctx;
 	for (ref const & arg : args) {
-		if (!posinf.linked(next-information)) {
+		if (!posinf.linked(nextinformation)) {
 			ref::context() = subctx.get(outercontext);
 			conceptunmake(subctx);
 			throw noteconcept().link
@@ -286,12 +288,12 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 				 concepts::habit, habit,
 				 information-value, arg);
 		}
-		posinf = posinf[next-information];
+		posinf = posinf[nextinformation];
 		// TODO: subcontexts or call instances
 		ref::context().set(posinf[information], arg);
 	}
-	while (posinf.linked(next-information)) {
-		posinf = posinf[next-information];
+	while (posinf.linked(nextinformation)) {
+		posinf = posinf[nextinformation];
 		if (!posinf.linked(assume)) {
 			ref::context() = subctx.get(outercontext);
 			conceptunmake(subctx);
@@ -305,8 +307,8 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	ref::context().set(self_, habit);
 	habit.fun<ref>()(ref::context());
 	posinf = habit.get(information-needed);
-	while (posinf.linked(next-information)) {
-		posinf = posinf[next-information];
+	while (posinf.linked(nextinformation)) {
+		posinf = posinf[nextinformation];
 		ref::context().unlink(posinf[information]);
 	}
 	ref ret = nothing;
@@ -354,11 +356,12 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 		provided[*pair.begin()] = *second;
 	}
 	ref nextinf = infn;
-	while (nextinf.linked(next-information)) {
-		nextinf = nextinf.get(next-information);
+	static ref nextinformation("next-information");
+	while (nextinf.linked(nextinformation)) {
+		nextinf = nextinf.get(nextinformation);
 		ref inf = nextinf.get(information);
 		if (!provided.count(inf)) {
-			if (nextinf.get(assume)) {
+			if (nextinf.linked(assume)) {
 				ctx.link(inf, nextinf.get(assume));
 			} else {
 				ref::context() = ctx.get(outercontext);
@@ -374,8 +377,8 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 	}
 	habit.fun<ref>()(ctx);
 	nextinf = infn;
-	while (nextinf.linked(next-information)) {
-		nextinf = nextinf.get(next-information);
+	while (nextinf.linked(nextinformation)) {
+		nextinf = nextinf.get(nextinformation);
 		ref inf = nextinf.get(information);
 		if (provided.count(inf)) {
 			ctx.unlink(inf, provided[inf]);

@@ -486,7 +486,7 @@ public:
 private:
 	ref C;
 };
-static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value");
+static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing");
 class StreamSentinel
 {
 public:
@@ -499,13 +499,13 @@ public:
 	ref value() { return S[dovalue](S); }
 	void next() { S[donext](S); }
 	void previous() { S[doprevious](S); }
-	void go(ref w) { S["do-go"](S, w); }
-	ref where() { return S["do-where"](S); }
+	void go(ref w) { S[dogo](S, w); }
+	ref where() { return S[dowhere](S); }
 	void returntohere() { origin = where(); }
 
 	~StreamSentinel()
 	{
-		S["do-go"](origin);
+		go(origin);
 	}
 
 private:
@@ -527,45 +527,55 @@ ref bootstraplookup(ref text)
 }
 
 #undef self
-ref bootstrap_parse_habit(ref file, ref ws, ref ctx, ref self, ref wctx)
+// uhh for comments, thinking about processing them inside the word-parser.
+// so, that means the stream offers tokens that _aren't_ processed by a wctx.
+// meanwhile, it calls wctx for every one that is.
+// 	does that work?  uhhhh
+// 	so, we start off, say run into 'habit'.  the main parser is a word parser,
+// 	offering a stream of unparsed words, mysteriously skipping ones that are
+// 		i think that might work.
+// 			it may have an unaddressed problem that may crop up later.
+// is good for comments.  we have comments, concept, and habit atm.
+// 	so we are planning to make a stream where the parser checks wctx.
+// 	and replace the main parser with it.
+// 	okay!
+// 		okay, i found an unaddressed issue, as was predicted, luckily soon
+// 		the [ parser is used to handle ['s.
+// 		results of parsing aren't put anywhere, so with it not being called manually,
+// 		braced content will disappear from parsing now.
+// 		we should output the results of our parsing into the stream made by the parser.  comments don't output anything, so they're skipped.
+// 			incidentally, this implements expressions!  and is small and easy!
+ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self, ref wctx)
 {
 	//StreamSentinel s(ws);
-	if (ref2txt(ws.get(dovalue)(ws)) != "habit") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+	auto tokenname = ref2txt(tokennameref);
+	if (tokenname != "habit" && tokenname != "parser") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 	ref habitname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref habit = intellect::level2::getnamed(ref2txt(habitname), true);
-	ws.get(donext)(ws);
-	//ref startargs = ws.get("do-where")(ws);
-	ref args = wctx.get(txt2ref("[")).fun<ref>()(ctx);
-	//ref endargs = ws.get("do-where")(ws);
-	ws.get(donext)(ws);
-	//ref startresults = ws.get("do-where")(ws);
-	ref results = wctx.get(txt2ref("[")).fun<ref>()(ctx);
-	//ref endresults = ws.get("do-where")(ws);
-	ws.get(donext)(ws);
-	//ref startsteps = ws.get("do-where")(ws);
-	ref steps = wctx.get(txt2ref("[")).fun<ref>()(ctx);
-	//ref endsteps = ws.get("do-where")(ws);
-	ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
-	for (auto target : args.getAll("word")) {
-		args.unlink("word", target);
+	ref args = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	ref results = (ws.get(donext)(ws), ws.get(dovalue)(ws)); (void)results;
+	ref steps = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	//ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
+	for (auto target : args.getAll(word)) {
+		args.unlink(word, target);
 		// txtref2bootstrap is used because there are still name values
 		// like "self" and "context" coming from level2
-		args.link("information-order", txtref2bootstrap(target));
+		args.link(informationorder, txtref2bootstrap(target));
 	}
 	ref("set-steps")(habit, args);
-	wctx.set(habitname, habit);
+	if (tokenname == "parser") { wctx.set(habitname, habit); }
 	// now we copy from level2.cpp, noting that \n is a symbol now
 	std::map<std::string, ref> labels;
 	std::set<std::string> values;
 	values.insert("context");
 	values.insert("self");
 	values.insert("result");
-	for (auto target : args.getAll("information-order")) {
+	for (auto target : args.getAll(informationorder)) {
 		values.insert(target.name());
 	}
 	ref laststep = habit;
-	labels["return"] = ref("nothing");
-	auto stepwords = steps.getAll("word");
+	labels["return"] = nothing;
+	auto stepwords = steps.getAll(word);
 	for (auto wordsit = stepwords.begin(); wordsit != stepwords.end(); ++ wordsit) {
 		std::string label, result;
 		std::string word = ref2txt(*wordsit);
@@ -706,8 +716,8 @@ void loadhabits()
 {
 	intellect::level2::createhabits();
 
-	decls(entry, previous, next, source, value, parser);
-	ref doprevious("do-previous"), donext("do-next"), streammoverelative("stream-move-relative");
+	decls(entry, previous, next, source, value, word, parser, nothing, file, focus, space);
+	ref doprevious("do-previous"), donext("do-next"), streammoverelative("stream-move-relative"), openbrace("open-brace"), closebrace("close-brace"), dogo("do-go"), dowhere("do-where"), informationorder("information-order"), filecontext("file-context"), wordcontext("word-context"), parsecontext("parse-context"), result_("result");
 
 	// GOAL: provide for syntax sugar with ease
 
@@ -748,7 +758,7 @@ void loadhabits()
 	/*
 	ahabit(make-c++-word-stream, ((source, stm)), {
 		result = ref("make-c++-stream")(stm);
-		result.link("do-next", result.get("do-next-word"));
+		result.link(donext, result.get("do-next-word"));
 	});
 
 	ahabit(make-c++-letter-stream, ((source, stm)), {
@@ -898,24 +908,26 @@ void loadhabits()
 		ret.link("is", p-ref("parser-stream"));
 		ret.link("source", stm);
 		ret.link("parser", p);
-		ret.link("do-next", "parser-stream-next");
-		ret.link("do-go", "parser-stream-go");
-		ret.link("do-where", "parser-stream-where");
+		ret.link(donext, "parser-stream-next");
+		ret.link(dogo, "parser-stream-go");
+		ret.link(dowhere, "parser-stream-where");
 		ret.link(dovalue, "stream-value");
-		ret.get("do-next")(ret);
+		ret.set(value, p(stm, ret));
 		result = ret;
 	});
 	
 	ahabit(parser-stream-go, ((source, stm), (where, w)), {
-		stm.get("source").get("do-go")(w);
+		stm.get(source).get(dogo)(w);
 		return stm;
 	});
 	ahabit(parser-stream-where, ((source, stm), (where, w)), {
-		return stm.get("source").get("do-where")();
+		return stm.get(source).get(dowhere)();
 	});
 	ahabit(parser-stream-next, ((source, stm)), {
 		try {
-			ref item = stm.get(parser)(stm.get(source));
+			ref src = stm.get(source);
+			src.get(donext)(src);
+			ref item = stm.get(parser)(src, stm);
 			stm.set(value, item);
 		} catch(intellect::level2::ref r) {
 			if (r.linked("stream") || r.isa("end-of-stream")) {
@@ -943,8 +955,8 @@ void loadhabits()
 		ret.link(dovalue, "keep-stream-value");
 		ret.link(donext, "keep-stream-next");
 		ret.link(doprevious, "keep-stream-previous");
-		ret.link("do-go", "keep-stream-go");
-		ret.link("do-where", "keep-stream-where");
+		ret.link(dogo, "keep-stream-go");
+		ret.link(dowhere, "keep-stream-where");
 		return ret;
 	});
 	ahabit(keep-stream-unmake, ((keep-stream, stm)), {
@@ -958,10 +970,12 @@ void loadhabits()
 	ahabit(keep-stream-where, ((keep-stream, stm)), {
 		return stm.get(entry);
 	});
+	ref("keep-stream-where").link("quiet", true);
 	ahabit(keep-stream-go, ((keep-stream, stm), (where, w)), {
 		stm.set(entry, w);
 		return stm;
 	});
+	ref("keep-stream-go").link("quiet", true);
 	ahabit(keep-stream-next, ((keep-stream, stm)), {
 		ref ntry = stm.get(entry);
 		if (ntry.linked(next)) {
@@ -1028,7 +1042,7 @@ void loadhabits()
 		result = txt2ref(concat);
 		s.returntohere();
 	});
-	ahabit(bootstrap-word, ((letter-stream, stm)), {
+	ahabit(bootstrap-word, ((letter-stream, stm), (my-stream, spc)), {
 		StreamSentinel s(stm);
 		std::string concat;
 		std::string quote;
@@ -1057,7 +1071,6 @@ void loadhabits()
 				}
 				std::cerr << letter;
 				concat += letter;
-				s.next();
 				if (quote.size()) {
 					if (letter == quote) {
 						break;
@@ -1065,7 +1078,9 @@ void loadhabits()
 				} else if (concat == "\n") {
 					break;
 				}
+				s.next();
 			}
+			std::cerr << "(" << letter << ")";
 		} catch(ref r) {
 			if (r.isa("end-of-stream") && !quote.size()) {
 				conceptunmake(r);
@@ -1082,6 +1097,30 @@ void loadhabits()
 	});
 	ref("bootstrap-word").link("quiet", true);
 
+	// we are passing the source stream to the habit parser as the wordpace.
+	// fix.
+	ahabit(bootstrap-parser, ((word-stream-with-context, stm), (my-stream, spc)), {
+		ref fctx = stm.get(filecontext);
+		ref wctx = fctx.get(wordcontext);
+		ref pctx = fctx.get(parsecontext);
+		ref f = fctx.get(file);
+		// i'd really like to donext all but the first time.
+		// 	... we don't wnt to donext if we haven't processed the first value yet.
+		// 	
+		while (true) {
+			ref word = stm.get(dovalue)(stm);
+			if (!wctx.linked(word)) {
+				return word;
+			}
+			spc.set(value, word);
+			result = wctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
+			if (result != nothing) {
+				return result;
+			}
+			stm.get(donext)(stm);
+		}
+	});
+	ref("bootstrap-parser").link("quiet", true);
 
 	ahabit(parse-relative-index, ((index-text, txt)), {
 		std::stringstream ss(ref2txt(txt));
@@ -1159,7 +1198,7 @@ void loadhabits()
 
 	ahabit(bootstrap-make-file-stream, ((filename, fn), (parse-context, pctx)), {
 		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
-		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
+		cxxstm.link(donext, cxxstm.get("do-next-letter"));
 		pctx.set("c++-stream", cxxstm);
 		ref letterspace = ref("make-keep-stream")(cxxstm);
 		pctx.set("letterspace", letterspace);
@@ -1199,29 +1238,28 @@ void loadhabits()
 		else if (brace1 == "((") { brace2 = "))"; }
 		else if (brace1 == "<<") { brace2 = ">>"; }
 		else if (brace1 == "begin") { brace2 = "end"; }
-		else { return "nothing"; }
+		else { return nothing; }
 		return txt2ref(brace2);
 	});
 	ref bootstrapmatchingbrace("bootstrap-matching-brace");
-	ahabit(bootstrap-parse-brace, ((result, file), (space, ws)),
+	ahabit(bootstrap-parse-brace, ((focus, bracetxt), (result, file), (space, ws)),
 	{
-		ref bracetxt = ws.get(dovalue)(ws);
 		ref brace2ref = bootstrapmatchingbrace(bracetxt);
 		if (brace2ref == "nothing") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 		std::string brace2 = ref2txt(brace2ref);
 		ref result = intellect::level2::noteconcept();
-		result.link("open-brace", bracetxt);
+		result.link(openbrace, bracetxt);
 		while (true) {
 			ws.get(donext)(ws);
 			ref sym = ws.get(dovalue)(ws);
 			if (ref2txt(sym) == brace2) {
-				result.link("close-brace", sym);
+				result.link(closebrace, sym);
 				break;
 			}
-			result.link("word", sym);
-			if (bootstrapmatchingbrace(sym) != "nothing") {
-				self(file, ws);
-			}
+			result.link(word, sym);
+			//if (bootstrapmatchingbrace(sym) != nothing) {
+			//	self(file, ws);
+			//}
 		}
 		return result;
 	});
@@ -1241,10 +1279,11 @@ void loadhabits()
 	});
 	ref("bootstrap-word-context").link(txt2ref("lookup"), "bootstrap-lookup");
 
-	ahabit(bootstrap-parse-habit, ((result, file), (space, ws), (word-context, wctx)), {
-		return bootstrap_parse_habit(file, ws, ctx, self, wctx);
+	ahabit(bootstrap-parse-habit, ((focus, word), (result, file), (space, ws), (word-context, wctx)), {
+		return bootstrap_parse_habit(word, file, ws, ctx, self, wctx);
 	});
 	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
+	ref("bootstrap-word-context").link(txt2ref("parser"), "bootstrap-parse-habit");
 
 	ahabit(bootstrap-parse-concept, ((result, file), (space, ws), (word-context, wctx)), {
 		return bootstrap_parse_concept(file, ws, ctx, self, wctx);
@@ -1252,9 +1291,11 @@ void loadhabits()
 	ref("bootstrap-word-context").link(txt2ref("concept"), "bootstrap-parse-concept");
 
 	ahabit(parse-file, ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
+		// notepad quick-implemented by passin the filename as the notepad name!  recommend keeping for safety, and copying data to outer notepad intentionally.
 		ref wctx, pctx;
 		ref file = intellect::level2::noteconcept();
 		file.link("notepad", intellect::level2::notepad());
+		fctx.set("file", file);
 		if (!fctx.linked("word-context")) {
 			wctx = intellect::level2::noteconcept();
 			fctx.link("word-context", wctx);
@@ -1271,15 +1312,16 @@ void loadhabits()
 		// TODO: implement just-do-one-step in level-2, to move towards using
 		// relevence here
 		
-		
 		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
-		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
-		cxxstm.get("do-next")(cxxstm);
+		cxxstm.link(donext, cxxstm.get("do-next-letter"));
+		cxxstm.get(donext)(cxxstm);
 		ref letterspace = ref("make-keep-stream")(cxxstm);
 		ref parserstm = ref("make-parser-stream")(letterspace, "bootstrap-word");
 		ref wordspace = ref("make-keep-stream")(parserstm);
 			// note: rewinding wordspace won't rewind letterspace at this time
 			// too bad!
+		wordspace.set(filecontext, fctx);
+		ref parsedspace = ref("make-parser-stream")(wordspace, "bootstrap-parser");
 
 		// to fully generalize we would just move the parsing behavior
 		// into the parse context.  this would probably be 'setup',
@@ -1288,24 +1330,14 @@ void loadhabits()
 		// NOTE: believe this was implemented but haven't put time into using it
 		while (true) {
 			ref word;
-			wordspace.get(donext)(wordspace);
-			word = wordspace.get(dovalue)(wordspace);
-			// we are changing parser to call habits in the file parser itself. [previously we called a 'habit' parser.  this will still be used.  but behavior from it will be copied into this function.  it will make sense to abstract it into a third function.  we can link it as 'anything' from the word context.
-			if (wctx.linked(word)) {
-				// notepad quick-implemented by passin the filename as the notepad name!  recommend keeping for safety, and copying data to outer notepad intentionally.
-				wctx.get(word)({{"focus", word}, {"space", wordspace}, {"word-context", wctx}, {"parse-context", pctx}, {"file-context", fctx}, {"result", file}}, true);
-				// call word-handler.
-				// want-to-send: word, wordspace, file-context, output notepad.
-				// it might make sense if we all operatd on file-context and stored our shareds in there.
-				// propose we parse into a notepad
-				// we can include a list of file contents if
-				// we desire to.
-			} else {
-				// TODO: store as free text?
-				// TODO: store references to underlying data.
-				// 	this means including locations in the
-				// 	spaces.
-			}
+			word = parsedspace.get(dovalue)(parsedspace);
+			parsedspace.get(donext)(parsedspace);
+			// we are changing parser to call habits in the file parser itself. [previously we called a 'habit' parser.  this will still be used.  but behavior from it will be copied into this function.  it will make sense to abstract it into a third function.  we can link it as 'anything' from the word context. <- never did this.  instead 'parser' is a special 'habit'.
+			
+			// TODO: store as free text?
+			// TODO: store references to underlying data.
+			// 	this means including locations in the
+			// 	spaces.
 		} 
 
 		// we have file context, word context, and parse context.
