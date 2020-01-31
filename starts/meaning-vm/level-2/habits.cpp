@@ -163,7 +163,6 @@ void _steps(ref s, ref ctx)
 		astate.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
 		// if needed-map, load subcontext
 		ref subctx = c;
-		std::cerr << "[next-step " << s.get(action).name() << "]" << std::endl;
 		std::cerr << "[step-context ";
 		for (auto link : c.links()) {
 			std::cerr << " " << link.first.name() << ":" << link.second.name();
@@ -179,9 +178,10 @@ void _steps(ref s, ref ctx)
 			subctx.set(concepts::root, ref::context().get(concepts::root));
 			ref::context() = subctx;
 		}
+		std::cerr << "[step " << subctx.get("self").name() << "]" << std::endl;
 		checknotepad(subctx);
-		subctx.set("self", s.get(action));
-		ref habit = s.get(action);
+		//subctx.set("self", s.get(action));
+		ref habit = subctx.get("self");//s.get(action);
 		{ // check arguments
 			ref infn = habit.get("information-needed");
 			for (auto link : infn.links()) {
@@ -686,19 +686,27 @@ void createhabits()
 	});
 	*/
 	decls(step, previous);
-	ahabit(set-context-step, ((target, t), (previous-step, ps, nothing), (known-information, literals), (needed-information-map, in), (made-information-map, out), (action, act)),
+	ahabit(set-context-step, ((target, t), (previous-step, ps, nothing), (known-information, literals), (needed-information-map, in), (made-information-map, out), (action, act, nothing)),
 	{
 		checknotepad(t);
 		if (ps != nothing) { checknotepad(ps); }
-		if (t.linked(needed-map) || t.linked(made-map) || t.linked(action)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
+		if (t.linked(needed-map) || t.linked(made-map)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
 		if (ps != nothing && ps.linked(next-step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
+		if (act != nothing) {
+			if (literals.linked("self")) {
+				if (literals.get("self") != act) {
+					throw noteconcept().link("is","conflicting-acions-specified", "self-action", literals.get("self"), "information-action", act, "habit", self, "context", ctx);
+				}
+			} else {
+				literals.link("self", act);
+			}
+		}
 		result = t;
 		result.link(
 			is, context-step,
 			//habit, context-action,
 			needed-map, settranslationmap(noteconcept(), in, literals),
-			made-map, settranslationmap(noteconcept(), out),
-			action, act);
+			made-map, settranslationmap(noteconcept(), out));
 		if (ps != nothing) { ps.set(next-step, result); }
 	});
 
@@ -746,14 +754,13 @@ void createhabits()
 	{
 		checknotepad(t);
 		if (ps != nothing) { checknotepad(ps); }
-		if (t.linked(needed-map) || t.linked(made-map) || t.linked(action)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
+		if (t.linked(needed-map) || t.linked(made-map)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
 		if (ps != nothing && ps.linked(next-step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
 		if (s == nothing) { s = noteconcept(); }
 		result = t;
 		t.link(
 			is, "condition-step",
-			needed-map, settranslationmap(noteconcept(), noteconcept().link(condition, cond), noteconcept().link(next-steps, s)),
-			action, condition
+			needed-map, settranslationmap(noteconcept(), noteconcept().link(condition, cond), noteconcept().link(next-steps, s, "self", condition))
 		);
 		if (ps != nothing) { ps.set(next-step, result); }
 	});

@@ -104,8 +104,14 @@ private:
 			} \
 			notepadrestoration.switchwith(ctx); \
 			ref result; (void)result; \
-			static ref const self(#nam);\
-			ctx.set(intellect::level2::concepts::self_, self);\
+			static ref const compiled_self(#nam);\
+			ref self;\
+			if (!ctx.linked(intellect::level2::concepts::self_)) {\
+				ctx.set(intellect::level2::concepts::self_, compiled_self);\
+				self = compiled_self;\
+			} else {\
+				self = ctx.get(intellect::level2::concepts::self_);\
+			}\
 			bool quiet = self.linked(intellect::level2::concepts::quiet); \
 			result = ([&]() mutable ->ref {\
 				if (!quiet) { std::cerr << "[habit " << self.name(); } \

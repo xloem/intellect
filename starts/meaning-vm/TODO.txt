@@ -5,6 +5,11 @@ NOW:
 - [X] expand brace parser to handle sub-braces
 - [X] fix up after adding locations
 - [ ] parse and run a bootstrap file OR write randomcode without parsing
+	-> presently considering adding provision for calling variables, to the vm, by passing the variable in the map as 'self'
+	- [X] set-context-step
+	- [X] set-condition-step
+	- [X] _steps
+	- [ ] parse_habit
 - [ ] modify existing code with random change using small chunk habits, maybe that take habits as arguments
 	Idea of habits: (remember small chunks!)
 	- [ ] find a spot in a process and return the spot
