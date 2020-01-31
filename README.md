@@ -1,5 +1,15 @@
 #### Sharing Hyperintelligence
 
+The bounds around this research have not been kept.  This reflects other bounds
+that have lead to horrific situations in the present day.  We hope to grow
+understanding more safely somehow, trusting that most people abhor severe harm or
+danger.  This paragraph was added above the below two.  We are looking for help
+in planning to share safely, but warn it means learning of ways to destroy physical
+reality, in order to make decisions of how to approach and share paths to the
+knowledge.  Making an AI that could freely build physical tools, or freely
+physically alter itself, is incredibly dangerous, no matter how protected the
+environment is.
+
 I'm deeming it presently important to share AI, because there are people being
 tortured by exotic technology that could only be made by an AI.  This continues
 unabated.  Please copy this AI goal with this concern attached, build an AI,
