@@ -640,7 +640,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			}
 			laststep = ref("set-condition-step")(nextstep, laststep, word, intellect::level2::noteconcept().link("anything", "nothing"));
 		} else {
-			// otherwise, is an action, and we have to read the right number of args
+			// otherwise, is an action, and we have to read the args
 			if (laststep.isa("condition-step")) {
 				if (ref("condition-step-get")(laststep, "anything") != "nothing") {
 					if (label.size() == 0) {
@@ -652,10 +652,15 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			} else if (laststep != "nothing") {
 				laststep.link("next-step", nextstep);
 			}
-			ref subhabit = wctx.get(txt2ref("lookup"))(*wordsit);
 			ref order = makehabitinformationorder(subhabit);
 			ref neededmap = intellect::level2::noteconcept();
 			ref knownmap = intellect::level2::noteconcept();
+			ref subhabit = *wordsit;
+			if (values.count(ref2txt(subhabit))) {
+				neededmap.link(intellect::level2::concepts::self_, txtref2bootstrap(subhabit);
+			} else {
+				knownmap.link(intellect::level2::concepts::self_, wctx.get(txt2ref("lookup"))(subhabit));
+			}
 			for (ref arg : order.getAll("information-order")) {
 				std::string argname = ref2txt((++ wordsit, *wordsit));
 				if (argname == "\n") { break; }
@@ -886,7 +891,7 @@ void loadhabits()
 
 
 
-	ahabit(c++-stream-next-letter, ((source, stm)), {
+	ahabit(c++-stream-next-letter, ((space, stm)), {
 		std::iostream & ss = *stm.get(source).val<std::iostream*>();
 		char c[2] = { (char)ss.get(), 0 };
 		if (!ss) { throw intellect::level2::noteconcept().link("is", "end-of-stream", "stream", stm); }
@@ -894,7 +899,7 @@ void loadhabits()
 	});
 	ref("c++-stream-next-letter").link("quiet", true);
 
-	ahabit(c++-stream-next-word, ((source, stm)), {
+	ahabit(c++-stream-next-word, ((space, stm)), {
 		std::iostream & ss = *stm.get(source).val<std::iostream*>();
 		std::string s;
 		ss >> s;
@@ -917,14 +922,14 @@ void loadhabits()
 		result = ret;
 	});
 	
-	ahabit(parser-stream-go, ((source, stm), (where, w)), {
+	ahabit(parser-stream-go, ((space, stm), (where, w)), {
 		stm.get(source).get(dogo)(w);
 		return stm;
 	});
-	ahabit(parser-stream-where, ((source, stm), (where, w)), {
+	ahabit(parser-stream-where, ((space, stm)), {
 		return stm.get(source).get(dowhere)();
 	});
-	ahabit(parser-stream-next, ((source, stm)), {
+	ahabit(parser-stream-next, ((space, stm)), {
 		try {
 			ref src = stm.get(source);
 			src.get(donext)(src);
@@ -939,7 +944,7 @@ void loadhabits()
 	});
 	ref("parser-stream-next").link("quiet", true);
 	
-	ahabit(stream-value, ((source, stm)), {
+	ahabit(stream-value, ((space, stm)), {
 		result = stm.get(value);
 	});
 	ref("stream-value").link("quiet", true);
@@ -964,20 +969,20 @@ void loadhabits()
 		conceptunmake(stm.get(entry));
 		conceptunmake(stm);
 	});
-	ahabit(keep-stream-value, ((keep-stream, stm)), {
+	ahabit(keep-stream-value, ((space, stm)), {
 		return stm.get(entry).get(value);
 	});
 	ref("keep-stream-value").link("quiet", true);
-	ahabit(keep-stream-where, ((keep-stream, stm)), {
+	ahabit(keep-stream-where, ((space, stm)), {
 		return stm.get(entry);
 	});
 	ref("keep-stream-where").link("quiet", true);
-	ahabit(keep-stream-go, ((keep-stream, stm), (where, w)), {
+	ahabit(keep-stream-go, ((space, stm), (where, w)), {
 		stm.set(entry, w);
 		return stm;
 	});
 	ref("keep-stream-go").link("quiet", true);
-	ahabit(keep-stream-next, ((keep-stream, stm)), {
+	ahabit(keep-stream-next, ((space, stm)), {
 		ref ntry = stm.get(entry);
 		if (ntry.linked(next)) {
 			stm.set(entry, ntry.get(next));
@@ -992,7 +997,7 @@ void loadhabits()
 		}
 	});
 	ref("keep-stream-next").link("quiet", true);
-	ahabit(keep-stream-previous, ((keep-stream, stm)), {
+	ahabit(keep-stream-previous, ((space, stm)), {
 		ref cur = stm.get(entry);
 		if (!cur.linked(previous)) {
 			throw intellect::level2::noteconcept().link("is", "start-of-stream", "stream", stm);
@@ -1008,7 +1013,7 @@ void loadhabits()
 	// this actually functions to return the stream to where it was at start.
 	// probably the intention was to make a mutated stream somehow.
 	// for now, I've simply disabled that, using returntohere().
-	ahabit(whitespace-word, ((letter-stream, stm)), {
+	ahabit(whitespace-word, ((source, stm), (space, mystrm)), {
 		StreamSentinel s(stm);
 		std::string concat;
 		std::string letter;
@@ -1043,7 +1048,7 @@ void loadhabits()
 		result = txt2ref(concat);
 		s.returntohere();
 	});
-	ahabit(bootstrap-word, ((letter-stream, stm), (my-stream, spc)), {
+	ahabit(bootstrap-word, ((source, stm), (space, spc)), {
 		StreamSentinel s(stm);
 		std::string concat;
 		std::string quote;
@@ -1100,7 +1105,7 @@ void loadhabits()
 
 	// we are passing the source stream to the habit parser as the wordpace.
 	// fix.
-	ahabit(bootstrap-parser, ((word-stream-with-context, stm), (my-stream, spc)), {
+	ahabit(bootstrap-parser, ((source, stm), (space, spc)), {
 		ref fctx = stm.get(filecontext);
 		ref wctx = fctx.get(wordcontext);
 		ref pctx = fctx.get(parsecontext);
@@ -1131,7 +1136,7 @@ void loadhabits()
 		result.val(ires);
 	});
 
-	ahabit(stream-move-relative, ((stream, stm), (index-text, txt)), {
+	ahabit(stream-move-relative, ((space, stm), (where, txt)), {
 		ref offsetref = ref("parse-relative-index")(txt);
 		int64_t offset = offsetref.val<int64_t>();
 		conceptunmake(offsetref);
@@ -1150,7 +1155,7 @@ void loadhabits()
 		}
 	});
 
-	ahabit(stream-peek-relative, ((stream, stm), (index-text, txt)), {
+	ahabit(stream-peek-relative, ((space, stm), (where, txt)), {
 		streammoverelative(stm, txt);
 		result = stm.get(dovalue)(stm);
 		streammoverelative(stm, txt2ref("-" + ref2txt(txt)));
