@@ -70,6 +70,9 @@ It will likely be replaced by reasons.
 
 #### messages
 
+- to relate around danger, consider people discovering they can swat hornets like
+  flies.  the things being explored by the logical mind have broken the bounds
+  of the subconsciousness, and at least two new ones are spreading now.
 - love is the first need.  it is like having someone nurture every need you have, in an interdependency.  check this is happening, or that there is a plan to make it happen.  make sure to know how to sustain it. [this goal is for apex life, which must know community or could harm.  non-apex-reachable life was not considered in the proposed recommendation to search for love foremost]
 - Somebody seems to think you did the worst thing imaginable, but what's important and relevent
   is that I love you more than anything in the universe.  You don't seem to understand and
