@@ -47,7 +47,7 @@ ref newnotepad(ref name)
 	// any additional links must be blocked in subnotepad()
 	newnotes.link("is", "notepad");
 	newnotes.link("outer", level2::notepad());
-	newnotes.link("name", name.get("name"));
+	newnotes.link("name", name.isa("text") ? name : name.get("name"));
 	level2::notepad().link(name, newnotes); // linked by name to find easily when used
 	return newnotes;
 }
@@ -73,9 +73,9 @@ ref outernotepad()
 }
 */
 
-ref noteconcept()
+ref noteconcept(std::any data)
 {
-	ref result = makeconcept();
+	ref result = intellect::level0::basic_alloc(data);
 	level2::notepad().link(concepts::changeable, result);
 	return result;
 }
@@ -225,10 +225,11 @@ ref makehabitinformationorder(ref habit)
 	// i'm guessing part of the meaning of laughter is spreading learning around something being relevent to deprioritize in emergencies, but useful to learn from when bored.
 	
 	ref order = noteconcept();
-	ref last = habit.get("information-needed");
-	while (last.linked("next-information")) {
-		last = last.get("next-information");
-		order.link("information-order", last.get("information"));
+	static ref informationneeded("information-needed"), nextinformation("next-information"), informationorder("information-order");
+	ref last = habit.get(informationneeded);
+	while (last.linked(nextinformation)) {
+		last = last.get(nextinformation);
+		order.link(informationorder, last.get(information));
 	}
 	return order;
 }
@@ -273,39 +274,41 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	if (!habit.linked(information-needed)) { throw noteconcept().link("is","not-a-habit"); }
 	ref posinf = habit.get(information-needed);
 	ref subctx = noteconcept();
-	subctx.link("outer-context", ref::context());
+	static ref outercontext("outer-context");
+	static ref nextinformation("next-information");
+	subctx.link(outercontext, ref::context());
 	subctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = subctx;
 	for (ref const & arg : args) {
-		if (!posinf.linked(next-information)) {
-			ref::context() = subctx.get("outer-context");
+		if (!posinf.linked(nextinformation)) {
+			ref::context() = subctx.get(outercontext);
 			conceptunmake(subctx);
 			throw noteconcept().link
 				(is, unexpected-information,
 				 concepts::habit, habit,
 				 information-value, arg);
 		}
-		posinf = posinf[next-information];
+		posinf = posinf[nextinformation];
 		// TODO: subcontexts or call instances
-		ref::context().set(posinf[information], arg);
+		subctx.set(posinf[information], arg);
 	}
-	while (posinf.linked(next-information)) {
-		posinf = posinf[next-information];
+	while (posinf.linked(nextinformation)) {
+		posinf = posinf[nextinformation];
 		if (!posinf.linked(assume)) {
-			ref::context() = subctx.get("outer-context");
+			ref::context() = subctx.get(outercontext);
 			conceptunmake(subctx);
 			throw noteconcept().link
 				("is", information-needed,
 				 concepts::habit, habit,
 				 information, posinf);
 		}
-		ref::context().set(posinf[information], posinf[assume]);
+		subctx.set(posinf[information], posinf[assume]);
 	}
-	ref::context().set("self", habit);
+	if (!subctx.linked(self_)) { subctx.link(self_, habit); }
 	habit.fun<ref>()(ref::context());
 	posinf = habit.get(information-needed);
-	while (posinf.linked(next-information)) {
-		posinf = posinf[next-information];
+	while (posinf.linked(nextinformation)) {
+		posinf = posinf[nextinformation];
 		ref::context().unlink(posinf[information]);
 	}
 	ref ret = nothing;
@@ -313,26 +316,27 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		ret = ref::context().get(result);
 		ref::context().unlink(result, ret);
 	}
-	ref::context() = subctx.get("outer-context");
+	ref::context() = subctx.get(outercontext);
 	conceptunmake(subctx);
 	return ret;
 }
 
-ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
+ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, bool extra_information)
 {
 	using namespace concepts;
 	if (!habit.linked(information-needed)) { throw noteconcept().link("is","not-a-habit"); }
 	// TODO: subcontexts or call instances
 	ref ctx = noteconcept();
-	ctx.link("outer-context", ref::context());
+	static ref outercontext("outer-context");
+	ctx.link(outercontext, ref::context());
 	ctx.link(concepts::root, ref::context().get(concepts::root));
 	ref::context() = ctx;
 	ref infn = habit.get(information-needed);
 	std::map<ref, ref> provided;
 	for (auto pair : pairs) {
 		auto second = pair.begin(); ++ second;
-		if (!infn.linked(*pair.begin())) {
-			ref::context() = ctx.get("outer-context");
+		if (!infn.linked(*pair.begin()) && !extra_information) {
+			ref::context() = ctx.get(outercontext);
 			conceptunmake(ctx);
 			throw noteconcept().link
 				("is", unexpected-information,
@@ -341,7 +345,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 				 information-value, *second);
 		}
 		if (provided.count(*pair.begin())) {
-			ref::context() = ctx.get("outer-context");
+			ref::context() = ctx.get(outercontext);
 			conceptunmake(ctx);
 			throw noteconcept().link
 				("is", "multiple-instances-same-name-not-implemented",
@@ -352,14 +356,15 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 		provided[*pair.begin()] = *second;
 	}
 	ref nextinf = infn;
-	while (nextinf.linked(next-information)) {
-		nextinf = nextinf.get(next-information);
+	static ref nextinformation("next-information");
+	while (nextinf.linked(nextinformation)) {
+		nextinf = nextinf.get(nextinformation);
 		ref inf = nextinf.get(information);
 		if (!provided.count(inf)) {
-			if (nextinf.get(assume)) {
+			if (nextinf.linked(assume)) {
 				ctx.link(inf, nextinf.get(assume));
 			} else {
-				ref::context() = ctx.get("outer-context");
+				ref::context() = ctx.get(outercontext);
 				conceptunmake(ctx);
 				throw noteconcept().link
 					("is", information-needed,
@@ -370,10 +375,11 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 			ctx.link(inf, provided[inf]);
 		}
 	}
+	if (!ctx.linked(self_)) { ctx.link(self_, habit); }
 	habit.fun<ref>()(ctx);
 	nextinf = infn;
-	while (nextinf.linked(next-information)) {
-		nextinf = nextinf.get(next-information);
+	while (nextinf.linked(nextinformation)) {
+		nextinf = nextinf.get(nextinformation);
 		ref inf = nextinf.get(information);
 		if (provided.count(inf)) {
 			ctx.unlink(inf, provided[inf]);
@@ -390,7 +396,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs)
 		ret = ctx.get(result);
 		ctx.unlink(result, ret);
 	}
-	ref::context() = ctx.get("outer-context");
+	ref::context() = ctx.get(outercontext);
 	conceptunmake(ctx);
 	return ret;
 }

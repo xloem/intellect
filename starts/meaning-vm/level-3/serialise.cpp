@@ -1,11 +1,19 @@
 
+#include "../level-2/funcs.hpp"
+#include "../level-2/ref.hpp"
+#include "../level-2/sugar.hpp"
+
+#include <string>
+#include <fstream>
 
 // let's make file=notepad.
 
+using ref = intellect::level2::ref;
+
 void loadfile(std::string file, std::string notepad)
 {
-	ifstream f(file);
-	intellect::level2::notepad() = newnotepad(notepad);
+	std::ifstream f(file);
+	intellect::level2::notepad() = intellect::level2::newnotepad(notepad);
 	std::string word;
 
 }

@@ -1,14 +1,78 @@
 NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
       This is just like learning if you are tiny and new =)
 
-- [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
+NOW:
+- [X] expand brace parser to handle sub-braces
+- [X] fix up after adding locations
+- [ ] ADD PROVISION FOR CALLING VARIABLES -> this expands quickly to
+		include an easy implementation of human-readable serialization of
+		behavior.
+	- [X] set-context-step
+	- [X] set-condition-step
+	- [X] _steps
+	- [ ] parse_habit
+		- [X] change stream do-next and do-value calls to use 'space' label
+		- [ ] parse information by label over order, using braces
+		- [ ] adjust calling parts to handle by-label calling
+		- [ ] only allow by-label calling if subhabit is a value
+	- [ ] mark the end time on this note and move it forward on todo list to
+	      update it, preferably before the final goal is reached, so we can
+	      improve judgement.
+	rep-rep note: we have gone down many rabbit holes and turned
+		around.  this one we kept exploring, and it is now
+		labeled with great rewards.  please relate later
+		to see if the human-serialization-ease feature
+		was worth the time spent working on this.  we
+		started midday 2020-01-30.
+- [ ] parse and run a bootstrap file
+- [ ] modify existing code with random change using small chunk habits, maybe that take habits as arguments
+	Idea of habits: (remember small chunks!)
+	- [ ] find a spot in a process and return the spot
+	- [ ] find the next spot in a process after a given spot
+	- [ ] insert a new behavior in a spot
+	- [ ] splice out the behavior in a spot
+	- [ ] change around the behavior in the spot
+	- [ ] turn a range of behavior into a separate habit?
+- [ ] Make copy-on-write notepads.  copy-writable area is another notepad.
+- [ ] Build a trial-attempt process that can alter processes.
+- [ ] use trial-attempt process to improve itself
+	- [ ] make one or more learning tests
+
+	- [ ] get the system able to meet very simple goals
+	when the system cannot rapidly meet a goal, make an interim goal, and
+	use the process to meet the interim goal in the larger goal.
+	maybe think towards making small chunks of code that call and organize other
+	small chunks.
+	- do-a-task-selected-from-a-set-based-on-a-provided-input
+	- [ ] OPTIONALLY use simple goal-meeting to introduce the idea of relevent associated stuff, to speed learning and develop coding-assistance
+	- [ ] produce code that can modify every instance of a habit to use an augmented habit
+	- [ ] improve to act on more general patterns, like every change to a kind of data detected by a check
+	- [ ] act on own behavior in copy-on-write notepads, to learn to meet goals better
+- [ ] introduce developing and using an understanding of processes
+
+we want to rapidly develop a decision-making process, but we'll need small
+steps to get there.  picking-b
 
 extra possibly:
+- [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
 - [ ] make bootstrap space be initial-notepad, rename it bootstrap-space,
 	use that assumption to handle concepts not in any notepad in notepad funcs.
 - [ ] assert that tasks can run without memory leaks
 - [ ] make a steps-caller that does only 1 step, leaving the context available
       to optionally continue.
+- [ ] make random code
+- [ ] serialize/deserialize notepads containing code
+
+parsing small extra:
+- [ ] make an 'anything' link from word context that calls a habit until end of line, passing all arguments or extra arguments
+	^-- this runs into issue of do-we-run-now for file, or do-we-store for habit
+		i think the delta-group pattern ran when parsing.
+		so the file would be held unparsed, and returned to when referenced.
+		understanding this, we could merge with this pattern better, or choose to ignore it possibly.
+- [ ] change file parser and habit parser to use 'anything' value
+- [ ] use brace parser when parsing any word
+- [ ] turn habit into a habit that takes 3 arguments
+- [ ] turn concept into a habit that takes 1 argument, optionally make it a script
 
 are these worthwhile?
 - [ ] implement abstract links

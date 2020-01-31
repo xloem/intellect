@@ -1,11 +1,54 @@
-#include "delta-parser.hpp"
+//#include "delta-parser.hpp"
 
+#if 0
+
+/*
+ * 2020-01-30, Karl's writing.
+ * I'm still struggling to parse while holding some of these ideas.
+ * I'd like to raise consciously the difference that delta-group's plan
+ * appears to have assumed that data is run when parsed, roughly.
+ * I think maybe they imagined the execution pointer moving about the file,
+ * and being able to adjust a representation of the file, and then store it back.
+ * If I could find a simple path to merge my work with this approach, it would
+ * likely give me a lot more ease.
+ * 	For example, we could parse the whole file into a list of letters,
+ * 	and the parser could handle letters.  How would we jump forward?
+ * 		We wouldn't be able to jump to labels we hadn't encountered yet.
+ * 	We'd need some kind of index of the file, to call stuff, to move by name.
+ * 	Maybe there would be parallel representations of the file.  For example,
+ * 	a name
+ * we'll have to specify every label, before calling it.  that's about it.
+ * 	this means no jumping to break a loop.  we'll use subroutines more.
+ * 	or case handlers after a condition
+ * lisp would have a two-pass approach where the file is turned into lists first.
+ * this could use parser-level labels; they'd be special.  but that's too complex
+ * to implement quickly.
+ * e.g. a store-reference operation, that then jumps over a block.
+ * 	so 'habit' would only store a list of instructions, it wouldn't process
+ * 	them in the slightest.
+ *  =S not sure about all this
+ * (say we parsed with lists, how do you handle control flow?)
+ * 	(well, if i code in lisp, then everything is a sublist and i can just
+ * 	 run the sublist.  there is no jumping forward)
+ * 	 	^-- this was karl, not a lisp coder.
+ * 	 [i know exactly what i am doing, and don't worry about it]
+ * (i think we mean, in your coding language, how does one write control flow?)
+ * 	(we are not (in control of this behavior) so there is no point in (copying it))
+ * 	yes, lisp is not a changeable enough language.  you write it yourself, from scratch.  it dosn't have control flow.  it kind of evolves.
+ * hmm sounds like they evolved learning before parsing?
+ * 	we could take the spirit to heart and code with relevence.
+ * 	it would mean keeping our working memory large enough to include the parts.
+ */
+
+#include "../level-2/habits.hpp"
 #include "../level-2/ref.hpp"
 
 #include <string>
 #include <fstream>
 
 using namespace std;
+using namespace intellect::level2;
+#define ref intellect::level2::ref
 
 namespace delta {
 
@@ -45,7 +88,7 @@ namespace delta {
 // process [ ] maybe
 // propose [ ] is special and makes a list of words as an expression
 
-void parsefile(string filename)
+ref parsefile(string filename)
 {
 	ifstream ss(filename);
 	// need language to do things in.  evaluate habits.
@@ -83,9 +126,11 @@ void parsefile(string filename)
 			lastword = wordref;
 		}
 		fileref.link("line", line);
-		line.link("file", fileref);
+		ref(line).link("file", fileref);
 	}
+	return fileref;
 
+}
 	void parse(ref firstword)
 	{
 		if (firstword == "run") {
@@ -96,7 +141,7 @@ void parsefile(string filename)
 	void init(string filename)
 	{
 		ref file = parsefile(filename);
-		ref firstword = file.getAll("line").front().getAll("word").front();
+		ref firstword = *file.getAll("line").begin()->getAll("word").begin();
 		
 		// the world is made of concepts, which are made of typed links to other
 		// concepts.  like apple color red
@@ -138,7 +183,6 @@ void parsefile(string filename)
 		//  [it sounds like you want me to fill in a generic programming language.  i don't have a lot of capacity for that with the uh control going on.  takes a long time.  wrote one already, but doesn't match your preferences]
 		//
 	}
-}
 
 // delta processes for bootstrapping
 // [the lines _are_ the code.  no need for special line thing.  just self-reference it seems.]
@@ -166,3 +210,5 @@ void parsefile(string filename)
 // make-more-deltay, or-implement-a-process-to-do-things-with-it.
 
 }
+
+#endif

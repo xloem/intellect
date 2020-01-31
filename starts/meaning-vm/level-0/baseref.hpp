@@ -37,7 +37,7 @@ public:
 	bool linked(ref const & type, ref const & target) const { return p->linked(type.p, target.p); }
 
 	ref get(ref const & type) const { return p->get(type.p); }
-	void set(ref const & type, ref const & target) { p->set(type.p, target.p); }
+	void set(ref const & type, ref const & target) const { p->set(type.p, target.p); }
 
 	array getAll(ref const & type) const;
 	links_t links() const;
@@ -71,21 +71,21 @@ public:
 	concept*& ptr() { return p; }
 	concept* const & ptr() const { return p; }
 
-	operator level0::ref const &() const { return *reinterpret_cast<level0::ref*>(this); }
-	operator level1::ref const &() const { return *reinterpret_cast<level1::ref*>(this); }
-	operator level2::ref const &() const { return *reinterpret_cast<level2::ref*>(this); }
-	operator level3::ref const &() const { return *reinterpret_cast<level3::ref*>(this); }
-	operator level4::ref const &() const { return *reinterpret_cast<level4::ref*>(this); }
-	operator level5::ref const &() const { return *reinterpret_cast<level5::ref*>(this); }
-	operator level6::ref const &() const { return *reinterpret_cast<level6::ref*>(this); }
-	operator level7::ref const &() const { return *reinterpret_cast<level7::ref*>(this); }
-	operator level8::ref const &() const { return *reinterpret_cast<level8::ref*>(this); }
-	operator level9::ref const &() const { return *reinterpret_cast<level9::ref*>(this); }
+	operator level0::ref const &() const { return *reinterpret_cast<level0::ref const*>(this); }
+	operator level1::ref const &() const { return *reinterpret_cast<level1::ref const*>(this); }
+	operator level2::ref const &() const { return *reinterpret_cast<level2::ref const*>(this); }
+	//operator level3::ref const &() const { return *reinterpret_cast<level3::ref const*>(this); }
+	operator level4::ref const &() const { return *reinterpret_cast<level4::ref const*>(this); }
+	operator level5::ref const &() const { return *reinterpret_cast<level5::ref const*>(this); }
+	operator level6::ref const &() const { return *reinterpret_cast<level6::ref const*>(this); }
+	operator level7::ref const &() const { return *reinterpret_cast<level7::ref const*>(this); }
+	operator level8::ref const &() const { return *reinterpret_cast<level8::ref const*>(this); }
+	operator level9::ref const &() const { return *reinterpret_cast<level9::ref const*>(this); }
 
 	operator level0::ref &() { return *reinterpret_cast<level0::ref*>(this); }
 	operator level1::ref &() { return *reinterpret_cast<level1::ref*>(this); }
 	operator level2::ref &() { return *reinterpret_cast<level2::ref*>(this); }
-	operator level3::ref &() { return *reinterpret_cast<level3::ref*>(this); }
+	//operator level3::ref &() { return *reinterpret_cast<level3::ref*>(this); }
 	operator level4::ref &() { return *reinterpret_cast<level4::ref*>(this); }
 	operator level5::ref &() { return *reinterpret_cast<level5::ref*>(this); }
 	operator level6::ref &() { return *reinterpret_cast<level6::ref*>(this); }
@@ -113,6 +113,9 @@ private:
 		mutated_it(It const & it) : it(it) { }
 
 		using mutit = mutated_it<val, It>;
+
+		mutated_it() { }
+		mutit & operator=(mutit const & other) { self.it = other.it; return self; }
 
 		mutit & operator++() { ++ self.it; return self; }
 		mutit operator++(int i) { return self.it.operator++(i); }

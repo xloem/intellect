@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ref.hpp"
+#include "concepts.hpp"
 
 #undef self
 
@@ -33,7 +34,7 @@ public:
 	{
 		if (innernotepad != "nothing") {
 			e.link("notepad", innernotepad);
-			entersubnotepad(e, "outer", true);
+			intellect::level2::entersubnotepad(e, "outer", true);
 			leave();
 		}
 		throw e;
@@ -51,7 +52,7 @@ private:
 	void leave()
 	{
 		if (innernotepad == "nothing") { return; }
-		if (intellect::level2::notepad() != innernotepad) { throw noteconcept().link("is", "not-in-correct-subnotepad", "notepad", intellect::level2::notepad, "inner-notepad", innernotepad, "outer-notepad", outernotepad); }
+		if (intellect::level2::notepad() != innernotepad) { throw intellect::level2::noteconcept().link("is", "not-in-correct-subnotepad", "notepad", intellect::level2::notepad, "inner-notepad", innernotepad, "outer-notepad", outernotepad); }
 		leavenotepad(ctx, innernotepad);
 		intellect::level2::notepad() = outernotepad;
 		innernotepad = "nothing";
@@ -62,9 +63,9 @@ private:
 		if (!ctx.linked("notepad")) { return; }
 		ref inner = ctx.get("notepad");
 		if (inner == "nothing") { return; }
-		innernotepad = subnotepad(inner);
-		entersubnotepad(ctx, inner);
-		if (innernotepad.get("outer") != outernotepad) { throw noteconcept().link("is","not-subnotepad-of-outer","inner-notepad",innernotepad,"outer-notepad",outernotepad,"name",inner,"context",ctx); }
+		innernotepad = intellect::level2::subnotepad(inner);
+		intellect::level2::entersubnotepad(ctx, inner);
+		if (innernotepad.get("outer") != outernotepad) { throw intellect::level2::noteconcept().link("is","not-subnotepad-of-outer","inner-notepad",innernotepad,"outer-notepad",outernotepad,"name",inner,"context",ctx); }
 		intellect::level2::notepad() = innernotepad;
 	}
 };
@@ -95,28 +96,39 @@ private:
 		(std::function<void(ref)>) \
 	[=](ref ctx) mutable \
 	{ \
-		restorenotepad notepadrestoration; \
+		intellect::level2::restorenotepad notepadrestoration; \
 		try { try { \
 			if (!everyone_already_cares_deeply_about_everyone_else_so_caring_talk_is_more_efficient_than_anything_else) { \
-				static int delay = sugar::rand(200000, 400000); \
-				sugar::usleep(delay); \
+				static int delay = intellect::level2::sugar::rand(200000, 400000); \
+				intellect::level2::sugar::usleep(delay); \
 			} \
 			notepadrestoration.switchwith(ctx); \
-			ref result("nothing"); (void)result; \
+			ref result; (void)result; \
+			static ref const compiled_self(#nam);\
+			ref self;\
+			if (!ctx.linked(intellect::level2::concepts::self_)) {\
+				ctx.set(intellect::level2::concepts::self_, compiled_self);\
+				self = compiled_self;\
+			} else {\
+				self = ctx.get(intellect::level2::concepts::self_);\
+			}\
+			bool quiet = self.linked(intellect::level2::concepts::quiet); \
 			result = ([&]() mutable ->ref {\
-				ref self = ctx.get(ref("self")); (void)self; \
-				std::cerr << "[habit " << self.name(); \
+				if (!quiet) { std::cerr << "[habit " << self.name(); } \
 				_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
 				__VA_ARGS__ \
 				return result; \
 			})(); \
-			if (innotepad(result, intellect::level2::notepad()) && !innotepad(result, subnotepad("outer", true))) { \
-				entersubnotepad(result, "outer", true); \
+			if (intellect::level2::innotepad(result, intellect::level2::notepad()) && !intellect::level2::innotepad(result, intellect::level2::subnotepad("outer", true))) { \
+				intellect::level2::entersubnotepad(result, "outer", true); \
 			} \
-			ctx.link(ref("result"), result); std::cerr << " result:" << result.name(); \
-			std::cerr << "]" << std::endl; \
+			ctx.link(intellect::level2::concepts::result, result); \
+			if (!quiet) { \
+				std::cerr << " result:" << result.name(); \
+				std::cerr << "]" << std::endl; \
+			} \
 		} catch(...) { \
-			rethrowref(); \
+			intellect::level2::rethrowref(); \
 		} } catch(decltype(intellect::level2::notepad()) const & e) { \
 			notepadrestoration.rethrow(e); \
 		} \
@@ -131,14 +143,14 @@ private:
 		, ref(#name)
 	#define _macro_habit_set_posarg(nam, tok, ...) \
 		if ((#__VA_ARGS__)[0] == 0 && !ctx.linked(ref(#nam))) { \
-			throw noteconcept().link \
+			throw intellect::level2::noteconcept().link \
 				("is", ref("habit-context-missing-information"), \
 				 ref("habit"), self, \
 				 ref("context"), ctx, \
 				 ref("missing-information"), ref(#nam)); \
 		} \
 		ref tok = ctx.linked(ref(#nam)) ? ctx[ref(#nam)] : ref(#__VA_ARGS__); \
-		std::cerr << " " << #nam << ":" << tok.name();
+		if (!quiet) { std::cerr << " " << #nam << ":" << tok.name(); }
 	#define _macro_habit_assume(info, tok, ...) \
 		if ((#__VA_ARGS__)[0] != 0) { intellect::level2::habitassume(_macro_habit_name, ref(#info), ref(#__VA_ARGS__)); }
 

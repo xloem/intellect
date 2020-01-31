@@ -21,12 +21,12 @@ struct baseref : public level1::baseref<ref>
 	static ref & context() { return level2::context(); }
 
 	template <typename... Refs>
-	ref operator()(ref first, Refs... rest) { return level2::dohabit(self, {first, rest...}); }
-	ref operator()(std::initializer_list<std::initializer_list<ref>> pairs) { return level2::dohabit(self, pairs); }
-	ref operator()() { return level2::dohabit(self); }
+	ref operator()(ref first, Refs... rest) const { return level2::dohabit(self, {first, rest...}); }
+	ref operator()(std::initializer_list<std::initializer_list<ref>> pairs, bool extra_information = false) const { return level2::dohabit(self, pairs, extra_information); }
+	ref operator()() const { return level2::dohabit(self); }
 
 	template <typename... Refs>
-	ref act(ref habit, Refs... rest) { return level2::dohabit(habit, {self, rest...}); }
+	ref act(ref habit, Refs... rest) const { return level2::dohabit(habit, {self, rest...}); }
 
 	void replace(ref other) { *self.ptr() = *other.ptr(); }
 };

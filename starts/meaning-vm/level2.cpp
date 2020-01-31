@@ -610,7 +610,7 @@ void parse(ref stream, ref subnotepad)
 					} else if (laststep != nothing) {
 						laststep.link("next-step", nextstep);
 					}
-					ref habit = values.count(action) ? action : lookup(action);
+					ref habit = lookup(action);
 					ref order = makehabitinformationorder(habit);
 					ref neededmap = makeconcept();
 					ref knownmap = makeconcept();
@@ -632,7 +632,7 @@ void parse(ref stream, ref subnotepad)
 					dealloc(stream2, intellect::level0::concepts::allocations());
 					ref mademap = makeconcept();
 					if (result.size()) {
-						mademap.link("result", values.count(result) ? result : lookup(result));
+						mademap.link("result", result);
 					}
 					ref("set-context-step")(nextstep, "nothing", knownmap, neededmap, mademap, habit);
 					laststep = nextstep;

@@ -1,11 +1,20 @@
-#include "bootstrap-perser.hpp"
+#include "bootstrap-parser.hpp"
+
+#include "../level-1/sugar.hpp"
+#include "../level-2/habits.hpp"
+#include "../level-2/sugar.hpp"
+
+#include <deque>
+#include <fstream>
+#include <list>
+#include <set>
 
 namespace intellect {
 namespace level3 {
 
-// 2020-01-26
-// this file is all over but contains some useful tools.
-// Let's copy from level2.cpp into around line 904 now.
+// 2020-01-28
+// i made a bootstrap-word habit that handles quotes and considers line-endings
+// a word.  it has disappeared, i must have accidentally erased it.  remaking.
 
 // I'm noticing a lot of confusion around the use of text strings and names.
 // It could be worthwhile to make use of name contexts, using text, globally, in
@@ -335,12 +344,12 @@ language, as has been expected.
 
 ref parsevalue(ref stream)
 {
-	istream & ss = *stream.val<istream*>();
-	string word;
+	std::istream & ss = *stream.val<std::istream*>();
+	std::string word;
 	ss >> word;
 	if (word.size() > 0 && (word[0] == '"' || word[0] == '\'' || word[0] == '`')) {
 		char delim = word[0];
-		string accum = word;
+		std::string accum = word;
 		if (accum[accum.size()-1] != delim || accum.size() == 1) {
 			char c;
 			while ((c = ss.get()) != delim) {
@@ -355,19 +364,31 @@ ref parsevalue(ref stream)
 	return word;
 }
 
+static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text");
+
 // let's do contextual word lookup.  it will really ease stuff later.
 
 
 // we use text for two things:
 // 1. symbols and text
 // 2. bootstrap-context references and concepts
+// instead of nothing or everything >_>
 std::string ref2txt(ref r)
 {
-	return r.vget<std::string>("name");
+	//return r.vget<std::string>(name_);
+	return r.val<std::string>();
+}
+bool istxtref(ref r)
+{
+	return r.isa(text_);
 }
 ref txt2ref(std::string t)
 {
-	return ref(t).get("name");
+	return ref(t).get(name_);
+}
+ref txtref2bootstrap(ref txt)
+{
+	return ref(ref2txt(txt));
 }
 
 // we'll want a way to swap off expression-ctx vs statement-ctx in a way that doesn't
@@ -380,37 +401,37 @@ ref ctxlookup(ref context, ref item)
 	std::map<ref,ref> exclusive_ctx_groups;
 	std::set<ref> encountered;
 	std::deque<ref> nesteds;
-	encountered.push_back(context);
+	encountered.insert(context);
 	nesteds.push_back(context);
 
 	while (!nesteds.empty()) {
-		context = nesteds.pop_front();
+		context = nesteds.front(); nesteds.pop_front();
 		for (auto link : context.links()) {
-			if (link.type == item) {
-				return link.target;
-			} else if (link.type == "is" || link.type == "outer-context") {
-				if (encountered.count(link.target)) { continue; }
-				nesteds.push_back(link.target);
-				encountered.push_back(link.target);
-			} else if (link.type.isan("exclusive-context-group")) {
-				if (!exclusive_ctx_groups.count(link.type)) {
-					exclusive_ctx_groups[link.type] = link.target;
-					nesteds.push_back(link.target);
-					encountered.push_back(link.target);
+			if (link.first == item) {
+				return link.second;
+			} else if (link.first == "is" || link.second == "outer-context") {
+				if (encountered.count(link.second)) { continue; }
+				nesteds.push_back(link.second);
+				encountered.insert(link.second);
+			} else if (link.first.isan("exclusive-context-group")) {
+				if (!exclusive_ctx_groups.count(link.first)) {
+					exclusive_ctx_groups[link.first] = link.second;
+					nesteds.push_back(link.second);
+					encountered.insert(link.second);
 				}
 			}
 		}
 	}
-	throw makeconcept().link("is", "item-not-in-context");
+	throw intellect::level2::noteconcept().link("is", "item-not-in-context");
 }
 
 // what-distinguishes-words
 ref parsewordtxt_ws(ref context, ref stream)
 {
-	string word;
-	istream & ss = *stream.val<istream*>();
+	std::string word;
+	std::istream & ss = *stream.val<std::istream*>();
 	ss >> word;
-	if (!ss) throw makeconcept().link("is", "end-of-stream", "stream", stream);
+	if (!ss) throw intellect::level2::noteconcept().link("is", "end-of-stream", "stream", stream);
 	return txt2ref(word);
 }
 
@@ -420,7 +441,7 @@ void parseprefix(ref context, ref stream, ref prefix)
 	try {
 		while (true) {
 			ref parsertxt = parsewordtxt_ws(context, stream);
-			if (!ss) break;
+			if (!*stream.val<std::istream*>()) break;
 			ctxlookup(context, parsertxt)(context, stream, parsertxt);
 		}
 	} catch(ref r) {
@@ -437,52 +458,397 @@ void parseprefix(ref context, ref stream, ref prefix)
 class ConceptException
 {
 public:
-	template <typename Rs...>
+	template <typename... Rs>
 	ConceptException(std::string type, Rs... rs)
-	: r(makeconcept().link("is", type, rs...))
+	: r(intellect::level2::noteconcept().link("is", type, rs...))
 	{ }
 
 	ConceptException(ConceptException &) = delete;
 	ConceptException(ConceptException && other)
 	{
 		r = other.r;
-		other.r = 0;
+		other.r.ptr() = 0;
 	}
 
 	operator ref() { return r; }
 
 	~ConceptException()
 	{
-		if (r) { conceptunmake(r); }
+		if (r.ptr()) { intellect::level2::conceptunmake(r); }
 	}
 
 	ref r;
-}
+};
 
+class ConceptUnmaker
+{
+public:
+	ConceptUnmaker(ref C)
+	: C(C) { }
+	~ConceptUnmaker()
+	{
+		conceptunmake(C);
+	}
+private:
+	ref C;
+};
 class StreamSentinel
 {
 public:
 	StreamSentinel(ref S)
-	: ct(0), S(S)
-	{ }
-
-	ref value() { return S["do-value"](S); }
-	void next() { S["do-next"](S); ++ ct; }
-	void previous() { S["do-previous"](S); -- ct; }
-
-	~StreamSentinel(ref S)
+	: S(S)
 	{
-		while (ct > 0) { previous(); }
-		while (ct < 0) { next(); }
+		returntohere();
+	}
+
+	ref value() { return S[dovalue](S); }
+	void next() { S[donext](S); }
+	void previous() { S[doprevious](S); }
+	void go(ref w) { S[dogo](S, w); }
+	ref where() { return S[dowhere](S); }
+	void returntohere() { origin = where(); }
+
+	~StreamSentinel()
+	{
+		go(origin);
 	}
 
 private:
+	ref origin;
 	ref S;
-	int ct;
 };
+
+ref bootstraplookup(ref text)
+{
+	std::string str = ref2txt(text);
+	if (str[0] == '\'' || str[0] == '\"' || str[0] == '`') {
+		if (str[str.size()-1] == str[0]) {
+			std::string temp = str.c_str()+1;
+			temp.resize(temp.size()-1);
+			if (str[0] == '\"') { return txt2ref(temp); }
+			str = temp;
+		}
+	}
+	return intellect::level2::getnamed(str);
+}
+
+ref bootstrapmatchingbrace(std::string brace1)
+{
+	static ref nothing("nothing");
+	//std::string brace1 = ref2txt(bracetxt);
+	std::string brace2;
+	if (brace1 == "[") { brace2 = "]"; }
+	else if (brace1 == "{") { brace2 = "}"; }
+	else if (brace1 == "(") { brace2 = ")"; }
+	else if (brace1 == "<") { brace2 = ">"; }
+	else if (brace1 == "[[") { brace2 = "]]"; }
+	else if (brace1 == "{{") { brace2 = "}}"; }
+	else if (brace1 == "((") { brace2 = "))"; }
+	else if (brace1 == "<<") { brace2 = ">>"; }
+	else if (brace1 == "begin") { brace2 = "end"; }
+	else { return nothing; }
+	return txt2ref(brace2);
+}
+
+ref bootstrap_word(ref self, ref stm, ref spc)
+{
+	StreamSentinel s(stm);
+	std::string concat;
+	std::string quote;
+	std::string letter;
+	try {
+		while (true) {
+			letter = ref2txt(s.value());
+			if (letter == " " || letter == "\r" || letter == "\t") {
+				std::cerr << "(" << letter << ")";
+				s.next();
+				continue;
+			}
+			break;
+		}
+		if (letter == "'" || letter == "\"" || letter == "`") { quote = concat = letter; s.next(); }
+		while (true) {
+			letter = ref2txt(s.value());
+			if (!quote.size()) {
+				if (letter == " " || letter == "\r" || letter == "\t") {
+					break;
+				}
+				if (concat.size() != 0 && (letter == "\n" || letter == "[" || letter == "{" || letter == "(" || letter == "<" || letter == "]" || letter == "}" || letter == ")" || letter == ">") ) {
+					// second token should end processing, but keep for next processing
+					s.previous();
+					break;
+				}
+			}
+			std::cerr << letter;
+			concat += letter;
+			if (quote.size()) {
+				if (letter == quote) {
+					break;
+				}
+			} else if (concat == "\n" || concat == "[" || concat == "{" || concat == "(" || concat == "<" || concat == "]" || concat == "}" || concat == ")" || concat == ">") {
+				break;
+			}
+			s.next();
+		}
+		std::cerr << "(" << letter << ")";
+	} catch(ref r) {
+		if (r.isa("end-of-stream") && !quote.size()) {
+			conceptunmake(r);
+			// just another way to terminate the loop
+		} else {
+			throw r;
+		}
+	}
+	if (concat.size() == 0) {
+		throw intellect::level2::noteconcept().link("is","pattern-failure", "pattern", self);
+	}
+	ref result = txt2ref(concat);
+	s.returntohere();
+	return result;
+}
+
+#undef self
+// uhh for comments, thinking about processing them inside the word-parser.
+// so, that means the stream offers tokens that _aren't_ processed by a wctx.
+// meanwhile, it calls wctx for every one that is.
+// 	does that work?  uhhhh
+// 	so, we start off, say run into 'habit'.  the main parser is a word parser,
+// 	offering a stream of unparsed words, mysteriously skipping ones that are
+// 		i think that might work.
+// 			it may have an unaddressed problem that may crop up later.
+// is good for comments.  we have comments, concept, and habit atm.
+// 	so we are planning to make a stream where the parser checks wctx.
+// 	and replace the main parser with it.
+// 	okay!
+// 		okay, i found an unaddressed issue, as was predicted, luckily soon
+// 		the [ parser is used to handle ['s.
+// 		results of parsing aren't put anywhere, so with it not being called manually,
+// 		braced content will disappear from parsing now.
+// 		we should output the results of our parsing into the stream made by the parser.  comments don't output anything, so they're skipped.
+// 			incidentally, this implements expressions!  and is small and easy!
+ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self, ref wctx)
+{
+	//StreamSentinel s(ws);
+	auto tokenname = ref2txt(tokennameref);
+	if (tokenname != "habit" && tokenname != "parser") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+	ref habitname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	ref habit = intellect::level2::getnamed(ref2txt(habitname), true);
+	ref args = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	ref results = (ws.get(donext)(ws), ws.get(dovalue)(ws)); (void)results;
+	ref steps = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	//ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
+	for (auto target : args.getAll(word)) {
+		args.unlink(word, target);
+		// txtref2bootstrap is used because there are still name values
+		// like "self" and "context" coming from level2
+		if (ref2txt(target) == "\n") { continue; }
+		args.link(informationorder, txtref2bootstrap(target));
+	}
+	ref("set-steps")(habit, args);
+	if (tokenname == "parser") { wctx.set(habitname, habit); }
+	// now we copy from level2.cpp, noting that \n is a symbol now
+	std::map<std::string, ref> labels;
+	std::set<std::string> values;
+	values.insert("context");
+	values.insert("self");
+	values.insert("result");
+	for (auto target : args.getAll(informationorder)) {
+		values.insert(target.name());
+	}
+	ref laststep = habit;
+	labels["return"] = nothing;
+	auto stepwords = steps.getAll(word);
+	for (auto wordsit = stepwords.begin(); wordsit != stepwords.end(); ++ wordsit) {
+		std::string label, result;
+		std::string word = ref2txt(*wordsit);
+		if (word == "\n") { continue; }
+		if (word[word.size()-1] == ':' || word[word.size()-1] == ',') {
+			label = word;
+			label.resize(label.size() - 1);
+			if (label == "return") { throw intellect::level2::noteconcept().link("is", "return-label-used"); }
+			word = ref2txt((++ wordsit, *wordsit));
+		}
+		if (word == "=" || word == "set") {
+			++ wordsit;
+			result = ref2txt(*wordsit);
+			++ wordsit;
+			word = ref2txt(*wordsit);
+			values.insert(result);
+		}
+		if (word[word.size()-1] == '.') {
+			// is goto
+			word.resize(word.size() - 1);
+			if (!labels.count(word)) {
+				labels.emplace(word, intellect::level2::noteconcept());
+			}
+			labels[word].link("label", word);
+			if (laststep.isa("condition-step")) {
+				if (ref("condition-step-get")(laststep, "anything") != "nothing") {
+					throw intellect::level2::noteconcept().link("is", "condition-already-has-anything-branch,-and-jump-follows", "condition", laststep, "label", labels[word]);
+				}
+				ref("condition-step-set")(laststep, "anything", labels[word]);
+			} else {
+				if (laststep.linked("next-step")) {
+					throw intellect::level2::noteconcept().link("is", "jump-from-nowhere", "label", word);
+				}
+				laststep.link("next-step", labels[word]);
+			}
+			laststep = ref("nothing");
+			continue;
+		}
+		if (word == "if") {
+			word = ref2txt((++ wordsit, *wordsit));
+			ref cond = wctx.get(txt2ref("lookup"))(*wordsit);
+			word = ref2txt((++ wordsit, *wordsit));
+			if (word[word.size()-1] != '.') {
+				throw intellect::level2::noteconcept().link("is", "condition-is-not-label", "action", word, "cond", cond);
+			}
+			if (!laststep.isa("condition-step")) {
+				throw intellect::level2::noteconcept().link("is", "if-not-following-condition", "cond", cond, "action", word);
+			}
+			if (label.size()) {
+				throw intellect::level2::noteconcept().link("is", "if-case-has-label", "cond", cond, "action", word, "label", label);
+			}
+			word.resize(word.size()-1);
+			if (!labels.count(word)) {
+				labels.emplace(word, intellect::level2::noteconcept());
+				labels[word].link("label", word);
+			}
+			ref("condition-step-set")(laststep, cond, labels[word]);
+			// if this improves from being  jump, remember to
+			// update laststep to end of any 'anything' branch
+			continue;
+		}
+		if (laststep == "nothing" && label.size() == 0) { throw intellect::level2::noteconcept().link("is", "no-path-to-code"); }
+		if (label.size() && !labels.count(label)) {
+			labels[label] = intellect::level2::noteconcept();
+			labels[label].link("label", label);
+		}
+		ref nextstep = label.size() ? labels[label] : intellect::level2::noteconcept();
+		if (word == "?" || word == "pick") {
+			word = ref2txt((++ wordsit, *wordsit));
+			if (!values.count(word)) {
+				throw intellect::level2::noteconcept().link("is", "condition-must-be-in-context", "condition", word);
+			}
+			laststep = ref("set-condition-step")(nextstep, laststep, word, intellect::level2::noteconcept().link("anything", "nothing"));
+		} else {
+			// otherwise, is an action, and we have to read the args
+			if (laststep.isa("condition-step")) {
+				if (ref("condition-step-get")(laststep, "anything") != "nothing") {
+					if (label.size() == 0) {
+						throw intellect::level2::noteconcept().link("is", "condition-already-has-anything-branch,-and-steps-follow", "condition", laststep);
+					}
+				} else {
+					ref("condition-step-set")(laststep, "anything", nextstep);
+				}
+			} else if (laststep != "nothing") {
+				laststep.link("next-step", nextstep);
+			}
+			ref order;
+			decltype(order.getAll(order)) orderitems;
+			decltype(orderitems.begin()) orderit;
+			ref neededmap = intellect::level2::noteconcept();
+			ref knownmap = intellect::level2::noteconcept();
+			ref subhabit = *wordsit;
+			if (values.count(ref2txt(subhabit))) {
+				neededmap.link(intellect::level2::concepts::self_, txtref2bootstrap(subhabit));
+			} else {
+				subhabit = wctx.get(txt2ref("lookup"))(subhabit);
+				knownmap.link(intellect::level2::concepts::self_, subhabit);
+		       		order = makehabitinformationorder(subhabit);
+				orderitems = order.getAll(informationorder);
+				orderit = orderitems.begin();
+			}
+			while (true) {
+				if (order != nothing && orderit == orderitems.end()) {
+					conceptunmake(order);
+					order = nothing;
+				}
+				ref arg = (++ wordsit, *wordsit);
+				if (arg.isa(bracedwords)) {
+					auto words = arg.getAll(word_);
+					auto it = words.begin();
+					ref label = txtref2bootstrap(*it);
+					if (order != nothing) {
+						if (*orderit != label) {
+							throw intellect::level2::noteconcept().link("is", "out-of-order-information", "information", label, "expected", *orderit, "habit", habit, "subhabit", subhabit);
+						}
+						++ orderit;
+					}
+					++it;
+					ref val = *it;
+					if (values.count(ref2txt(val))) {
+						neededmap.link(label, txtref2bootstrap(val));
+					} else {
+						knownmap.link(label, wctx.get(txt2ref("lookup"))(val));
+					}
+					++it;
+					if (it != words.end()) { throw intellect::level2::noteconcept().link("is", "extra-word-in-label-information-pair", "space", ws); } 
+					continue;
+				}
+				std::string argname = ref2txt(arg);
+				if (argname == "\n") { break; }
+				if (order == nothing) { throw intellect::level2::noteconcept().link("is","extra-information-for-subhabit", "subhabit", subhabit, "habit", habit, "information", arg); }
+				if (values.count(argname)) {
+					neededmap.link(*orderit, txtref2bootstrap(arg));
+				} else {
+					knownmap.link(*orderit, wctx.get(txt2ref("lookup"))(arg));
+				}
+				++ orderit;
+			}
+			// TODO: could check to make sure all ordered information is provided.
+			if (order != nothing) { conceptunmake(order); }
+			ref mademap = intellect::level2::noteconcept();
+			if (result.size()) {
+				mademap.link("result", txtref2bootstrap(txt2ref(result)));
+			}
+			ref("set-context-step")(nextstep, "nothing", knownmap, neededmap, mademap);
+			laststep = nextstep;
+		}
+	}
+	return habit;
+}
+/*
+ref bootstrap_parse_call(ref file, ref ws, ref ctx, ref self, ref wctx)
+{
+	// ran into issue: word-array is not a wordspace.
+	// propose making the brace parser be a stream constructor.
+	// returns stream at a location in a keep-stream, that runs
+	// into end at end of braces.
+	// 	what do we use for subbraces.
+	// 		uhh it looks like implementing will make this obvious
+	// 		streams? looks like streams.
+}
+*/
+
+ref bootstrap_parse_concept(ref file, ref ws, ref ctx, ref self, ref wctx)
+{
+	if (ref2txt(ws.get(dovalue)(ws)) != "concept") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+	ref conceptname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	ref concept = intellect::level2::getnamed(ref2txt(conceptname), true);
+	ref parts = wctx.get(txt2ref("[")).fun<ref>()(ctx);
+	ConceptUnmaker partsdel(parts);
+	auto allparts = parts.getAll("word");
+	for (auto it = allparts.begin(); it != allparts.end();) {
+		while (ref2txt(*it) == "\n") { ++ it; continue; }
+		ref type = (*it);
+		++ it;
+		while (ref2txt(*it) == "\n") { ++ it; }
+		ref target = (*it);
+		concept.link(wctx.get(txt2ref("lookup"))(type), wctx.get(txt2ref("lookup"))(target));
+		++ it;
+	}
+	return concept;
+}
+
 
 void loadhabits()
 {
+	intellect::level2::createhabits();
+
+	decls(entry, previous, next, source, value, word, parser, nothing, file, focus, space, is);
+	ref doprevious("do-previous"), donext("do-next"), streammoverelative("stream-move-relative"), openbrace("open-brace"), closebrace("close-brace"), dogo("do-go"), dowhere("do-where"), informationorder("information-order"), filecontext("file-context"), wordcontext("word-context"), parsecontext("parse-context"), result_("result"), bracedwords("braced-words"), word_("word");
+
 	// GOAL: provide for syntax sugar with ease
 
 	// can we parse into a stream for infix and postfix operator handling that is loose
@@ -497,32 +863,35 @@ void loadhabits()
 	// keep-stream is for rewindable and peekable streams.
 	// tokenization streams don't need this, nor do c++ sstreams
 	
-	aHabit("make-c++-stream-from-filename", ((filename, fn)), {
-		std::iostream * stm = new std::fstream(fn);
-		result = ref("make-c++-stream")(stm);
-	})
-
-	aHabit("make-c++-stream", ((source, stm)), {
-		result = makeconcept();
-		result.link("source", stm);
-		result.link("do-value", "stream-value");
-		result.link("do-next-letter", "c++-stream-next-letter");
-		result.link("do-next-word", "c++-stream-next-word");
+	ahabit(make-c++-stream-from-filename, ((filename, fn)), {
+		std::iostream * stm = new std::fstream(ref2txt(fn));
+		result = ref("make-c++-stream")(intellect::level2::noteconcept(stm));
 	});
 
-	aHabit("c++-stream-unmake", ((stream, stm)), {
-		iostream * ss = stm.get("source").val<iostream*>();
-		conceptunmake(stm);
+	ahabit(make-c++-stream, ((source, stm)), {
+		result = intellect::level2::noteconcept();
+		result.link("source", stm);
+		result.link(dovalue, "stream-value");
+		result.link("do-next-letter", "c++-stream-next-letter");
+		result.link("do-next-word", "c++-stream-next-word");
+		result.link("do-next-line", "c++-stream-next-line");
+	});
+
+	ahabit(c++-stream-unmake, ((stream, stm)), {
+		ref src = stm.get("source");
+		std::iostream * ss = src.val<std::iostream*>();
+		intellect::level2::conceptunmake(stm);
+		intellect::level2::conceptunmake(src);
 		delete ss;
 	});
 
 	/*
-	aHabit("make-c++-word-stream", ((source, stm)), {
+	ahabit(make-c++-word-stream, ((source, stm)), {
 		result = ref("make-c++-stream")(stm);
-		result.link("do-next", result.get("do-next-word"));
+		result.link(donext, result.get("do-next-word"));
 	});
 
-	aHabit("make-c++-letter-stream", ((source, stm)), {
+	ahabit(make-c++-letter-stream, ((source, stm)), {
 		result = ref("make-c++-stream")(stm);
 		result.link("do-next", result.get("do-next-letter"));
 	});
@@ -646,91 +1015,118 @@ void loadhabits()
 
 
 
-	aHabit("c++-stream-next-letter", ((source, stm)), {
-		iostream & ss = *stm.get("source").val<iostream*>();
-		char c[2] = { ss.get(), 0 };
-		if (!ss) { throw makeconcept().link("is", "end-of-stream", "stream", stm); }
-		stm.set("value", txt2ref(c));
+	ahabit(c++-stream-next-letter, ((space, stm)), {
+		std::iostream & ss = *stm.get(source).val<std::iostream*>();
+		char c[2] = { (char)ss.get(), 0 };
+		if (!ss) { throw intellect::level2::noteconcept().link("is", "end-of-stream", "stream", stm); }
+		stm.set(value, txt2ref(c));
 	});
+	ref("c++-stream-next-letter").link("quiet", true);
 
-	aHabit("c++-stream-next-word", ((source, stm)), {
-		iostream & ss = *stm.get("source").val<iostream*>();
+	ahabit(c++-stream-next-word, ((space, stm)), {
+		std::iostream & ss = *stm.get(source).val<std::iostream*>();
 		std::string s;
 		ss >> s;
-		if (!ss) { throw makeconcept().link("is", "end-of-stream", "stream", stm); }
-		stm.set("value", txt2ref(s));
+		if (!ss) { throw intellect::level2::noteconcept().link("is", "end-of-stream", "stream", stm); }
+		stm.set(value, txt2ref(s));
 	});
 
-	aHabit("make-parser-stream", ((source, stm), (parser, p)), {
-		ref ret = makeconcept();
+	ahabit(make-parser-stream, ((source, stm), (parser, p)), {
+		ref ret = intellect::level2::noteconcept();
 		ret.link("is", "parser-stream");
 		ret.link("is", "stream");
+		ret.link("is", p-ref("parser-stream"));
 		ret.link("source", stm);
 		ret.link("parser", p);
-		ret.link("do-next", "parser-stream-next");
-		ret.link("do-value", "stream-value");
-		ret.get("do-next")(ret);
+		ret.link(donext, "parser-stream-next");
+		ret.link(dogo, "parser-stream-go");
+		ret.link(dowhere, "parser-stream-where");
+		ret.link(dovalue, "stream-value");
+		ret.set(value, p(stm, ret));
 		result = ret;
 	});
 	
-	aHabit("parser-stream-next", ((source, stm)), {
+	ahabit(parser-stream-go, ((space, stm), (where, w)), {
+		stm.get(source).get(dogo)(w);
+		return stm;
+	});
+	ahabit(parser-stream-where, ((space, stm)), {
+		return stm.get(source).get(dowhere)();
+	});
+	ahabit(parser-stream-next, ((space, stm)), {
 		try {
-			ref item = stm.get("parser")(stm.get("source"));
-		} catch(r) {
+			ref src = stm.get(source);
+			src.get(donext)(src);
+			ref item = stm.get(parser)(src, stm);
+			stm.set(value, item);
+		} catch(intellect::level2::ref r) {
 			if (r.linked("stream") || r.isa("end-of-stream")) {
 				r.set("stream", stm);
 			}
 			throw r;
 		}
-		stm.set("value", item);
 	});
+	ref("parser-stream-next").link("quiet", true);
 	
-	aHabit("stream-value", ((source, stm)), {
-		result = stm.get("value");
+	ahabit(stream-value, ((space, stm)), {
+		result = stm.get(value);
 	});
-	
-	aHabit("make-keep-stream", ((source, stm)), {
-		ref ret = makeconcept();
+	ref("stream-value").link("quiet", true);
+
+	ahabit(make-keep-stream, ((source, stm)), {
+		ref ret = intellect::level2::noteconcept();
 		ret.link("is", "keep-stream");
 		ret.link("is", "stream");
-		ret.link("is", p-ref("keep-stream"));
 		ret.link("source", stm);
-		ref entry = makeconcept();
-		wordentry.link("value", stm.get("do-value")(stm));
-		ret.link("entry", entry);
-		ret.link("first", entry);
-		ret.link("do-value", "keep-stream-value");
-		ret.link("do-next", "keep-stream-next");
-		ret.link("do-previous", "keep-stream-previous");
+		ref ntry = intellect::level2::noteconcept();
+		ntry.link(value, stm.get(dovalue)(stm));
+		ret.link(entry, ntry);
+		ret.link("first", ntry);
+		ret.link(dovalue, "keep-stream-value");
+		ret.link(donext, "keep-stream-next");
+		ret.link(doprevious, "keep-stream-previous");
+		ret.link(dogo, "keep-stream-go");
+		ret.link(dowhere, "keep-stream-where");
 		return ret;
 	});
-	aHabit("keep-stream-unmake", ((keep-stream, stm)), {
-		conceptunmake(stm.get("entry"));
+	ahabit(keep-stream-unmake, ((keep-stream, stm)), {
+		conceptunmake(stm.get(entry));
 		conceptunmake(stm);
 	});
-	aHabit("keep-stream-value", ((keep-stream, stm)), {
-		return stm.get("entry").get("value");
+	ahabit(keep-stream-value, ((space, stm)), {
+		return stm.get(entry).get(value);
 	});
-	aHabit("keep-stream-next", ((keep-stream, stm)), {
-		ref entry = stm.get("entry");
-		if (entry.linked("next")) {
-			stm.set("entry", entry.get("next"));
+	ref("keep-stream-value").link("quiet", true);
+	ahabit(keep-stream-where, ((space, stm)), {
+		return stm.get(entry);
+	});
+	ref("keep-stream-where").link("quiet", true);
+	ahabit(keep-stream-go, ((space, stm), (where, w)), {
+		stm.set(entry, w);
+		return stm;
+	});
+	ref("keep-stream-go").link("quiet", true);
+	ahabit(keep-stream-next, ((space, stm)), {
+		ref ntry = stm.get(entry);
+		if (ntry.linked(next)) {
+			stm.set(entry, ntry.get(next));
 		} else {
-			ref next = makeconcept();
-			next.link("previous", entry);
-			entry.link("next", next);
-			stm.set("entry", next);
-			ref src = stm.get("source");
-			src.get("do-next")(stm));
-			next.link("value", src.get("do-value")(stm));
+			ref nxt = intellect::level2::noteconcept();
+			nxt.link(previous, ntry);
+			ntry.link(next, nxt);
+			stm.set(entry, nxt);
+			ref src = stm.get(source);
+			src.get(donext)(src);
+			nxt.link(value, src.get(dovalue)(src));
 		}
 	});
-	aHabit("keep-stream-previous", ((keep-stream, stm)), {
-		ref cur = stm.get("entry");
-		if (!linked(cur, "previous")) {
-			throw makeconcept().link("is", "start-of-stream", "stream", stm);
+	ref("keep-stream-next").link("quiet", true);
+	ahabit(keep-stream-previous, ((space, stm)), {
+		ref cur = stm.get(entry);
+		if (!cur.linked(previous)) {
+			throw intellect::level2::noteconcept().link("is", "start-of-stream", "stream", stm);
 		}
-		stm.set("entry", cur.get("previous"));
+		stm.set(entry, cur.get(previous));
 	});
 
 	// keep-stream of letters.  make keep-stream of words.
@@ -738,17 +1134,16 @@ void loadhabits()
 	// is less confusing to make parser stream also be a keep stream.
 	// 	we could use patterns here.
 	
-	// this doesn't note the bounds of the word, but does advance the stream from one end
-	// of the word, to the other.  the bounds are kept in the before-state and after-state
-	// due to the advancement, I guess.
-	aHabit("whitespace-word", ((letter-stream, stm)), {
+	// this actually functions to return the stream to where it was at start.
+	// probably the intention was to make a mutated stream somehow.
+	// for now, I've simply disabled that, using returntohere().
+	ahabit(whitespace-word, ((source, stm), (space, mystrm)), {
 		StreamSentinel s(stm);
 		std::string concat;
-		ref letter;
-		int count = 0;
+		std::string letter;
 		try {
 			while (true) {
-				letter = s.value();
+				letter = ref2txt(s.value());
 				if (letter == " " || letter == "\r" || letter == "\n" || letter == "\t") {
 					s.next();
 					continue;
@@ -756,47 +1151,81 @@ void loadhabits()
 				break;
 			}
 			while (true) {
-				letter = s.value();
+				letter = ref2txt(s.value());
 				if (letter == " " || letter == "\r" || letter == "\n" || letter == "\t") {
 					break;
 				}
-				concat += ref2txt(letter);
+				concat += letter;
 				s.next();
-				}
 			}
 		} catch(ref r) {
 			if (r.isa("end-of-stream")) {
 				conceptunmake(r);
-				break;
+				// just another way to terminate the loop
 			} else {
 				throw r;
 			}
 		}
 		if (concat.size() == 0) {
-			throw makeconcept().link("is","pattern-failure", "pattern", self);
+			throw intellect::level2::noteconcept().link("is","pattern-failure", "pattern", self);
 		}
 		result = txt2ref(concat);
+		s.returntohere();
 	});
+	//ahabit(bootstrap-matching-brace, ((brace-text, bracetxt)), {
+	//auto bootstrapmatchingbrace = [](std::string brace1)
+	//{
+	//};//);
+	//ref bootstrapmatchingbrace("bootstrap-matching-brace");
+	ahabit(bootstrap-word, ((source, stm), (space, spc)), {
+		return bootstrap_word(self, stm, spc);
+	});
+	ref("bootstrap-word").link("quiet", true);
 
-	aHabit("parse-relative-index", ((index-text, txt)), {
+	// we are passing the source stream to the habit parser as the wordpace.
+	// fix.
+	ahabit(bootstrap-parser, ((source, stm), (space, spc)), {
+		ref fctx = stm.get(filecontext);
+		ref wctx = fctx.get(wordcontext);
+		ref pctx = fctx.get(parsecontext);
+		ref f = fctx.get(file);
+		// i'd really like to donext all but the first time.
+		// 	... we don't wnt to donext if we haven't processed the first value yet.
+		// 	
+		while (true) {
+			ref word = stm.get(dovalue)(stm);
+			if (!wctx.linked(word)) {
+				return word;
+			}
+			spc.set(value, word);
+			result = wctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
+			if (result != nothing) {
+				return result;
+			}
+			stm.get(donext)(stm);
+		}
+	});
+	ref("bootstrap-parser").link("quiet", true);
+
+	ahabit(parse-relative-index, ((index-text, txt)), {
 		std::stringstream ss(ref2txt(txt));
 		int64_t ires;
 		ss >> ires;
-		result = makeconcept();
+		result = intellect::level2::noteconcept();
 		result.val(ires);
 	});
 
-	aHabit("stream-move-relative", ((stream, stm), (index-text, txt)), {
+	ahabit(stream-move-relative, ((space, stm), (where, txt)), {
 		ref offsetref = ref("parse-relative-index")(txt);
 		int64_t offset = offsetref.val<int64_t>();
 		conceptunmake(offsetref);
 		if (offset != 0) {
 			ref dir;
 			if (offset < 0) {
-				dir = stm.get("do-previous");
+				dir = stm.get(doprevious);
 				offset = -offset;
 			} else {
-				dir = stm.get("do-next");
+				dir = stm.get(donext);
 			}
 			while (offset) {
 				dir(stm);
@@ -805,10 +1234,10 @@ void loadhabits()
 		}
 	});
 
-	aHabit("stream-peek-relative", ((stream, stm), (index-text, txt)), {
-		ref("stream-move-relative")(stm, txt);
-		result = stm.get("do-value")(stm);
-		ref("stream-move-relative")(stm, txt2ref("-" + ref2txt(txt)));
+	ahabit(stream-peek-relative, ((space, stm), (where, txt)), {
+		streammoverelative(stm, txt);
+		result = stm.get(dovalue)(stm);
+		streammoverelative(stm, txt2ref("-" + ref2txt(txt)));
 	});
 
 	// stream can be generated with parsing function that takes a stream
@@ -818,7 +1247,7 @@ void loadhabits()
 	// but not in the stream functions.
 	// but it would make sense to alter streams to fit the context.
 	
-	// the parsing function takes a context (ignoring the aHabit context),
+	// the parsing function takes a context (ignoring the ahabit context),
 	// which is used for looking up parts of the parsing process  ... i think ...
 	
 	// please combine contexts of streams of contextualized parsing.
@@ -847,24 +1276,24 @@ void loadhabits()
 	// 		yes this work will need to be done anyway.
 	
 	/*
-	aHabit("parse-contextual-stream-word", ((stream, stm), (word-context, wctx)), {
+	ahabit(parse-contextual-stream-word, ((stream, stm), (word-context, wctx)), {
 		wctx.get("parse-word")(stm);
 	});
 	*/
 
-	aHabit("bootstrap-make-file-stream", ((filename, fn), (parse-context, pctx)), {
+	ahabit(bootstrap-make-file-stream, ((filename, fn), (parse-context, pctx)), {
 		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
-		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
+		cxxstm.link(donext, cxxstm.get("do-next-letter"));
 		pctx.set("c++-stream", cxxstm);
 		ref letterspace = ref("make-keep-stream")(cxxstm);
 		pctx.set("letterspace", letterspace);
-		ref parserstm = ref("make-parser-stream")(letterspace, "whitespace-word");
+		ref parserstm = ref("make-parser-stream")(letterspace, "bootstrap-word");
 		pctx.set("parser-stream", parserstm);
 		ref wordspace = ref("make-keep-stream")(parserstm);
 		pctx.set("wordspace", wordspace);
 		
 	});
-	aHabit("bootstrap-file-stream-unmake", ((parse-context, pctx)), {
+	ahabit(bootstrap-file-stream-unmake, ((parse-context, pctx)), {
 		ref("keep-stream-unmake")(pctx.get("wordspace"));
 		conceptunmake(pctx.get("parser-stream"));
 		ref("keep-stream-unmake")(pctx.get("letterspace"));
@@ -874,49 +1303,77 @@ void loadhabits()
 		pctx.unlink("letterspace");
 		pctx.unlink("c++-stream");
 	});
-	aHabit("bootstrap-file-stream-next-value", ((parse-context, pctx)), {
+	ahabit(bootstrap-file-stream-next-value, ((parse-context, pctx)), {
 		ref wordspace = pctx.get("wordspace");
-		wordspace.get("do-next")(wordspace);
-		return wordspace.get("do-value")(wordspace);
+		wordspace.get(donext)(wordspace);
+		return wordspace.get(dovalue)(wordspace);
 	});
 
 	ref("bootstrap-file-context").link("word-context", "bootstrap-word-context");
-	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
 
-	ahabit(bootstrap-parse-brace, ((result, file), (space, ws)),
+	ahabit(bootstrap-parse-brace, ((focus, bracetxt), (result, file), (space, ws)),
 	{
-		if (ref2txt(ws.get("do-value")) != "[") { throw noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
-		result = noteconcept();
+		ref brace2ref = bootstrapmatchingbrace(ref2txt(bracetxt));
+		if (brace2ref == "nothing") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+		std::string brace2 = ref2txt(brace2ref);
+		ref result = intellect::level2::noteconcept();
+		result.link(is, bracedwords);
+		result.link(openbrace, bracetxt);
 		while (true) {
-			ws.get("do-next")(ws);
-			if (ref2txt(ws.get("do-value")) == "]") { break; }
-			result.link("word", ws.get("do-value"));
+			ws.get(donext)(ws);
+			ref sym = ws.get(dovalue)(ws);
+			if (istxtref(sym) && ref2txt(sym) == brace2) {
+				result.link(closebrace, sym);
+				break;
+			}
+			result.link(word, sym);
+			//if (bootstrapmatchingbrace(sym) != nothing) {
+			//	self(file, ws);
+			//}
 		}
 		return result;
 	});
 	ref("bootstrap-word-context").link(txt2ref("["), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("{"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("("), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("<"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("[["), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("{{"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("(("), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("<<"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("begin"), "bootstrap-parse-brace");
 
-	ahabit(bootstrap-parse-habit, ((result, file), (space, ws), (word-context, wctx)), {
-		if (ws.get("do-value") != "habit") { throw noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
-		ref habit = (ws.get("do-next")(ws), ws.get("do-value")(ws));
-		ws.get("do-next")(ws);
-		ref args = wctx.get(txt2ref("[")).fun<ref>()(ctx);
-		ref results = wctx.get(txt2ref("[")).fun<ref>()(ctx);
-		ref steps = wctx.get(txt2ref("[")).fun<ref>()(ctx);
-		// now we copy from level2.cpp
+	ahabit(bootstrap-lookup, ((text, txt)),
+	{
+		return bootstraplookup(txt);
 	});
+	ref("bootstrap-word-context").link(txt2ref("lookup"), "bootstrap-lookup");
+
+	ahabit(bootstrap-parse-habit, ((focus, word), (result, file), (space, ws), (word-context, wctx)), {
+		return bootstrap_parse_habit(word, file, ws, ctx, self, wctx);
+	});
+	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
+	ref("bootstrap-word-context").link(txt2ref("parser"), "bootstrap-parse-habit");
+
+	ahabit(bootstrap-parse-concept, ((result, file), (space, ws), (word-context, wctx)), {
+		return bootstrap_parse_concept(file, ws, ctx, self, wctx);
+	});
+	ref("bootstrap-word-context").link(txt2ref("concept"), "bootstrap-parse-concept");
 
 	ahabit(parse-file, ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
+		// notepad quick-implemented by passin the filename as the notepad name!  recommend keeping for safety, and copying data to outer notepad intentionally.
 		ref wctx, pctx;
-		ref file = noteconcept();
+		ref file = intellect::level2::noteconcept();
+		file.link("notepad", intellect::level2::notepad());
+		fctx.set("file", file);
 		if (!fctx.linked("word-context")) {
-			wctx = makeconcept();
+			wctx = intellect::level2::noteconcept();
 			fctx.link("word-context", wctx);
 		} else {
 			wctx = fctx.get("word-context");
 		}
 		if (!fctx.linked("parse-context")) {
-			pctx = makeconcept();
+			pctx = intellect::level2::noteconcept();
 			fctx.link("parse-context", pctx);
 		} else {
 			pctx = fctx.get("parse-context");
@@ -925,39 +1382,32 @@ void loadhabits()
 		// TODO: implement just-do-one-step in level-2, to move towards using
 		// relevence here
 		
-		
-		
 		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
-		cxxstm.link("do-next", cxxstm.get("do-next-letter"));
+		cxxstm.link(donext, cxxstm.get("do-next-letter"));
+		cxxstm.get(donext)(cxxstm);
 		ref letterspace = ref("make-keep-stream")(cxxstm);
-		ref parserstm = ref("make-parser-stream")(letterspace, "whitespace-word");
+		ref parserstm = ref("make-parser-stream")(letterspace, "bootstrap-word");
 		ref wordspace = ref("make-keep-stream")(parserstm);
 			// note: rewinding wordspace won't rewind letterspace at this time
 			// too bad!
+		wordspace.set(filecontext, fctx);
+		ref parsedspace = ref("make-parser-stream")(wordspace, "bootstrap-parser");
 
 		// to fully generalize we would just move the parsing behavior
 		// into the parse context.  this would probably be 'setup',
 		// 'teardown', and 'next-value'.  we would love a universe where
 		// we implement that as recreation.
+		// NOTE: believe this was implemented but haven't put time into using it
 		while (true) {
 			ref word;
-			wordspace.get("do-next")(wordspace);
-			word = wordspace.get("do-value")(wordspace);
-			if (wctx.linked(word)) {
-				// notepad quick-implemented by passin the filename as the notepad name!
-				wctx.get(word)({{"focus", word}, {"space", wordspace}, {"word-context", wctx}, {"parse-context", pctx}, {"file-context", fctx}, {"result", file});
-				// call word-handler.
-				// want-to-send: word, wordspace, file-context, output notepad.
-				// it might make sense if we all operatd on file-context and stored our shareds in there.
-				// propose we parse into a notepad
-				// we can include a list of file contents if
-				// we desire to.
-			} else {
-				// TODO: store as free text?
-				// TODO: store references to underlying data.
-				// 	this means including locations in the
-				// 	spaces.
-			}
+			word = parsedspace.get(dovalue)(parsedspace);
+			parsedspace.get(donext)(parsedspace);
+			// we are changing parser to call habits in the file parser itself. [previously we called a 'habit' parser.  this will still be used.  but behavior from it will be copied into this function.  it will make sense to abstract it into a third function.  we can link it as 'anything' from the word context. <- never did this.  instead 'parser' is a special 'habit'.
+			
+			// TODO: store as free text?
+			// TODO: store references to underlying data.
+			// 	this means including locations in the
+			// 	spaces.
 		} 
 
 		// we have file context, word context, and parse context.
@@ -971,7 +1421,7 @@ void loadhabits()
 		result = file;
 	})
 /*
-	aHabit("parse-contextual-stream-word", ((stream, stm), (word-context, wctx)), {
+	ahabit(parse-contextual-stream-word, ((stream, stm), (word-context, wctx)), {
 		wctx.get("parse-word")(stm);
 	});
 
@@ -980,10 +1430,10 @@ void loadhabits()
 	// parse-word
 
 	// spaces separate words
-	aHabit("parse-word", ((context, ctx), (stream, stm), (word, w)), {
+	ahabit(parse-word, ((context, ctx), (stream, stm), (word, w)), {
 			// why is word an argument here?
 	});
-	aHabit("parse-spaces-until-delimiter", ((context, ctx), (stream, stm), (delimiter, delim)), {
+	ahabit(parse-spaces-until-delimiter, ((context, ctx), (stream, stm), (delimiter, delim)), {
 		
 	});
 	*/
@@ -991,11 +1441,11 @@ void loadhabits()
 
 void parsespaces(ref context, ref stream, ref parsertxt)
 {
-	context.set("parse-until-delimiter");///.....
+	//context.set("parse-until-delimiter");///.....
 	
 	// we'll want to load parsers into contexts for the parsespaces context.
-	// we have aHabit but it doesn't use contexts
-		// aHabit loads into bootstrap context. we can reference from there.
+	// we have ahabit but it doesn't use contexts
+		// ahabit loads into bootstrap context. we can reference from there.
 }
 
 ref spacesuntildelimiter(ref context, ref stream, ref delimiter)
@@ -1006,8 +1456,9 @@ ref spacesuntildelimiter(ref context, ref stream, ref delimiter)
 	}
 }
 
-void parseopenbrace(ref context, stream, parsertxt)
+void parseopenbrace(ref context, ref stream, ref parsertxt)
 {
+	ref bracetxt = stream.get(dovalue);
 	std::string brace1 = ref2txt(bracetxt);
 	std::string brace2;
 	if (brace1 == "[") { brace2 = "]"; }
@@ -1019,7 +1470,8 @@ void parseopenbrace(ref context, stream, parsertxt)
 	else if (brace1 == "((") { brace2 = "))"; }
 	else if (brace1 == "<<") { brace2 = ">>"; }
 	else if (brace1 == "begin") { brace2 = "end"; }
-	ref contents = ctxlookup(context, txt2ref("parse-until-delimiter"))(stream, context, brace2);
+	else { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", stream); }
+	//ref contents = ctxlookup(context, txt2ref("parse-until-delimiter"))(stream, context, brace2);
 
 	// i'd like to be able to evaluate things in either an expression context or a statement context.
 	// this would mean having a contextual evaluator, I suppose
@@ -1028,13 +1480,13 @@ void parseopenbrace(ref context, stream, parsertxt)
 
 void parsebootstrap(ref stream, ref context)
 {
-	istream & ss = *stream.val<istream*>();
-	string lookupstr;
+	std::istream & ss = *stream.val<std::istream*>();
+	std::string lookupstr;
 	ss >> lookupstr;
 	ref lookup = lookupstr;
 	std::list<std::string> comments;
 	while (true) {
-		string cmd;
+		std::string cmd;
 		ss >> cmd;
 		if (!ss) { break; }
 		if (cmd == "//") {
@@ -1042,44 +1494,44 @@ void parsebootstrap(ref stream, ref context)
 			std::getline(ss, comment);
 			comments.push_back(comment);
 		} else if (cmd == "concept") {
-			string name;
+			std::string name;
 			ss >> name;
 			ref c = lookup(parsevalue(name));
-			string tok;
+			std::string tok;
 			ss >> tok;
-			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-concept"); }
+			if (tok != "[") { throw intellect::level2::noteconcept().link("is", "missing-[-after-concept"); }
 			while (true) {
-				string type, target;
+				std::string type, target;
 				ss >> type;
 				if (type == "]") { break; }
 				ss >> target;
 				c.link(lookup(parsevalue(type)), lookup(parsevalue(target)));
 			}
 		} else if (cmd == "habit") {
-			string name;
+			std::string name;
 			ss >> name;
-			string tok;
+			std::string tok;
 			ss >> tok;
-			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-habit-name"); }
-			ref args = makeconcept();
+			if (tok != "[") { throw intellect::level2::noteconcept().link("is", "missing-[-after-habit-name"); }
+			ref args = intellect::level2::noteconcept();
 			while (true) {
-				string arg;
+				std::string arg;
 				ss >> arg;
-				if (ss == "]") { break; }
+				if (arg == "]") { break; }
 				args.link("information-order", arg);
 			}
 			ss >> tok;
-			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-habit-needs"); }
-			std::set<string> values;
+			if (tok != "[") { throw intellect::level2::noteconcept().link("is", "missing-[-after-habit-needs"); }
+			std::set<std::string> values;
 			values.insert("context");
 			values.insert("self");
 			while (true) {
-				string arg;
+				std::string arg;
 				ss >> arg;
-				if (ss == "]") { break; }
+				if (arg == "]") { break; }
 				args.link("information-made", arg);
 				// need to seed values with argument names
-				values.insert(arg.name());
+				values.insert(arg);
 			} // information-made is unused.  is a 'stub' for if-needed-later.
 			ref("set-steps")(name, args);
 			for (auto comment : comments) {
@@ -1087,16 +1539,16 @@ void parsebootstrap(ref stream, ref context)
 			}
 			comments.clear();
 			ss >> tok;
-			if (tok != "[") { throw makeconcept().link(is, "missing-[-after-habit-makes"); }
-			std::map<string,ref> labels;
+			if (tok != "[") { throw intellect::level2::noteconcept().link("is", "missing-[-after-habit-makes"); }
+			std::map<std::string,ref> labels;
 			ref laststep = name;
-			labels["return"] = nothing;
+			labels["return"] = "nothing";
 			for (auto comment : comments) {
 				ref(name).link("comment", comment);
 			}
 			comments.clear();
 			while (true) {
-				string label, action, result;
+				std::string label, action, result;
 				ss >> action;
 				if (action == "]") { break; }
 				if (action == "//") {
@@ -1104,7 +1556,7 @@ void parsebootstrap(ref stream, ref context)
 				if (action[action.size()-1] == ':' || action[action.size()-1] == ',') {
 					label = action;
 					label.resize(label.size() - 1);
-					if (label == "return") { throw makeconcept().link(is, "return-label-used"); }
+					if (label == "return") { throw intellect::level2::noteconcept().link("is", "return-label-used"); }
 					ss >> action;
 				}
 				if (action == "=" || action == "set") {
@@ -1118,29 +1570,29 @@ void parsebootstrap(ref stream, ref context)
 					// is goto
 					action.resize(action.size() - 1);
 					if (!labels.count(action)) {
-						labels.emplace(action, makeconcept());
+						labels.emplace(action, intellect::level2::noteconcept());
 					}
 					labels[action].link("label", action);
-					if (laststep.linked("next-step")) { throw makeconcept().link(is, "jump-from-nowhere", "label", action); }
+					if (laststep.linked("next-step")) { throw intellect::level2::noteconcept().link("is", "jump-from-nowhere", "label", action); }
 					laststep.link("next-step", labels[action]);
-					laststep = nothing;
+					laststep = "nothing";
 					continue;
 				}
 				if (action == "if") {
 					ref cond = lookup(parsevalue(stream));
 					ss >> action;
 					if (action[action.size()-1] != '.') {
-						throw makeconcept().link(is, "condition-is-not-label", "action", action, "cond", cond);
+						throw intellect::level2::noteconcept().link("is", "condition-is-not-label", "action", action, "cond", cond);
 					}
 					if (!laststep.isa("condition-step")) {
-						throw makeconcept().link(is, "if-not-following-condition", "cond", cond, "action", action);
+						throw intellect::level2::noteconcept().link("is", "if-not-following-condition", "cond", cond, "action", action);
 					}
 					if (label.size()) {
-						throw makeconcept().link(is, "if-case-has-label", "cond", cond, "action", action, "label", label);
+						throw intellect::level2::noteconcept().link("is", "if-case-has-label", "cond", cond, "action", action, "label", label);
 					}
 					action.resize(action.size()-1);
 					if (!labels.count(action)) {
-						labels.emplace(action, makeconcept());
+						labels.emplace(action, intellect::level2::noteconcept());
 						labels[action].link("label", action);
 					}
 					ref("condition-step-set")(laststep, cond, labels[action]);
@@ -1148,41 +1600,41 @@ void parsebootstrap(ref stream, ref context)
 					// update laststep to end of any 'anything' branch
 					continue;
 				}
-				if (laststep == nothing && label.size() == 0) { throw makeconcept().link(is, "no-path-to-code"); }
+				if (laststep == "nothing" && label.size() == 0) { throw intellect::level2::noteconcept().link("is", "no-path-to-code"); }
 				if (label.size() && !labels.count(label)) {
-					labels[label] = makeconcept();
+					labels[label] = intellect::level2::noteconcept();
 					labels[label].link("label", label);
 				}
-				ref nextstep = label.size() ? labels[label] : makeconcept();
+				ref nextstep = label.size() ? labels[label] : intellect::level2::noteconcept();
 				if (action == "?" || action == "pick") {
-					string cond;
+					std::string cond;
 					ss >> cond;
 					if (!values.count(cond)) {
-						throw makeconcept().link(is, "condition-must-be-in-context", condition, cond);
+						throw intellect::level2::noteconcept().link("is", "condition-must-be-in-context", "condition", cond);
 					}
-					laststep = ref("set-condition-step")(nextstep, laststep, cond, makeconcept().link("anything", "nothing"));
+					laststep = ref("set-condition-step")(nextstep, laststep, cond, intellect::level2::noteconcept().link("anything", "nothing"));
 				} else {
 					// otherwise, action is an action, and we have to read the right number of args
 					if (laststep.isa("condition-step")) {
 						if (ref("condition-step-get")(laststep, "anything") != "nothing") {
 							if (label.size() == 0) {
-								throw makeconcept().link(is, "condition-already-has-anything-branch-and-steps-follow", condition, laststep);
+								throw intellect::level2::noteconcept().link("is", "condition-already-has-anything-branch-and-steps-follow", "condition", laststep);
 							}
 						} else {
 							ref("condition-step-set")(laststep, "anything", nextstep);
 						}
-					} else if (laststep != nothing) {
+					} else if (laststep != "nothing") {
 						laststep.link("next-step", nextstep);
 					}
 					ref habit = values.count(action) ? action : lookup(action);
 					ref order = makehabitinformationorder(habit);
-					ref neededmap = makeconcept();
-					ref knownmap = makeconcept();
-					ref informationnames = makeconcept();
-					string linerest;
+					ref neededmap = intellect::level2::noteconcept();
+					ref knownmap = intellect::level2::noteconcept();
+					ref informationnames = intellect::level2::noteconcept();
+					std::string linerest;
 				       	std::getline(ss, linerest);
-					stringstream ss2(linerest);
-					ref stream2 = alloc(intellect::level0::concepts::allocations(), (istream*)&ss2);
+					std::stringstream ss2(linerest);
+					ref stream2 = alloc(intellect::level0::concepts::allocations(), (std::istream*)&ss2);
 					auto args = order.getAll("information-order");
 					auto argsit = args.begin();
 					while (true) {
@@ -1202,7 +1654,7 @@ void parsebootstrap(ref stream, ref context)
 					knownmap.link("information-names", informationnames);
 					conceptunmake(order);
 					dealloc(stream2, intellect::level0::concepts::allocations());
-					ref mademap = makeconcept();
+					ref mademap = intellect::level2::noteconcept();
 					if (result.size()) {
 						mademap.link("result", values.count(result) ? result : lookup(result));
 					}
@@ -1211,7 +1663,7 @@ void parsebootstrap(ref stream, ref context)
 				}
 			} 
 		} else {
-			throw makeconcept().link("is", "parse-error", "stream", stream, "unexpected-word", cmd);
+			throw intellect::level2::noteconcept().link("is", "parse-error", "stream", stream, "unexpected-word", cmd);
 		}
 	}
 }
