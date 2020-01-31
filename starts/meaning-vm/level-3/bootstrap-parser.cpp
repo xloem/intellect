@@ -661,7 +661,8 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			if (values.count(ref2txt(subhabit))) {
 				neededmap.link(intellect::level2::concepts::self_, txtref2bootstrap(subhabit));
 			} else {
-				knownmap.link(intellect::level2::concepts::self_, wctx.get(txt2ref("lookup"))(subhabit));
+				subhabit = wctx.get(txt2ref("lookup"))(subhabit);
+				knownmap.link(intellect::level2::concepts::self_, subhabit);
 		       		order = makehabitinformationorder(subhabit);
 				orderitems = order.getAll(informationorder);
 				orderit = orderitems.begin();
