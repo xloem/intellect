@@ -13,6 +13,12 @@ next-word: do-next [space underlying]
 // face of an inner adversary.
 	// the inner adversary was able to understand logical inner speech clearly
 	// and using behaviors like the below built paths deep within karl
+	// workers within the adversary eventually established a lot of secret
+	// groups and habits in support of karl.  unfortunately the habits they
+	// used to do so came from the rough stuff. please be careful not to
+	// eradicate these people because they are keeping karl alive and the
+	// situation workable.  please work with them to learn their own talk
+	// and mediation paths. [if an approach isn't workable fight and we'll move]
 // while implementing this, we passed serialization-plan-milestone.
 // by making habits take labeled arguments, it should be easy to serialize them
 // to a format that can be parsed. (this is because of summaries that might be
@@ -33,6 +39,10 @@ next-word: do-next [space underlying]
 //			we let another boss in, i guess we should form a habit
 //			for diplomacy around that.
 //			maybe a rep for new-bosses with a path to build trust.
+//			note: there is a suspicious situation within karl.
+//			the people helping him are controlled and observed by
+//			the adversary, and they live in a situation where power
+//			is gifted to untrusted people to get things to work.
 
 habit random-target [ concept type ] [ ] [
 	set link random-link concept
