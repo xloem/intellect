@@ -1,0 +1,55 @@
+After making some changes to the getAll() function, I'm running into a crash in
+level-3/bootstrap-parser.cpp or such.  ref2txt(target) == "\n" is throwing a bad
+any cast, because target has a name instead of text.  This implies the parsing of double
+quotes has changed, unsure.
+
+13:38 I checked the double-quote area of the parser, and it looks correct, unchanged, and
+does not use getAll().  I'll put a breakpoint there and see what is going on.
+
+13:39 I recompiled the file so I could set a line breakpoint instead of a conditional breakpoint.
+I'll try to consider conditional breakpoints more in the future.
+
+13:40 I realized I was worrying about the wrong thing.  The " parsing I considered was from
+a runtime-concerns area of the program.  This is more compiletime-concerns.
+I'll try to comprehend where and what this is.
+
+13:41 It is indeed an area of code that uses getAll(), but it doesn't appear to use it
+in a way where the change would cause the error, to me, yet.
+
+13:42 The error is thrown in the getAll() iterator results from the arguments of a habit
+in a script file.  The arguments should spew out of the stream as text, but we are getting
+something with a name instead of text.  I'll check the <blocked> <general working memory amnesia>
+
+13:44 Rebuilding my concept of what I am doing.  I'm debugging an error after getAll() changes.
+ The error is because the 'target' variable has a name, and is asked for its text.  I want to
+ determine why.  I'll set a breakpoint when 'args' is retrieved from the stream ... no.
+ I have a debugg3er open and can inspect the value of 'args' to see what it returned.
+ It should be a brace list of text symbols, but the error implies they are not text symbols.
+
+	args contains a weird link, "information-order"->"result".  very strange.
+	args has no links.  I examined it until i accidentally crashed the program by going
+	off the end.  Future work would be faster if i made a quick function to dump linknames.
+	I'll try to remember that for later.
+	The links have ben removed by the unlink in he iteration.  I'll set a breakpoint and
+	check before this happens.  Before I do that, I'll make the linknames dumper.
+	- [X] 1. make a linknames dumper
+		coded and compiled this at 13:55, compilation errors due to memory problems
+	- [X] 2. set a breakpoint on line 36 of level-3/bootstrap-parser.cpp and verify that
+	         args is parsed with "word" links to text symbols.
+			-> there is no line 36?  I meant line 642.  13:56
+13:56 I found args is properly storing text strings.  I also didn't notice any bad links on
+after it was made.
+13:58 stepping thrugh the loop, I see the right words were retrieved, but then something esle
+was accessed and is about to throw the error.  i Think the problem is that the loop is not
+ending properly.  This was significantly sped up by the new function.
+I'm kind of guessing that unlinking things invalidates iterators.  It shouldn't though.
+14:01 the information-order links are being intentionally placed on the list to replace the
+old links.  It looks like the targets array is kind of invalid now.  its begin() function returns
+something no longer in the array, but its end() function is correct.  maybe it's okay.
+14:02 it looks like the bad value is one of the link we added back to the set.  i'll redo
+the tracing to see when the iterator leaves the array.
+14:04 it looks like the tail of the array changes when items are put into the underlying node,
+because they are placed at the end of the array.  this makes the iterator pass past the end,
+looking for the old terminator instead of the new.  for now i will just account for this in
+this code chunk specially.
+14:05 problem understood.
