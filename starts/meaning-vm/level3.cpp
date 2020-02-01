@@ -9,7 +9,11 @@ int main()
 {
 	loadhabits();
 	intellect::level2::newnotepad(txt2ref("level-3/randomcode.bootstrap"));
-	::ref file = ::ref("parse-file")(txt2ref("level-3/randomcode.bootstrap"));
-	intellect::level2::conceptunmake(file);
+	try {
+		::ref file = ::ref("parse-file")(txt2ref("level-3/randomcode.bootstrap"));
+		intellect::level2::conceptunmake(file);
+	} catch(intellect::level2::ref e) {
+		if (!e.isa("debug")) { throw; }
+	}
 	return 0;
 }

@@ -81,15 +81,15 @@ ref settranslationmap(ref c, ref m, ref k = nothing)
 //						means accessing every condition.  no need to rewrite whole structure, just look up how to access.  faster than rewriting.
 //							make a function to wire to end
 
-void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
+void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = false)
 {
 	checknotepad(c2);
 	decl(translation); decl(known); decl(nothing);
-	std::cerr << "[context-map";
+	if (!quiet) { std::cerr << "[context-map"; }
 	for (auto link : m.get(translation).links()) {
-		std::cerr << " ";
+		if (!quiet) { std::cerr << " "; }
 		if (reverse) {
-			std::cerr << link.second.name() << ":" << link.first.name() << "=";
+			if (!quiet) { std::cerr << link.second.name() << ":" << link.first.name() << "="; }
 			if (!c1.linked(link.first)) {
 				throw noteconcept().link(
 						"is", "not-in-context",
@@ -99,9 +99,9 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 						);
 			}
 			c2.set(link.second, c1.get(link.first));
-			std::cerr << c1.get(link.first).name();
+			if (!quiet) { std::cerr << c1.get(link.first).name(); }
 		} else {
-			std::cerr << link.first.name() << ":" << link.second.name() << "=";
+			if (!quiet) { std::cerr << link.first.name() << ":" << link.second.name() << "="; }
 			if (!c1.linked(link.second)) {
 				throw noteconcept().link(
 						"is", "not-in-context",
@@ -111,21 +111,25 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false)
 						);
 			}
 			c2.set(link.first, c1.get(link.second));
-			std::cerr << c1.get(link.second).name();
+			if (!quiet) { std::cerr << c1.get(link.second).name(); }
 		}
 	}
 	if (m.linked(known) && m.get(known) != nothing) {
 		for (auto link : m.get(known).links()) {
 			if (reverse) {
-				std::cerr << " " << link.second.name() << ":" << link.first.name();
+				if (!quiet) {
+					std::cerr << " " << link.second.name() << ":" << link.first.name();
+				}
 				c2.set(link.second, link.first);
 			} else {
-				std::cerr << " " << link.first.name() << ":" << link.second.name();
+				if (!quiet) {
+					std::cerr << " " << link.first.name() << ":" << link.second.name();
+				}
 				c2.set(link.first, link.second);
 			}
 		}
 	}
-	std::cerr << "]" << std::endl;
+	if (!quiet) { std::cerr << "]" << std::endl; }
 }
 
 void _steps(ref s, ref ctx)
@@ -142,6 +146,7 @@ void _steps(ref s, ref ctx)
 	// 	for one thing, this might help the structure of the system represent
 	// 	meaningful thought if it optimizes for speed
 
+	bool quiet = s.linked(intellect::level2::concepts::quiet, true) || ctx.linked(intellect::level2::concepts::quiet, true);
 	checknotepad(ctx);
 	ref astate = noteconcept();
 	ref c = ctx;
@@ -163,14 +168,16 @@ void _steps(ref s, ref ctx)
 		astate.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
 		// if needed-map, load subcontext
 		ref subctx = c;
-		std::cerr << "[step-context ";
-		for (auto link : c.links()) {
-			std::cerr << " " << link.first.name() << ":" << link.second.name();
+		if (!quiet) {
+			std::cerr << "[step-context ";
+			for (auto link : c.links()) {
+				std::cerr << " " << link.first.name() << ":" << link.second.name();
+			}
+			std::cerr << "]" << std::endl;
 		}
-		std::cerr << "]" << std::endl;
 		if (s.linked(needed-map)) {
 			subctx = noteconcept();
-			contextmapinto(c, s.get(needed-map), subctx);
+			contextmapinto(c, s.get(needed-map), subctx, false, quiet);
 			subctx.set(outer-context, c);
 			subctx.set(active-state, astate);
 			subctx.set(context, subctx);
@@ -178,8 +185,11 @@ void _steps(ref s, ref ctx)
 			subctx.set(concepts::root, ref::context().get(concepts::root));
 			ref::context() = subctx;
 		}
-		std::cerr << "[step " << subctx.get("self").name() << "]" << std::endl;
+		if (!quiet) {
+			std::cerr << "[step " << subctx.get("self").name() << "]" << std::endl;
+		}
 		checknotepad(subctx);
+		if (quiet) { subctx.set(intellect::level2::concepts::quiet, true); }
 		//subctx.set("self", s.get(action));
 		ref habit = subctx.get("self");//s.get(action);
 		{ // check arguments
@@ -198,7 +208,7 @@ void _steps(ref s, ref ctx)
 		}
 		habit.fun<ref>()(subctx);
 		if (s.linked(made-map)) {
-			contextmapinto(subctx, s.get(made-map), c, true);
+			contextmapinto(subctx, s.get(made-map), c, true, quiet);
 		}
 		if (s.linked(needed-map)) {
 			c = subctx.get(outer-context);
@@ -644,10 +654,10 @@ void createhabits()
 		if (c.isa("translation-map") || c.linked("translation") || c.linked("known")) { throw noteconcept().link(is, "already-has-translation-map-data", concept, c, context, ctx); }
 		result = settranslationmap(c, m, k);
 	});
-	ahabit(context-map-into, ((source-context, c1), (translation-map, m), (target-context, c2)),
+	ahabit(context-map-into, ((source-context, c1), (translation-map, m), (target-context, c2), (reverse, r, false), (quiet, q, false)),
 	{
 		checknotepad(c2);
-		contextmapinto(c1, m, c2);
+		contextmapinto(c1, m, c2, r, q);
 	});
 	/*
 	ahabit(make-translated-context, ((translation-map, m), (context, c)),

@@ -8,6 +8,9 @@ next-word: do-next [space underlying]
 " return.
 	next-word.
 ]
+link '//' [
+	quiet true
+]
 // this is a comment containing the word habit that I hope will parse okay
 // meanwhile, the below information relates to rebuilding karl's mind in the
 // face of an inner adversary.

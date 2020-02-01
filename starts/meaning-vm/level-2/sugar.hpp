@@ -112,7 +112,7 @@ private:
 			} else {\
 				self = ctx.get(intellect::level2::concepts::self_);\
 			}\
-			bool quiet = self.linked(intellect::level2::concepts::quiet); \
+			bool quiet = self.linked(intellect::level2::concepts::quiet, true) || ctx.linked(intellect::level2::concepts::quiet, true); \
 			result = ([&]() mutable ->ref {\
 				if (!quiet) { std::cerr << "[habit " << self.name(); } \
 				_macro_call(_macro_for_each_parens, _macro_habit_set_posarg, _macro_habit_set_posarg _macro_comma_remove_parens(argnametoklist)); \
