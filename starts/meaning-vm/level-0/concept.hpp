@@ -4,6 +4,7 @@
 
 #include <any>
 #include <map>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -13,7 +14,7 @@ namespace level0 {
 struct concept
 {
 	// a concept is made of concept-typed links to other concepts
-	std::multimap<concept*,concept*> links;
+	std::unordered_multimap<concept*,concept*> links;
 	// and optional associated arbitrary data
 	std::any data;
 

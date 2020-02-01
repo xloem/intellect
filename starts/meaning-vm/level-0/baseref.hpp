@@ -119,8 +119,8 @@ private:
 
 		mutit & operator++() { ++ self.it; return self; }
 		mutit operator++(int i) { return self.it.operator++(i); }
-		mutit & operator--() { -- self.it; return self; }
-		mutit operator--(int i) { return self.it.operator--(i); }
+		// mutit & operator--() { -- self.it; return self; }
+		// mutit operator--(int i) { return self.it.operator--(i); }
 		bool operator==(mutit const & other) const { return self.it == other.it; }
 		bool operator!=(mutit const & other) const { return self.it != other.it; }
 
