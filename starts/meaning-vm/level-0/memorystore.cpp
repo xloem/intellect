@@ -191,7 +191,8 @@ void dealloc_from(ref source)
 	std::vector<std::tuple<ref,ref,ref>> forgotten_links;
 
 	auto ours = source.getAll(concepts::allocates());
-	for (auto allocation : ours) {
+	for (auto oursit = ours.begin(); oursit != ours.end();) {
+		auto allocation = *(oursit++);
 		if (allocation.crucial()) { throw crucial_concept(allocation); }
 		source.unlink(concepts::allocates(), allocation);
 		allocation.unlink(concepts::allocator(), source);
@@ -209,13 +210,15 @@ void dealloc_from(ref source)
 		}
 	}
 	try {
-		for (auto allocation : ours ) {
+		for (auto & allocations : forgotten ) {
+			auto & allocation = allocations.first;
 			for (auto suballocation : allocation.getAll(concepts::allocates())) {
 				// check for this link to find subgroups
 				throw still_referenced_by(allocation, suballocation);
 			}
 		}
-		for (auto ghost : ours) {
+		for (auto & ghostpair : forgotten) {
+			auto & ghost = ghostpair.first;
 			
 			concept * referenced = intellect::level0::referenced(ghost, source);
 			if (referenced) {
@@ -229,14 +232,15 @@ void dealloc_from(ref source)
 	} catch(...) {
 		// NOTE: this doesn't rebuild deallocated subgroups, but that could be done
 		// by returning them.
-		index().merge(forgotten);
 		for (auto link : forgotten_links) {
 			std::get<0>(link).link(std::get<1>(link), std::get<2>(link));
 		}
-		for (auto allocation : ours) {
+		for (auto & allocations : forgotten) {
+			auto & allocation = allocations.first;
 			source.link(concepts::allocates(), allocation);
 			allocation.link(concepts::allocator(), source);
 		}
+		index().merge(forgotten);
 		throw;
 	}
 

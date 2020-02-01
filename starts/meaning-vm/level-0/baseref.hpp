@@ -29,9 +29,9 @@ public:
 		return self;
 	}
 
-	ref link(ref const & type, ref const & target) { p->link(type.p, target.p); return ptr(); }
-	void unlink(ref const & type, ref const & target) { p->unlink(type.p, target.p); }
-	void unlink(ref const & type) { p->unlink(type.p); }
+	ref link(ref const & type, ref const & target) const { p->link(type.p, target.p); return ptr(); }
+	void unlink(ref const & type, ref const & target) const { p->unlink(type.p, target.p); }
+	void unlink(ref const & type) const { p->unlink(type.p); }
 
 	bool linked(ref const & type) const { return p->linked(type.p); }
 	bool linked(ref const & type, ref const & target) const { return p->linked(type.p, target.p); }
@@ -43,9 +43,9 @@ public:
 	links_t links() const;
 
 	template <typename... Ref>
-	ref link(Ref... refspack)
+	ref link(ref type1, ref target1, ref type2, ref target2, Ref... refspack) const
 	{
-		std::initializer_list<ref> refs{refspack...};
+		std::initializer_list<ref> refs{type1, target1, type2, target2, refspack...};
 		for (auto it = refs.begin(); it != refs.end();) {
 			ref type = *it++;
 			ref target = *it++;
@@ -119,8 +119,8 @@ private:
 
 		mutit & operator++() { ++ self.it; return self; }
 		mutit operator++(int i) { return self.it.operator++(i); }
-		mutit & operator--() { -- self.it; return self; }
-		mutit operator--(int i) { return self.it.operator--(i); }
+		//mutit & operator--() { -- self.it; return self; }
+		//mutit operator--(int i) { return self.it.operator--(i); }
 		bool operator==(mutit const & other) const { return self.it == other.it; }
 		bool operator!=(mutit const & other) const { return self.it != other.it; }
 
@@ -152,6 +152,7 @@ public:
 		decltype(concept::links) & links;
 	};
 
+	void unlink(typename array::iterator it) { p->unlink(static_cast<concept::array::linkit&>(it.underlying())); }
 	void unlink(typename links_t::iterator it) { p->unlink(it.underlying()); }
 	bool crucial(typename links_t::iterator it) { return self.p->crucial(it.underlying()); }
 	void setcrucial(typename links_t::iterator it) { self.p->setcrucial(it.underlying()); }

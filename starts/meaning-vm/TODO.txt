@@ -54,6 +54,7 @@ we want to rapidly develop a decision-making process, but we'll need small
 steps to get there.  picking-b
 
 extra possibly:
+- [ ] convert to use faster unordered map for links, which means removing use of ordered links for arguments
 - [ ] write code that runs code in a notepad and then restores original state exactly if an error occurs
 - [ ] make bootstrap space be initial-notepad, rename it bootstrap-space,
 	use that assumption to handle concepts not in any notepad in notepad funcs.

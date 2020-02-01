@@ -91,7 +91,7 @@ void concept::unlink(concept* type)
 	unlink(ls.first);
 }
 
-void concept::unlink(decltype(links)::iterator it)
+void concept::unlink(decltype(links)::const_iterator it)
 {
 	if (crucialparts.count(it)) {
 		throw crucial_link_type_target(selfref, it->first, it->second);
@@ -118,15 +118,8 @@ bool concept::linked(concept* type, concept* target) const
 
 concept::array concept::getAll(concept* type) const
 {
-	array ret;
-	for (
-		auto range = links.equal_range(type);
-		range.first != range.second;
-		++ range.first
-	) { 
-		ret.emplace_back(range.first->second);
-	}
-	return ret;
+	auto range = links.equal_range(type);
+	return array(range.first, range.second);
 }
 
 concept* concept::get(concept* type) const

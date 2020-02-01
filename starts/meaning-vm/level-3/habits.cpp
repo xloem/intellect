@@ -29,7 +29,11 @@ void createhabits()
 	});
 	
 	ahabit(random-of, ((concept, c), (type, t)), {
-		auto links = c.ptr()->getAll(t);
+		auto linksall = c.ptr()->getAll(t);
+		std::vector<ref> links;
+		for (auto it = linksall.begin(); it != linksall.end(); ++ it) {
+			links.push_back(*it);
+		}
 		size_t num = intellect::level2::sugar::rand(0.0, links.size());
 		result = links[num];
 	});

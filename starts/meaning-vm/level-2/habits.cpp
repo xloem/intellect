@@ -418,6 +418,7 @@ void createhabits()
 		poplinkentry(le);
 		result = le;
 	});
+	/*
 	ahabit(last-link-entry, ((target, le), (concept, c)),
 	{
 		checknotepad(le);
@@ -435,6 +436,7 @@ void createhabits()
 		poplinkentry(le);
 		result = le;
 	});
+	*/
 	ahabit(next-link-entry, ((link-entry, le)),
 	{
 		checknotepad(le);
@@ -442,6 +444,7 @@ void createhabits()
 		poplinkentry(le);
 		result = le;
 	});
+	/*
 	ahabit(previous-link-entry, ((link-entry, le)),
 	{
 		checknotepad(le);
@@ -449,6 +452,7 @@ void createhabits()
 		poplinkentry(le);
 		result = le;
 	});
+	*/
 	ahabit(same-link-entry, ((link-entry-A, lea), (link-entry-B, leb)),
 	{
 		return lea.val<links_it>() == leb.val<links_it>();

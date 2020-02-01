@@ -1,0 +1,8 @@
+Now that level3 runs without crashing, it hangs with no output.  Maybe it is hanging
+in the habit parser.
+14:10 I'll interrupt the hang and look where it is.
+It's in link() in bootstrap_parse_hbit l652 .   ... the arg parsing I just fixed.
+14:11 I'll trace through the arg parsing and see why it isn't terminating.
+	Oh!  I can see by inspection now, when I removed the unlink to simplify it,
+	it no longer advances thruogh the list, staying there forever.
+14:12 problem understood

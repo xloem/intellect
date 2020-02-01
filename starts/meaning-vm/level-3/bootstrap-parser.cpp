@@ -525,7 +525,9 @@ ref bootstraplookup(ref text, bool create = false)
 		if (str[str.size()-1] == str[0]) {
 			std::string temp = str.c_str()+1;
 			temp.resize(temp.size()-1);
-			if (str[0] == '\"') { return txt2ref(temp); }
+			if (str[0] == '\"') {
+				return txt2ref(temp);
+			}
 			str = temp;
 		}
 	}
@@ -636,15 +638,17 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 	if (tokenname != "habit" && tokenname != "parser") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 	ref habitname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref habit = wctx.get(txt2ref("lookup"))(habitname, true);
-	ref args = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	ref argtext = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref results = (ws.get(donext)(ws), ws.get(dovalue)(ws)); (void)results;
 	ref steps = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	ref args = intellect::level2::noteconcept();
 	//ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
-	for (auto target : args.getAll(word)) {
-		args.unlink(word, target);
+	auto targets = argtext.getAll(word);
+	for (auto it = targets.begin(); it != targets.end();) {
+		auto target = *(it++);
+		if (ref2txt(target) == "\n") { continue; }
 		// txtref2bootstrap is used because there are still name values
 		// like "self" and "context" coming from level2
-		if (ref2txt(target) == "\n") { continue; }
 		args.link(informationorder, txtref2bootstrap(target));
 	}
 	ref("set-steps")(habit, args);
@@ -1208,7 +1212,7 @@ void loadhabits()
 			spc.set(value, word);
 			result = wctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
 			++ dbg_ct;
-			if (dbg_ct > 5) throw intellect::level2::noteconcept().link("is","debug");
+			if (dbg_ct > 20) throw intellect::level2::noteconcept().link("is","debug");
 			if (result != nothing) {
 				return result;
 			}

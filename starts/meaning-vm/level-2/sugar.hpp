@@ -52,7 +52,7 @@ private:
 	void leave()
 	{
 		if (innernotepad == "nothing") { return; }
-		if (intellect::level2::notepad() != innernotepad) { throw intellect::level2::noteconcept().link("is", "not-in-correct-subnotepad", "notepad", intellect::level2::notepad, "inner-notepad", innernotepad, "outer-notepad", outernotepad); }
+		if (intellect::level2::notepad() != innernotepad) { throw intellect::level2::noteconcept().link("is", "not-in-correct-subnotepad", "notepad", intellect::level2::notepad(), "inner-notepad", innernotepad, "outer-notepad", outernotepad); }
 		leavenotepad(ctx, innernotepad);
 		intellect::level2::notepad() = outernotepad;
 		innernotepad = "nothing";
