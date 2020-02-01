@@ -1,0 +1,5 @@
+This is a general log.  Karl's been inhibited from journaling, so we're trying a little.
+2020-02-01 14:19 Pacific
+	I just discovered that I lost my 'simplify' worktree where I was organizing the
+	whole project to make more sense.  I think this history is left only in the
+	unallocated space on some drive, now, unsure.
