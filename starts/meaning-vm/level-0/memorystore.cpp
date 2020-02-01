@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <iostream>
 #include <list>
 #include <memory>
 #include <mutex>
@@ -21,8 +22,18 @@ static auto & guid()
 
 static auto & index()
 {
-	static std::unordered_map<ref, std::unique_ptr<concept>, std::hash<concept*>> index;
-	return index;
+	static struct ist {
+		std::unordered_map<ref, std::unique_ptr<concept>, std::hash<concept*>> index;
+		~ist() {
+			for (auto & item : index) {
+				auto & links = item.second->links;
+				for (auto it = links.begin(); it != links.end();) {
+					item.second->unlink(it++);
+				}
+			}
+		}
+	} index_struct;
+	return index_struct.index;
 }
 
 
@@ -101,6 +112,8 @@ ref basic_alloc(std::any data)
 {
 	//static pool<concept> concept_pool;
 	ref r = new concept();//concept_pool.alloc();//new concept();
+	// i think this segfaults because it can get called before cerr is init'd
+	//std::cerr << "alloc: " << std::hex << (uint64_t)r.ptr() << std::endl;
 	r.ptr()->data = data;
 	std::lock_guard lk(indices);
 	index().emplace(r, r.ptr());
@@ -130,6 +143,7 @@ void realloc(ref r, ref newsource)
 }
 
 static concept* referenced(ref r, concept* source = 0) {
+	if (r.ptr()->refcount() == 0) { return 0; }
 	for (auto & r2pair : index()) {
 		ref r2 = r2pair.first;
 		if (r2.ptr() == source) {
@@ -161,6 +175,10 @@ void basic_dealloc(ref r)
 		throw still_referenced_by(r, referenced);
 	}
 
+	//if (r.ptr()->refcount() != 0) {
+	//	throw still_referenced(r);
+	//}
+
 	std::lock_guard lk(indices);
 	guid().erase(it->first);
 	index().erase(it);
@@ -170,6 +188,7 @@ void dealloc_from(ref source)
 {
 	std::lock_guard lk(indices);
 	std::remove_reference<decltype(index())>::type forgotten;
+	std::vector<std::tuple<ref,ref,ref>> forgotten_links;
 
 	auto ours = source.getAll(concepts::allocates());
 	for (auto allocation : ours) {
@@ -179,8 +198,14 @@ void dealloc_from(ref source)
 		if (allocation.linked(concepts::allocator())) { continue; }
 
 		auto it = index().find(allocation);
-		if (it != index().end()) {
+		//if (it != index().end()) {
 			forgotten.insert(index().extract(it));
+		//}
+
+		auto links = allocation.links();
+		for (auto it = links.begin(); it != links.end();) {
+			forgotten_links.emplace_back(allocation, it->first, it->second);
+			allocation.unlink(it++);
 		}
 	}
 	try {
@@ -191,15 +216,23 @@ void dealloc_from(ref source)
 			}
 		}
 		for (auto ghost : ours) {
+			
 			concept * referenced = intellect::level0::referenced(ghost, source);
 			if (referenced) {
 				throw still_referenced_by(ghost, referenced);
 			}
+			
+			//if (ghost.ptr()->refcount() != 0) {
+			//	throw still_referenced(ghost);
+			//}
 		}
 	} catch(...) {
 		// NOTE: this doesn't rebuild deallocated subgroups, but that could be done
 		// by returning them.
 		index().merge(forgotten);
+		for (auto link : forgotten_links) {
+			std::get<0>(link).link(std::get<1>(link), std::get<2>(link));
+		}
 		for (auto allocation : ours) {
 			source.link(concepts::allocates(), allocation);
 			allocation.link(concepts::allocator(), source);
@@ -220,8 +253,16 @@ void dealloc(ref r, ref source)
 	r.unlink(concepts::allocator(), source);
 	if (r.linked(concepts::allocator())) { return; }
 
+	std::vector<std::pair<ref,ref>> removed_links;
+
 	try {
 		if (r.crucial()) { throw crucial_concept(r); }
+		auto links = r.links();
+		for (auto it = links.begin(); it != links.end();) {
+			if (it->first == concepts::allocates()) { ++ it; continue; }
+			removed_links.push_back(*it);
+			r.unlink(it++);
+		}
 		dealloc_from(r);
 		concept * referenced = intellect::level0::referenced(r, source);
 		if (referenced) {
@@ -234,6 +275,9 @@ void dealloc(ref r, ref source)
 	} catch(...) {
 		source.link(concepts::allocates(), r);
 		r.link(concepts::allocator(), source);
+		for (auto link : removed_links) {
+			r.link(link.first, link.second);
+		}
 		throw;
 	}
 }

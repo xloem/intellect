@@ -17,6 +17,9 @@ struct concept
 	// and optional associated arbitrary data
 	std::any data;
 
+	concept();
+	~concept() noexcept(false); // throws if referenced
+
 	using array = std::vector<concept*>;
 
 	concept* id();
@@ -56,7 +59,10 @@ struct concept
 	template <typename T>
 	bool hasvalof() { return hasval() && data.type() == typeid(T); }
 
+	size_t refcount() { return _refcount; }
+
 private:
+	size_t _refcount;
 	// for permanence
 	bool iscrucial;
 	struct linksit_hash

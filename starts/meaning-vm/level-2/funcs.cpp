@@ -441,9 +441,14 @@ void rethrowref()
 			"source", e.source,
 			"type", e.type
 			);
-	} catch(still_referenced_by const & e) {
+	} catch(still_referenced const & e) {
 		throw noteconcept().link(
 			"is", "concept-is-still-referenced",
+			"topic", e.topic
+			);
+	} catch(still_referenced_by const & e) {
+		throw noteconcept().link(
+			"is", "concept-is-still-referenced-by",
 			"topic", e.topic,
 			"referrer", e.referrer
 			);

@@ -5,7 +5,7 @@
 
 using namespace intellect::level0;
 
-#define out(name) std::cout << " " #name ":" << std::hex << (size_t)name.ptr() << std::dec
+#define out(name) std::cout << " " #name "(" << name.ptr()->refcount() << "):" << std::hex << (size_t)name.ptr() << std::dec
 
 int main()
 {
@@ -23,12 +23,16 @@ int main()
 	ref skip = alloc(store); out(skip);
 	std::cout << std::endl;
 	
+	out(b);
 	a.link(
 		b, c,
 		d, e
 	);
+	out(b);
 	e.set(b, a);
+	out(b);
 	c.link(b, e);
+	out(b);
 	a.vset<int>(numlink, 3);
 	a.vset<std::function<void()>>(codelink, [](){
 		std::cout << "Hello, world." << std::endl;
@@ -41,6 +45,7 @@ int main()
 	std::cout << "Code:  "; a.vget<std::function<void()>>(codelink)();
 
 	std::cout << allocated() << " allocated" << std::endl;
+	out(b);
 	
 	a.get(codelink).setcrucial();
 	try {
@@ -68,8 +73,10 @@ int main()
 			++ it;
 		}
 	}
+	out(b);
 
 	e.unlink(b, a);
+	out(b); std::cout << std::endl;
 	//dealloc(a, store);
 	dealloc(store, concepts::allocations());
 

@@ -68,6 +68,16 @@ struct link_type_not_unique : public std::invalid_argument
 	concept* const type;
 };
 
+struct still_referenced : public std::invalid_argument
+{
+	still_referenced(concept* topic)
+	: std::invalid_argument("concept is still referenced"),
+	  topic(topic)
+	{ }
+
+	concept* const topic;
+};
+
 struct still_referenced_by : public std::invalid_argument
 {
 	still_referenced_by(concept* topic, concept* referrer)
