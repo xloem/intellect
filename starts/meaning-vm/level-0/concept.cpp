@@ -5,6 +5,18 @@ using namespace intellect::level0;
 
 #define selfref const_cast<concept*>(&self)
 
+concept::concept()
+: _refcount(0), iscrucial(false)
+{ }
+
+concept::~concept() noexcept(false)
+{
+	if (refcount() != 0) { throw still_referenced(this); }
+	for (auto it = links.begin(); it != links.end();) {
+		unlink(it++);
+	}
+}
+
 concept* concept::id()
 {
 	return this;
@@ -13,6 +25,8 @@ concept* concept::id()
 void concept::link(concept* type, concept* target)
 {
 	if (type == 0 || target == 0) { throw null_reference(); }
+	if (type != this) { ++ type->_refcount; }
+	if (target != this) { ++ target->_refcount; }
 	links.insert({type, target});
 }
 
@@ -54,6 +68,8 @@ void concept::unlink(concept* type, concept* target)
 		if (l->second == target) {
 			if (crucialparts.count(l)) { wascrucial = true; continue; }
 			links.erase(l);
+			if (type != this) { -- type->_refcount; }
+			if (target != this) { -- target->_refcount; }
 			return;
 		}
 	}
@@ -75,11 +91,13 @@ void concept::unlink(concept* type)
 	unlink(ls.first);
 }
 
-void concept::unlink(decltype(links)::iterator it)
+void concept::unlink(decltype(links)::const_iterator it)
 {
 	if (crucialparts.count(it)) {
 		throw crucial_link_type_target(selfref, it->first, it->second);
 	}
+	if (it->first != this) { -- it->first->_refcount; }
+	if (it->second != this) { -- it->second->_refcount; }
 	links.erase(it++);
 }
 
@@ -100,15 +118,8 @@ bool concept::linked(concept* type, concept* target) const
 
 concept::array concept::getAll(concept* type) const
 {
-	array ret;
-	for (
-		auto range = links.equal_range(type);
-		range.first != range.second;
-		++ range.first
-	) { 
-		ret.emplace_back(range.first->second);
-	}
-	return ret;
+	auto range = links.equal_range(type);
+	return array(range.first, range.second);
 }
 
 concept* concept::get(concept* type) const

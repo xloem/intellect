@@ -159,6 +159,16 @@ std::string getname(concept* r)
 	}
 }
 
+std::string dbglinks(concept* r)
+{
+	std::string ret;
+	for (auto & link : r->links) {
+		if (ret.size()) ret += " ";
+		ret += getname(link.first) + "=" + getname(link.second);
+	}
+	return ret;
+}
+
 bool isa(concept* member, concept* group)
 {
 	for (auto & g : member->getAll(is)) {

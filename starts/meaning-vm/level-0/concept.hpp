@@ -18,25 +18,29 @@ struct concept
 	// and optional associated arbitrary data
 	std::any data;
 
-	using array = std::vector<concept*>;
+	concept();
+	~concept() noexcept(false); // throws if referenced
+
+	//using array = std::vector<concept*>;
 
 	concept* id();
 
 	void link(concept* type, concept* target);
 	void unlink(concept* type, concept* target);
 	void unlink(concept* type);
-	void unlink(decltype(links)::iterator it);
+	void unlink(decltype(links)::const_iterator it);
 
 	bool crucial() { return iscrucial || crucialparts.size(); }
 	bool crucial(concept* type, concept* target);
-	bool crucial(decltype(links)::iterator it) { return crucialparts.count(it); }
+	bool crucial(decltype(links)::const_iterator it) { return crucialparts.count(it); }
 	void setcrucial() { iscrucial = true; }
 	void setcrucial(concept* type, concept* target);
-	void setcrucial(decltype(links)::iterator it) { crucialparts.insert(it); }
+	void setcrucial(decltype(links)::const_iterator it) { crucialparts.insert(it); }
 
 	bool linked(concept* type) const;
 	bool linked(concept* type, concept* target) const;
 
+	struct array;
 	array getAll(concept* type) const;
 
 	// get and set enforce that only 1 link of a given type is present
@@ -57,17 +61,47 @@ struct concept
 	template <typename T>
 	bool hasvalof() { return hasval() && data.type() == typeid(T); }
 
+	size_t refcount() { return _refcount; }
+
+	struct array {
+		using linkit = decltype(links)::const_iterator;
+		array() = default;
+		array(array const &) = default;
+		array(array &&) = default;
+		array &operator=(array const &) = default;
+		array(linkit b, linkit e)
+		: itb(b), ite(e) { }
+		struct iterator : public linkit {
+			iterator() = default;
+			iterator(iterator const &) = default;
+			iterator(iterator &&) = default;
+			iterator& operator=(iterator const &) = default;
+			iterator(linkit it) : linkit(it) { }
+			iterator operator++() { return linkit::operator++(); }
+			iterator operator++(int i) { return linkit::operator++(i); }
+			//iterator operator--() { return linkit::operator--(); }
+			//iterator operatir--(int i) { return linkit::operator--(i); }
+			concept*const& operator*() { return linkit::operator*().second; }
+			concept*const* operator->() { return &linkit::operator->()->second; }
+		};
+		iterator begin() { return itb; }
+		iterator end() { return ite; }
+
+		iterator itb, ite;
+	};
+
 private:
+	size_t _refcount;
 	// for permanence
 	bool iscrucial;
 	struct linksit_hash
 	{
-		size_t operator()(decltype(links)::iterator const &it) const
+		size_t operator()(decltype(links)::const_iterator const &it) const
 		{
 			return std::hash<decltype(&*it)>()(&*it);
 		}
 	};
-	std::unordered_set<decltype(links)::iterator, linksit_hash> crucialparts;
+	std::unordered_set<decltype(links)::const_iterator, linksit_hash> crucialparts;
 };
 
 }

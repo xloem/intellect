@@ -418,7 +418,8 @@ void createhabits()
 		poplinkentry(le);
 		result = le;
 	});
-	/*ahabit(last-link-entry, ((target, le), (concept, c)),
+	/*
+	ahabit(last-link-entry, ((target, le), (concept, c)),
 	{
 		checknotepad(le);
 		if (le.hasval() && !le.hasvalof<links_it>()) {
@@ -434,7 +435,8 @@ void createhabits()
 		le.set(source, c);
 		poplinkentry(le);
 		result = le;
-	});*/
+	});
+	*/
 	ahabit(next-link-entry, ((link-entry, le)),
 	{
 		checknotepad(le);
