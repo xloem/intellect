@@ -1,0 +1,36 @@
+Test takes too long to run.  Speeding up.
+focus areas from gprof:
+	concept::linked(a, b) 18% time, >50% calls are from dohabit
+	concept::unlink(a, b) 9% time, 8/9 calls from dohabit
+	std::map iterator ++ 8% time (called too much, not slow)
+	concept::array iterator++ 7% time (called too much, not slow)
+
+10:48
+plan:
+	1. adjust dohabit to do less unlinking
+	2. implement unordered links for faster lookup
+10:49
+	note: dohabit is unlinking in order to restore context afterwards.
+	It kind of is responsible since we're not storing the context otherwise.
+	I'll move on to #2.
+10:52
+	In order to do unordered links, we'll have to redo all parts that use ordered links
+	as arrays.  That means primarily arguments passed to habits.  To handle ordering,
+	it might make for fastest runtime to implement numbers.  If we implement numbers,
+	we could look each argument up by its order from a single link.  Otherwise we're
+	going to have 'next' links which are possibly slower due to the structure not being
+	aware of memory locality.  But maybe not.
+	Alternatively we could create an 'array' type that is special and holds an ordered
+	list of concepts.  This might be pretty fast.  We'd need to provide functions to
+	work with the array.  That might be easiest to do with numbers, but could also be
+	done without them using an iterator like everything else.
+	Let's implement this array, because it will likely help speed.  Let's put it in
+	level-2.
+	ATM compilation error to deal with.
+10:55
+ 1. [ ] compilation error
+ 2. [ ] implement array to replace ordered links
+10:59 I'm leaving my computer to get an apple
+11:21 back.
+	Okay, so the plan is to implement vectors of concepts.
+	Will do.
