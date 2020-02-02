@@ -1,0 +1,51 @@
+I've got two errors.
+1. randomcode is using an undefined 'error' habit that is clearly supposed to throw an error
+2. i tried to use .dbglinks() from debugger and it says 'Cannot evaluate function -- may be inlined'.
+I'll be doing #2 first.
+09:18 oops: this is a header file deep in things, so a lot gets rebuilt when something changes.
+might think more on it.  meanwhile, the battery voltage is slowly rising, 1.4A from panels,
+11.70V.
+09:19 I'm not sure why this error is happening when the code is compiled with -O0 -ggdb.
+Maybe because the method is never used, and is in a header file, no object code is produced.
+09:22 all the code for level-1/baseref was in a header file, but I made a cpp file to hold
+just this function, with voice decision-making support.
+09:25 Oops: baseref is, as always, a template class, so you can't put method definitions in
+object files.  This is likely also why the code is not compiled.
+09:27 btw earlier I went for a walk in the rising sun to try to warm up my bare toes.  there is
+sun under the picnic table, too, so hopefully that can help.  There is a bird in the road here,
+trying to eat some things on the wet asphalt.  It makes a noise when I don't look at it.  I
+tried to fix the issue by referencing the function from the main level3.cpp file.  Compilation
+is ongoing due to header-file change.
+09:29 solar at 1.450A.  I want to get the battery up to 11.95V where it was a couple days ago.
+09:30 compilation error using function showed me a problem was that i wasn't returning the value
+from it.  recompiling with header change.
+09:33 compilation finished, tested in debugger, #2 is fixed.  test is still running to next error.
+oh, it got there.  it's the expected 'error' problem #1.
+09:36 i'm trying to implement the error habit.  i'm distracted with experiences associated with
+realizing that the random code script is basically working and can be used.  i want to finish
+the error habit first.  i may add small code to the habit-workings to provide for extra arguments
+being okay.  this would let scripts add data to their errors, arbitrarily.
+- [ ] throw error
+- [ ] add extra links to errors
+- [ ] check where arguments are verified in steps, that extra arguments are okay for errors;
+mark errors as special, and handle this, if they aren't
+	the voices inhibiting this behavior say I should ignore the error habit and just build
+	the intellect without more error functionality.  it will invent errors on its own.
+	this habit is incredibly small, and lets my other habits live in a domain they expect.
+	the inhibitions have not built reason-paths for my other habits to understand that
+	a meaningful change is happening.
+09:39 trying to implement error habit
+09:40 distracted by the difference between my habits and the program's habits demonstrated
+as confusing in the above relation, trying to continue
+09:41 updating order of behavior so that underlying work can inform use
+- [X] throw error
+- [ ] check where arguments are verified in steps, that extra arguments are okay for errors;
+- [ ] add extra links to errors
+09:42 verified that steps vm does not care if extra arguments are passed.  i guess, due to
+implied urgency of inhibition, i won't fix that, and will just take advantage of it, for now.
+09:46
+- [X] throw error
+- [X] check where arguments are verified in steps, that extra arguments are okay for errors;
+- [X] add extra links to errors
+compiling
+09:47 new error is thrown, so even though this isn't tested yet, I'll consider it addressed for now.
