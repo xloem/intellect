@@ -65,3 +65,7 @@ more rapidly.
 recently run guix gc --verify=contents with no errors.
 my node is /gnu/store/k6fhqibm4hxlaww1q2gm80v3rgr96hsa-node-10.16.0/bin/node .  I wonder if
 this bug has been fixed.
+12:48 looks like the error was caused because I moved the files out of the cache.  I'll put 'em
+back!
+12:53 as far as I can tell it's working now.  many of my transactions don't appear to be actually
+on the blockchain, so resending is good.  hopefully there aren't double-spends =S
