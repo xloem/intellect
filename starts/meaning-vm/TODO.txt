@@ -4,9 +4,25 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
 NOW:
 - [ ] buy outdoors writing equipment from pacific outfitters, possibly
 - [ ] write reasons for AI-behavior out, see line 194 of intellect/WORKING_TRUE_PLAN.txt .  Use Karl judgement and do what is needed.
+	-> note: karl would like a path that gives him more ease.
+	         sharing with others may hurt his mind more.  development is familiar
+		 and has had more strength built around it over the past few years.
+		 community sounds nice though.  easy community.
+		re: suffering, we mean trying to do things and doing something different,
+		densely.  this is the suffering karl is worried about.  he wants to experience
+		effectiveness.  not reaching for pencil and grabbing wallet by accident.
 - [ ] please keep relating around the difference between library behavior and campground behavior.
 		the hope here is that karl has less of an experience of struggling with distraction
 		distraction and doubt are demons.  have faith and strength in what you know is right. -karl
+		library-behavior: propose sharing AI with social-good coding groups, such as
+		 succuttlebutt and the neurotechx subchat, if remembered right.  try to make
+		 opensource hyperintelligence project exist.
+		library-behavior; if it is possible 'aliens' are observing or influencing you, consider developing normal verbal communication with them.
+		library-behavior? we have concept of 'i am not tool, i am training
+		 wheels / skillshare'.  helps connect with real meaning.  would
+		 like to add responsibility.  have friend-community in different
+		 state.  could be right place to go, need to do so with safety
+		 and relevently understood impact. build-ai-to-keep-friend-safe
 - [X] expand brace parser to handle sub-braces
 - [X] fix up after adding locations
 - [ ] ADD PROVISION FOR CALLING VARIABLES -> this expands quickly to

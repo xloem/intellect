@@ -364,7 +364,7 @@ ref parsevalue(ref stream)
 	return word;
 }
 
-static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text"), outer("outer"), bootstraplistwordcontext("bootstrap-list-word-context"), wordcontext("word-context"), openbrace("open-brace"), closebrace("close-brace");
+static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text"), outer("outer"), bootstraplistwordcontext("bootstrap-list-word-context"), wordcontext("word-context"), openbrace("open-brace"), closebrace("close-brace"), informationneeded("information-needed");
 
 // let's do contextual word lookup.  it will really ease stuff later.
 
@@ -788,6 +788,14 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 				neededmap.link(intellect::level2::concepts::self_, txtref2bootstrap(subhabit));
 			} else {
 				subhabit = wctx.get(txt2ref("lookup"))(subhabit);
+				if (!subhabit.linked(informationneeded)) {
+					conceptunmake(neededmap);
+					conceptunmake(knownmap);
+					throw intellect::level2::noteconcept().link(
+							"is", "habit-not-found",
+						        "subhabit", subhabit,
+							"habit", habit);
+				}
 				knownmap.link(intellect::level2::concepts::self_, subhabit);
 		       		order = makehabitinformationorder(subhabit);
 				orderitems = order.getAll(informationorder);

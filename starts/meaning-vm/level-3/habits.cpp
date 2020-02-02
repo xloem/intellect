@@ -12,9 +12,11 @@ void createhabits()
 {
 	intellect::level2::createhabits();
 
+	/*
 	ahabit(to, ((source, s)), {
 		result = s;
 	});
+	*/
 	ahabit(error, ((error, e)), {
 		// e is name of error
 		ref er = noteconcept();

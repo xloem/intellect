@@ -8,10 +8,78 @@ next-word: do-next [space underlying]
 " return.
 	next-word.
 ]
-concept // [
+concept '//' [
 	quiet true
 ]
 // this is a comment containing the word habit that I hope will parse okay
+
+parser /* [ space ] [ ] [
+	set underlying get space 'source'
+	set do-next get underlying 'do-next'
+	set do-value get underlying 'do-value'
+next-word: do-next [space underlying]
+	set value do-value [space underlying]
+	pick value if "*/" return.
+	next-word.
+]
+concept '/*' [
+	quiet true
+]
+/* this is a comment // containing a line comment to fuzz more */
+
+habit first-link-entry-of [ concept type ] [ result ] [
+	set result make-concept
+	first-link-entry result concept
+	next:
+		set more-links linked result 'type'
+		pick more-links if false failure.
+		set link-type get result 'type'
+		set done same link-type type
+		pick done if true return.
+		next-link-entry result
+		next.
+	failure:
+	error type-not-on-concept [ 'concept' concept ] [ 'type' type ]
+]
+
+/*
+habit last-link-entry-of [ concept type ] [ result ] [
+	set result make-concept
+	last-link-entry result concept
+	next:
+		set more-links link-type linked link
+		pick more-links if false failure.
+		set link-type get result 'type'
+		set done same link-type type
+		pick done if true return.
+		previous-link-entry result
+	failure:
+	error type-not-on-link
+]
+*/
+
+habit take [ concept type ] [ result ] [
+	set link-entry first-link-entry-of concept type
+	set result get link-entry target
+	link-entry-unlink link-entry
+]
+
+habit to [ result ] [ result ] [ ]
+
+habit inner-put [ concept inner type value ] [ ] [
+	set inner get concept inner
+	put inner type value
+]
+
+habit inner-link [ concept inner type value ] [ ] [
+	set inner get concept inner
+	link inner type value
+]
+
+habit inner-get [ concept inner type ] [ result ] [
+	set inner get concept inner
+	set result get inner type
+]
 
 // 'link' below is being parsed as a link-command.
 // could fix by setting word-context again
@@ -38,7 +106,7 @@ habit make-step [ habit ] [ result ] [
 		set result random-of all-steps 'step'
 		return.
 	new:
-		set result makeconcept
+		set result make-concept
 		inner-link habit tail-steps step result
 		inner-link habit all-steps step result
 		return.
@@ -90,57 +158,6 @@ habit make-random-habit [ suggestions ] [ result ] [
 	
 	// 4. for each tail-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
 	// 5. repeat until no tail-steps
-]
-
-habit first-link-entry-of [ concept type ] [ result ] [
-	set result make-concept
-	first-link-entry result concept
-	next:
-		set more-links link-type linked link
-		pick more-links if false failure.
-		set link-type get result 'type'
-		set done same link-type type
-		pick done if true return.
-		next-link-entry result
-	failure:
-	error type-not-on-link
-]
-
-habit last-link-entry-of [ concept type ] [ result ] [
-	set result make-concept
-	last-link-entry result concept
-	next:
-		set more-links link-type linked link
-		pick more-links if false failure.
-		set link-type get result 'type'
-		set done same link-type type
-		pick done if true return.
-		previous-link-entry result
-	failure:
-	error type-not-on-link
-]
-
-habit take [ concept type ] [ result ] [
-	set link-entry first-link-entry-of concept type
-	set result get link-entry target
-	link-entry-unlink link-entry
-]
-
-habit to [ result ] [ result ] [ ]
-
-habit inner-put [ concept inner type value ] [ ] [
-	set inner get concept inner
-	put inner type value
-]
-
-habit inner-link [ concept inner type value ] [ ] [
-	set inner get concept inner
-	link inner type value
-]
-
-habit inner-get [ concept inner type ] [ result ] [
-	set inner get concept inner
-	set result get inner type
 ]
 
 concept step-types [

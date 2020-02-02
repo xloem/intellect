@@ -1,0 +1,35 @@
+I wasn't going to open one of these files, but I realized how much the notes help my
+memory issues.
+I'm working on an issue but I've forgotten what it is.  The debugger will show me.
+09:59 The "makeconcept" habit isn't found, and I'm adding an error that reports that situation
+specifically since it crops up a lot.  The error wasn't thrown.
+10:06 I went on another walk to warm my feet, and turned the solar panels to the moved sun.
+It helped current by maybe 0.11A, which is a lot.
+10:08 new error works, checking status of makeconcept hbit.  I bet I just frogot the '-'.
+In fact, we're so sure of that, we're just going to add a '-'.
+Oh!  I'd like to check that make-concept uses the notepad, just to know this again.
+10:09 It does.  Adding hyphen.
+10:09 rerunning test.  Laptop is finishing up charge.  12V battery at 12.3V, still far below
+the float voltage the buck converter is set to.
+10:10 next issue is "inner-link".  I'll keep work open in this file; the issues are small.
+"inner-link" doesn't exist.
+	It's declared after use.
+	A general fix for this would be to parse habit bodies after the file is parsed, might
+	make implementing parsers confusing, could move them to a separate file though.
+	For now I'll move inner-link to before its use.
+10:12	Oh hey I have a tricky implementation of "to" in the scriptfile next to inner-link!
+	I'll try this out, undoing my c++ "to" habit.
+10:13 recompiling with "to" removed.  i guess the file-scoped one should shadow it, haven't
+tested that.  now running test.
+10:14 moved 'first-link-entry-of' habit up as well, was used.
+10:15 seems I didn't move it far enough up.  adding details to missing-habit error.
+10:17 running test again.  y'know, voices halted me before I sped this up too much.  each effort
+to speed it up takes at least a few hours.  laptop is fully charged.
+10:18 hmmm first-link-entry-of is using an undefined link-type function, looks like an error
+possibly.  it's also used as a variable.  reviewing.
+10:23 blergh, had blowjob hallucination, don't like them.  i think i fixed first-link-entry-of.
+rerunning test.
+10:24 script is using removed last-link-entry function, reviewing.  habit is unused , errr
+I put /* */ around but the parser ignores that =)  I'll add a parser in the scriptfile that
+handlesit.
+10:30 the test passes the debug count of 40 expressions now.  I'll store and double to 80.
