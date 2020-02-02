@@ -19,6 +19,8 @@ struct baseref : public level0::baseref<ref>
 	baseref(const char *name, concept* allocator = nullptr) : baseref(std::string(name), allocator) { }
 	baseref(bool b) : baseref(b ? "true" : "false") { }
 	baseref() : baseref("nothing") { }
+	
+	void dbglinks() { level1::dbglinks(this->ptr()); }
 
 	bool isa(ref group) const { return level1::isa(self, group); }
 	bool isan(ref group) const { return isa(group); }

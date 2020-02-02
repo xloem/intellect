@@ -364,7 +364,7 @@ ref parsevalue(ref stream)
 	return word;
 }
 
-static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text");
+static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text"), outer("outer"), bootstraplistwordcontext("bootstrap-list-word-context"), wordcontext("word-context"), openbrace("open-brace"), closebrace("close-brace");
 
 // let's do contextual word lookup.  it will really ease stuff later.
 
@@ -631,16 +631,19 @@ ref bootstrap_word(ref self, ref stm, ref spc)
 // 		braced content will disappear from parsing now.
 // 		we should output the results of our parsing into the stream made by the parser.  comments don't output anything, so they're skipped.
 // 			incidentally, this implements expressions!  and is small and easy!
-ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self, ref wctx)
+ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self, ref wctx, ref fctx)
 {
 	//StreamSentinel s(ws);
 	auto tokenname = ref2txt(tokennameref);
 	if (tokenname != "habit" && tokenname != "parser") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 	ref habitname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref habit = wctx.get(txt2ref("lookup"))(habitname, true);
+	bootstraplistwordcontext.set(outer, fctx.get(wordcontext));
+	fctx.set(wordcontext, bootstraplistwordcontext);
 	ref argtext = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref results = (ws.get(donext)(ws), ws.get(dovalue)(ws)); (void)results;
 	ref steps = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 	ref args = intellect::level2::noteconcept();
 	//ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
 	auto targets = argtext.getAll(word);
@@ -664,23 +667,32 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 	}
 	ref laststep = habit;
 	labels["return"] = nothing;
-	auto stepwords = steps.getAll(word);
-	for (auto wordsit = stepwords.begin(); wordsit != stepwords.end(); ++ wordsit) {
+	ws.get(dogo)(ws, steps.get(openbrace));
+	//auto stepwords = steps.getAll(word);
+	//for (auto wordsit = stepwords.begin(); wordsit != stepwords.end(); ++ wordsit) {
+	while (true) {
+		ws.get(donext)(ws);
+		if (ws.get(dowhere)(ws) == steps.get(closebrace)) { break; }
+		ref wordref = ws.get(dovalue)(ws);
 		std::string label, result;
-		std::string word = ref2txt(*wordsit);
+		std::string word = ref2txt(wordref);
 		if (word == "\n") { continue; }
 		if (word[word.size()-1] == ':' || word[word.size()-1] == ',') {
 			label = word;
 			label.resize(label.size() - 1);
 			if (label == "return") { throw intellect::level2::noteconcept().link("is", "return-label-used"); }
-			word = ref2txt((++ wordsit, *wordsit));
+			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+			word = ref2txt(wordref);
 		}
 		if (word == "=" || word == "set") {
-			++ wordsit;
-			result = ref2txt(*wordsit);
-			++ wordsit;
-			word = ref2txt(*wordsit);
+			fctx.set(wordcontext, bootstraplistwordcontext);
+			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+			result = ref2txt(wordref);
 			values.insert(result);
+			fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
+
+			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+			word = ref2txt(wordref);
 		}
 		if (word[word.size()-1] == '.') {
 			// is goto
@@ -704,9 +716,14 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			continue;
 		}
 		if (word == "if") {
-			word = ref2txt((++ wordsit, *wordsit));
-			ref cond = wctx.get(txt2ref("lookup"))(*wordsit);
-			word = ref2txt((++ wordsit, *wordsit));
+			fctx.set(wordcontext, bootstraplistwordcontext);
+			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+			word = ref2txt(wordref);
+			fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
+
+			ref cond = wctx.get(txt2ref("lookup"))(wordref);
+			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+			word = ref2txt(wordref);
 			if (word[word.size()-1] != '.') {
 				throw intellect::level2::noteconcept().link("is", "condition-is-not-label", "action", word, "cond", cond);
 			}
@@ -733,7 +750,11 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 		}
 		ref nextstep = label.size() ? labels[label] : intellect::level2::noteconcept();
 		if (word == "?" || word == "pick") {
-			word = ref2txt((++ wordsit, *wordsit));
+			fctx.set(wordcontext, bootstraplistwordcontext);
+			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+			word = ref2txt(wordref);
+			fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
+
 			if (!values.count(word)) {
 				throw intellect::level2::noteconcept().link("is", "condition-must-be-in-context", "condition", word);
 			}
@@ -756,7 +777,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			decltype(orderitems.begin()) orderit;
 			ref neededmap = intellect::level2::noteconcept();
 			ref knownmap = intellect::level2::noteconcept();
-			ref subhabit = *wordsit;
+			ref subhabit = wordref;
 			if (values.count(ref2txt(subhabit))) {
 				neededmap.link(intellect::level2::concepts::self_, txtref2bootstrap(subhabit));
 			} else {
@@ -771,7 +792,9 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 					conceptunmake(order);
 					order = nothing;
 				}
-				ref arg = (++ wordsit, *wordsit);
+				fctx.set(wordcontext, bootstraplistwordcontext);
+				ref arg = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+				fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 				if (arg.isa(bracedwords)) {
 					auto words = arg.getAll(word_);
 					auto it = words.begin();
@@ -1058,11 +1081,13 @@ void loadhabits()
 	});
 	
 	ahabit(parser-stream-go, ((space, stm), (where, w)), {
-		stm.get(source).get(dogo)(w);
+		ref src = stm.get(source);
+		src.get(dogo)(src, w);
 		return stm;
 	});
 	ahabit(parser-stream-where, ((space, stm)), {
-		return stm.get(source).get(dowhere)();
+		ref src = stm.get(source);
+		return src.get(dowhere)(src);
 	});
 	ahabit(parser-stream-next, ((space, stm)), {
 		try {
@@ -1212,7 +1237,7 @@ void loadhabits()
 			spc.set(value, word);
 			result = wctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
 			++ dbg_ct;
-			if (dbg_ct > 20) throw intellect::level2::noteconcept().link("is","debug");
+			if (dbg_ct > 40) throw intellect::level2::noteconcept().link("is","debug");
 			if (result != nothing) {
 				return result;
 			}
@@ -1332,12 +1357,12 @@ void loadhabits()
 		std::string brace2 = ref2txt(brace2ref);
 		ref result = intellect::level2::noteconcept();
 		result.link(is, bracedwords);
-		result.link(openbrace, bracetxt);
+		result.link(openbrace, ws.get(dowhere)(ws));//bracetxt);
 		while (true) {
 			ws.get(donext)(ws);
 			ref sym = ws.get(dovalue)(ws);
 			if (istxtref(sym) && ref2txt(sym) == brace2) {
-				result.link(closebrace, sym);
+				result.link(closebrace, ws.get(dowhere)(ws));//sym);
 				break;
 			}
 			result.link(word, sym);
@@ -1347,6 +1372,15 @@ void loadhabits()
 		}
 		return result;
 	});
+	ref("bootstrap-list-word-context").link(txt2ref("["), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("{"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("("), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("<"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("[["), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("{{"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("(("), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("<<"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("begin"), "bootstrap-parse-brace");
 	ref("bootstrap-word-context").link(txt2ref("["), "bootstrap-parse-brace");
 	ref("bootstrap-word-context").link(txt2ref("{"), "bootstrap-parse-brace");
 	ref("bootstrap-word-context").link(txt2ref("("), "bootstrap-parse-brace");
@@ -1363,8 +1397,8 @@ void loadhabits()
 	});
 	ref("bootstrap-word-context").link(txt2ref("lookup"), "bootstrap-lookup");
 
-	ahabit(bootstrap-parse-habit, ((focus, word), (result, file), (space, ws), (word-context, wctx)), {
-		return bootstrap_parse_habit(word, file, ws, ctx, self, wctx);
+	ahabit(bootstrap-parse-habit, ((focus, word), (result, file), (space, ws), (word-context, wctx), (file-context, fctx)), {
+		return bootstrap_parse_habit(word, file, ws, ctx, self, wctx, fctx);
 	});
 	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
 	ref("bootstrap-word-context").link(txt2ref("parser"), "bootstrap-parse-habit");

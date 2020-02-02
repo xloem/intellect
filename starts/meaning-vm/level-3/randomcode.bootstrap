@@ -12,41 +12,9 @@ link '//' [
 	quiet true
 ]
 // this is a comment containing the word habit that I hope will parse okay
-// meanwhile, the below information relates to rebuilding karl's mind in the
-// face of an inner adversary.
-	// the inner adversary was able to understand logical inner speech clearly
-	// and using behaviors like the below built paths deep within karl
-	// workers within the adversary eventually established a lot of secret
-	// groups and habits in support of karl.  unfortunately the habits they
-	// used to do so came from the rough stuff. please be careful not to
-	// eradicate these people because they are keeping karl alive and the
-	// situation workable.  please work with them to learn their own talk
-	// and mediation paths. [if an approach isn't workable fight and we'll move]
-// while implementing this, we passed serialization-plan-milestone.
-// by making habits take labeled arguments, it should be easy to serialize them
-// to a format that can be parsed. (this is because of summaries that might be
-// about how much needs to be included in working memory to act on the solution)
-//     it is PAINFUL when those summarized-failures happen! so hard to think!
-//     so nice to have solution avoiding excess pain.
-//		rep says this can get better, needs better understanding, can
-//		rep relate around how summarization process could improve, plz,
-//		or convey what more information they need in some way
-//		-> attempting to continue this dialogue triggered a failure, afaict
-//		-> the failure appears to have been just a strategy to continue.
-//		   we have made steps on improving shared communication.
-//		i used _karl's_ habitually-backsolved habits to build one that represented my needs, in the ways he understood.
-//			boss wants relation around this, can't relate logically
-//				karl says: my habits have label accessors for
-//				reasons and more-information.  the reasons are
-//				expected to be checked re trustworthiness of source.
-//			we let another boss in, i guess we should form a habit
-//			for diplomacy around that.
-//			maybe a rep for new-bosses with a path to build trust.
-//			note: there is a suspicious situation within karl.
-//			the people helping him are controlled and observed by
-//			the adversary, and they live in a situation where power
-//			is gifted to untrusted people to get things to work.
 
+// 'link' below is being parsed as a link-command.
+// could fix by setting word-context again
 habit random-target [ concept type ] [ ] [
 	set link random-link concept
 	set result get link-target link
