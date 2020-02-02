@@ -23,5 +23,25 @@ It seems the thing called missing is there in the previous lines.
 12:18 struggling, boss roleplay concept.  i've made a 3rd log of the error with more details.
 it seems to show that some code is being skipped, or possibly old code being executed.
 maybe i should try with valgrind.  still trying to look at log to understand it, struggling.
-
-
+12:20 having some food, sun is glancing a smidge around edges of clouds.
+12:21 okay, so, the log looks fine until the call to broadcast(), then the same weird error is
+thrown, saying it came from api.js line 79.  But the console output on lines 78, 77, and 76 was
+never output.  I guess I'll try under valgrind, which will likely be slow.
+12:24 i've disabled my wifi to save battery.  i like to think this helps security and system
+stability too.  i've worked with a lot of buggy network devices.  valgrind is still booting up
+node.
+12:25 I'm thinking what I could do is go into the broadcast() function and add logs to the
+lines in there, to see when things start going weird.  It could also be that the stream is
+closed before the output reaches the terminal; not sure how to handle that.  Maybe I can put
+a big delay before the line that crashes.  I'll try just moving it out of the try loop for now,
+since javascript does delays asynchronously.  MAybe the function is async; that would help.
+12:27 the function is async; I'll add a delay.
+12:29 the delay didn't seem to do anything
+12:31 i may not have used settimeout correctly, but it didn't even throw an error.
+will try commenting line out.
+12:32 valgrind completed with no memory errors found.  storing.  halfway through implemented
+test 5, commenting the line out.
+12:33 with the line commented out, the error changed to "console.log is not a function" on line 80.  This sure seems like some corruption inside node.
+12:36 the sun came out and the panels were charging at over 2A! i angled them to aim at it better
+and the amperage dropped to 1.3A.  Clouds are moving across the sun.  also have unplugged the
+laptop to easily not sit in front of panels.
