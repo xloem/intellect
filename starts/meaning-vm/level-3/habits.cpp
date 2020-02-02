@@ -12,6 +12,28 @@ void createhabits()
 {
 	intellect::level2::createhabits();
 
+	/*
+	ahabit(to, ((source, s)), {
+		result = s;
+	});
+	*/
+	ahabit(error, ((error, e)), {
+		// e is name of error
+		ref er = noteconcept();
+		er.link("is", e);
+		er.link("habit", ctx.get("outer-context").get("self"));
+		for (auto l : ctx.links()) {
+			if (l.first == "outer-context") { continue; }
+			if (l.first == "root") { continue; }
+			if (l.first == "active-state") { continue; }
+			if (l.first == "error") { continue; }
+			if (l.first == "quiet") { continue; }
+			if (l.first == "self") { continue; }
+			er.link(l.first, l.second);
+		}
+		throw er;
+	});
+
 	ahabit(same, ((concept-a, a), (concept-b, b)), {
 		result = (a == b);
 	});

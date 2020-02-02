@@ -8,48 +8,108 @@ next-word: do-next [space underlying]
 " return.
 	next-word.
 ]
-link '//' [
+concept '//' [
 	quiet true
 ]
 // this is a comment containing the word habit that I hope will parse okay
-// meanwhile, the below information relates to rebuilding karl's mind in the
-// face of an inner adversary.
-	// the inner adversary was able to understand logical inner speech clearly
-	// and using behaviors like the below built paths deep within karl
-	// workers within the adversary eventually established a lot of secret
-	// groups and habits in support of karl.  unfortunately the habits they
-	// used to do so came from the rough stuff. please be careful not to
-	// eradicate these people because they are keeping karl alive and the
-	// situation workable.  please work with them to learn their own talk
-	// and mediation paths. [if an approach isn't workable fight and we'll move]
-// while implementing this, we passed serialization-plan-milestone.
-// by making habits take labeled arguments, it should be easy to serialize them
-// to a format that can be parsed. (this is because of summaries that might be
-// about how much needs to be included in working memory to act on the solution)
-//     it is PAINFUL when those summarized-failures happen! so hard to think!
-//     so nice to have solution avoiding excess pain.
-//		rep says this can get better, needs better understanding, can
-//		rep relate around how summarization process could improve, plz,
-//		or convey what more information they need in some way
-//		-> attempting to continue this dialogue triggered a failure, afaict
-//		-> the failure appears to have been just a strategy to continue.
-//		   we have made steps on improving shared communication.
-//		i used _karl's_ habitually-backsolved habits to build one that represented my needs, in the ways he understood.
-//			boss wants relation around this, can't relate logically
-//				karl says: my habits have label accessors for
-//				reasons and more-information.  the reasons are
-//				expected to be checked re trustworthiness of source.
-//			we let another boss in, i guess we should form a habit
-//			for diplomacy around that.
-//			maybe a rep for new-bosses with a path to build trust.
-//			note: there is a suspicious situation within karl.
-//			the people helping him are controlled and observed by
-//			the adversary, and they live in a situation where power
-//			is gifted to untrusted people to get things to work.
 
+parser /* [ space ] [ ] [
+	set underlying get space 'source'
+	set do-next get underlying 'do-next'
+	set do-value get underlying 'do-value'
+next-word: do-next [space underlying]
+	set value do-value [space underlying]
+	pick value if "*/" return.
+	next-word.
+]
+concept '/*' [
+	quiet true
+]
+/* this is a comment // containing a line comment to fuzz more */
+
+habit first-link-entry-of [ concept type ] [ result ] [
+	set result make-concept
+	first-link-entry result concept
+	next:
+		set more-links linked result 'type'
+		pick more-links if false failure.
+		set link-type get result 'type'
+		set done same link-type type
+		pick done if true return.
+		next-link-entry result
+		next.
+	failure:
+	error type-not-on-concept [ 'concept' concept ] [ 'type' type ]
+]
+
+/*
+habit last-link-entry-of [ concept type ] [ result ] [
+	set result make-concept
+	last-link-entry result concept
+	next:
+		set more-links link-type linked link
+		pick more-links if false failure.
+		set link-type get result 'type'
+		set done same link-type type
+		pick done if true return.
+		previous-link-entry result
+	failure:
+	error type-not-on-link
+]
+*/
+
+habit take [ concept type ] [ result ] [
+	set link-entry first-link-entry-of concept type
+	set result get link-entry target
+	link-entry-unlink link-entry
+]
+
+habit to [ result ] [ result ] [ ]
+
+habit inner-put [ concept inner type value ] [ ] [
+	set inner get concept inner
+	put inner type value
+]
+
+habit inner-link [ concept inner type value ] [ ] [
+	set inner get concept inner
+	link inner type value
+]
+
+habit inner-get [ concept inner type ] [ result ] [
+	set inner get concept inner
+	set result get inner type
+]
+
+// 'link' below is being parsed as a link-command.
+// could fix by setting word-context again
 habit random-target [ concept type ] [ ] [
 	set link random-link concept
 	set result get link-target link
+]
+
+// moved this up here because we dont have forward declarations and parsing is using spec info
+habit make-step [ habit ] [ result ] [
+	set choice random-of step-types or
+	pick choice
+	if stop stop.
+	if jump jump.
+	if new new.
+	if step step.
+	if pick pick.
+	error unknown-step-type
+	stop:
+		set result to nothing
+		return.
+	jump:
+		set all-steps get habit 'all-steps'
+		set result random-of all-steps 'step'
+		return.
+	new:
+		set result make-concept
+		inner-link habit tail-steps step result
+		inner-link habit all-steps step result
+		return.
 ]
 
 // would like this to be static local to make-random-habit
@@ -100,83 +160,10 @@ habit make-random-habit [ suggestions ] [ result ] [
 	// 5. repeat until no tail-steps
 ]
 
-habit first-link-entry-of [ concept type ] [ result ] [
-	set result make-concept
-	first-link-entry result concept
-	next:
-		set more-links link-type linked link
-		pick more-links if false failure.
-		set link-type get result 'type'
-		set done same link-type type
-		pick done if true return.
-		next-link-entry result
-	failure:
-	error type-not-on-link
-]
-
-habit last-link-entry-of [ concept type ] [ result ] [
-	set result make-concept
-	last-link-entry result concept
-	next:
-		set more-links link-type linked link
-		pick more-links if false failure.
-		set link-type get result 'type'
-		set done same link-type type
-		pick done if true return.
-		previous-link-entry result
-	failure:
-	error type-not-on-link
-]
-
-habit take [ concept type ] [ result ] [
-	set link-entry first-link-entry-of concept type
-	set result get link-entry target
-	link-entry-unlink link-entry
-]
-
-habit to [ result ] [ result ] [ ]
-
-habit inner-put [ concept inner type value ] [ ] [
-	set inner get concept inner
-	put inner type value
-]
-
-habit inner-link [ concept inner type value ] [ ] [
-	set inner get concept inner
-	link inner type value
-]
-
-habit inner-get [ concept inner type ] [ result ] [
-	set inner get concept inner
-	set result get inner type
-]
-
 concept step-types [
 	or stop
 	or jump
 	or new
-]
-habit make-step [ habit ] [ result ] [
-	set choice random-of step-types or
-	pick choice
-	if stop stop.
-	if jump jump.
-	if new new.
-	if step step.
-	if pick pick.
-	error unknown-step-type
-	stop:
-		set result to nothing
-		return.
-	jump:
-		set all-steps get habit 'all-steps'
-		set result random-of all-steps 'step'
-		return.
-	new:
-		set result makeconcept
-		inner-link habit tail-steps step result
-		inner-link habit all-steps step result
-		return.
 ]
 
 habit fill-step [ step habit ] [ ] [

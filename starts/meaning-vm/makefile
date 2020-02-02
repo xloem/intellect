@@ -1,33 +1,37 @@
 # Please support Karl working on this intelligence framework.  The framework needs to be quality, so that the rest may function.
 
-CXXFLAGS=-pedantic -Wall -Werror -Wno-error=deprecated-declarations -Wno-gnu-zero-variadic-macro-arguments -std=gnu++17 -fno-operator-names -ggdb -O0
+CXXFLAGS=-pedantic -Wall -Werror -Wno-error=deprecated-declarations -Wno-gnu-zero-variadic-macro-arguments -std=gnu++17 -fno-operator-names -ggdb -O0 -pg
 LINK.o=$(LINK.cc)
+OBJDIR=/tmp/intellect-vm-objs/
 
 all: level0 level1 habit-starts/rhythm level2 level3
 level0: level0.o liblevel0.a
-liblevel0.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp))
+liblevel0.a: $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-0/*.cpp))
 level1: level1.o liblevel1.a
-liblevel1.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-1/*.cpp))
+liblevel1.a: $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-1/*.cpp))
 level2: level2.o liblevel2.a
-liblevel2.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-1/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-2/*.cpp))
+liblevel2.a: $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-1/*.cpp)) $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-2/*.cpp))
 level3: level3.o liblevel3.a
-liblevel3.a: $(patsubst %.cpp,%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-1/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-2/*.cpp)) $(patsubst %.cpp,%.o,$(wildcard level-3/*.cpp))
+liblevel3.a: $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-0/*.cpp)) $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-1/*.cpp)) $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-2/*.cpp)) $(patsubst %.cpp,$(OBJDIR)/%.o,$(wildcard level-3/*.cpp))
 
 habit-starts/rhythm: habit-starts/rhythm.o liblevel2.a
 
-%.o: %.ii %.cpp
-	$(CXX) $(CXXFLAGS) -c $*.ii -o $*.o
-%.d: %.cpp
-	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM -MF $*.d -MT "$*.ii $*.o $*.d" -E $*.cpp
-%.ii: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $*.cpp -o $*.ii
-.INTERMEDIATE: $(patsubst %.cpp,%.ii,$(wildcard */*.cpp) $(wildcard *.cpp))
+%.o: $(OBJDIR)/%.o
+	ln -sf $(OBJDIR)/$*.o
+$(OBJDIR)/%.o: $(OBJDIR)/%.ii %.cpp
+	$(CXX) $(CXXFLAGS) -c $(OBJDIR)/$*.ii -o $(OBJDIR)/$*.o
+$(OBJDIR)/%.d: %.cpp
+	@if ! [ -d $(dir $@) ]; then mkdir $(dir $@); fi
+	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM -MF $(OBJDIR)/$*.d -MT "$(OBJDIR)/$*.ii $(OBJDIR)/$*.o $(OBJDIR)/$*.d" -E $*.cpp
+$(OBJDIR)/%.ii: %.cpp $(OBJDIR)/%.d
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $*.cpp -o $(OBJDIR)/$*.ii
+.INTERMEDIATE: $(patsubst %.cpp,$(OBJDIR)/%.ii,$(wildcard */*.cpp) $(wildcard *.cpp))
 
--include $(patsubst %.cpp,%.d,$(wildcard level-0/*.cpp) $(wildcard level-1/*.cpp) $(wildcard level-2/*.cpp) $(wildcard level*.cpp))
+-include $(patsubst %.cpp,$(OBJDIR)/%.d,$(wildcard level-0/*.cpp) $(wildcard level-1/*.cpp) $(wildcard level-2/*.cpp) $(wildcard level*.cpp))
 
 %.a:
 	ar cr $@ $^
 	ranlib $@
 
 clean:
-	-rm *.ii *.o level? *.a */*.o */*.ii *.d */*.d
+	-rm $(OBJDIR)/*.ii $(OBJDIR)/*.o level? *.a $(OBJDIR)/*/*.o $(OBJDIR)/*/*.ii $(OBJDIR)/*.d $(OBJDIR)/*/*.d

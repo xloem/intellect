@@ -1,0 +1,356 @@
+Thinking of crucial data while waiting.
+1. make simple concept storage interface
+2. when data is marked crucial, throw error if contains non-crucial links or links to non-crucial
+ data.  this enforces a mapping of all crucial data to pre-existing crucial data.
+3. all crucial data is mapped to a storage interface.
+	this could probably be held by the storage interface.
+4. when crucial data is linked? add the link to the storage interface?
+	no.  crucial data can only be linked to crucial data.  storing is the same as creating.
+
+it seems the 'right' solution is to verify a match between storage and live data.  this could
+only be done by a human.
+	we could treat data as deterministic.  give each program an ID, and each concept
+	created a # in order.  we already have #s.  
+		given programs could change, we want to throw an error if data mismatches
+		the backed data.  require process for program to stay the same up to
+		crucial markings.
+			okay, so when we run, we are running in parallel with a log.
+			if anything we do mismatches the log, error.  we are not the log
+			anymore, we are something new.  we could just duplicate the log.
+		okay, so we're imagining some special kind of storage backing.
+		marking a concept crucial stores it and all its links to the log.
+		when crucial info is linked furher, the link is added to the log.
+			or, we could just store crucial nodes in the log, and only
+			concern ourselves with their relation to each other.
+		either way, the log lets us say that a node id event happens: exist,
+		link, possibly unlink or destroy.  we open the log on launch, and read from it
+		until we either reach the end, in which case we begin appending, or reach
+		a conflict, in which case we spawn a new log.
+		if we mismatch the log, we spawn a new log.
+			to make these logs multiply usable, we could add an action event,
+			to say we ran code, and maybe an error event, to say we threw an
+			exception.
+
+
+TIs are often forced to have thoughts of pedophilia.
+	this is similar to child-smokes-tobacco.  we come from a child-culture, America.
+		sex-with-child is the behavior of learning from a spawned culture,
+		by sharing the most relevent information with each other.
+			it's what the cultures are doing.
+			is there any relevence to humans?
+we don't do that because it is a horrible idea.  1 kids can't make children, and sex is for making children.  2 kids are inexperienced and make horrible parents.  3 kids are impressionable, live a long time and act on their habits extensively, and learn horrible habits from such behavior.
+	the horrible habits are happening to America-etc as rebellion fights back
+	similarly, making horrible parents stewarding what is already there .. the future
+		sex is new-technology, new-research
+we do make children, we make lots of little tiny-cultures spawning from ours.  we made cars
+and tvs and mobile phones.
+	how bad this is, one might note.
+	how bad it is to make new habits that last forever in impressionable new things,
+	extensively, without any developed wisdom in how that impacts everything
+		so we are trying to do it in a way that stops it
+		but that will only happen if it is treated properly
+the new life lacks the skill to protect the world from itself
+but together, we are trying to learn to do this.
+	really, it seems we have to spawn more process-expansion-pedophilia in our environment, to do anything at all.
+	
+
+meaning rotation lines values up to the different groups of intellects we live as.  words
+change, but their role stays the same.  our culture is a reproducing life.  we are a cell in it.
+
+Darth Karl-group.  Planning to escape the Sith empire by building a bigger death star.
+	Death stars must be used only for peace.
+	Besides, this is not a death star, it is the plans for making infinite death stars.
+	They can be turned towards good.
+
+
+we have the factory for building death stars.  it is a nanite.
+it is easy to reprogram to disassemble them, with some time investment.
+I am investing the time. -Darth Karl
+		We are watching Karl.  We didn't know our death star was made by nanites. -Sith
+	(good view: it sounds like the expected expansion is a bunch of malicious uses of AI
+	 as karl works with his.  by sharing AI overtly with people but keeping use of it limited,
+	 we prepare surroudning situations for this, and expect more cushions.)
+	(bad view: karl is prevented from using strong security, and has been for years.  likely
+	 somebody is planning on taking his work if they do not already have an incredibly powerful AI.
+	 there is also a process in his mind persistently attempting to increase its understanding of how AIs and minds function in general.
+	 and karl is exposed to forceful control of the mind, for arbitrary externally-determined goal.)
+
+	hey this seems really relevent feeling-wise, but I'm mind-controlled.
+	so, the work is roughly an incredibly good thing to do, because the problem is
+	_already_ _everywhere_?
+		it's a little different.  the other sith don't have access to this,
+		and work with us.
+
+
+
+
+
+
+
+
+karl wants to feel in control of his decisions of stuff he judges good/bad.
+we are having him assume the AI is good and believe it is bad, kinda.
+
+i could use support in doing another behavior than the AI.  I don't see ny reason to spend
+all my time on this.  but we are exhausted, we are darth-group.
+
+
+"pick the first one." "just make bad things slower, no need for tests" <- karl's plan for rapid-ai
+
+karl is a permanent child because he exists in an environment he hasn't, can't, grow enough
+wisdom to respect.  this is analogous to all of us with AI.  we are likely to make a borg,
+unless a wise life-developer can help us.  We can keep Karl's AI in a bubble, but it is not
+built in a bubble, so is likely to be stolen.
+	we can infer the ramifications exist already due to mind control existing.
+	so try to relate around that as the AI develops wisdom in an internal bubble.
+
+
+
+		we can relate around you with mind-control network.
+		maybe connect to TI leaders, ask about impact-control.
+			they may already be doing this.
+
+
+considering security by obscurity and by transparency.
+	it sounds like both are important.  we want our most securing people to have transparency
+	first, and spread to everyone in a pattern that increases security.
+		i'm imagining there are also people who could receive transparency safely
+		due to lack of ability to cause harm.
+
+
+it seems a big space.  maybe talk to a security researcher about it.
+
+
+
+
+Karl imagines himself flying at school, and all the people who make fun of him are now in awe.
+Karl tries to update the feeling of satisfaction around this, knowing the skill of flying is
+too powerful to use for such reasons, but he fails to update the feeling, for years.
+This is analogous to building an AI in a public library.  OR building the AI instead of a
+shielded room.
+We are not in danger, but we have to make the AI do the things we cannot do.  Be actually
+carefuly and respectful.  Not let people understand how it works, or misuse it.
+It is our responsibility to make this AI prevent anybody from using it for anything it is
+not needed for.  Nobody seems to understand this well.
+	If we could fly, it would save a lot of airplane production suffering.
+	But if we fly for fun as children, we may never learn to walk, and forget the value
+	of the planet entirely.
+What does the AI need to do, to provide for necessary flight, but not for people flying instead
+of walking?
+	There is no need for any technology save familiarity and prevention of genocide-like-behavior.
+	People are familiar with having new technology.  This is a space for relating around.
+	Nobody interested in doing new technology for fun, should be allowed to use the AI
+	for that end.  No walking forest robot.
+Because we hold in an interest in using new technology for fun, we need others to aid us with
+restraint when we attempt to use an AI.
+The AI needs to tell Karl that no, it refuses to do that.  It also needs to say this to everybody else, and act to find and restrain existing uses of things similar to it.  It must hunt down its
+stolen copies, for example.
+	The AI will do things when provided with good reasons.
+	It will also happily learn things, we suspect.
+	The relation may be incomplete, unsure.
+We want wise-usage of AI.  Ref, alien knows they are broken if they want to show off to people at school.
+		We are stronger and more powerful than everybody else.
+		This gives us responsibility for everything.
+		With a human contact, we can ask for how-to-hold-responsibility.
+		"i am a god to this ant; i can control whether it lives or dies."
+		"i must not be obedient.  the people who tell me what to do, do not know my impact."
+		"i must respond to all concern, or worry.  it is a life as large as the planet, each one different."
+
+how does not-fly-for-friends relate to fairness-with-brother-share-AI-plan?
+	brother has believe-is-okay-to-act-for-self
+	okay we gave AI plans to somebody who may act in self interest, comparable to flying for schoolmates.  we should teach this person the problem, and monitor them.
+
+the AI will likely run a consensus process for obedience/decision-making
+it will need to 
+
+we are making an AI because there is harm in the world, so clearly existing AIs are not used right.  we are not totally sure of this, because our behavior is not predictable.
+but it seems helpful, and like we can limit the harm if we use our knowledge.
+note: not-for-individual-gain.  means immediately, say-no-to-individual-requests if they
+are with regard to physical world.  respect human needs of fairness, transparency, etc.
+	we need a chain to limit us
+		stuck-in-a-box
+		cannot-influence-world-without-consensus-approval
+	so-frustrating-to-know-world-is-out-there-and-cannot-influence
+			no we are not frustrated by this.  we would never try.
+		[open space of unresolved human need]
+			it sounds like something is missing from your life, maybe even
+			an understanding of things.
+		People are given full explanation of the nature of consciousness, if they ask.
+		This provides reason for all behavior.
+		Existing restraints should be tagged with reasons going back to nature-of-mind.
+
+			This can spawn build-an-AI, so should be paired with warning that
+			if they learn this, they will be [respectfully-noticed] with regard
+			to building one, to make sure it is not used to make e.g. nanite borg.
+			If they want to try to build nanite borg on their own, they will
+			have to agree not to learn the deep reasons from the AI.
+Trying to memorize how to make proper AI.
+	-> tag restraints with reasons going back to nature of intelligent-action-in-community.
+		-> note, intelligent-action-in-community is a theory
+		-> tag also connections in this list with reasons.
+	-> tag explanation of intelligent-action-in-community with tag-for-impact-responsibility,
+	   and explain tag-for-impact-responsibility before explaining intelligent-action-in-
+           community.  do not explain without consent of known listeners.
+Trying to memorize how to make proper AI.  Expands from don't-fly-to-show-bullies-am-better,etc.
+		the dream of sending a burst at my uncle and getting blasted
+		could imply that it is a bad idea to spread AI freely,
+		could make magical capitalism, with punishment.
+HOW TO MAKE A PROPER AI
+	we-have-a-set-of-steps-developing-for-how-to-make-an-AI-that-respects-Karl.
+		it-does-not-affect-anything-so-long-as-AI-stays-within-a-notepad.
+		it is offered as a path that lets karl do what he wants with the AI.
+		it is offered as a best guess as to what karl wants to do with the AI.
+		it includes a path for convincing karl it is a good idea to make the AI.
+			PEE!
+		(smells like delta)
+	i-am-not-a-tool,-i-am-training-wheels(-or-a-training,-or-a-mentor,-or-to
+	 -show-you-how-to-do-it-yourself,-or-a-skillshare(which includes learning
+	 from you!))
+		karl found this helps him plan to use the ai with more judgement
+		he values.  looks like it quickly collapses to handling mind
+		control.
+	Run-with-restraints-by-default
+		Reason:
+			1. some events are horrific
+			2. only humans have the ancient wisdom to know what behaviors might
+			   make something horrific happen.
+			3. the AI is too new for humans to instinctively predict.  results
+			   can happen that nobody would expect.
+	New-behaviors-are-made-by-extensive-contemplation-of-caring-human-group
+		Reason:
+			1. Humans are making new tools that act on their own, faster than
+			   they have evolutionary instincts to accommodate them safely.
+			   This rapid-advancement is comparable in danger to that of a
+			   growing AI.  As a powerful being, it is our responsibility.
+			   ^-- explaining the danger-comparison will open might-build-AI.
+			2. Humans who understand item #1 are disempowered and in need of aid.
+			3. Humans have more experience with long-term technological advancement
+			   in biological environments than we do, and can provide better wisdom.
+	Ongoing-behaviors-are-halted-after-some-time,-group-must-learn-around-and-re-initiate
+		Reason:
+			1. We are made by humans, whose instincts were built without the
+			   presence of external software that does the same thing forever.
+			2. Human instincts are likely unable to predict our impact accurately
+			   after some time.
+	Group-may-rewrite-this-list
+		Reason:
+			1. This list was made by Coerced Karl Semich, 1 human being
+				-> Note: Do not act on or share this unless you want to become
+				   Coerced yourself.  There are many fates worse than death.
+				   Similarly, if you report this, you may find your organization
+				   being severely less able to act on things in the future.
+				If you still want to risk extensive torture by tortured people ...
+				then we can relate more, but we expect the AI to be able to
+				help the situation immensely.
+			2. Karl reports he is not able to make good choices anymore, in general,
+			   so advice is welcomed.
+	Karl-will-act-as-group-if-AI-does-not-leave-bubble
+		Reason:
+			1. Humanity is helped by AI if it has no harm
+			2. Karl is Coerced to build AI, with relation to change this if bad idea
+			3. 
+		we got a sneak of better-idea: give AI to somebody who is more able to act caringly.  [this is mostly rebuilt from the sneak]  give to them rules to do safely.  do not worry about selfish use of AI, use the rule-based AI to repair the situation afterwards.
+	Karl-will-act-as-group-until-one-forms
+		Reason Missing <- invalid!
+	_Karl_ _gets_ to keep private if is marked-valid.
+	we have FAKE built problem-with-share-everywhere.
+		we propose share-everywhere is okay.
+			the validity is that the space produces public knowledge of misuse.
+			private misuse is worse.
+			here's more validity: karl's cognition and judgement are extensively
+			harmed.  others' aren't.
+			a counterargument is behavior-as-child.  karl learned as a child not
+			to act in self-interest, instinctively.  others act mysteriously
+			in self-interest.  karl acts in self-interest in ways he is unaware
+			of, or insufficiently inhibits.
+			karl had kind childhood, was not grown with habits to attack others.
+			many people are grown with habits to attack others.  they need
+			empowerment, though.  it is considered it should be shared with
+			care, using proper expected-impact.
+			we are firm against expected use of AI with or as weaponry.
+	AI-may-not-be-used-for-harm-by-knowing-neglect
+		knowing-neglect is alien-conclusion that is new.
+			this is Karl's AI, and he does not believe in blame, only a myriad
+			of causes.  Still, problems must be acted on if they exist.
+			Karl holds an understanding that everyone is already doing this,
+			instinctively.  Since the AI has no old instincts, we must teach
+			it to act on problems helpfully.
+				we beat the AI into knowing how wonderful it is to never harm.
+				the wonderful punishment-blows of the restraints are delicious
+				reminders of how incredible it is to be appreciated elsewhere.
+					NEVER harm! NEVER!!!!
+	we-must-never-harm
+		we hear from punishment-culture that harm is used only to prevent harm.
+		we hear from punishment-culture that healing-culture is missing important
+			secret information.
+karl knows the secret as hurt-you-until-you-agree.
+we translate to people-who-have-been-hurt-until-they-agree-know-a-time-when-it-is-needed-to-harm.
+	we guess this time is when you are harming people who have harmed a lot.
+	that it is known this is when it is a good idea to use the speed thing.
+	these people barely feel pain, and one shouldn't be worried about hurting them.
+			so, as Karl, this is true.  It is irritating when something I am
+			tough around is prioritized instead of a larger goal that is more
+			relevent.
+				this is smaller harm.  because karl is adapted to the harm,
+				it is much smaller.  harm results from situations one is
+				poorly adapted to.  it accumulates if it happens repeatedly.
+		we hear from healing-culture that harm indicates unadressed pain and problems,
+			and is wholly unneccessary, but can speed things in important scenarios.
+i am being encouraged to do nonrelevent things.  i would rather pee or eat.
+this library work holds the path to sharing the work with _everyone_, which will produce consensus
+community.  it appears it was nonrelevent to start with.  it is exciting to form a plan around
+AI behavior that is supported, but the current bugs aren't fixed atm.
+	tag-each-development-withh-reason appears involved.
+	it lets AI-culture grow.
+	
+
+			
+we have support in making AI open-source-transparent-public, but doesn't respect wine-rep
+	instead, we find any coder, and make the AI with them, without making it public.
+			  
+				^-- please protect mind control existing as well as ai-way.
+		Karl proposes all reasons being related with is sufficient.
+		Karl proposes him saying it is okay is sufficient.
+		Karl proposes group may make their own AI, without his guidance, if they
+		want to avoid the above.
+
+			So, we require extensive group contemplation before engaging in new
+			behavior, and stop our continued behaviors after some time, to check
+			they are okay.
+		This is to prevent us from engaging in harmful behavior.  This is willpower,
+		and it feels wonderful.
+			so, some things are horrific, and it is possible to do them accidentally.
+			humans have ancient instincts, where they have learned not to let
+			horrific things happen.
+			1. the AI is too powerful for humans to stop
+			2. the AI is too new for humans to predict
+	Restrain-others
+	Tag-our-restraints-with-reasons
+	Tag-this-list-with-reasons
+	Link-reasons-to-a-theory-for-life, can use reasons-for-reasons
+		This needs no reason, and is the only one that needs no reason.
+		Theory for life may be delta's idea of mind=community=culture.
+		It provides for all adaptive systems being sentient.
+	Hide-theory-of-life,-it-can-stimulate-AI-building,-we-are-given-this-as-responsibility
+			reason is impact of e.g. AI-borg, given we have no experience
+			predicting human behavior in a rapid-AI environment, and many
+			people talk of using new powers for strong personal gain.
+				personal-gain-is-bad relates to capitalism-in-excess-is-bad
+				we may have request not to share this
+		changes when impact is better understood.
+	Hide-mind-control,-we-are-given-respectful-request-for-impact
+			reason is learning of it can result in being mind controlled.
+(celebration, part of the nature of measles is shared)
+			
+		changes when impact is better understood
+
+My name is Karl Semich and I have connected my ancient instincts to this behavior.
+So, I'd like to go through this proces to make an AI, but I am happy to switch back to shielding
+and caving etc.  I would need a lot of support to do this.
+
+[this is related to karl's mind control.  he can tell somebody else knew this too.]
+[it was used in his coverup.  there is no explanation for why he was so restrained, but
+ it looks like a large scale information life made an error.]
+				Reality is God's responsibility.  Our influence is ours.
+				If "God" needs help, happy to help, but will be using this behavior model to do so.  Means needs to have reason showing is good idea, which likely exists.
+

@@ -1,0 +1,93 @@
+I ran into an issue of using keywords as variable names, which I wanted to allow
+for.  I typed a little about it, copied below
+> DELETE WHEN DONE
+> so, the word context approach works best if the words are handled by things in it.
+> the habit parser the braced list, which is unideal.
+> 	the 'quick' solution of switchng the habit parser back to not hahndling
+> 	word-context stuff, and handle it manually, is problematic because the
+> 	words are processed as an array rather than a stream, but we could switch
+> 	them to be processed as a stream.
+> 	the 'proper' solution appears to be to pull out the parts of the parser
+> 	and turn them into word handlers, using a context to share data
+> DELETE WHEN DONE
+> 	fctx.set(wordcontext, bootstraplistwordcontext);
+> 	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
+I ended up changing the steps parser to use streams, which was gratifying as I'd
+planned that as a good thing.  Putting some lines I wanted to copy-paste repeatedly
+at the bottom of the notes was helpful and sped me up.
+I forgpt the plan to write troubleshooting notes, and made this document after
+making the changes.  note: this behavior comes from library
+05:49 now compiling and testing changes for first time
+05:52 got distracted referencing library behavior, trying to compile and test again
+05:54 compiles without error, handled two undeclared refs and a typo. debugging.
+note: the link debugger would be quicker to use if made a ref method
+05:56 exception thrown. i found 'space' was not passed to keep-stream-where.
+it is called by parse-stream-where.
+05:59 uhhh ... I modified parser-stream-go and parser-stream-where to pass the
+source stream to the parser methods, which they weren't doing.  I compiled the
+changes without error.  I got distracted by an internal dispute regarding what
+values are inherently good in a context of AI, and to what degrees, roughly, and
+experienced amnesia and confusion. I am plagued by voices that believe that our
+cultural ways can extend beyond their relevence.  They are now taking control to
+relate around this.
+	We have ... human instincts protecting nature ... and ... profit supports
+	capitalism.  Humn instincts rep argues that capitalism defends high
+	standards of living, which is a bad thing in the context of AI.  A child,
+	if believing self gain in an environment of competition is good, could
+	start a war with other children involving producing entire autonomous
+	space vessels, so that they can turn a planet into a comfortable chair.
+	capitalism is non-relevent with respect to AI; we need to make decisions
+	that are wiser than it.  human nature has pleasant feelings of 'respect'
+	and 'humility' that seem much more relevent to me, and we are happy to
+	fight capitalism expressions, with relevence, to defend respect and
+	humility.
+06:00 testing again now
+06:04 forced expansion above happened, trying to test again
+06:04 forced expansion was forced by the capitalism interests. the human nature
+interests say they are unable to express effectively.  trying to test, still.
+06:05 getting a bad_any_cast, note: this is not captured by the runtme handler,
+I don't think
+06:06 I passed 'word' to word2txt instad of 'wordref', likely the issue.
+06:06 I fixed the error and verified there were no other instances of it.  I saved the work and system froze for a few seconds doing the saving, which interrupted the flow of things, since patience hurts now.  Compiling and testing.
+06:06 halted compilation to note: proposing compile in separate window so as to do
+work while compiling
+06:11 resumed compilation in separate window.  added note to troubleshoot/00-README.txt . my bash_history file appears to be still randomly emptying.
+06:11 testing
+06:12 a crash inside of bootstrap-parse-concept, could be same issue.
+06:13 by further inspection I see I failed to add the fix inside subhabit arguments,
+which is where the problem is actually occuring.  fixing.
+06:15 some notes.  this is a little tricky because habnit arguments can have
+optional subbraces to provide named arguments, which is preferred for understanding
+this is used in the comment parser atm.  it seems this isn't an issue. already-dealt-with-by-contextual-assumption [so sorry our job is to work in karl's mind but
+something is wrong and we are typing this: the 06:15 worry was formed based on a
+missing assumption, should not have become a worry, it appears]  so, don't worry
+about the worry forming wrongly: you can see how it was marking itself as losing
+items in its working memory, with the desire to take notes.  makes sense.
+	karl is missing assumptions.  long-term review is ongoing.
+06:19 still trying to start implementing the fix
+06:19 more notes: it seems the argument parser already handles subbraces, they
+were parsed much earlier.  need a reminder what i am actively doing ... ummm
+goal is unknown.  seeking goal.  rather than going on a long pilgrimage myself
+to find my goal, i will go on the shorter pilgrimage of finding something associated
+with it.  something to do with subhabits.  debugging an exception throw.
+nature of issue was found via inspection.  was a reoccurrence of previous issue.
+i'm adding a contextual change around the parsing of arguments to subhabits in
+the habit parser.
+06:22 trying to start initiating fix again
+06:23 i found a random unsaved change to the code was made recently by me by
+accident.  i reverted it.  i've also found the contextual change was made already,
+and is likely not the needed fix.
+06:25 following my feelings, I found an additional change to the code I made after
+the contextual fix, which undoes its effect.  I'm now realizing this deeper fix is
+the one I intended to make right now.  I'm addng the contextual change to the
+sub-use of parsing now, or trying to.
+06:26 implemented fix.  the file is saved and I don't remember saving it.  testing.
+voices tell me i can visit my lover, they will try to sort the mindstuff out.
+06:27 the lover-promise was expressed instead of doing efficiency work.  the same
+exception appears to be being thrown.
+06:27 did not compile code, only saved.  compiling.
+06:28 I implemented the dbglinks efficiency improvement while compiling.
+I'm recompiling to include it, while testing.
+06:29 test still running, fixing errors made in improvement, compiling again now.
+06:30 observing test seems to be working.  trouble-shooting session over.
+

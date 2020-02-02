@@ -1,0 +1,14 @@
+Getting no-such-link-type in parsing randomcode.bootstrap
+09:48 A nonexistent habit "to" is being used?  I'll check the scriptfile for suspects.
+09;49 I wrote english "set result to nothing".  Rather than making this okay, I'll delete the
+word --- ohhh!  "set" calls a habit, so there is no ready way to set one variable to the
+value of another.  I must have been planning on making a "to" habit that did this.  I'll
+write it in the scriptfile =)
+09:50 nope, this can't be set in the scriptfile, because it would use its own feature
+in its implementation.  I'll add it in c++ like I added error.
+09:51 note: the ahabit implementation could copy the script structure of listing its output
+variables after its input variables.
+09:52 Solar is doing 1.565A and battery is at 12.00V =)  I guess this works well, and I just
+need to visit this picnic table on a sunny day to get my battery recharged.  I wonder how long
+it lasts until it won't power my computer anymore.
+09:53 "to" appears to parse now.  Some further small issues may not get logged due to smallness.

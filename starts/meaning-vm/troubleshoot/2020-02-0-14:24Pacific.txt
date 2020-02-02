@@ -1,0 +1,48 @@
+Now that I removed the excess comments from randomcode.bootstrap, the parser is throwing
+another error farther down in the file.
+
+14:25 It's from attempting to modify a concept outside the contextual notepad.
+14:26 When I added the 'parser' scriptfile entry type, I may have messed up whether
+the concept is made in the notepad or not.  l836, spawned concept not in notepad.
+14:27 Memory wrong.  Concept is not created if it's a link, is created if it's a concept.
+Seems correct.  Must not be properly creating the concept.  Will step through.
+14:29 'create' is getting passed as 'false' to the function, incorrectly.
+14:31 The value 'true' is being looked up, instead of the concept name with 'true' as the creation value.
+	It turns out I am in the wrong area of code, which is why the behavior is wrong.
+	I don't know how I got to a different area.  Did something wrong with breakpoints.
+14:33 I think the lookup value that is problematic could be 'random-target'.  no, it isn't.
+	It looks like it could be 'type', which is a strange concept name.  Checking
+	scriptfile.
+14:35 It looks like the concept parser was spawned inside the arguments list of random-target,
+ because I used 'concept' as an argument name.  I expected this error some time ago but the
+ path to finding it was wearisome.
+
+Thinking on this.  It would be possible for the concept-parser to look ahead in the stream
+and see if what's coming up is a concept body.  But it would be more relevent for it to not
+act inside arguments lists.
+	I suppose you could theoretically make a concept inside an arguments list.
+	Its definition would then be parsed as an argument name.
+	It feels easier to infer when to parse a concept from what is around, but I would
+	rather do the oter solution.  Noting parsing English is valuable, and that it is
+	better done by something other than me, now.
+	- when-parsing-braces,-for-arguments,-don't-spawn-other-parsers
+I planned to do contextual parsing but have memory loss around it.  I use both a word context
+and a parse context, and ignore the parse context.  The word context says atm what words to
+respond to.  We want to act differently when parsing arguments by not responding to any
+words in there, which means providing a different word context for them.
+14:39 I am having an internal battle around engaging in this fix.  I just have to relink
+the word context to basically nothing during argument parsing.
+14:40 I think we pushed hrouogh, I am tired, the fight engaged many of my exhaustion-urges.
+Would like some food.
+14:41 notes can help me here: we have atm access to the wordspace and the wctx.  where does
+the parser retrieve the word context from?  we want to make sure it gets our change.
+14:42 it pulls "word-context" from the file-context.  So I can change that value.
+14:43 I'm celebrating now that text concepts are different from named concepts.  It means
+I can arbitrarily annotate inside the word context without polluting behavior.  We had a lot
+of dispute around implementing text concepts, since we could just load named concepts and
+treat them as text, faster.
+14:47 I'm a little confused because the parsing function doesn't appear to have access to the
+word context.  It takes only the word space.  It looks like it uses a link in the underlying
+stream to the file context.  Okay, I guess.
+14:50 I added the subcontext but the exception appears still thrown.
+14:51 No, it is a different exception, farther on =)
