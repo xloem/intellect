@@ -1,0 +1,18 @@
+So, my work still isn't on the blockchain, and I'm debugging it.
+I've modified bsvup to resend all its transactions in case some were lost.  I've found this is
+sometimes needed.  I made a resend_all function to do this, and I am getting a weird error.
+I'm getting 'fs.unlinkSync is not a function', which is strange to me because fs.unlinkSync is
+used elsewhere in the codebase, the fs module is imported, and fs.readdirSync is called right
+before the line throwing the error.  Maybe some corruption is harming things ...
+
+11:57 I'm noticing that unlinking is a pretty bad idea, because I moved the transaction files
+into this folder.  Without a backup, that's highly dangerous.  I'll make a backup of them
+before continuing.
+11:58 I made the backup and reran the resend command.  I'll store this situation in git.
+12:03 I stored a log of the error and the code that created it in the care repo, under the
+bsvup-karl-modified branch.
+12:04 trying to figure out how to address this error.  let's output the parts of the fs
+module on the console to see if they are there.
+12:06 I've recieved relation that if this is evidence of a trojan on my system, allies would
+prefer it to not be demonstrated, so I will be resolving this off-log.  I'm pretty sure it's
+not a trojan, I just don't know what it is.
