@@ -19,5 +19,9 @@ not a trojan, I just don't know what it is.
 12:10 I've resumed logging, for a private reason that is valid to the group.
 12:12 I've pushed a new log to the branch showing further how weird the error is.
 It seems the thing called missing is there in the previous lines.
+12:14 the sun has just gone behind a cloud and i'm getting cold.  my panels are down to .3A.
+12:18 struggling, boss roleplay concept.  i've made a 3rd log of the error with more details.
+it seems to show that some code is being skipped, or possibly old code being executed.
+maybe i should try with valgrind.  still trying to look at log to understand it, struggling.
 
 
