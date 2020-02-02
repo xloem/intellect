@@ -1,0 +1,25 @@
+I'm getting on l786 a linebreak being treated as a habit.
+Maybe I put a linebreak after a label.  I don't think I accounted for that.
+If I switched to a more general way of parsing, these kinds of problems likely
+wouldn't happen.  We've been prioritizing get-it-working-now with more imperative
+programming, since too much generality builds a complete description of
+consciousness in the codebase, roughly.  It's a struggle because I am used
+to coding generally.  Coding generally means you don't see progress for a longer
+time, while general patterns are built.
+08:59 with some debugging and inspection I found it is indeed due to a linebreak
+after a label.  The label is args-done in make-random-habit.  Implementing fix.
+09:00 thinking about this, I'm realizing a good fix would be to handle all \n's
+as nonwords inside lists.  thinking ... which parts are treated that way.
+	it turns out we only care about \n's after habit arguments.  so \n should
+	only be a word after habit arguments.  changing that would mean adding
+	small new structure to our parsing generality, which is inhibited,
+	so I'll just handle \n's after labels and such manually.
+09:03 i found label handling and it looks like the problem shouldn't happen atm,
+reviewing
+09:05 my error; the working code is for jumping to labels not specifying them.
+09:08 I added manual struts for some linebreaks including the error one.  compilation is ongoing.
+09:10 while running the test i reviewed battery situation; laptop only says is using around
+1.288A, not 1.6, but doesn't include what it needs to run, nor what is taken from battery.
+Sun is giving 1.035A now.
+09:12 this error appears resolved.  new error now.  this would be easier if parser were aware
+of its line number.

@@ -681,18 +681,24 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			label = word;
 			label.resize(label.size() - 1);
 			if (label == "return") { throw intellect::level2::noteconcept().link("is", "return-label-used"); }
-			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
-			word = ref2txt(wordref);
+			do {
+				wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+				word = ref2txt(wordref);
+			} while (word == "\n");
 		}
 		if (word == "=" || word == "set") {
 			fctx.set(wordcontext, bootstraplistwordcontext);
-			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
-			result = ref2txt(wordref);
+			do {
+				wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+				result = ref2txt(wordref);
+			} while (result == "\n");
 			values.insert(result);
 			fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 
-			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
-			word = ref2txt(wordref);
+			do {
+				wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+				word = ref2txt(wordref);
+			} while (word == "\n");
 		}
 		if (word[word.size()-1] == '.') {
 			// is goto
@@ -851,14 +857,17 @@ ref bootstrap_parse_call(ref file, ref ws, ref ctx, ref self, ref wctx)
 }
 */
 
-ref bootstrap_parse_concept(ref f, ref file, ref ws, ref ctx, ref self, ref wctx)
+ref bootstrap_parse_concept(ref f, ref file, ref ws, ref ctx, ref self, ref wctx, ref fctx)
 {
 	std::string focus = ref2txt(f);
-	if (focus != "concept" && focus != "link") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+	if (focus != "concept") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+	bootstraplistwordcontext.set(outer, fctx.get(wordcontext));
+	fctx.set(wordcontext, bootstraplistwordcontext);
 	ref conceptname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
-	ref concept = wctx.get(txt2ref("lookup"))(conceptname, focus == "concept");
+	ref concept = wctx.get(txt2ref("lookup"))(conceptname, true);
 	checknotepad(concept);
 	ref parts = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 	//ConceptUnmaker partsdel(parts);
 	auto allparts = parts.getAll("word");
 	for (auto it = allparts.begin(); it != allparts.end();) {
@@ -1403,11 +1412,11 @@ void loadhabits()
 	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
 	ref("bootstrap-word-context").link(txt2ref("parser"), "bootstrap-parse-habit");
 
-	ahabit(bootstrap-parse-concept, ((focus, f), (result, file), (space, ws), (word-context, wctx)), {
-		return bootstrap_parse_concept(f, file, ws, ctx, self, wctx);
+	ahabit(bootstrap-parse-concept, ((focus, f), (result, file), (space, ws), (word-context, wctx), (file-context, fctx)), {
+		return bootstrap_parse_concept(f, file, ws, ctx, self, wctx, fctx);
 	});
 	ref("bootstrap-word-context").link(txt2ref("concept"), "bootstrap-parse-concept");
-	ref("bootstrap-word-context").link(txt2ref("link"), "bootstrap-parse-concept");
+	//ref("bootstrap-word-context").link(txt2ref("link"), "bootstrap-parse-concept");
 
 	ahabit(parse-file, ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
 		// notepad quick-implemented by passin the filename as the notepad name!  recommend keeping for safety, and copying data to outer notepad intentionally.

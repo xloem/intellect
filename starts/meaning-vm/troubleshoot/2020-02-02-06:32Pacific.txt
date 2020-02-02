@@ -1,0 +1,66 @@
+An error similar to the last one is being thrown in parser.
+It was hard for me to open this troubleshooting file.  I couldn't
+remember the date, and when I tried to use the touchpad, which I rarely
+do, to check on the date widget, there was water on it preventing it from
+functioning.  The computer can handle water to some degree, but the touchpad
+needs recalibration when humidity changes.  There is a hotkey for recalibrating,
+which I did not use.  My relevence to it was reduced because there was so much
+water it didn't seem helpful, but if I had used it I would havbe had to redry
+the touchpad less.  Additionally there are keyboard ways to check the date, such
+as the 'date' command.  I am also running into freezes during compilation tasks
+due to disk i/o.  I'm not sure why the kernel doesn't manage the i/o buffer better.
+A quick solution might be to move vim's backup location to /tmp or /run or even
+the local flash.  The disk is an SD card and I could get a faster one.
+06:36 re-inspecting error
+06:37 is out-of-notepad access vioation.  is because a 'link' word is being
+interpreted as for parsing inside a habit, likely.
+06:37 I am having significant delay writing files to disk.  Saving this file
+after entering a line produces a pause.  I guess it is because compilation
+task was still syncing.
+06:39 distracted with experiences ... working to continue
+06:41 i found the likely error by inspection: on line 44 of randomcode.bootstrap,
+'link' is used as a habit.  I also made it into a parser keyword.
+Linking is pretty important.
+	We have two meanings of link.  link-when-parsing, and link-when-run.
+	We could quote the word somehow to indicate which one.
+		The 'link' parsing habit is shadowing the 'link' global habit,
+		which is more important.
+		They do the exact same thing.  The parsing habit takes a parsing
+		context instead of a concept to link directly.
+	There are 2 habits that take a parsing context.  It could be reasonable
+	to change them to auto-convert the parsing context.  This would still
+	leave the error, though, as the system can't tell whether the user wants
+	the linking to happen at load-time or run-time.
+		We could eradicate the 'link' parsetime indication and just call
+		it 'concept'.  This seems to be okay.
+		The difference is 'concept' is supposed to make a new concept,
+		but since we have a file-specific notepad, the only things we
+		can link are our own concepts.  explanation got confusing,
+		but I'll change 'link' to merge behavior with 'concept' to fix
+		this.
+06:45 implementing fix
+2 places: randomcode.bootstrap needs link changed to concept
+and bootstrap-parser.cpp needs link-named-behavior merged with concept-named-behavior, and link-parser-keyword removed
+3 -> I'll also do the context-updating inide of concept-parser so parser keywords
+not triggered for name of concept.  this seems intuitive.
+06:50 distracted by 'examine goal', rebuilding
+06:51 believe i have implemented fix, compiling
+06:54 failed to remove link-parser-keyword, revealed by test.  fixing.
+07:06 I got distracted handling i/o delay by altering the makefile.  Seemed to be
+working ...
+07:09 distracted change added bug of linking cpp file into binary extra time.
+fixing.  note: it's 7:09 and a bird is singing nearby.  i can see the ground outside
+my tent.  it's winter, so the sun rises late.  it's seemed pitch black earlier;
+of course my laptop backlight is on.  i haven't hacked the software to reduce the
+brightness to good levels at night.
+07:19 uhhh continuing
+08:41 so, the battery on the computer died, and I did some morning stuff.  I'm
+now at a campground picnic table, having hiked my 12v backup battery here.
+The backup is at around 11.5 volts.  I have solar panels up giving about 0.06A;
+the sun hasn't risen over the trees yet.  My computer is drawing over 1.6A.
+08:49 seem to have gotten makefile change to work.  what was I doing ?? heh
+looks like I'm just running level3 to see if it makes and old error or a new one.
+08:54 while compiling I reviewed this document, which was quite helpful in
+re-understanding some of the error =)
+08:54 the error has changed to no_such_link_type, so I think this one is resolved
+now!

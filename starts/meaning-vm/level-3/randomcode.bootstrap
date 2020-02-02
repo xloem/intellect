@@ -8,7 +8,7 @@ next-word: do-next [space underlying]
 " return.
 	next-word.
 ]
-link '//' [
+concept // [
 	quiet true
 ]
 // this is a comment containing the word habit that I hope will parse okay
@@ -18,6 +18,30 @@ link '//' [
 habit random-target [ concept type ] [ ] [
 	set link random-link concept
 	set result get link-target link
+]
+
+// moved this up here because we dont have forward declarations and parsing is using spec info
+habit make-step [ habit ] [ result ] [
+	set choice random-of step-types or
+	pick choice
+	if stop stop.
+	if jump jump.
+	if new new.
+	if step step.
+	if pick pick.
+	error unknown-step-type
+	stop:
+		set result to nothing
+		return.
+	jump:
+		set all-steps get habit 'all-steps'
+		set result random-of all-steps 'step'
+		return.
+	new:
+		set result makeconcept
+		inner-link habit tail-steps step result
+		inner-link habit all-steps step result
+		return.
 ]
 
 // would like this to be static local to make-random-habit
@@ -123,28 +147,6 @@ concept step-types [
 	or stop
 	or jump
 	or new
-]
-habit make-step [ habit ] [ result ] [
-	set choice random-of step-types or
-	pick choice
-	if stop stop.
-	if jump jump.
-	if new new.
-	if step step.
-	if pick pick.
-	error unknown-step-type
-	stop:
-		set result to nothing
-		return.
-	jump:
-		set all-steps get habit 'all-steps'
-		set result random-of all-steps 'step'
-		return.
-	new:
-		set result makeconcept
-		inner-link habit tail-steps step result
-		inner-link habit all-steps step result
-		return.
 ]
 
 habit fill-step [ step habit ] [ ] [
