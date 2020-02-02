@@ -2,6 +2,11 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
       This is just like learning if you are tiny and new =)
 
 NOW:
+- [ ] buy outdoors writing equipment from pacific outfitters, possibly
+- [ ] write reasons for AI-behavior out, see line 194 of intellect/WORKING_TRUE_PLAN.txt .  Use Karl judgement and do what is needed.
+- [ ] please keep relating around the difference between library behavior and campground behavior.
+		the hope here is that karl has less of an experience of struggling with distraction
+		distraction and doubt are demons.  have faith and strength in what you know is right. -karl
 - [X] expand brace parser to handle sub-braces
 - [X] fix up after adding locations
 - [ ] ADD PROVISION FOR CALLING VARIABLES -> this expands quickly to
