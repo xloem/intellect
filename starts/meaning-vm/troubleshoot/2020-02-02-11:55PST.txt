@@ -45,3 +45,23 @@ test 5, commenting the line out.
 12:36 the sun came out and the panels were charging at over 2A! i angled them to aim at it better
 and the amperage dropped to 1.3A.  Clouds are moving across the sun.  also have unplugged the
 laptop to easily not sit in front of panels.
+12:38 inspecting, it looks like after the broadcast call, the last call in the try block is
+making a thrown exception, no matter what it is, without calling anything after the broadcast
+call, before the end of the try block.  I'll move unlinkSync to the end of the whole function
+and see what happens.
+12:40 it was still console.log that threw, not unlinkSync, so it has to do with the try block.
+12:40 I'm noting that the catch block assumes it receives an array of two items.  Maybe the
+error could be caused by that not matching what is thrown.  I'll move fs.unlinkSync back, and
+try changing that.
+12:42 I'm remembering that I'm offline, so of course broadcast will fail.  Test 7 ran.  It
+threw a much more reasonable error!  'err.split is not a function'.  It looks like this obscure
+failure was indeed caused by the catch block structure, and a thrown error that didn't match it.
+I'll rewrite the catch block to handle that.
+12:44 running test 8
+12:45 test 8 shows the issue was from an error inside broadcast_insight.  Now i've gotten
+past the rough parts of handling something deeply different from its cause, i'll resolve this
+more rapidly.
+12:46 oh i'd better out my node version.  I'm on guix, so node should be reproducible.  I've
+recently run guix gc --verify=contents with no errors.
+my node is /gnu/store/k6fhqibm4hxlaww1q2gm80v3rgr96hsa-node-10.16.0/bin/node .  I wonder if
+this bug has been fixed.
