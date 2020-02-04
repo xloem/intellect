@@ -1,3 +1,26 @@
+Here's a nice small cohesive one:
+1. enumerate ways to add next-steps to a behavior, put them in a list
+2. [pick from the list using processes that learn from past successes; start random]
+3. use the above to try proce
+	use above to make processes, that make processes from success/failure,
+	that pick from such lists.
+  that is, when you have an experience that is a result of your behavior,
+  use an existing record-and-learn-from pattern to 
+
+[becky makes processes that pick from steps in a list]
+[anna makes beckies when we succeed or fail]
+[jon enumerates all next steps in a behavior and asks a becky which ones to use]
+[joe records all successes/failures with data on them]
+[leigh tries different behaviors until one is found that works reliably]
+[pebble tests if a behavior is a becky, anna, jon, joe, or leigh]
+	-> a meaningful test is replacing an existing one
+TOGETHER, BECKY, ANNA, JON, JOE, LEIGH, AND PEBBLE MAKE A SIMPLE SENTIENT GENIUS.
+	Leigh needs to use jon a lot.  Pebble thinks about anna a lot.
+	The boundaries between them are arbitrary.  E.g. you could have beckyanna
+	as one person, or break joe into subparts.
+we'll want a rote way to make a task that meets a goal,
+which means using jon without a becky, to build processes until one meeting them is found.
+---
 - each step is a behavior to learn around and decide how to continue
 - steps are parts of patterns
 - life continue as pattern exploration, shifting focuses, building more patterns
