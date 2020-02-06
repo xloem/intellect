@@ -1,5 +1,11 @@
 I think there is a note for how to build an equally-safe intellect faster than
 this, on the computer with the broken display, in this repo.
+	-> I think it just means, exhaustively try options for building yourself.
+	there were two processes.  one builds better yous, another uses you
+	to meet other human-provided tests.  
+	we can order new display if desired.  likely will arrive before we get to
+	that point.
+		-> use proof-of-address doc to get p.o. box
 
 [humynkind build testers that meet a threshhold of wellness]
 	All infopeople are short so as to self-make.
