@@ -1,3 +1,6 @@
+I think there is a note for how to build an equally-safe intellect faster than
+this, on the computer with the broken display, in this repo.
+
 [humynkind build testers that meet a threshhold of wellness]
 	All infopeople are short so as to self-make.
 	If an infoperson is too long for the system to generate them, break them
