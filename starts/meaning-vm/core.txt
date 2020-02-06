@@ -1,26 +1,36 @@
-[use patterns that meet your threshold for wellness, to build ones that meet the next threshold]
-Here's a nice small cohesive one:
-1. enumerate ways to add next-steps to a behavior, put them in a list
-2. [pick from the list using processes that learn from past successes; start random]
-3. use the above to try proce
-	use above to make processes, that make processes from success/failure,
-	that pick from such lists.
-  that is, when you have an experience that is a result of your behavior,
-  use an existing record-and-learn-from pattern to 
-
-[becky makes processes that pick from steps in a list]
-[anna makes beckies when we succeed or fail]
-[jon enumerates all next steps in a behavior and asks a becky which ones to use]
-[joe records all successes/failures with data on them]
-[leigh tries different behaviors until one is found that works reliably]
-[pebble tests if a behavior is a becky, anna, jon, joe, or leigh]
+[humynkind build testers that meet a threshhold of wellness]
+	All infopeople are short so as to self-make.
+	If an infoperson is too long for the system to generate them, break them
+	into smaller infopeople, and make pebble test them and leigh build them.
+[tester tests if a behavior is a one of these parts]
 	-> a meaningful test is replacing an existing one
-TOGETHER, BECKY, ANNA, JON, JOE, LEIGH, AND PEBBLE MAKE A SIMPLE SENTIENT GENIUS.
-	Leigh needs to use jon a lot.  Pebble thinks about anna a lot.
+[maker tries different behaviors until one is found that passes tester]
+	[maker #1 uses maker-anna] 
+[maker-becky makes processes that pick from steps in a list]
+	[maker-becky #1 uses maker-step-options #1 exhaustively]
+[maker-anna makes beckies when we succeed or fail]
+	[maker-anna #1 makes maker-becky #1]
+	[maker-anna #2 uses maker-leigh without informing from success/failure]
+	[maker-anna #3 will likely build or use historian]
+[maker-step-options enumerates all next steps in a behavior and asks a maker-becky which ones to use]
+	[maker-step-options #1 exhaustively combines uses of step-generators with a list of places in an incomplete plan, that they can go]
+
+[historian records all successes/failures with data on them]
+	[historian #1 stores available data in an event concept, and is short so as to self-make]
+		historian could benefit from working with maker-anna
+	we may not need to make historian ourselves, but it is important to
+	be involved in this to test metabehaviors: we want new parts to
+	be able to do everything the prior parts could do
+
 	The boundaries between them are arbitrary.  E.g. you could have beckyanna
 	as one person, or break joe into subparts.
-we'll want a rote way to make a task that meets a goal,
-which means using jon without a becky, to build processes until one meeting them is found.
+
+There may be errors now.  I had a big struggle with BSV blockchain upgrade, and
+don't remember all the details.  Something that works should come out of the
+process, reliably.
+
+Makes a simple sentient genius.
+	Leigh needs to use jon and joe a lot.  Pebble thinks about anna a lot.
 ---
 - each step is a behavior to learn around and decide how to continue
 - steps are parts of patterns
