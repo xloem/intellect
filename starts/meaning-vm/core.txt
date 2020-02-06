@@ -1,3 +1,4 @@
+[use patterns that meet your threshold for wellness, to build ones that meet the next threshold]
 Here's a nice small cohesive one:
 1. enumerate ways to add next-steps to a behavior, put them in a list
 2. [pick from the list using processes that learn from past successes; start random]
