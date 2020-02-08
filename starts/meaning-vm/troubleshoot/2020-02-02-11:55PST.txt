@@ -1,0 +1,71 @@
+So, my work still isn't on the blockchain, and I'm debugging it.
+I've modified bsvup to resend all its transactions in case some were lost.  I've found this is
+sometimes needed.  I made a resend_all function to do this, and I am getting a weird error.
+I'm getting 'fs.unlinkSync is not a function', which is strange to me because fs.unlinkSync is
+used elsewhere in the codebase, the fs module is imported, and fs.readdirSync is called right
+before the line throwing the error.  Maybe some corruption is harming things ...
+
+11:57 I'm noticing that unlinking is a pretty bad idea, because I moved the transaction files
+into this folder.  Without a backup, that's highly dangerous.  I'll make a backup of them
+before continuing.
+11:58 I made the backup and reran the resend command.  I'll store this situation in git.
+12:03 I stored a log of the error and the code that created it in the care repo, under the
+bsvup-karl-modified branch.
+12:04 trying to figure out how to address this error.  let's output the parts of the fs
+module on the console to see if they are there.
+12:06 I've recieved relation that if this is evidence of a trojan on my system, allies would
+prefer it to not be demonstrated, so I will be resolving this off-log.  I'm pretty sure it's
+not a trojan, I just don't know what it is.
+12:10 I've resumed logging, for a private reason that is valid to the group.
+12:12 I've pushed a new log to the branch showing further how weird the error is.
+It seems the thing called missing is there in the previous lines.
+12:14 the sun has just gone behind a cloud and i'm getting cold.  my panels are down to .3A.
+12:18 struggling, boss roleplay concept.  i've made a 3rd log of the error with more details.
+it seems to show that some code is being skipped, or possibly old code being executed.
+maybe i should try with valgrind.  still trying to look at log to understand it, struggling.
+12:20 having some food, sun is glancing a smidge around edges of clouds.
+12:21 okay, so, the log looks fine until the call to broadcast(), then the same weird error is
+thrown, saying it came from api.js line 79.  But the console output on lines 78, 77, and 76 was
+never output.  I guess I'll try under valgrind, which will likely be slow.
+12:24 i've disabled my wifi to save battery.  i like to think this helps security and system
+stability too.  i've worked with a lot of buggy network devices.  valgrind is still booting up
+node.
+12:25 I'm thinking what I could do is go into the broadcast() function and add logs to the
+lines in there, to see when things start going weird.  It could also be that the stream is
+closed before the output reaches the terminal; not sure how to handle that.  Maybe I can put
+a big delay before the line that crashes.  I'll try just moving it out of the try loop for now,
+since javascript does delays asynchronously.  MAybe the function is async; that would help.
+12:27 the function is async; I'll add a delay.
+12:29 the delay didn't seem to do anything
+12:31 i may not have used settimeout correctly, but it didn't even throw an error.
+will try commenting line out.
+12:32 valgrind completed with no memory errors found.  storing.  halfway through implemented
+test 5, commenting the line out.
+12:33 with the line commented out, the error changed to "console.log is not a function" on line 80.  This sure seems like some corruption inside node.
+12:36 the sun came out and the panels were charging at over 2A! i angled them to aim at it better
+and the amperage dropped to 1.3A.  Clouds are moving across the sun.  also have unplugged the
+laptop to easily not sit in front of panels.
+12:38 inspecting, it looks like after the broadcast call, the last call in the try block is
+making a thrown exception, no matter what it is, without calling anything after the broadcast
+call, before the end of the try block.  I'll move unlinkSync to the end of the whole function
+and see what happens.
+12:40 it was still console.log that threw, not unlinkSync, so it has to do with the try block.
+12:40 I'm noting that the catch block assumes it receives an array of two items.  Maybe the
+error could be caused by that not matching what is thrown.  I'll move fs.unlinkSync back, and
+try changing that.
+12:42 I'm remembering that I'm offline, so of course broadcast will fail.  Test 7 ran.  It
+threw a much more reasonable error!  'err.split is not a function'.  It looks like this obscure
+failure was indeed caused by the catch block structure, and a thrown error that didn't match it.
+I'll rewrite the catch block to handle that.
+12:44 running test 8
+12:45 test 8 shows the issue was from an error inside broadcast_insight.  Now i've gotten
+past the rough parts of handling something deeply different from its cause, i'll resolve this
+more rapidly.
+12:46 oh i'd better out my node version.  I'm on guix, so node should be reproducible.  I've
+recently run guix gc --verify=contents with no errors.
+my node is /gnu/store/k6fhqibm4hxlaww1q2gm80v3rgr96hsa-node-10.16.0/bin/node .  I wonder if
+this bug has been fixed.
+12:48 looks like the error was caused because I moved the files out of the cache.  I'll put 'em
+back!
+12:53 as far as I can tell it's working now.  many of my transactions don't appear to be actually
+on the blockchain, so resending is good.  hopefully there aren't double-spends =S

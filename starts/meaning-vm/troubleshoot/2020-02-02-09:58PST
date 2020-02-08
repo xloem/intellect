@@ -33,3 +33,4 @@ rerunning test.
 I put /* */ around but the parser ignores that =)  I'll add a parser in the scriptfile that
 handlesit.
 10:30 the test passes the debug count of 40 expressions now.  I'll store and double to 80.
+10:$2 this 80-expression test is unworkably slow.  I'll be focusing on speed again.
