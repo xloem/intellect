@@ -26,7 +26,7 @@
 
 using namespace intellect::level2;
 using namespace intellect::level2::concepts;
-#define ref intellect::level2::ref
+//#define ref intellect::level2::ref
 
 /*
 // makes a list in one call =)
@@ -184,7 +184,7 @@ ref makestep(ref last, ref action, std::initializer_list<char const *> resultand
 
 
 
-using namespace std;
+//using namespace std;
 //#define ref intellect::level2::ref
 
 // PLAN HERE: use EXPRESSIONS that effectively evaluate to FIRST-STEP,LAST-STEPS PAIRS
@@ -389,6 +389,8 @@ void parsestep(ref firststep, ref context, istream ss, ref nextlaststepset)
 }
 #endif
 
+using std::string;
+
 ref bootstraplookup(ref text)
 {
 	// text was relevent
@@ -408,6 +410,8 @@ ref bootstraplookup(ref text)
 	}
 	return str;
 }
+
+using std::istream;
 
 ref parsevalue(ref stream)
 {
@@ -430,6 +434,8 @@ ref parsevalue(ref stream)
 	}
 	return word;
 }
+
+using std::stringstream;
 
 void parse(ref stream, ref subnotepad)
 {

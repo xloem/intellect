@@ -129,7 +129,7 @@ private:
 			} \
 		} catch(...) { \
 			intellect::level2::rethrowref(); \
-		} } catch(decltype(intellect::level2::notepad()) const & e) { \
+		} } catch(intellect::level2::ref const & e) { \
 			notepadrestoration.rethrow(e); \
 		} \
 	}); \
