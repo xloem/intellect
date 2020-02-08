@@ -1,6 +1,7 @@
 # Please support Karl working on this intelligence framework.  The framework needs to be quality, so that the rest may function.
 
-CXXFLAGS=-pedantic -Wall -Werror -Wno-error=unused-command-line-argument -Wno-error=deprecated-declarations -Wno-gnu-zero-variadic-macro-arguments -std=gnu++17 -fno-operator-names -ggdb -O0
+CXXFLAGS=-pedantic -Wall -Werror -Wno-error=unused-command-line-argument -Wno-error=deprecated-declarations -Wno-gnu-zero-variadic-macro-arguments -std=gnu++17 -fno-operator-names -ggdb -fno-omit-frame-pointer -O0
+#-fsanitize-memory-track-origins -fsanitize=memory -fPIE -pie -v
 LINK.o=$(LINK.cc)
 OBJDIR=$(TMPDIR)/intellect-vm-objs/
 

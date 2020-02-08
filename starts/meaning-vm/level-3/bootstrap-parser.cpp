@@ -569,7 +569,7 @@ ref bootstrap_word(ref self, ref stm, ref spc)
 			break;
 		}
 		if (letter == "'" || letter == "\"" || letter == "`") {
-			std::cerr << letter;
+			std::cout << letter;
 			quote = concat = letter; s.next();
 		}
 		while (true) {
@@ -584,7 +584,7 @@ ref bootstrap_word(ref self, ref stm, ref spc)
 					break;
 				}
 			}
-			std::cerr << letter;
+			std::cout << letter;
 			concat += letter;
 			if (quote.size()) {
 				if (letter == quote) {
