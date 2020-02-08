@@ -1238,7 +1238,6 @@ void loadhabits()
 	// we are passing the source stream to the habit parser as the wordpace.
 	// fix.
 	ahabit(bootstrap-parser, ((source, stm), (space, spc)), {
-			static int dbg_ct = 0;
 		ref fctx = stm.get(filecontext);
 		ref wctx = fctx.get(wordcontext);
 		ref pctx = fctx.get(parsecontext);
@@ -1253,8 +1252,6 @@ void loadhabits()
 			}
 			spc.set(value, word);
 			result = wctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
-			++ dbg_ct;
-			if (dbg_ct > 40) throw intellect::level2::noteconcept().link("is","debug");
 			if (result != nothing) {
 				return result;
 			}
