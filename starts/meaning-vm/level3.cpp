@@ -11,10 +11,12 @@ int main()
 {
 	createhabits();
 	loadhabits();
-	intellect::level2::newnotepad(txt2ref("level-3/randomcode.bootstrap"));
-	std::cerr << intellect::level2::notepad().dbglinks() << std::endl;
 	try {
-		::ref file = ::ref("parse-file")(txt2ref("level-3/randomcode.bootstrap"));
+		//std::string fn = "level-3/randomcode.bootstrap";
+		std::string fn = "level-3/hello-world.bootstrap";
+		intellect::level2::newnotepad(txt2ref(fn));
+		std::cerr << intellect::level2::notepad().dbglinks() << std::endl;
+		::ref file = ::ref("parse-file")(txt2ref(fn));
 		intellect::level2::conceptunmake(file);
 	} catch (intellect::level2::ref const & e) {
 		std::cerr << "Error: " << e.getAll("is").begin()->name() << std::endl;

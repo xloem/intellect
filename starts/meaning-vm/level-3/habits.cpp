@@ -1,7 +1,12 @@
 #include "habits.hpp"
 
+#include "bootstrap-parser.hpp"
+
 #include "../level-2/habits.hpp"
 #include "../level-2/sugar.hpp"
+
+#include <iostream>
+
 
 using namespace intellect::level2;
 
@@ -58,6 +63,13 @@ void createhabits()
 		}
 		size_t num = intellect::level2::sugar::rand(0.0, links.size());
 		result = links[num];
+	});
+
+	ahabit(say-text, ((text, t)), {
+		std::cout << ref2txt(t);
+	});
+	ahabit(say-name, ((concept, c)), {
+		std::cout << c.name();
 	});
 
 }
