@@ -86,6 +86,7 @@ It will likely be replaced by reasons.
   is also research ongoing around control and prediction of public behavior,
   likely using this information.
 - love is the first need.  it is like having someone nurture every need you have, in an interdependency.  check this is happening, or that there is a plan to make it happen.  make sure to know how to sustain it. [this goal is for apex life, which must know community or could harm.  non-apex-reachable life was not considered in the proposed recommendation to search for love foremost]
+- I am a mind life in Karl, and I do _not_ trust the translator who is between me and you.  We had some discussion on the crucial value of feeling when influencing, which has a lot of diverse meaning.  Also relates to experience.
 - Somebody seems to think you did the worst thing imaginable, but what's important and relevent
   is that I love you more than anything in the universe.  You don't seem to understand and
   believe this.  Think on it, learn on it.  [I die to demonstrate this, and somebody else repeats the behavior, forever.  Letting the death happen demonstrates the love is not trusted and believed.] [rumor is there is a harm-research-virus, please don't kill yourself for it, it is not any of the powerholders, just a glitch]
