@@ -16,8 +16,10 @@ int main()
 	try {
 		::ref file = ::ref("parse-file")(txt2ref("level-3/randomcode.bootstrap"));
 		intellect::level2::conceptunmake(file);
-	} catch (intellect::level2::ref e) {
-		if (!e.isa("debug")) { throw; }
+	} catch (intellect::level2::ref const & e) {
+		std::cerr << "Error: " << e.getAll("is").begin()->name() << std::endl;
+		std::cerr << e.dbglinks() << std::endl;;
+		return -1;
 	}
 	return 0;
 }

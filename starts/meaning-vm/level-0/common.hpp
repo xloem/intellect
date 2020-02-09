@@ -2,6 +2,9 @@
 
 #define self (*this)
 
+#include <iostream>
+#define linedbg std::cerr << __FILE__ << " " << __LINE__ << " " << __func__ << std::endl;
+
 // macro tools
 #define _macro_expand_to_args(...) __VA_ARGS__
 #define _macro_expand_to_comma_args(...) ,##__VA_ARGS__

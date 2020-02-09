@@ -166,17 +166,6 @@ concept step-types [
 	or new
 ]
 
-habit fill-step [ step habit ] [ ] [
-	set is-condition random-of true-or-false or
-	pick is-condition true condition.
-	action:
-		fill-habit-step step habit
-		return.
-	condition:
-		fill-habit-pick step habit
-		return.
-]
-
 // add-a-step:
 habit fill-habit-step [ step habit ] [ ] [
 	set values get habit 'values'
@@ -195,9 +184,9 @@ information-enumeration:
 	pick is-next if false enumeration-done.
 	set last get next-information last
 	set has-assumption linked last assume
-	pick has-assumption false not-consider-assuming.
+	pick has-assumption if false not-consider-assuming.
 	set skip random-of true-or-false or
-	pick skip true information-enumeration.
+	pick skip if true information-enumeration.
 	not-consider-assuming:
 	set information-name get next-information information
 	set use-constant random-of true-or-false or
@@ -254,6 +243,17 @@ habit fill-habit-pick [ step habit ] [ result ] [
 		set continue random-of true-or-false or
 		pick continue if true add-option.
 	set-condition-step step nothing condiion next-steps
+]
+
+habit fill-step [ step habit ] [ ] [
+	set is-condition random-of true-or-false or
+	pick is-condition if true condition.
+	action:
+		fill-habit-step step habit
+		return.
+	condition:
+		fill-habit-pick step habit
+		return.
 ]
 
 // need ways to:
