@@ -620,6 +620,7 @@ ref bootstrap_parse_brace(ref bracetxt, ref file, ref ws, ref self)
 	ref result = intellect::level2::noteconcept();
 	result.link(is, bracedwords);
 	result.link(openbrace, ws.get(dowhere)(ws));//bracetxt);
+	auto & vec = intellect::level2::data<intellect::level2::vector>(result);
 	while (true) {
 		ws.get(donext)(ws);
 		ref sym = ws.get(dovalue)(ws);
@@ -627,7 +628,7 @@ ref bootstrap_parse_brace(ref bracetxt, ref file, ref ws, ref self)
 			result.link(closebrace, ws.get(dowhere)(ws));//sym);
 			break;
 		}
-		result.link(word, sym);
+		vec.push_back(sym);
 		//if (bootstrapmatchingbrace(sym) != nothing) {
 		//	self(file, ws);
 		//}
@@ -694,13 +695,14 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 	ref args = intellect::level2::noteconcept();
 	//ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
-	auto targets = argtext.getAll(word);
+	auto & targets = argtext.val<intellect::level2::vector>();
+	auto & argvec = intellect::level2::data<intellect::level2::vector>(args);
 	for (auto it = targets.begin(); it != targets.end();) {
 		auto target = *(it++);
 		if (ref2txt(target) == "\n") { continue; }
 		// txtref2bootstrap is used because there are still name values
 		// like "self" and "context" coming from level2
-		args.link(informationorder, txtref2bootstrap(target));
+		argvec.push_back(txtref2bootstrap(target));
 	}
 	ref("set-steps")(habit, args);
 	if (tokenname == "parser") { wctx.set(habitname, habit); }
@@ -710,14 +712,12 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 	values.insert("context");
 	values.insert("self");
 	values.insert("result");
-	for (auto target : args.getAll(informationorder)) {
-		values.insert(target.name());
+	for (auto target : args.val<intellect::level2::vector>()) {
+		values.insert(ref(target).name());
 	}
 	ref laststep = habit;
 	labels["return"] = nothing;
 	ws.get(dogo)(ws, steps.get(openbrace));
-	//auto stepwords = steps.getAll(word);
-	//for (auto wordsit = stepwords.begin(); wordsit != stepwords.end(); ++ wordsit) {
 	while (true) {
 		ws.get(donext)(ws);
 		if (ws.get(dowhere)(ws) == steps.get(closebrace)) { break; }
@@ -827,7 +827,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 				laststep.link("next-step", nextstep);
 			}
 			ref order;
-			decltype(order.getAll(order)) orderitems;
+			intellect::level2::vector orderitems;
 			decltype(orderitems.begin()) orderit;
 			ref neededmap = intellect::level2::noteconcept();
 			ref knownmap = intellect::level2::noteconcept();
@@ -846,7 +846,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 				}
 				knownmap.link(intellect::level2::concepts::self_, subhabit);
 		       		order = makehabitinformationorder(subhabit);
-				orderitems = order.getAll(informationorder);
+				orderitems = order.val<decltype(orderitems)>();
 				orderit = orderitems.begin();
 			}
 			while (true) {
@@ -858,7 +858,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 				ref arg = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 				fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 				if (arg.isa(bracedwords)) {
-					auto words = arg.getAll(word_);
+					auto words = arg.val<intellect::level2::vector>();
 					auto it = words.begin();
 					ref label = txtref2bootstrap(*it);
 					if (order != nothing) {
@@ -925,7 +925,7 @@ ref bootstrap_parse_concept(ref f, ref file, ref ws, ref ctx, ref self, ref wctx
 	ref parts = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 	//ConceptUnmaker partsdel(parts);
-	auto allparts = parts.getAll("word");
+	auto allparts = parts.val<intellect::level2::vector>();
 	for (auto it = allparts.begin(); it != allparts.end();) {
 		if (ref2txt(*it) == "\n") { ++ it; continue; }
 		ref type = (*it);
@@ -1593,11 +1593,12 @@ void parsebootstrap(ref stream, ref context)
 			ss >> tok;
 			if (tok != "[") { throw intellect::level2::noteconcept().link("is", "missing-[-after-habit-name"); }
 			ref args = intellect::level2::noteconcept();
+			auto & argvec = intellect::level2::data<intellect::level2::vector>(args);
 			while (true) {
 				std::string arg;
 				ss >> arg;
 				if (arg == "]") { break; }
-				args.link("information-order", arg);
+				argvec.push_back(ref(arg).ptr());
 			}
 			ss >> tok;
 			if (tok != "[") { throw intellect::level2::noteconcept().link("is", "missing-[-after-habit-needs"); }
@@ -1714,7 +1715,7 @@ void parsebootstrap(ref stream, ref context)
 				       	std::getline(ss, linerest);
 					std::stringstream ss2(linerest);
 					ref stream2 = alloc(intellect::level0::concepts::allocations(), (std::iostream*)&ss2);
-					auto args = order.getAll("information-order");
+					auto args = order.val<intellect::level2::vector>();
 					auto argsit = args.begin();
 					while (true) {
 						ref argname = parsevalue(stream2);
