@@ -18,7 +18,7 @@ namespace sugar {
 class restorenotepad
 {
 public:
-	restorenotepad(ref ctx = "nothing")
+	restorenotepad(ref ctx = intellect::level1::concepts::nothing)
 	: outernotepad(intellect::level2::notepad()),
 	  ctx(ctx)
 	{
@@ -51,21 +51,21 @@ private:
 
 	void leave()
 	{
-		if (innernotepad == "nothing") { return; }
+		if (innernotepad == intellect::level1::concepts::nothing) { return; }
 		if (intellect::level2::notepad() != innernotepad) { throw intellect::level2::noteconcept().link("is", "not-in-correct-subnotepad", "notepad", intellect::level2::notepad(), "inner-notepad", innernotepad, "outer-notepad", outernotepad); }
 		leavenotepad(ctx, innernotepad);
 		intellect::level2::notepad() = outernotepad;
-		innernotepad = "nothing";
+		innernotepad = intellect::level1::concepts::nothing;
 	}
 	void enter()
 	{
-		if (ctx == "nothing") { return; }
-		if (!ctx.linked("notepad")) { return; }
-		ref inner = ctx.get("notepad");
-		if (inner == "nothing") { return; }
+		if (ctx == intellect::level1::concepts::nothing) { return; }
+		if (!ctx.linked(intellect::level2::concepts::notepad)) { return; }
+		ref inner = ctx.get(intellect::level2::concepts::notepad);
+		if (inner == intellect::level1::concepts::nothing) { return; }
 		innernotepad = intellect::level2::subnotepad(inner);
 		intellect::level2::entersubnotepad(ctx, inner);
-		if (innernotepad.get("outer") != outernotepad) { throw intellect::level2::noteconcept().link("is","not-subnotepad-of-outer","inner-notepad",innernotepad,"outer-notepad",outernotepad,"name",inner,"context",ctx); }
+		if (innernotepad.get(intellect::level2::concepts::outer) != outernotepad) { throw intellect::level2::noteconcept().link("is","not-subnotepad-of-outer","inner-notepad",innernotepad,"outer-notepad",outernotepad,"name",inner,"context",ctx); }
 		intellect::level2::notepad() = innernotepad;
 	}
 };
@@ -119,12 +119,16 @@ private:
 				__VA_ARGS__ \
 				return result; \
 			})(); \
-			if (intellect::level2::innotepad(result, intellect::level2::notepad()) && !intellect::level2::innotepad(result, intellect::level2::subnotepad("outer", true))) { \
-				intellect::level2::entersubnotepad(result, "outer", true); \
+			if (result != intellect::level1::concepts::nothing) {\
+				if (intellect::level2::innotepad(result, intellect::level2::notepad()) && intellect::level2::notepad().linked(intellect::level2::concepts::outer)) { \
+					if(!intellect::level2::innotepad(result, intellect::level2::subnotepad(intellect::level2::concepts::outer, true))) { \
+						intellect::level2::entersubnotepad(result, intellect::level2::concepts::outer, true); \
+					} \
+				} \
+				ctx.set(intellect::level2::concepts::result, result); \
 			} \
-			ctx.link(intellect::level2::concepts::result, result); \
 			if (!quiet) { \
-				std::cerr << " result:" << result.name(); \
+				std::cerr << " result:[" << result.dbglinks() << "]"/*name()*/; \
 				std::cerr << "]" << std::endl; \
 			} \
 		} catch(...) { \

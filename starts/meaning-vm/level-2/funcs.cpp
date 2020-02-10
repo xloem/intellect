@@ -306,16 +306,16 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	}
 	if (!subctx.linked(self_)) { subctx.link(self_, habit); }
 	habit.fun<ref>()(ref::context());
-	posinf = habit.get(information-needed);
-	while (posinf.linked(nextinformation)) {
-		posinf = posinf[nextinformation];
-		ref::context().unlink(posinf[information]);
-	}
 	ref ret = nothing;
 	if (ref::context().linked(result)) {
 		ret = ref::context().get(result);
-		ref::context().unlink(result, ret);
+		//ref::context().unlink(result, ret);
 	}
+	//posinf = habit.get(information-needed);
+	//while (posinf.linked(nextinformation)) {
+	//	posinf = posinf[nextinformation];
+	//	ref::context().unlink(posinf[information]);
+	//}
 	ref::context() = subctx.get(outercontext);
 	conceptunmake(subctx);
 	return ret;
@@ -377,16 +377,17 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 	}
 	if (!ctx.linked(self_)) { ctx.link(self_, habit); }
 	habit.fun<ref>()(ctx);
-	nextinf = infn;
-	while (nextinf.linked(nextinformation)) {
-		nextinf = nextinf.get(nextinformation);
-		ref inf = nextinf.get(information);
-		if (provided.count(inf)) {
-			ctx.unlink(inf, provided[inf]);
-		} else {
-			ctx.unlink(inf, nextinf.get(assume));
-		}
-	}
+	//nextinf = infn;
+	//while (nextinf.linked(nextinformation)) {
+	//	nextinf = nextinf.get(nextinformation);
+	//	ref inf = nextinf.get(information);
+	//	if (provided.count(inf)) {
+	//		ctx.unlink(inf, provided[inf]);
+	//	} else {
+	//		ctx.unlink(inf, nextinf.get(assume));
+	//	}
+	//}
+
 	//for (auto pair : pairs) {
 	//	auto second = pair.begin(); ++ second;
 	//	ctx.unlink(pair.begin(), second);
@@ -394,7 +395,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 	ref ret = nothing;
 	if (ctx.linked(result)) {
 		ret = ctx.get(result);
-		ctx.unlink(result, ret);
+		//ctx.unlink(result, ret);
 	}
 	ref::context() = ctx.get(outercontext);
 	conceptunmake(ctx);

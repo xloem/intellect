@@ -1,0 +1,48 @@
+parser call [ space result ] [ result ] [
+	set do-next get space 'do-next'
+	set do-value get space 'do-value'
+	do-next [space space]
+	set value do-value [space space]
+	set value bootstrap-lookup value
+	value
+]
+concept call [ quiet true ]
+
+habit hello-world [] [] [
+	say-text "
+
+hello world!
+
+"
+]
+concept hello-world[
+	quiet true
+]
+
+habit read-word [] [result] [
+	set do-next get c++-stdin 'do-next-word'
+	set do-value get c++-stdin 'do-value'
+	do-next [space c++-stdin]
+	set result do-value [space c++-stdin]
+]
+
+habit say-endl [] [] [
+	say-text "
+"
+]
+
+habit repeat-name [] [] [
+	say-text "Enter your name: "
+	set name read-word
+	say-endl
+	say-text "Hello, "
+	say-text name
+	say-text "!"
+	say-endl
+]
+concept repeat-name [
+	quiet true
+]
+
+call hello-world
+call repeat-name

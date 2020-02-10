@@ -344,7 +344,7 @@ language, as has been expected.
 
 ref parsevalue(ref stream)
 {
-	std::istream & ss = *stream.val<std::istream*>();
+	std::iostream & ss = *stream.val<std::iostream*>();
 	std::string word;
 	ss >> word;
 	if (word.size() > 0 && (word[0] == '"' || word[0] == '\'' || word[0] == '`')) {
@@ -364,7 +364,7 @@ ref parsevalue(ref stream)
 	return word;
 }
 
-static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text"), outer("outer"), bootstraplistwordcontext("bootstrap-list-word-context"), wordcontext("word-context"), openbrace("open-brace"), closebrace("close-brace"), informationneeded("information-needed");
+static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text"), outer("outer"), bootstraplistwordcontext("bootstrap-list-word-context"), wordcontext("word-context"), openbrace("open-brace"), closebrace("close-brace"), informationneeded("information-needed"), is("is"), filecontext("file-context"), parsecontext("parse-context"), file("file"), value("value"), focus("focus"), space("space"), result_("result");
 
 // let's do contextual word lookup.  it will really ease stuff later.
 
@@ -429,7 +429,7 @@ ref ctxlookup(ref context, ref item)
 ref parsewordtxt_ws(ref context, ref stream)
 {
 	std::string word;
-	std::istream & ss = *stream.val<std::istream*>();
+	std::iostream & ss = *stream.val<std::iostream*>();
 	ss >> word;
 	if (!ss) throw intellect::level2::noteconcept().link("is", "end-of-stream", "stream", stream);
 	return txt2ref(word);
@@ -441,7 +441,7 @@ void parseprefix(ref context, ref stream, ref prefix)
 	try {
 		while (true) {
 			ref parsertxt = parsewordtxt_ws(context, stream);
-			if (!*stream.val<std::istream*>()) break;
+			if (!*stream.val<std::iostream*>()) break;
 			ctxlookup(context, parsertxt)(context, stream, parsertxt);
 		}
 	} catch(ref r) {
@@ -609,6 +609,54 @@ ref bootstrap_word(ref self, ref stm, ref spc)
 	}
 	ref result = txt2ref(concat);
 	s.returntohere();
+	return result;
+}
+
+ref bootstrap_parse_brace(ref bracetxt, ref file, ref ws, ref self)
+{
+	ref brace2ref = bootstrapmatchingbrace(ref2txt(bracetxt));
+	if (brace2ref == "nothing") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
+	std::string brace2 = ref2txt(brace2ref);
+	ref result = intellect::level2::noteconcept();
+	result.link(is, bracedwords);
+	result.link(openbrace, ws.get(dowhere)(ws));//bracetxt);
+	while (true) {
+		ws.get(donext)(ws);
+		ref sym = ws.get(dovalue)(ws);
+		if (istxtref(sym) && ref2txt(sym) == brace2) {
+			result.link(closebrace, ws.get(dowhere)(ws));//sym);
+			break;
+		}
+		result.link(word, sym);
+		//if (bootstrapmatchingbrace(sym) != nothing) {
+		//	self(file, ws);
+		//}
+	}
+	return result;
+}
+
+ref bootstrap_parser(ref stm, ref spc)
+{
+	ref fctx = stm.get(filecontext);
+	ref wctx = fctx.get(wordcontext);
+	ref pctx = fctx.get(parsecontext);
+	ref f = fctx.get(file);
+	ref result;
+	// i'd really like to donext all but the first time.
+	// 	... we don't wnt to donext if we haven't processed the first value yet.
+	// 	
+	while (true) {
+		ref word = stm.get(dovalue)(stm);
+		if (!wctx.linked(word)) {
+			return word;
+		}
+		spc.set(value, word);
+		result = wctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
+		if (result != nothing) {
+			return result;
+		}
+		stm.get(donext)(stm);
+	}
 	return result;
 }
 
@@ -832,7 +880,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 				}
 				std::string argname = ref2txt(arg);
 				if (argname == "\n") { break; }
-				if (order == nothing) { throw intellect::level2::noteconcept().link("is","extra-information-for-subhabit", "subhabit", subhabit, "habit", habit, "information", arg); }
+				if (order == nothing) { throw intellect::level2::noteconcept().link("is","ordered-information-for-contextual-subhabit", "subhabit", subhabit, "habit", habit, "information", arg); }
 				if (values.count(argname)) {
 					neededmap.link(*orderit, txtref2bootstrap(arg));
 				} else {
@@ -927,6 +975,8 @@ void loadhabits()
 		result.link("do-next-word", "c++-stream-next-word");
 		result.link("do-next-line", "c++-stream-next-line");
 	});
+
+	intellect::level1::givename(ref("make-c++-stream")(intellect::level2::noteconcept((std::iostream*)&std::cin)), "c++-stdin");
 
 	ahabit(c++-stream-unmake, ((stream, stm)), {
 		ref src = stm.get("source");
@@ -1181,6 +1231,7 @@ void loadhabits()
 		}
 		stm.set(entry, cur.get(previous));
 	});
+	ref("keep-stream-previous").link("quiet", true);
 
 	// keep-stream of letters.  make keep-stream of words.
 	// we have parser stream that can be wrapped in keep stream, but is confusing
@@ -1238,25 +1289,7 @@ void loadhabits()
 	// we are passing the source stream to the habit parser as the wordpace.
 	// fix.
 	ahabit(bootstrap-parser, ((source, stm), (space, spc)), {
-		ref fctx = stm.get(filecontext);
-		ref wctx = fctx.get(wordcontext);
-		ref pctx = fctx.get(parsecontext);
-		ref f = fctx.get(file);
-		// i'd really like to donext all but the first time.
-		// 	... we don't wnt to donext if we haven't processed the first value yet.
-		// 	
-		while (true) {
-			ref word = stm.get(dovalue)(stm);
-			if (!wctx.linked(word)) {
-				return word;
-			}
-			spc.set(value, word);
-			result = wctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
-			if (result != nothing) {
-				return result;
-			}
-			stm.get(donext)(stm);
-		}
+		return bootstrap_parser(stm, spc);
 	});
 	ref("bootstrap-parser").link("quiet", true);
 
@@ -1366,25 +1399,7 @@ void loadhabits()
 
 	ahabit(bootstrap-parse-brace, ((focus, bracetxt), (result, file), (space, ws)),
 	{
-		ref brace2ref = bootstrapmatchingbrace(ref2txt(bracetxt));
-		if (brace2ref == "nothing") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
-		std::string brace2 = ref2txt(brace2ref);
-		ref result = intellect::level2::noteconcept();
-		result.link(is, bracedwords);
-		result.link(openbrace, ws.get(dowhere)(ws));//bracetxt);
-		while (true) {
-			ws.get(donext)(ws);
-			ref sym = ws.get(dovalue)(ws);
-			if (istxtref(sym) && ref2txt(sym) == brace2) {
-				result.link(closebrace, ws.get(dowhere)(ws));//sym);
-				break;
-			}
-			result.link(word, sym);
-			//if (bootstrapmatchingbrace(sym) != nothing) {
-			//	self(file, ws);
-			//}
-		}
-		return result;
+		return bootstrap_parse_brace(bracetxt, file, ws, self);
 	});
 	ref("bootstrap-list-word-context").link(txt2ref("["), "bootstrap-parse-brace");
 	ref("bootstrap-list-word-context").link(txt2ref("{"), "bootstrap-parse-brace");
@@ -1482,7 +1497,8 @@ void loadhabits()
 		ref("c++-stream-unmake")(cxxstm);
 
 		result = file;
-	})
+	});
+	ref("bootstrap-parse-file").set("quiet", "true");
 /*
 	ahabit(parse-contextual-stream-word, ((stream, stm), (word-context, wctx)), {
 		wctx.get("parse-word")(stm);
@@ -1543,7 +1559,7 @@ void parseopenbrace(ref context, ref stream, ref parsertxt)
 
 void parsebootstrap(ref stream, ref context)
 {
-	std::istream & ss = *stream.val<std::istream*>();
+	std::iostream & ss = *stream.val<std::iostream*>();
 	std::string lookupstr;
 	ss >> lookupstr;
 	ref lookup = lookupstr;
@@ -1697,7 +1713,7 @@ void parsebootstrap(ref stream, ref context)
 					std::string linerest;
 				       	std::getline(ss, linerest);
 					std::stringstream ss2(linerest);
-					ref stream2 = alloc(intellect::level0::concepts::allocations(), (std::istream*)&ss2);
+					ref stream2 = alloc(intellect::level0::concepts::allocations(), (std::iostream*)&ss2);
 					auto args = order.getAll("information-order");
 					auto argsit = args.begin();
 					while (true) {
