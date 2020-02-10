@@ -161,12 +161,13 @@ std::string getname(concept* r)
 
 std::string dbglinks(concept* r)
 {
-	std::string ret;
+	std::stringstream ret;
 	for (auto & link : r->links) {
-		if (ret.size()) ret += " ";
-		ret += getname(link.first) + "=" + getname(link.second);
+		ret << getname(link.first) << "=" << getname(link.second);
+		ret << " ";
 	}
-	return ret;
+	ret << std::hex << r;
+	return ret.str();
 }
 
 bool isa(concept* member, concept* group)
