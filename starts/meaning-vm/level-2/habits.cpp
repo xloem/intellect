@@ -1,3 +1,5 @@
+#include "habits.hpp"
+
 #include "ref.hpp"
 #include "../level-1/sugar.hpp"
 #include "sugar.hpp"
@@ -262,10 +264,51 @@ void _condition(ref ctx, ref cond, ref steps, ref state)
 // we'll want a contextual notepad.  this can be thread-local I suppose.
 // link thread-local contexts to their root, so we can find it easily.
 
+template<typename T>
+void createcontainer(std::string name)
+{
+	ref container(name);
+	decls(set, push, front, back, iterator, begin, end, entry);
+	ahabitraw(set-container, ((concept, c)),
+	{
+		data<T>(c).clear();
+		return c;
+	});
+	ahabitraw(container-push-back, ((container, c), (value, v)),
+	{
+		c.val<T>().push_back(v.ptr());
+		return c;
+	});
+	ahabitraw(set-begin-container-entry, ((entry, e), (container, c)),
+	{
+		data<typename T::iterator>(e) = (c.val<T>()).begin();
+		return e;
+	});
+	ahabitraw(set-end-container-entry, ((entry, e), (container, c)),
+	{
+		data<typename T::iterator>(e) = (c.val<T>()).end();
+		return e;
+	});
+	ahabitraw(container-entry-same, ((entry-a, ea), (entry-b, eb)),
+	{
+		return ea.val<typename T::iterator>() == eb.val<typename T::iterator>();
+	});
+	ahabitraw(container-entry-next, ((entry, e)),
+	{
+		++ e.val<typename T::iterator>();
+		return e;
+	});
+	ahabitraw(container-entry-value, ((entry, e)),
+	{
+		return *e.val<typename T::iterator>();
+	});
+}
 
 
 void createhabits()
 {
+	createcontainer<vector>("vector");
+
 	ahabit(set-notepad, ((notepad, n)),
 	{
 		ctx.get("outer-context").set(concepts::notepad, n);
@@ -738,7 +781,7 @@ void createhabits()
 		ref infn = noteconcept().link(is, habit-information-needed);
 		result.set(information-needed, infn);
 		ref posinf = infn;
-		for (auto inf : io.getAll(information-order)) {
+		for (auto inf : data<vector>(io)) {
 			ref nextinf = noteconcept().link(is, habit-information);
 			nextinf.set(information, inf);
 			posinf.set(next-information, nextinf);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "../level-0/concept.hpp"
 
 #include <any>
 #include <functional>
@@ -32,6 +33,9 @@ ref dohabit(ref habit, std::initializer_list<ref> args = {});
 ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> args, bool extra_information = false);
 
 void rethrowref();
+
+using vector = std::vector<intellect::level0::concept*>;
+using vectorit = vector::iterator;
 
 }
 }

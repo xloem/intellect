@@ -227,9 +227,10 @@ ref makehabitinformationorder(ref habit)
 	ref order = noteconcept();
 	static ref informationneeded("information-needed"), nextinformation("next-information"), informationorder("information-order");
 	ref last = habit.get(informationneeded);
+	auto & vec = data<vector>(order);
 	while (last.linked(nextinformation)) {
 		last = last.get(nextinformation);
-		order.link(informationorder, last.get(information));
+		vec.push_back(last.get(information));
 	}
 	return order;
 }

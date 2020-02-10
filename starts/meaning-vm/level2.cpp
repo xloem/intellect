@@ -458,6 +458,7 @@ void parse(ref stream, ref subnotepad)
 			comments.push_back(comment);
 		} else if (cmd == "information") {
 			ref args = makeconcept();
+			auto & argvec = intellect::level2::data<intellect::level2::vector>(args);
 			string name;
 			ss >> name;
 			intellect::level2::notepad() = outernotepad;
@@ -470,7 +471,7 @@ void parse(ref stream, ref subnotepad)
 				string arg;
 				ss2 >> arg;
 				if (!ss2) { break; }
-				args.link("information-order", arg);
+				argvec.push_back(ref(arg).ptr());
 			}
 			ref("set-steps")(ref(name/*, true*/), args);
 			for (auto comment : comments) {
@@ -488,7 +489,7 @@ void parse(ref stream, ref subnotepad)
 			values.insert("context");
 			values.insert("self");
 			ref order = makehabitinformationorder(name);
-			for (ref arg: order.getAll("information-order")) {
+			for (ref arg: order.val<intellect::level2::vector>()) {
 				values.insert(arg.name());
 			}
 			conceptunmake(order);
@@ -624,7 +625,7 @@ void parse(ref stream, ref subnotepad)
 				       	std::getline(ss, linerest);
 					stringstream ss2(linerest);
 					ref stream2 = alloc(intellect::level0::concepts::allocations(), (istream*)&ss2);
-					for (ref arg : order.getAll("information-order")) {
+					for (ref arg : order.val<intellect::level2::vector>()) {
 						ref argname = parsevalue(stream2);
 						if (!ss2) { break; }
 						// depending on whether argname is in localcontext, pass to neededmap or knownmap.  also parse literal strings.

@@ -14,6 +14,19 @@ ref makeconcept();
 ref notepadconcept();
 void conceptunmake(ref c);
 
+template<typename T>
+T & data(ref c) {
+	if (c.hasval() && !c.hasvalof<T>()) {
+		throw noteconcept().link(
+			"is", "already-has-value",
+			"concept", c);
+	}
+	if (!c.hasval()) {
+		c.val<T>(T());
+	}
+	return c.val<T>();
+}
+
 namespace concepts {
 
 	// make a link

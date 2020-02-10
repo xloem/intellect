@@ -90,8 +90,13 @@ private:
 #endif
 
 #define ahabit(nam, argnametoklist, ...) \
+	{ \
+		static ref rnam(#nam); \
+		ahabitraw(rnam, argnametoklist, __VA_ARGS__); \
+	}
+#define ahabitraw(rnam, argnametoklist, ...) \
 	intellect::level2::makehabit( \
-		ref(#nam), \
+		rnam, \
 		{_macro_call(_macro_for_each_parens, _macro_habit_argnameref, _macro_habit_commaargnameref _macro_comma_remove_parens(argnametoklist))}, \
 		(std::function<void(ref)>) \
 	[=](ref ctx) mutable \
@@ -104,7 +109,7 @@ private:
 			} \
 			notepadrestoration.switchwith(ctx); \
 			ref result; (void)result; \
-			static ref const compiled_self(#nam);\
+			static ref const compiled_self(rnam);\
 			ref self;\
 			if (!ctx.linked(intellect::level2::concepts::self_)) {\
 				ctx.set(intellect::level2::concepts::self_, compiled_self);\
@@ -119,7 +124,7 @@ private:
 				__VA_ARGS__ \
 				return result; \
 			})(); \
-			if (result != intellect::level1::concepts::nothing) {\
+			if (result != intellect::level1::concepts::nothing || !ctx.linked(intellect::level2::concepts::result)) { \
 				if (intellect::level2::innotepad(result, intellect::level2::notepad()) && intellect::level2::notepad().linked(intellect::level2::concepts::outer)) { \
 					if(!intellect::level2::innotepad(result, intellect::level2::subnotepad(intellect::level2::concepts::outer, true))) { \
 						intellect::level2::entersubnotepad(result, intellect::level2::concepts::outer, true); \
@@ -138,7 +143,7 @@ private:
 		} \
 	}); \
 	{ \
-		ref _macro_habit_name(#nam); \
+		ref _macro_habit_name(rnam); (void)_macro_habit_name;\
 		_macro_call(_macro_for_each_parens, _macro_habit_assume, _macro_habit_assume _macro_comma_remove_parens(argnametoklist)) \
 	}
 	#define _macro_habit_argnameref(name, tok, ...) \
