@@ -1,0 +1,23 @@
+#include "common.bootstrap"
+
+// let's store sata in a common object other than the habit.
+
+// === Tests ===
+
+// === Behaviors ===
+
+// = Make a habit workspace with spec
+//   that matches an existing habit.
+
+// = Build the start of a habit in a workspace.
+
+// = Produce a list of possible habit steps
+//   for a workspace.
+
+// = Produce a list of available spaces for a step in
+//   a habit workspace
+
+// = Produce a list of combinations between two other
+//   lists.
+
+
