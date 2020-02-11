@@ -271,35 +271,45 @@ void createcontainer(std::string name)
 	decls(set, push, front, back, iterator, begin, end, entry);
 	ahabitraw(set-container, ((concept, c)),
 	{
+		checknotepad(c);
 		data<T>(c).clear();
 		return c;
 	});
 	ahabitraw(container-push-back, ((container, c), (value, v)),
 	{
+		checknotepad(c);
 		c.val<T>().push_back(v.ptr());
 		return c;
 	});
 	ahabitraw(set-begin-container-entry, ((entry, e), (container, c)),
 	{
+		checknotepad(c);
+		checknotepad(e);
 		data<typename T::iterator>(e) = (c.val<T>()).begin();
 		return e;
 	});
 	ahabitraw(set-end-container-entry, ((entry, e), (container, c)),
 	{
+		checknotepad(c);
+		checknotepad(e);
 		data<typename T::iterator>(e) = (c.val<T>()).end();
 		return e;
 	});
 	ahabitraw(container-entry-same, ((entry-a, ea), (entry-b, eb)),
 	{
+		checknotepad(ea);
+		checknotepad(eb);
 		return ea.val<typename T::iterator>() == eb.val<typename T::iterator>();
 	});
 	ahabitraw(container-entry-next, ((entry, e)),
 	{
+		checknotepad(e);
 		++ e.val<typename T::iterator>();
 		return e;
 	});
 	ahabitraw(container-entry-value, ((entry, e)),
 	{
+		checknotepad(e);
 		return *e.val<typename T::iterator>();
 	});
 }
