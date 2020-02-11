@@ -1,0 +1,70 @@
+parser // [ space result ] [ ] [
+	set underlying get space 'source'
+	set do-next get underlying 'do-next'
+	set do-value get underlying 'do-value'
+next-word: do-next [space underlying]
+	set value do-value [space underlying]
+	pick value if "
+" return.
+	next-word.
+]
+concept '//' [
+	quiet true
+]
+parser /* [ space ] [ ] [
+	set underlying get space 'source'
+	set do-next get underlying 'do-next'
+	set do-value get underlying 'do-value'
+next-word: do-next [space underlying]
+	set value do-value [space underlying]
+	pick value if "*/" return.
+	next-word.
+]
+concept '/*' [
+	quiet true
+]
+
+habit to [ result ] [ result ] [ ]
+
+habit first-link-entry-of [ concept type ] [ result ] [
+	set result make-concept
+	first-link-entry result concept
+	next:
+		set more-links linked result 'type'
+		pick more-links if false failure.
+		set link-type get result 'type'
+		set done same link-type type
+		pick done if true return.
+		next-link-entry result
+		next.
+	failure:
+	error type-not-on-concept [ 'concept' concept ] [ 'type' type ]
+]
+
+habit take [ concept type ] [ result ] [
+	set link-entry first-link-entry-of concept type
+	set result get link-entry target
+	link-entry-unlink link-entry
+]
+
+habit inner-put [ concept inner type value ] [ ] [
+	set inner get concept inner
+	put inner type value
+]
+
+habit inner-link [ concept inner type value ] [ ] [
+	set inner get concept inner
+	link inner type value
+]
+
+habit inner-get [ concept inner type ] [ result ] [
+	set inner get concept inner
+	set result get inner type
+]
+
+// 'link' below is being parsed as a link-command.
+// could fix by setting word-context again
+habit random-target [ concept type ] [ ] [
+	set link random-link concept
+	set result get link-target link
+]
