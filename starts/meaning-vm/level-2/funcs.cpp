@@ -107,6 +107,11 @@ void leavenotepad(ref concept, ref pad)
 	pad.unlink(concepts::changeable,concept);
 }
 
+void considerwith(ref realitypad, ref imaginationpad)
+{
+	imaginationpad.link(realitypad, concepts::changing);
+}
+
 void givename(ref context, ref concept, std::string const & name, bool contextisnotepad)
 {
 	ref tname = gettext(name);

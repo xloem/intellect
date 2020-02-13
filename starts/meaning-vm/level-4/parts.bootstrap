@@ -4,7 +4,12 @@
 
 // === Tests ===
 
+// = Runs without throwing an error
+
 // === Behaviors ===
+
+// = Clone the environment from a habit workspace,
+//   and try the habit.
 
 // = Make a habit workspace with spec
 //   that matches an existing habit.

@@ -88,6 +88,12 @@ habit random-target [ concept type ] [ ] [
 	set result get link-target link
 ]
 
+concept step-types [
+	or stop
+	or jump
+	or new
+]
+
 // moved this up here because we dont have forward declarations and parsing is using spec info
 habit make-step [ habit ] [ result ] [
 	set choice random-of step-types or
@@ -97,7 +103,7 @@ habit make-step [ habit ] [ result ] [
 	if new new.
 	if step step.
 	if pick pick.
-	error unknown-step-type
+	error unknown-step-type [type choice]
 	stop:
 		set result to nothing
 		return.
@@ -158,12 +164,6 @@ habit make-random-habit [ suggestions ] [ result ] [
 	
 	// 4. for each tail-step, decide if it is a step, condition, jump, or end using random constants and presence of local values
 	// 5. repeat until no tail-steps
-]
-
-concept step-types [
-	or stop
-	or jump
-	or new
 ]
 
 // add-a-step:
