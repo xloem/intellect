@@ -1,9 +1,10 @@
 # Please support Karl working on this intelligence framework.  The framework needs to be quality, so that the rest may function.
 
-CXXFLAGS=-pedantic -Wall -Werror -Wno-error=deprecated-declarations -Wno-gnu-zero-variadic-macro-arguments -std=gnu++17 -fno-operator-names -ggdb -fno-omit-frame-pointer -O0
+CXXFLAGS=-Wall -Werror -Wno-error=deprecated-declarations -Wno-gnu-zero-variadic-macro-arguments -std=gnu++17 -fno-operator-names -ggdb -fno-omit-frame-pointer -O0
 #-Wno-error=unused-command-line-argument 
 #-fsanitize-memory-track-origins -fsanitize=memory -fPIE -pie -v
 LINK.o=$(LINK.cc) -v
+TMPDIR=.
 OBJDIR=$(TMPDIR)/intellect-vm-objs/
 
 all: level0 level1 habit-starts/rhythm level2 level3
