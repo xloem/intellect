@@ -69,18 +69,12 @@ int main()
 	std::cout << intellect::level0::allocated() << " allocated" << std::endl;
 	while (true) {
 		try {
-			linedbg
 			intellect::level0::dealloc(intellect::level0::concepts::allocations(), intellect::level0::concepts::level0allocations());
-			linedbg
 			break;
 		} catch (intellect::level0::still_referenced_by &e) {
-			linedbg
 			if (e.topic->linked(intellect::level0::concepts::allocates(), e.referrer)) {
-				linedbg
 				intellect::level0::realloc(e.referrer, intellect::level0::concepts::allocations());
-				linedbg
 			} else {
-				linedbg
 				std::cout << "In deallocation, " << ref(e.topic).name() << " still referenced by " << ref(e.referrer).name() << std::endl;
 				throw;
 			}
