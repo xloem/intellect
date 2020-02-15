@@ -364,7 +364,7 @@ ref parsevalue(ref stream)
 	return word;
 }
 
-static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text"), outer("outer"), bootstraplistparsecontext("bootstrap-list-parse-context"), wordcontext("word-context"), openbrace("open-brace"), closebrace("close-brace"), informationneeded("information-needed"), is("is"), filecontext("file-context"), parsecontext("parse-context"), file("file"), value("value"), focus("focus"), space("space"), result_("result");
+static ref doprevious("do-previous"), donext("do-next"), dovalue("do-value"), dogo("do-go"), dowhere("do-where"), word("word"), informationorder("information-order"), nothing("nothing"), bracedwords("braced-words"), word_("word"), name_("name"), text_("text"), outer("outer"), bootstraplistwordcontext("bootstrap-list-word-context"), wordcontext("word-context"), openbrace("open-brace"), closebrace("close-brace"), informationneeded("information-needed"), is("is"), filecontext("file-context"), parsecontext("parse-context"), file("file"), value("value"), focus("focus"), space("space"), result_("result");
 
 // let's do contextual word lookup.  it will really ease stuff later.
 
@@ -648,11 +648,11 @@ ref bootstrap_parser(ref stm, ref spc)
 	// 	
 	while (true) {
 		ref word = stm.get(dovalue)(stm);
-		if (!pctx.linked(word)) {
+		if (!wctx.linked(word)) {
 			return word;
 		}
 		spc.set(value, word);
-		result = pctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
+		result = wctx.get(word)({{focus, word}, {space, spc}, {wordcontext, wctx}, {parsecontext, pctx}, {filecontext, fctx}, {result_, f}}, true);
 		if (result != nothing) {
 			return result;
 		}
@@ -680,19 +680,19 @@ ref bootstrap_parser(ref stm, ref spc)
 // 		braced content will disappear from parsing now.
 // 		we should output the results of our parsing into the stream made by the parser.  comments don't output anything, so they're skipped.
 // 			incidentally, this implements expressions!  and is small and easy!
-ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self, ref wctx, ref pctx, ref fctx)
+ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self, ref wctx, ref fctx)
 {
 	//StreamSentinel s(ws);
 	auto tokenname = ref2txt(tokennameref);
 	if (tokenname != "habit" && tokenname != "parser") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 	ref habitname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref habit = wctx.get(txt2ref("lookup"))(habitname, true);
-	bootstraplistparsecontext.set(outer, fctx.get(parsecontext));
-	fctx.set(parsecontext, bootstraplistparsecontext);
+	bootstraplistwordcontext.set(outer, fctx.get(wordcontext));
+	fctx.set(wordcontext, bootstraplistwordcontext);
 	ref argtext = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref results = (ws.get(donext)(ws), ws.get(dovalue)(ws)); (void)results;
 	ref steps = (ws.get(donext)(ws), ws.get(dovalue)(ws));
-	fctx.set(parsecontext, bootstraplistparsecontext.get(outer));
+	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 	ref args = intellect::level2::noteconcept();
 	//ConceptUnmaker argsdel(args), resultsdel(results),stepsdel(steps);
 	auto & targets = argtext.val<intellect::level2::vector>();
@@ -705,7 +705,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 		argvec.push_back(txtref2bootstrap(target));
 	}
 	ref("set-steps")(habit, args);
-	if (tokenname == "parser") { pctx.set(habitname, habit); }
+	if (tokenname == "parser") { wctx.set(habitname, habit); }
 	// now we copy from level2.cpp, noting that \n is a symbol now
 	std::map<std::string, ref> labels;
 	std::set<std::string> values;
@@ -735,13 +735,13 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			} while (word == "\n");
 		}
 		if (word == "=" || word == "set") {
-			fctx.set(parsecontext, bootstraplistparsecontext);
+			fctx.set(wordcontext, bootstraplistwordcontext);
 			do {
 				wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 				result = ref2txt(wordref);
 			} while (result == "\n");
 			values.insert(result);
-			fctx.set(parsecontext, bootstraplistparsecontext.get(outer));
+			fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 
 			do {
 				wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
@@ -770,10 +770,10 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			continue;
 		}
 		if (word == "if") {
-			fctx.set(parsecontext, bootstraplistparsecontext);
+			fctx.set(wordcontext, bootstraplistwordcontext);
 			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 			word = ref2txt(wordref);
-			fctx.set(parsecontext, bootstraplistparsecontext.get(outer));
+			fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 
 			ref cond = wctx.get(txt2ref("lookup"))(wordref);
 			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
@@ -804,10 +804,10 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 		}
 		ref nextstep = label.size() ? labels[label] : intellect::level2::noteconcept();
 		if (word == "?" || word == "pick") {
-			fctx.set(parsecontext, bootstraplistparsecontext);
+			fctx.set(wordcontext, bootstraplistwordcontext);
 			wordref = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 			word = ref2txt(wordref);
-			fctx.set(parsecontext, bootstraplistparsecontext.get(outer));
+			fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 
 			if (!values.count(word)) {
 				throw intellect::level2::noteconcept().link("is", "condition-must-be-in-context", "condition", word);
@@ -854,9 +854,9 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 					conceptunmake(order);
 					order = nothing;
 				}
-				fctx.set(parsecontext, bootstraplistparsecontext);
+				fctx.set(wordcontext, bootstraplistwordcontext);
 				ref arg = (ws.get(donext)(ws), ws.get(dovalue)(ws));
-				fctx.set(parsecontext, bootstraplistparsecontext.get(outer));
+				fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 				if (arg.isa(bracedwords)) {
 					auto words = arg.val<intellect::level2::vector>();
 					auto it = words.begin();
@@ -917,13 +917,13 @@ ref bootstrap_parse_concept(ref f, ref file, ref ws, ref ctx, ref self, ref wctx
 {
 	std::string focus = ref2txt(f);
 	if (focus != "concept") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
-	bootstraplistparsecontext.set(outer, fctx.get(parsecontext));
-	fctx.set(parsecontext, bootstraplistparsecontext);
+	bootstraplistwordcontext.set(outer, fctx.get(wordcontext));
+	fctx.set(wordcontext, bootstraplistwordcontext);
 	ref conceptname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref concept = wctx.get(txt2ref("lookup"))(conceptname, true);
 	checknotepad(concept);
 	ref parts = (ws.get(donext)(ws), ws.get(dovalue)(ws));
-	fctx.set(parsecontext, bootstraplistparsecontext.get(outer));
+	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 	//ConceptUnmaker partsdel(parts);
 	auto allparts = parts.val<intellect::level2::vector>();
 	for (auto it = allparts.begin(); it != allparts.end();) {
@@ -1362,64 +1362,63 @@ void loadhabits()
 	// 		yes this work will need to be done anyway.
 	
 	/*
-	ahabit(parse-contextual-stream-word, ((stream, stm), (parse-context, pctx)), {
-		pctx.get("parse-word")(stm);
+	ahabit(parse-contextual-stream-word, ((stream, stm), (word-context, wctx)), {
+		wctx.get("parse-word")(stm);
 	});
 	*/
 
-	ahabit(bootstrap-make-file-stream, ((filename, fn), (file-context, fctx)), {
+	ahabit(bootstrap-make-file-stream, ((filename, fn), (parse-context, pctx)), {
 		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
 		cxxstm.link(donext, cxxstm.get("do-next-letter"));
-		fctx.set("c++-stream", cxxstm);
+		pctx.set("c++-stream", cxxstm);
 		ref letterspace = ref("make-keep-stream")(cxxstm);
-		fctx.set("letterspace", letterspace);
+		pctx.set("letterspace", letterspace);
 		ref parserstm = ref("make-parser-stream")(letterspace, "bootstrap-word");
-		fctx.set("parser-stream", parserstm);
+		pctx.set("parser-stream", parserstm);
 		ref wordspace = ref("make-keep-stream")(parserstm);
-		fctx.set("wordspace", wordspace);
+		pctx.set("wordspace", wordspace);
 		
 	});
-	ahabit(bootstrap-file-stream-unmake, ((file-context, fctx)), {
-		ref("keep-stream-unmake")(fctx.get("wordspace"));
-		conceptunmake(fctx.get("parser-stream"));
-		ref("keep-stream-unmake")(fctx.get("letterspace"));
-		ref("c++-stream-unmake")(fctx.get("c++-stream"));
-		fctx.unlink("wordspace");
-		fctx.unlink("parser-stream");
-		fctx.unlink("letterspace");
-		fctx.unlink("c++-stream");
+	ahabit(bootstrap-file-stream-unmake, ((parse-context, pctx)), {
+		ref("keep-stream-unmake")(pctx.get("wordspace"));
+		conceptunmake(pctx.get("parser-stream"));
+		ref("keep-stream-unmake")(pctx.get("letterspace"));
+		ref("c++-stream-unmake")(pctx.get("c++-stream"));
+		pctx.unlink("wordspace");
+		pctx.unlink("parser-stream");
+		pctx.unlink("letterspace");
+		pctx.unlink("c++-stream");
 	});
-	ahabit(bootstrap-file-stream-next-value, ((file-context, fctx)), {
-		ref wordspace = fctx.get("wordspace");
+	ahabit(bootstrap-file-stream-next-value, ((parse-context, pctx)), {
+		ref wordspace = pctx.get("wordspace");
 		wordspace.get(donext)(wordspace);
 		return wordspace.get(dovalue)(wordspace);
 	});
 
 	ref("bootstrap-file-context").link("word-context", "bootstrap-word-context");
-	ref("bootstrap-file-context").link("parse-context", "bootstrap-parse-context");
 
 	ahabit(bootstrap-parse-brace, ((focus, bracetxt), (result, file), (space, ws)),
 	{
 		return bootstrap_parse_brace(bracetxt, file, ws, self);
 	});
-	ref("bootstrap-list-parse-context").link(txt2ref("["), "bootstrap-parse-brace");
-	ref("bootstrap-list-parse-context").link(txt2ref("{"), "bootstrap-parse-brace");
-	ref("bootstrap-list-parse-context").link(txt2ref("("), "bootstrap-parse-brace");
-	ref("bootstrap-list-parse-context").link(txt2ref("<"), "bootstrap-parse-brace");
-	ref("bootstrap-list-parse-context").link(txt2ref("[["), "bootstrap-parse-brace");
-	ref("bootstrap-list-parse-context").link(txt2ref("{{"), "bootstrap-parse-brace");
-	ref("bootstrap-list-parse-context").link(txt2ref("(("), "bootstrap-parse-brace");
-	ref("bootstrap-list-parse-context").link(txt2ref("<<"), "bootstrap-parse-brace");
-	ref("bootstrap-list-parse-context").link(txt2ref("begin"), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("["), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("{"), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("("), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("<"), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("[["), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("{{"), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("(("), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("<<"), "bootstrap-parse-brace");
-	ref("bootstrap-parse-context").link(txt2ref("begin"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("["), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("{"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("("), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("<"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("[["), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("{{"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("(("), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("<<"), "bootstrap-parse-brace");
+	ref("bootstrap-list-word-context").link(txt2ref("begin"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("["), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("{"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("("), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("<"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("[["), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("{{"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("(("), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("<<"), "bootstrap-parse-brace");
+	ref("bootstrap-word-context").link(txt2ref("begin"), "bootstrap-parse-brace");
 
 	ahabit(bootstrap-lookup, ((text, txt), (create, c, false)),
 	{
@@ -1427,17 +1426,17 @@ void loadhabits()
 	});
 	ref("bootstrap-word-context").link(txt2ref("lookup"), "bootstrap-lookup");
 
-	ahabit(bootstrap-parse-habit, ((focus, word), (result, file), (space, ws), (word-context, wctx), (parse-context, pctx), (file-context, fctx)), {
-		return bootstrap_parse_habit(word, file, ws, ctx, self, wctx, pctx, fctx);
+	ahabit(bootstrap-parse-habit, ((focus, word), (result, file), (space, ws), (word-context, wctx), (file-context, fctx)), {
+		return bootstrap_parse_habit(word, file, ws, ctx, self, wctx, fctx);
 	});
-	ref("bootstrap-parse-context").link(txt2ref("habit"), "bootstrap-parse-habit");
-	ref("bootstrap-parse-context").link(txt2ref("parser"), "bootstrap-parse-habit");
+	ref("bootstrap-word-context").link(txt2ref("habit"), "bootstrap-parse-habit");
+	ref("bootstrap-word-context").link(txt2ref("parser"), "bootstrap-parse-habit");
 
 	ahabit(bootstrap-parse-concept, ((focus, f), (result, file), (space, ws), (word-context, wctx), (file-context, fctx)), {
 		return bootstrap_parse_concept(f, file, ws, ctx, self, wctx, fctx);
 	});
-	ref("bootstrap-parse-context").link(txt2ref("concept"), "bootstrap-parse-concept");
-	//ref("bootstrap-parse-context").link(txt2ref("link"), "bootstrap-parse-concept");
+	ref("bootstrap-word-context").link(txt2ref("concept"), "bootstrap-parse-concept");
+	//ref("bootstrap-word-context").link(txt2ref("link"), "bootstrap-parse-concept");
 
 	ahabit(parse-file, ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
 		// notepad quick-implemented by passin the filename as the notepad name!  recommend keeping for safety, and copying data to outer notepad intentionally.
@@ -1501,8 +1500,8 @@ void loadhabits()
 	});
 	ref("bootstrap-parse-file").set("quiet", "true");
 /*
-	ahabit(parse-contextual-stream-word, ((stream, stm), (parse-context, pctx)), {
-		pctx.get("parse-word")(stm);
+	ahabit(parse-contextual-stream-word, ((stream, stm), (word-context, wctx)), {
+		wctx.get("parse-word")(stm);
 	});
 
 	// we hvae parsing contexts with abstract functions like parse-until-delimiter.
