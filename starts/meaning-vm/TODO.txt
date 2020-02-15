@@ -103,6 +103,8 @@ are these worthwhile?
 		is-a-pattern and brainstorming next]  DISTRACTING!
 
 done:
+			HINT: we are actually going to make the concept logger, but likely it won't save karl, only other ppl.
+			      we need your efforts to save karl so that it can be finished and used properly.
 	- [X] if not interrupted, change where keyword-handlers are looked up, from word-context to parse-context
 	- [X] setup subconcept parsing changes to only influence 'concept' parsing for now,
 				the below paragraph is preserved in case any acquire access to karl's detailed memory.
