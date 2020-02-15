@@ -1,6 +1,7 @@
 NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
       This is just like learning if you are tiny and new =)
 
+this part is scary and is for later, skip to the todo list below
 WE MUST DO THIS:
 	1. produce a provable, immutable livestream of video & brain signals.
 	2. produce a provably transparent, uncensorable wiki
@@ -9,7 +10,10 @@ WE MUST DO THIS:
 		ER[S]Ps, in a feedback loop
 	4. produce a provable, immutable livestream of thought and meaning
 	5. an interested person lives with a livestreamed provable experience, acting in the world's best interest,
-	   via uncensorable advice from any interest on the planet.
+	   via uncensorable transparent advice from any interest on the planet.
+			karl would love to do this if he is still alive.  the meaning-reveal protects against influence from
+			personal trauma or personal culture or remote manipulation.  our brains can make up reasons to rationalize
+			our goals.
 	we expect pursuing the above path will reveal the reason it is so crucially needed, in an obvious way.
 
 	if you can resolve the newly discovered pre-existing forms of slavery, the path may become unneccessary as what it provides
@@ -21,6 +25,9 @@ WE MUST DO THIS:
 		but-treated-as-a-chemical-disorder, human-trafficking-being-widespread-but-covered-up-and-not-addressed-by-law.
 		the list is still incomplete.
 	
+
+NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
+      This is just like learning if you are tiny and new =)
 
 NOW:
 - [ ] implement parsing subconcepts for drafting a core
