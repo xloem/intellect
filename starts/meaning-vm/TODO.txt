@@ -5,17 +5,9 @@ NOW:
 - [ ] implement parsing subconcepts for drafting a core
 	- [X] if not interrupted, change where keyword-handlers are looked up, from word-context to parse-context
 	- [ ] setup subconcept parsing changes to only influence 'concept' parsing for now,
-	      because names could be misleading to habit-parsing.
-		- an alternative is to remove names entirely.  then they are more flexible for habit-parsing.
-			so, how is name placed into parsing context then?  what do parsed names look like?
-			word-context['lookup'] is called on the name to identify what is being referenced.
-				we should continue to use that.  it could resolve names inside habits, later.
-		current task is making subconcepts, considering how to handle their names
-			-> names are made by passing 'true' to the current value lookuper, which means create-if-not-exist.
-			this would work fine for habits to create local values.  just need to adjust value lookuper.
-				and subconcepts?
-					we would provide a word-context that does not provide for name looking up.
-					we recommend adding hierarchy to word-contexts.  the reason not to combine the
+				the below paragraph is preserved in case any acquire access to karl's detailed memory.
+				can show decision-making-process-advice-in-him.
+					we recommend using hierarchy in word-contexts.  the reason not to combine the
 					contexts was expanded better than ever before for us, and is worth reviewing to
 					understand how we think better and make better choices.
 	- [ ] change concepts to not have parsed names?, and to parse to a reference to a concept understood by other parts
