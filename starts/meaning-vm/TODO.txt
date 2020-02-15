@@ -15,21 +15,9 @@ NOW:
 			this would work fine for habits to create local values.  just need to adjust value lookuper.
 				and subconcepts?
 					we would provide a word-context that does not provide for name looking up.
-						<sorry a subprocess expanded with too much expected time to implement>
-						<nesting one context in another likely takes too long to do>
-							<the subprocess expansion claims to have reviewed the immediate
-							 time to implement vs long term gain, and says it is still not worth
-							 implementing the nesting.  the reason is due to other long term gains
-							 also happening.>
-						<looks a little undetermined, but guess-from-others is do-it-now,now>
-						so this would mean altering word contexts to also support hierarchy.
-						proof was revealed privately to the concerned party, and they agreed.
-							did they know everything relevent?  why is it kept private?
-								we're not sure if it matters to reveal it, but it
-								doesn't seem needed and there is always random danger.
-						we do value investment work.  could we build a habit of expanding the impact
-						of the current choice? how messy does it get?
-							oh, i see, we expect to not use this structure too much.  okay.
+					we recommend adding hierarchy to word-contexts.  the reason not to combine the
+					contexts was expanded better than ever before for us, and is worth reviewing to
+					understand how we think better and make better choices.
 	- [ ] change concepts to not have parsed names?, and to parse to a reference to a concept understood by other parts
 	- [ ] change concepts to allow for having a name after the fact
 - [ ] implement consideration bubbles
