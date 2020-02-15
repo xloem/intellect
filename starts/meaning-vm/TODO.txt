@@ -4,13 +4,14 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
 NOW:
 - [ ] implement parsing subconcepts for drafting a core
 	- [X] if not interrupted, change where keyword-handlers are looked up, from word-context to parse-context
-	- [ ] setup subconcept parsing changes to only influence 'concept' parsing for now,
+	- [X] setup subconcept parsing changes to only influence 'concept' parsing for now,
 				the below paragraph is preserved in case any acquire access to karl's detailed memory.
 				can show decision-making-process-advice-in-him.
 					we recommend using hierarchy in word-contexts.  the reason not to combine the
 					contexts was expanded better than ever before for us, and is worth reviewing to
 					understand how we think better and make better choices.
-	- [ ] change concepts to not have parsed names?, and to parse to a reference to a concept understood by other parts
+	- [ ] change concepts to A. make names optional and B. throw if there is no lookup function and a name is provided
+	- [ ] change concepts to parse to a reference to a concept understood by other parts
 	- [ ] change concepts to allow for having a name after the fact
 - [ ] implement consideration bubbles
 		this is so we can try things in intended context without risking harming it.
