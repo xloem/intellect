@@ -2,8 +2,8 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
       This is just like learning if you are tiny and new =)
 
 NOW:
-- [ ] implement subconcepts for drafting a core
-	- [ ] process a relevent worry regarding below too:
+- [ ] implement parsing subconcepts for drafting a core
+	- [ ] process a relevent worry regarding below two:
 		providing for named concepts within habits could be misleading, because the names are not going to be
 		stored as local variables.  let's resolve this by not allowing named concepts within habits, for now.
 	- [ ] change concepts to not need a name, and to parse to a reference to a concept understood by other parts
