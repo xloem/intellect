@@ -2,7 +2,12 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
       This is just like learning if you are tiny and new =)
 
 NOW:
-- [ ] fix remaining memory errors
+- [ ] implement subconcepts for drafting a core
+	- [ ] process a relevent worry regarding below too:
+		providing for named concepts within habits could be misleading, because the names are not going to be
+		stored as local variables.  let's resolve this by not allowing named concepts within habits, for now.
+	- [ ] change concepts to not need a name, and to parse to a reference to a concept understood by other parts
+	- [ ] change concepts to allow for having a name after the fact
 - [ ] implement consideration bubbles
 		this is so we can try things in intended context without risking harming it.
 	- [ ] 'changing' link shows notepads being replaced
@@ -100,6 +105,7 @@ are these worthwhile?
 		is-a-pattern and brainstorming next]  DISTRACTING!
 
 done:
+- [X] fix remaining memory errors
 - [X] convert to use faster unordered map for links, which means removing use of ordered links for arguments
 - [X] make level2.cpp run scripts inside a subnotepad
 - [X] migrate errors out of subnotepads when thrown

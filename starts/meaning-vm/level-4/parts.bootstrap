@@ -1,12 +1,21 @@
 #include "common.bootstrap"
 
-// let's store sata in a common object other than the habit.
+// let's store state in a common object, a habit workspace treated as the working context
 
 // === Tests ===
 
 // = Runs without throwing an error
 
 // === Behaviors ===
+
+// let's work on Alphas and Betas  Alphas list possible type-parts for an unfinished part of the workspace.  Betas produce parts for the part.
+// So, the workspace is made of 'open-ends' linked to behaviors or behavior-specs that can fill those ends in.
+
+concept empty-habit-workspace [
+	is habit-workspace
+	// now i want to link in the first two unfinished-parts.  one is the habit itself, which needs an interface.  another is the next-step link in the habit, to a step.
+	unfinished-part /* here i want to make an anonymous subconcept.  this likely means making a new parser-part to process it. */
+]
 
 // = Clone the environment from a habit workspace,
 //   and try the habit.

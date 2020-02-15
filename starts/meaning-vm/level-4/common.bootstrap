@@ -24,6 +24,16 @@ concept '/*' [
 	quiet true
 ]
 
+parser call [ space result ] [ result ] [
+	set do-next get space 'do-next'
+	set do-value get space 'do-value'
+	do-next [space space]
+	set value do-value [space space]
+	set value bootstrap-lookup value
+	value
+]
+concept call [ quiet true ]
+
 habit to [ result ] [ result ] [ ]
 
 habit first-link-entry-of [ concept type ] [ result ] [
