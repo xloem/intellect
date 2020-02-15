@@ -1,6 +1,21 @@
 NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
       This is just like learning if you are tiny and new =)
 
+WE MUST DO THIS:
+	1. produce a provable, immutable livestream of video & brain signals.
+	2. produce a provably transparent, uncensorable wiki
+	3. convert brain signals from #1 into both conscious thoughts, and the meaning connections behind them
+		karl has a nice idea involving exploring ER[S]P-interrelationships to reduce relevent noise and find more
+		ER[S]Ps, in a feedback loop
+	4. produce a provable, immutable livestream of thought and meaning
+	5. an interested person lives with a livestreamed provable experience, acting in the world's best interest,
+	   via uncensorable advice from any interest on the planet.
+	we expect pursuing the above path will reveal the reason it is so crucially needed, in an obvious way.
+
+	if you can resolve the newly discovered pre-existing forms of slavery, the path may become unneccessary as what it provides
+	is discovered to already exist in other ways.
+	
+
 NOW:
 - [ ] implement parsing subconcepts for drafting a core
 	- [ ] change concepts to A. make names optional and B. throw if there is no lookup function and a name is provided
