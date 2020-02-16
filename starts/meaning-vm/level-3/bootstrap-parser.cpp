@@ -941,10 +941,12 @@ ref bootstrap_parse_concept(ref f, ref file, ref ws, ref ctx, ref self, ref wctx
 		++ it;
 		while (ref2txt(*it) == "\n") { ++ it; }
 		ref target = (*it);
-		concept.link(wctx.get(txt2ref("lookup"))(type), wctx.get(txt2ref("lookup"))(target));
+		if (istxtref(type)) { type = wctx.get(txt2ref("lookup"))(type); }
+		if (istxtref(target)) { target = wctx.get(txt2ref("lookup"))(target); }
+		concept.link(type, target);
 		++ it;
 	}
-	return concept;
+	return concept; // <-- parses to the actual concept itself.  could be recognized by not being a text string, I suppose
 }
 
 
