@@ -5,7 +5,7 @@ this part is scary and is for later, skip to the todo list below
 WE MUST DO THIS:
 	1. produce a provable, immutable livestream of video & brain signals.
 	2. produce a provably transparent, uncensorable wiki
-	3. convert brain signals from #1 into both conscious thoughts, and the meaning connections behind them
+	3. convert brain signals from #1 into descriptions of both conscious thoughts, and the meaning connections behind them
 		karl has a nice idea involving exploring ER[S]P-interrelationships to reduce relevent noise and find more
 		ER[S]Ps, in a feedback loop
 	4. produce a provable, immutable livestream of thought and meaning

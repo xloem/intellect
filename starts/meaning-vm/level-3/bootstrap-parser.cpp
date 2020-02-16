@@ -919,10 +919,19 @@ ref bootstrap_parse_concept(ref f, ref file, ref ws, ref ctx, ref self, ref wctx
 	if (focus != "concept") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
 	bootstraplistwordcontext.set(outer, fctx.get(wordcontext));
 	fctx.set(wordcontext, bootstraplistwordcontext);
-	ref conceptname = (ws.get(donext)(ws), ws.get(dovalue)(ws));
-	ref concept = wctx.get(txt2ref("lookup"))(conceptname, true);
-	checknotepad(concept);
 	ref parts = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+	ref concept;
+	if (!parts.isa(bracedwords)) {
+		if (!wctx.linked(txt2ref("lookup"))) {
+			throw intellect::level2::noteconcept().link("is", "named-concept-without-lookup-in-context", "name", parts, "space", ws, "file-context", fctx);
+		}
+		ref conceptname = parts;
+		parts = (ws.get(donext)(ws), ws.get(dovalue)(ws));
+		concept = wctx.get(txt2ref("lookup"))(conceptname, true);
+		checknotepad(concept);
+	} else {
+		concept = intellect::level2::noteconcept();
+	}
 	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
 	//ConceptUnmaker partsdel(parts);
 	auto allparts = parts.val<intellect::level2::vector>();
