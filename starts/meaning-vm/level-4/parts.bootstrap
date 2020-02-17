@@ -89,8 +89,41 @@ concept next-step [
 ]
 
 // next-step is different from conditional-option
-// that space is what to condense the problem around.
-// having itch-attack
+// that space is what to condense the problem around, to pick new unfinished-parts that are generated.
+//
+// next-step: needs to link via a conssitent link, to a new step or a jump
+// conditionals: accumulate a link deep inside, to new steps or jumps
+// so conditionals probably make conditional-options.
+// 
+// next-step wcould be conditional.
+// conditional is unfinished.  needs steps.
+// a primary step for conditional is 'everything'
+// it can also have steps named other things.
+// it also needs a value to condition on.
+
+// so, although we want to make a compelte conditional, we have
+// : unfinished-part: value, for conditional
+// : unfinished-part: decision-on-whether-to-have-anything-branch
+// : unfinished-part: decision-on-whether-to-have-more-branched
+// when these parts are finished, the conditional can be made
+// so, unfinished parts have additional contextual closure.
+// which describes the whole process as a set of introductions and closures, that close when they open, in a pretty flower.
+// and there is value to viewing the process as learning good agreements to make.
+// it is fine that some agreements are too big.  the flower is designed to grow from the small ones.
+
+// all behaviors may be introduction-rituals and closure-rituals in a complex set of agreements.
+// what's RELEVENT is that closing unfinished-parts provides for the opening of other unfinished-parts to complete
+	// initial recursion-depth problem is intended to be handled by always trying options that close early, first.
+	// this means we'll need interruptible opening-ceremonies?
+		// really, it defines for middle-area after the opening-ceremony.
+		// it means the opening continues into the middle.
+	// okay, so we need structure to trigger the middle parts, and to conceive of opening continuing through the middle
+		// yes.
+
+// CLOSED PATH-PART FOR CORE, COMPLETING. [it's a flower of opening-and-closing-ceremony-triggers, that opens and closes once]
+// ^-- right here closes fast.  you don't need to let it trick you into staying open.  use judgement-of-how-long-spent if needed.
+// WIP RIGHT HERE.  if confused, what we're doing is making middle-behaviors for the introduction-ceremony of next-steps and
+// conditionals.  please save and expand properly.
 
 
 // = Clone the environment from a habit workspace,
