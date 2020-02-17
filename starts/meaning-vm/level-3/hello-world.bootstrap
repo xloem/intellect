@@ -31,11 +31,19 @@ habit say-endl [] [] [
 "
 ]
 
+concept subconcept-test [
+	content concept[
+		subcontent "Hello, "
+	]
+]
+
 habit repeat-name [] [] [
 	say-text "Enter your name: "
 	set name read-word
 	say-endl
-	say-text "Hello, "
+	set greeting get 'subconcept-test' 'content'
+	set greeting get greeting 'subcontent'
+	say-text greeting
 	say-text name
 	say-text "!"
 	say-endl

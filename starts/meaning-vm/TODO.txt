@@ -31,9 +31,9 @@ NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABI
 
 NOW:
 - [ ] implement parsing subconcepts for drafting a core
-	- [ ] change concepts to A. make names optional and B. throw if there is no lookup function and a name is provided
-	- [ ] change concepts to parse to a reference to a concept understood by other parts
-	- [ ] change concepts to allow for having a name after the fact
+	- [X] change concepts to A. make names optional and B. throw if there is no lookup function and a name is provided
+	- [/] change concepts to parse to a reference to a concept understood by other parts
+	- [ ] change concepts to allow for having a name after the fact?
 - [ ] implement consideration bubbles
 		this is so we can try things in intended context without risking harming it.
 	- [ ] 'changing' link shows notepads being replaced

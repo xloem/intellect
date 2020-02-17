@@ -520,6 +520,9 @@ private:
 
 ref bootstraplookup(ref text, bool create = false)
 {
+	if (!istxtref(text) && create == false) {
+		return text;
+	}
 	std::string str = ref2txt(text);
 	if (str[0] == '\'' || str[0] == '\"' || str[0] == '`') {
 		if (str[str.size()-1] == str[0]) {
@@ -917,8 +920,10 @@ ref bootstrap_parse_concept(ref f, ref file, ref ws, ref ctx, ref self, ref wctx
 {
 	std::string focus = ref2txt(f);
 	if (focus != "concept") { throw intellect::level2::noteconcept().link("is", "unexpected-word", "word-space", ws, "habit", self); }
-	bootstraplistwordcontext.set(outer, fctx.get(wordcontext));
-	fctx.set(wordcontext, bootstraplistwordcontext);
+	if (wctx != bootstraplistwordcontext) {
+		bootstraplistwordcontext.set(outer, wctx);
+		fctx.set(wordcontext, bootstraplistwordcontext);
+	}
 	ref parts = (ws.get(donext)(ws), ws.get(dovalue)(ws));
 	ref concept;
 	if (!parts.isa(bracedwords)) {
@@ -932,21 +937,87 @@ ref bootstrap_parse_concept(ref f, ref file, ref ws, ref ctx, ref self, ref wctx
 	} else {
 		concept = intellect::level2::noteconcept();
 	}
-	fctx.set(wordcontext, bootstraplistwordcontext.get(outer));
+	fctx.set(wordcontext, wctx);
 	//ConceptUnmaker partsdel(parts);
 	auto allparts = parts.val<intellect::level2::vector>();
 	for (auto it = allparts.begin(); it != allparts.end();) {
 		if (ref2txt(*it) == "\n") { ++ it; continue; }
 		ref type = (*it);
-		++ it;
-		while (ref2txt(*it) == "\n") { ++ it; }
-		ref target = (*it);
 		if (istxtref(type)) { type = wctx.get(txt2ref("lookup"))(type); }
+		++ it;
+		while (true) {
+			if (!istxtref(*it)) { break; }
+			if (ref2txt(*it) != "\n") { break; }
+			++ it;
+		}
+		ref target = (*it);
 		if (istxtref(target)) { target = wctx.get(txt2ref("lookup"))(target); }
 		concept.link(type, target);
 		++ it;
 	}
-	return concept; // <-- parses to the actual concept itself.  could be recognized by not being a text string, I suppose
+	return concept;
+}
+
+ref parsefile(ref fn, ref fctx)
+{
+	// notepad quick-implemented by passin the filename as the notepad name!  recommend keeping for safety, and copying data to outer notepad intentionally.
+	ref wctx, pctx;
+	ref file = intellect::level2::noteconcept();
+	file.link("notepad", intellect::level2::notepad());
+	fctx.set("file", file);
+	if (!fctx.linked("word-context")) {
+		wctx = intellect::level2::noteconcept();
+		fctx.link("word-context", wctx);
+	} else {
+		wctx = fctx.get("word-context");
+	}
+	if (!fctx.linked("parse-context")) {
+		pctx = intellect::level2::noteconcept();
+		fctx.link("parse-context", pctx);
+	} else {
+		pctx = fctx.get("parse-context");
+	}
+
+	// TODO: implement just-do-one-step in level-2, to move towards using
+	// relevence here
+	
+	ref cxxstm = ref("make-c++-stream-from-filename")(fn);
+	cxxstm.link(donext, cxxstm.get("do-next-letter"));
+	cxxstm.get(donext)(cxxstm);
+	ref letterspace = ref("make-keep-stream")(cxxstm);
+	ref parserstm = ref("make-parser-stream")(letterspace, "bootstrap-word");
+	ref wordspace = ref("make-keep-stream")(parserstm);
+		// note: rewinding wordspace won't rewind letterspace at this time
+		// too bad!
+	wordspace.set(filecontext, fctx);
+	ref parsedspace = ref("make-parser-stream")(wordspace, "bootstrap-parser");
+
+	// to fully generalize we would just move the parsing behavior
+	// into the parse context.  this would probably be 'setup',
+	// 'teardown', and 'next-value'.  we would love a universe where
+	// we implement that as recreation.
+	// NOTE: believe this was implemented but haven't put time into using it
+	while (true) {
+		ref word;
+		word = parsedspace.get(dovalue)(parsedspace);
+		parsedspace.get(donext)(parsedspace);
+		// we are changing parser to call habits in the file parser itself. [previously we called a 'habit' parser.  this will still be used.  but behavior from it will be copied into this function.  it will make sense to abstract it into a third function.  we can link it as 'anything' from the word context. <- never did this.  instead 'parser' is a special 'habit'.
+		
+		// TODO: store as free text?
+		// TODO: store references to underlying data.
+		// 	this means including locations in the
+		// 	spaces.
+	} 
+
+	// we have file context, word context, and parse context.
+
+	
+	
+	conceptunmake(parserstm);
+	ref("keep-stream-unmake")(letterspace);
+	ref("c++-stream-unmake")(cxxstm);
+
+	return file;
 }
 
 
@@ -1435,6 +1506,7 @@ void loadhabits()
 	{
 		return bootstraplookup(txt, c == true_);
 	});
+	ref("bootstrap-list-word-context").link(txt2ref("lookup"), "bootstrap-lookup");
 	ref("bootstrap-word-context").link(txt2ref("lookup"), "bootstrap-lookup");
 
 	ahabit(bootstrap-parse-habit, ((focus, word), (result, file), (space, ws), (word-context, wctx), (file-context, fctx)), {
@@ -1446,68 +1518,12 @@ void loadhabits()
 	ahabit(bootstrap-parse-concept, ((focus, f), (result, file), (space, ws), (word-context, wctx), (file-context, fctx)), {
 		return bootstrap_parse_concept(f, file, ws, ctx, self, wctx, fctx);
 	});
+	ref("bootstrap-list-word-context").link(txt2ref("concept"), "bootstrap-parse-concept");
 	ref("bootstrap-word-context").link(txt2ref("concept"), "bootstrap-parse-concept");
 	//ref("bootstrap-word-context").link(txt2ref("link"), "bootstrap-parse-concept");
 
 	ahabit(parse-file, ((notepad, fn), (file-context, fctx, bootstrap-file-context)), {
-		// notepad quick-implemented by passin the filename as the notepad name!  recommend keeping for safety, and copying data to outer notepad intentionally.
-		ref wctx, pctx;
-		ref file = intellect::level2::noteconcept();
-		file.link("notepad", intellect::level2::notepad());
-		fctx.set("file", file);
-		if (!fctx.linked("word-context")) {
-			wctx = intellect::level2::noteconcept();
-			fctx.link("word-context", wctx);
-		} else {
-			wctx = fctx.get("word-context");
-		}
-		if (!fctx.linked("parse-context")) {
-			pctx = intellect::level2::noteconcept();
-			fctx.link("parse-context", pctx);
-		} else {
-			pctx = fctx.get("parse-context");
-		}
-
-		// TODO: implement just-do-one-step in level-2, to move towards using
-		// relevence here
-		
-		ref cxxstm = ref("make-c++-stream-from-filename")(fn);
-		cxxstm.link(donext, cxxstm.get("do-next-letter"));
-		cxxstm.get(donext)(cxxstm);
-		ref letterspace = ref("make-keep-stream")(cxxstm);
-		ref parserstm = ref("make-parser-stream")(letterspace, "bootstrap-word");
-		ref wordspace = ref("make-keep-stream")(parserstm);
-			// note: rewinding wordspace won't rewind letterspace at this time
-			// too bad!
-		wordspace.set(filecontext, fctx);
-		ref parsedspace = ref("make-parser-stream")(wordspace, "bootstrap-parser");
-
-		// to fully generalize we would just move the parsing behavior
-		// into the parse context.  this would probably be 'setup',
-		// 'teardown', and 'next-value'.  we would love a universe where
-		// we implement that as recreation.
-		// NOTE: believe this was implemented but haven't put time into using it
-		while (true) {
-			ref word;
-			word = parsedspace.get(dovalue)(parsedspace);
-			parsedspace.get(donext)(parsedspace);
-			// we are changing parser to call habits in the file parser itself. [previously we called a 'habit' parser.  this will still be used.  but behavior from it will be copied into this function.  it will make sense to abstract it into a third function.  we can link it as 'anything' from the word context. <- never did this.  instead 'parser' is a special 'habit'.
-			
-			// TODO: store as free text?
-			// TODO: store references to underlying data.
-			// 	this means including locations in the
-			// 	spaces.
-		} 
-
-		// we have file context, word context, and parse context.
-
-		
-		
-		conceptunmake(parserstm);
-		ref("keep-stream-unmake")(letterspace);
-		ref("c++-stream-unmake")(cxxstm);
-
-		result = file;
+		return parsefile(fn, fctx);
 	});
 	ref("bootstrap-parse-file").set("quiet", "true");
 /*
