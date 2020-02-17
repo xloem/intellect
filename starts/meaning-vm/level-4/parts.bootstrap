@@ -11,11 +11,87 @@
 // let's work on Alphas and Betas  Alphas list possible type-parts for an unfinished part of the workspace.  Betas produce parts for the part.
 // So, the workspace is made of 'open-ends' linked to behaviors or behavior-specs that can fill those ends in.
 
+// okay, I've run into a problem around the idea of making a concept model for new habits to use.
+// I expect the unfinished parts to link to the parts that they
+	// rather than implementing classes, which I know would be small and easy, but would give us too many
+	// decision-making challenges to complete with any speed, let's write strut code to fill in the gaps.
+	// we can make a constructor.
+
+		// if we do want to make classes, they appear to be a good model for everything.
+		// they are a concept that executes code as parsed, and the lookup function stores a hierarchical local context
+			// so all that would be need would be adding that functionality to 'lookup'
+			// and then we could implement it all as parsers, it sounds like
+		// yeah, roughly.  then the whole file could be a class
+
+// WHEN INSTANTIATING A NEW HABIT-WORKSPACE, WE'LL NEED TO
+	// 1. REPLACE THE HABIT LINK AND ALL ITS REFERENCES WITH REFERENCES TO A NEW CONCEPT
+	// 2. REPLACE SELF-REFERENCES WITH REFERENCES TO THE NEW VALUE
 concept empty-habit-workspace [
 	is habit-workspace
-	// now i want to link in the first two unfinished-parts.  one is the habit itself, which needs an interface.  another is the next-step link in the habit, to a step.
-	unfinished-part /* here i want to make an anonymous subconcept.  this likely means making a new parser-part to process it. */
-]
+
+	habit concept empty-habit-workspace-model-habit []
+
+	// a new habit needs a spec, for what needed-information is associated
+	unfinished-part concept [
+		is habit-interface
+
+		habit empty-habit-workspace-model-habit
+		workspace empty-habit-workspace
+	]
+
+	// a new habit needs a first step.
+	unfinished-part concept [
+		is next-step
+		last-step empty-habit-workspace-model-habit
+
+		habit empty-habit-workspace-model-habit
+		workspace empty-habit-workspace
+	]
+]
+concept habit-interface [
+	handler bootstreap-habit-interface-handler
+]
+
+
+
+concept habit-workspace-agreements [
+	introduction habit make-habit-workspace [][][
+		// ToDO
+	]
+	closure habit habit-workspace-unmake [habit-workspace][][
+		// TODO
+	]
+]
+concept unfinished-part-agreements [
+	introduction habit make-unfinished-part [workspace larger-part type][][
+		set result make-concept
+		link result 'is' type
+		link workspace 'unfinished-part' result
+		link result 'workspace' workspace
+		link result 'larger-part' larger-part
+	]
+	closure habit unfinished-part-unmake [unfinished-part][][
+		set workspace get unfinished-part 'workspace'
+		unlink workspace 'unfinished-part' unfinished-part
+		concept-unmake unfinished-part
+	]
+]
+
+// propose handlers are listed on the type object.
+
+concept next-step [
+	handler habit bootstrap-next-step-handler [unfinished-part habit-workspace][][
+		// We produce a list of ways to eat the next-step, each of which may produce new unfinished-parts.
+		// The new unfinished-parts will need to be tried in subworkspaces that inherit from this one.
+
+			// each way will likely need some agreements, if only for closure to deallocate memory.
+	]
+]
+
+// next-step is different from conditional-option
+// that space is what to condense the problem around.
+// having itch-attack
+
 
 // = Clone the environment from a habit workspace,
 //   and try the habit.
