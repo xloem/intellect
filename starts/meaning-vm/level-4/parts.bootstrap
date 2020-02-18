@@ -229,7 +229,7 @@ decision-needed:
 			we propose
 			1. advancing habit-workspace to a general priority queue of options each with a context-to-resume
 					DO NOT IMPLEMENT GENERALITY YET, just hold as goal while making for habits
-				habit-workspace (consideration-context ;p)
+				habit-workspace (consideration-context)
 					sustains a priority queue.  this is a big set of norms already.
 					each item has information on priority and anything additional anyone desires.
 					has a way to spawn another.  adds it to a priority queue.
@@ -237,28 +237,43 @@ decision-needed:
 					can be used for general work.
 				DO NOT MAKE QUEUE PRIORITY YET.  Just a list with wrapped values.
 				habit-part-builders will provide things to add to the queue.
-				a manager will call them from the queue.
-				the queue is ordered to plan for prioritization, apparently.
-					we may be able to save a lot of work speccing habits if we use the process-learning pattern.
 					let's split steps now?  that way we don't need to make a new object-type for every decision-point
-				this is self-building.  let's implement it.
-					consideration-bubbles-around-how-to-make-yourself.
 self-building: consideration hierarchies around how to make yourself.
+		we relax into 'consideration hierarchies of how to prioritize items in the consideration hierarchies'
 	we are in the middle of writing software that does this.
+		we are implementing a sub-part: consideration hierarchies of what to plan to do, roughly.
+1. CLEAN UP SURROUNDING WORDS, THEY ARE MOSTLY REDUNDANT.
+2. MAKE A STRUCTURE THAT CAN USE NOTEPADS IN A QUEUE?.
+			SOLUTION: Notepads and consideration bubbles are this structure.
+
+		<UNSURE HOW TO CONSIDER HABITS-FIRST HERE>
+			each child would be have further parts for the habit.
+					it looks like the habit _could_be_ the consideration context.
+					oh I see.  ---v REVIEW REQUEST WAS WARRANTED AND QUALITY.
+				<TRYING TO COMPLETE REVIEW-OBLIGATION: BEST-CHOICE-FOR-HABIT-BUILDING-GOAL>
+				[why isn't process closing to TODO? [entry reason is lost] hmm]		
+				[the reason to stay here is it is more commonly harder to work on core pattern than side goals]
+				GOAL: can we work on habit-core before implementing consideration bubbles?
+						yes, we can implement builder-parts.
+					USE: we need full consideration bubbles anyway, to test new code safely. please propagate.
+					we plan to use consideration bubbles for habit building, now.
+					unless they make it harder.
+				
+		'consideration' uses these structures.  'action' happens in a context.  some 'action' could be in a sub-notepad.
+	later learning may do this with notepads at each part of the hierarchy, for learning what action is.
+3. Write code that uses the structure in a way that would exhaust all possible plans of behavior.
+		it can just be a single function looping through queues of queues.
+			looks like updating a lower queue updates the upper queue.
+				sounds like every step, things can bubble upwards.
+				might work well with a root-step-vm, unsure.
+	the process that is going through the queue will have to handle finding results, not too hard.
+	this means that the root notepad manages the queues, though, so that it can make choices around what is encountered
+4. Write code that uses the structure in a way that picks results of \#
 						
 				this used to be \#2 but is now \#1.  We should do \#2 after.
 				The reason to do \#1 first is that it is harder to think about, and we can test the structure
 				with basic habits, to resolve the hard-to-think-about-part.  \#2 is emotionally easier.
-				
-				> okay, um, so \#1 can use a priority queue with just habit data.
-				  each habit part would have a habit-workspace in it. (oh wow we were really inhibited around this)
-				  we should clearly implement this first, and then do \#2
-					> it sounds like habit workspaces link to subworkspaces.
-						> yeah =)
 
-				it's time to work.  mark that there is more expansion around
-				contexts with priority-queues of subcontexts (considerations)
-				if you generalize between rote habit-building and learning-goal-meeting
 				but it is time to work now.  please clean up this section, and then
 				implement its header.
 						

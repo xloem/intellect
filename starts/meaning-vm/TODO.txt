@@ -33,7 +33,7 @@ NOW:
 - [X] implement parsing subconcepts for drafting a core
 	- [X] change concepts to A. make names optional and B. throw if there is no lookup function and a name is provided
 	- [X] change concepts to parse to a reference to a concept understood by other parts
-- [ ] implement consideration bubbles
+- [ ] implement consideration bubbles <-- if core doesn't work we have this too
 		this is so we can try things in intended context without risking harming it.
 	- [ ] 'changing' link shows notepads being replaced
 	      associate notepad with replacement map
@@ -50,11 +50,8 @@ NOW:
 			- [ ] habits.cpp
 			- [ ] bootstrap-parser.cpp
 			- [ ] level3.cpp
-- [ ] add an item in a relevent spot in this list around splitting random selection
-      from identification of next steps.  this provides for also using exhaustive
-      search.  reminder-to-karl: exhaustive search can reliably meet more distantly
-      relevent goals. <- this is the secret that makes it look like our minds are
-      restricted from building AI.  it is obvious and makes hyperintelligence.
+- [ ] make a structure that can hold subnotepads, consideration bubbles in a queue.  it should represent its current notepad, and
+      have queued children of the same structure as itself.
 - [ ] modify existing code with random change using small chunk habits, maybe that take habits as arguments
 	Idea of habits: (remember small chunks!)
 	- [ ] find a spot in a process and return the spot
