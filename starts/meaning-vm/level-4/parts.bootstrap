@@ -62,7 +62,7 @@ concept habit-workspace-norms [
 ]
 concept unfinished-part [
 	// norms
-	begin habit make-unfinished-part [workspace larger-part type interested][result][
+	begin habit make-unfinished-part [workspace larger-part type][result][
 		set result make-concept
 		link result 'is' 'unfinished-part'
 		link result 'is' type
@@ -71,33 +71,84 @@ concept unfinished-part [
 		link result 'larger-part' larger-part
 		pick interested
 			if 'nothing' return.
-		unfinished-part-interested result interested
 	]
-	/*
-	interested habit unfinished-part-interested [unfinished-part interested][][
-		link unfinished-part 'interested' interested
-	]
-	*/
-	finished habit unfinished-part-finished [unfinished-part finished-part][][
-		link unfinished-part 'finished-part' finished-part
-	/*
-		set is-linked linked unfinished-part 'interested'
-		pick is-linked if 'false' return.
-		set interested-entry first-link-entry unfinished-part 'interested'
-	continue:
-		set interest get interested-entry 'target'
-		set result norm-2 interest 'finished-part' unfinished-part
-		pick result if 'thankful' continue-2.
-	continue-2:
-		next-link-entry interested-entry
-		set interested-type get-or-nothing interested-entry 'type'
-		pick interested-type
-			if 'interested' continue.
+	// unfinished parts have different states and paths.
+	// each unfinished part is associated with options for how to approach it
+	// these ideas may result in a finished part, or may result in more unfinished-parts.
+	// so, we need to plan a path for this.
 
-	done:
-		concept-unmake interested-entry
-	*/
-	]
+		/*
+			for each unfinished part, some function generates options. [are these options more unfinished parts?]
+			the system now has a bunch of options.  each option excludes some set of other options.
+			it may pick 1 option from each exclusive set, or it may just pick 1 option and leave others unpicked.
+			regardless, it clones the workspace or stores undo information, and calls functions to generate results
+			for the options it picks.
+			- it sounds like a set-of-options is an unfinished part.  it needs a decision on which option to try.
+			- who handles picking the option and continuing?
+				this is the set of subparts that live as the behavior.
+				given not much growth is needed here, if there is an easier way to do it than with many subparts,
+				it could be good.  the value to the subparts is that the whole system is a good analogue to other
+				planning processes.
+			okay, so there is value to interruptible sequential processes.  the work would be aided if the VM is part
+			of the workspace.
+					this is actually doable without much change.  a function context can access the current VM.
+					when your call returns, it uses what is linked as the contextual vm information.
+					so a subprocess in the same notepad as an outer process can alter the outer process.
+			okay, so the idea of "trying different return values" seems doable?
+						it inverts the idea of who's in charge.  where is the progress information stored?
+				remember we are picking between which is easier/faster to make:
+				1. trying different return values
+				2. coding all behaviors as small separated parts that hand off work
+					note: these behaviors likely don't need to be altered during growth
+				there is lots of value to both of these.  i propose option2, but let us explore option1
+					for option1, we would have a special returning-function we could use at the end of things
+					to return options.  before using it, we would have to set up how to pick options, I guess
+						it kind of seems we'd want 2 kinds of it.
+						1 that is commonly used in workers
+						and 1 that is used in its implementation.
+						this lets us write everything sequentially, like async functions in javascript.
+						so the main cognitive process would be all get-an-option instead of do-this
+						execution would start and then stop when a decision was needed, and jump allll the way back
+						an object would be returned that gives a way to continue after an option is picked
+						the system would have to preserve and clone its state some other way if it wanted
+						to try in a bubble, but it has space inbetween to do this.
+					i think the implementation of \#2 is more clear, even if \#1 has much clearer,more intuitive, usage.
+						for \#2 we will need to code many behaviors in multiple habits, that store their work,
+						and then pick it up again.
+							in \#1, work is stored in the function context, already.
+							can we just store the function context, and resume from it?
+							let's make a way to jump outside of habits.  this seems a nice way to move
+							towards both things.  it can store a way to return to where it is, when it does
+							this.
+					one more thought: option \#1 doesn't provide for escape.  jumping-out-of-a-habit likely does.
+						with option \#1 when you find options, you return out of the whole tree.
+						with option \#2, your growth and exploration is managed either by a leader or a community.
+						you never spawn other trees yourself.
+						with this option \#3 of jump-outside-of-habit, the problem remains open.
+							so, we may want to establish a norm somewhere of not providing for recursion or
+							excessive calls of other processes.
+							we would want to merge jump-outside-of-a-habit with call-a-function.
+							but it doesn't actually matter.
+					let's plan past pause-and-go-elsewhere.  say we implement that.
+					what structure does it take?
+						roughly, we write code that builds an entire habit, by selecting from decisions.
+						many of its code paths loop forever, depending on the decisions.
+						but the decisions are all learned around, such that that becomes silly to do quickly.
+							for generality, we'll want the paths inbetween decisions to be considerable
+							as single functions.  this means habits that take a vm context, and
+							jump to a decision-making process at the end.
+
+
+CORE FOCUS \#2: AFTER CELEBRATE-HEALING-AS-ALL-ACTION:
+	We can write ways as processes that depend on learned-decisions,-without-ways-for-making-the-decisions.
+	This works well and produces clear description, for the core process of building a habit to a specification.
+	Results of making decisions are written.  How to make the decision is not.
+			(this is totally new as far as we can tell)
+								there's an add-on for testing-partway:
+								pause the VM when it hits an incomplete-spot.
+								very similar to make-a-decision, and then running is the same
+								as building.
+		*/
 	end habit unfinished-part-unmake [unfinished-part][result][
 		set result get-or-nothing unfinished-part 'finished-part'
 		set workspace get unfinished-part 'workspace'
@@ -114,6 +165,8 @@ concept next-step [
 ]
 
 // making them as habits for now just to feel the space out
+// remember we make OPTIONS for moving the part on, and then we produce RESULT for EACH OPTION.
+// so, unfinished-part does not close.  it spawns new subworkspaces.
 habit make-conditional [][][
 	set value make-part 'value'
 	set have-anything make-part 'decide-have-anything-branch'
@@ -132,12 +185,12 @@ habit make-conditional [][][
 		// I AM RIGHT HERE, IMPLEMENTING SUBWORKSPACE OUTLINE
 		// FOR CORE HABIT-BUILDING HABITS such as condition-part.
 		// let us find where we recommended to split, and see if there is relevence
-			// okay, so, we were hoping we could get an exhaustive list of what-to-add-on-next
-			// the proposal to learn around selection from the list is missing, but a learning part i imagine
-			// could learn from small or large chunks.
-			// so what's important atm is that A. we can exhaustively try all code paths, SHORTEST FIRST
+			// so what's important atm is that A. we can exhaustively try ALL code paths, SHORTEST FIRST
 			// and B. when decisions are made, the system can look at the options before one is chosen.
-			// there is also value around recovering the laptop, which could give some ease.
+			// it looks like B makes A happen, the system must try options first.
+			// so propose there is a solid managing process, that tries shortest path first.
+			// these sub-parts just produce options.
+				
 ]
 
 // propose handlers are listed on the type object.
