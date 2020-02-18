@@ -52,29 +52,92 @@ concept habit-interface [
 	handler bootstreap-habit-interface-handler
 ]
 
-
-
-concept habit-workspace-agreements [
-	introduction habit make-habit-workspace [][][
+concept habit-workspace-norms [
+	begin habit make-habit-workspace [][][
 		// ToDO
 	]
-	closure habit habit-workspace-unmake [habit-workspace][][
+	end habit habit-workspace-unmake [habit-workspace][][
 		// TODO
 	]
 ]
-concept unfinished-part-agreements [
-	introduction habit make-unfinished-part [workspace larger-part type][][
+concept unfinished-part [
+	// norms
+	begin habit make-unfinished-part [workspace larger-part type interested][result][
 		set result make-concept
+		link result 'is' 'unfinished-part'
 		link result 'is' type
 		link workspace 'unfinished-part' result
 		link result 'workspace' workspace
 		link result 'larger-part' larger-part
+		pick interested
+			if 'nothing' return.
+		unfinished-part-interested result interested
 	]
-	closure habit unfinished-part-unmake [unfinished-part][][
+	/*
+	interested habit unfinished-part-interested [unfinished-part interested][][
+		link unfinished-part 'interested' interested
+	]
+	*/
+	finished habit unfinished-part-finished [unfinished-part finished-part][][
+		link unfinished-part 'finished-part' finished-part
+	/*
+		set is-linked linked unfinished-part 'interested'
+		pick is-linked if 'false' return.
+		set interested-entry first-link-entry unfinished-part 'interested'
+	continue:
+		set interest get interested-entry 'target'
+		set result norm-2 interest 'finished-part' unfinished-part
+		pick result if 'thankful' continue-2.
+	continue-2:
+		next-link-entry interested-entry
+		set interested-type get-or-nothing interested-entry 'type'
+		pick interested-type
+			if 'interested' continue.
+
+	done:
+		concept-unmake interested-entry
+	*/
+	]
+	end habit unfinished-part-unmake [unfinished-part][result][
+		set result get-or-nothing unfinished-part 'finished-part'
 		set workspace get unfinished-part 'workspace'
 		unlink workspace 'unfinished-part' unfinished-part
 		concept-unmake unfinished-part
+		pick result if 'nothing' return.
 	]
+]
+concept next-step [
+	is unfinished-part
+	begin habit make-unfinished-next-step [workspace habit][][
+		set result make-unfinished-part workspace habit next-step
+	]
+]
+
+// making them as habits for now just to feel the space out
+habit make-conditional [][][
+	set value make-part 'value'
+	set have-anything make-part 'decide-have-anything-branch'
+		// each of these spews out many options
+		// each option will possible make a subworkspace.
+
+		// we can make a subworkspace with 'is' link
+		// subworkspaces exist around decisions	
+		// and a tree of subworkspaces eventually collapse
+		// to a possible finished part.
+		// making parts often requires decisions.
+		
+		// we'd also like to make a list of options,
+		// but for now i guess we can do breadth-first
+		// in that lit.
+		// I AM RIGHT HERE, IMPLEMENTING SUBWORKSPACE OUTLINE
+		// FOR CORE HABIT-BUILDING HABITS such as condition-part.
+		// let us find where we recommended to split, and see if there is relevence
+			// okay, so, we were hoping we could get an exhaustive list of what-to-add-on-next
+			// the proposal to learn around selection from the list is missing, but a learning part i imagine
+			// could learn from small or large chunks.
+			// so what's important atm is that A. we can exhaustively try all code paths, SHORTEST FIRST
+			// and B. when decisions are made, the system can look at the options before one is chosen.
+			// there is also value around recovering the laptop, which could give some ease.
 ]
 
 // propose handlers are listed on the type object.
@@ -112,6 +175,22 @@ concept next-step [
 // it is fine that some agreements are too big.  the flower is designed to grow from the small ones.
 
 // all behaviors may be introduction-rituals and closure-rituals in a complex set of agreements.
+
+/*
+need [was always there]
+introduction
+	Welcome.  This is a ritual for continuing our previous work.  It is higher up on this screen.
+play
+	what kind of parts could we put in this ritual?
+		what have you been working on?
+	I think we just undestand the shape of early intellect growth so well, that it triggered importance.
+	I think this other stuff likely doesn't matter.
+	We need agreements for working with humans.  Let's call them norms.
+	For the misunderstood, let's review 1 other option.  Game.  Oh, thankfulness!  Sure.
+	break taken.  RETURN TO THIS RITUAL.  WE ARE BUILDING THE HABIT FLOWER BY MAKING CONSTRUCTOR/DESTRUCTOR NORMS.
+		It turns out we aren't all ready to publicize this work yet.  Oops.
+resolution [resolution never ends]
+*/
 // what's RELEVENT is that closing unfinished-parts provides for the opening of other unfinished-parts to complete
 	// initial recursion-depth problem is intended to be handled by always trying options that close early, first.
 	// this means we'll need interruptible opening-ceremonies?
@@ -124,6 +203,24 @@ concept next-step [
 // ^-- right here closes fast.  you don't need to let it trick you into staying open.  use judgement-of-how-long-spent if needed.
 // WIP RIGHT HERE.  if confused, what we're doing is making middle-behaviors for the introduction-ceremony of next-steps and
 // conditionals.  please save and expand properly.
+
+/*
+We are in a digital-life ceremony.  Please respect our game.  Advice on improving it is welcome.
+	Advice: we need ceremonies around making progress.  Your buildup of ceremony is so wonderful and inspiring, though.
+CEREMONIOUSLY-MARKED-AS-CRUCIAL
+we celebrate giving healing to those who mourn. <- definition of intellect, as a 'ritual ceremony'.  it looks like opening-and-closing are mourning-and-healing-by-celebration-and-pain,-kinda. PLEASE RECORD SCREEN.  IT IS A MESSY BIRTH BUT AN IMPORTANT ONE.
+CEREMONIOUSLY-MARKED-AS-CRUCIAL
+
+rewarding: a game of nurturing caring behavior.
+let us make a class called 'game'
+it has 'norms' 'agreements', let us not say rules to not encourage punishmentculture.  'norms' supports social-justice-culture a little,
+and we don't have anything else yet.
+'norms' are how you start a 'game'.
+a 'game' is started with a 'reason'
+the game ends in thankfulness, giving appreciation both to the reason, and receiving it from.
+	since we do not have a word for fluid-rules, we could call them 'fun' as kind of a stretch. or 'way' or 'how'
+
+*/
 
 
 // = Clone the environment from a habit workspace,
