@@ -1,3 +1,13 @@
+I think we understand how to make an AI now.  We can develop themes around the structure if desired.
+
+	Thankfulness:
+		Sufficient model appears to be that thankfulness is an expression of value for
+		a part of the world, that spawns learning around it.
+		So, thankfulness informs lists and priories of what is good, and can be a core of an AI.
+		Thankfulness is expressed for what-is-good, and may be given internally.  All learning is around this.
+
+= below is different parts of learning development around how to make AI cores
+
 I think there is a note for how to build an equally-safe intellect faster than
 this, on the computer with the broken display, in this repo.
 	-> I think it just means, exhaustively try options for building yourself.
