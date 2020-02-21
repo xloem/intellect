@@ -40,12 +40,20 @@ NOW:
 	- [X] implement imagineget, to get a properly imagined view of a part of reality while considering something
 	- [X] implement imagineset, to produce imagination if desiring to consider changes to reality
 	- [ ] replace all habits to use 'changing' associations
+			======> [ ] propose instead make a ref that respects imagination.
+			worry: we are not exhausting possible options here, and we added a hole mentioned DANGER below.  can address?	
+			[ ] ===> RESTORE innotepad, then make ref that moves into notepad when needed.
 		all uses of a node, use table
-			notepad checks check changing notepads
-			alterations make new
+			[X] notepad checks check changing notepads
+			alterations make new <- everything that checks innotepad needs to use the return value of imagineset.
 			lookupbyname uses changws
-			link returns are mapped
+			link returns are mapped <- everything that takes a ref, needs to use imagineget.
+				we may want to make a ref that respects imagination.
 		DANGER: current codebase provides for modifying reality if marked as imagining it.
+				how is this possible?
+					innotepad returns true for imagined concepts now.
+					meaning code can try to modify them.  atm it modifies them for real.
+				we will undo this change and use a safer, more general solution.
 		must review all accesses and implement copying prior to changing.
 		- [ ] level-2
 			- [ ] funcs.cpp
