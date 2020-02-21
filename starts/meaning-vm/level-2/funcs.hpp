@@ -20,6 +20,8 @@ void checknotepad(ref concept);
 bool innotepad(ref concept, ref pad);
 void leavenotepad(ref concept, ref pad);
 void considerwith(ref realitypad, ref imaginationpad);
+ref imagineget(ref pad, ref concept);
+ref imagineset(ref pad, ref concept);
 void entersubnotepad(ref concept, ref name, bool allowouter = false);
 //void givename(ref context, ref concept, std::string const & name, bool contextisnotepad = false);
 //ref namelookup(std::string name, ref context, ref outerlink, bool makelocal, bool contextisnotepad = false);

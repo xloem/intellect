@@ -37,10 +37,8 @@ NOW:
 		this is so we can try things in intended context without risking harming it.
 	- [X] 'changing' link shows notepads being replaced
 	      associate notepad with replacement map
-	- [ ] build 2 functions to access node in imagination
-			how does spawning work?
-				read-only-accesses: return mapped node
-				write-accesses: spawn if nonpresent
+	- [ ] implement imagineget, to replace reality with imagination if present
+	- [ ] implement imagineset, to produce imagination if desiring to consider changes to reality
 	- [ ] replace all habits to use 'changing' associations
 		all uses of a node, use table
 			notepad checks check changing notepads
