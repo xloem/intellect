@@ -108,7 +108,7 @@ protected:
 
 private:
 	template <typename val, typename It>
-	struct mutated_it
+	struct mutated_it : public std::iterator<std::forward_iterator_tag, val>
 	{
 		mutated_it(It const & it) : it(it) { }
 

@@ -37,8 +37,8 @@ NOW:
 		this is so we can try things in intended context without risking harming it.
 	- [X] 'changing' link shows notepads being replaced
 	      associate notepad with replacement map
-	- [ ] implement imagineget, to replace reality with imagination if present
-	- [ ] implement imagineset, to produce imagination if desiring to consider changes to reality
+	- [X] implement imagineget, to get a properly imagined view of a part of reality while considering something
+	- [X] implement imagineset, to produce imagination if desiring to consider changes to reality
 	- [ ] replace all habits to use 'changing' associations
 		all uses of a node, use table
 			notepad checks check changing notepads
@@ -60,7 +60,7 @@ NOW:
 - [ ] split _steps into single-step and all-steps
 - [ ] make a habit-made vm that does single-step and spawns consideration bubbles for decisions
 - [ ] MOVE LOWER, PREVENTS HARMFUL COGNITIVE-WAY: learn to make good, harmless decisions without spawning whole consideration bubbles
-	this lets inner structure map to normal life, where we can't undo error.
+	this lets inner structure map to normal life, where we can't undo error. for human communication and caring choices.
 - [ ] modify existing code with random change using small chunk habits, maybe that take habits as arguments
 	Idea of habits: (remember small chunks!)
 	- [ ] find a spot in a process and return the spot

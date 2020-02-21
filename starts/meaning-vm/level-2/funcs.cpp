@@ -5,6 +5,7 @@
 #include "concepts.hpp"
 #include "habits.hpp"
 
+#include <deque>
 #include <set>
 
 namespace intellect {
@@ -122,6 +123,39 @@ void considerwith(ref realitypad, ref imaginationpad)
 		// plan: imagination is a map of reality-parts to local-parts
 		imaginationpad.link(concepts::imagination, noteconcept());
 	}
+}
+
+ref imagineget(ref pad, ref concept)
+{
+	ref imagination = pad.get(concepts::imagination);
+	if (imagination.linked(concept)) { return imagination.get(concept); }
+
+	static thread_local std::deque<ref> plausible_dreams;
+	plausible_dreams.clear();
+	auto changing = pad.getAll(concepts::changing);
+	plausible_dreams.insert<ref::array::iterator>(plausible_dreams.end(), changing.begin(), changing.end());
+	while (!plausible_dreams.empty()) {
+		auto & plausible = plausible_dreams.front();
+		if (plausible.linked(concepts::imagination)) {
+			imagination = plausible.get(concepts::imagination);
+			if (imagination.linked(concept)) { return imagination.get(concept); }
+			auto changing = plausible.getAll(concepts::changing);
+			plausible_dreams.insert<ref::array::iterator>(plausible_dreams.end(), changing.begin(), changing.end());
+		}
+		plausible_dreams.pop_front();
+	}
+	
+	return concept;
+}
+
+ref imagineset(ref pad, ref concept)
+{
+	ref imagination = pad.get(concepts::imagination);
+	if (imagination.linked(concept)) { return imagination.get(concept); }
+
+	ref idea = noteconcept();
+	imagination.link(concept, idea);
+	return idea;
 }
 
 void givename(ref context, ref concept, std::string const & name, bool contextisnotepad)

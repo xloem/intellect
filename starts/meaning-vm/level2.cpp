@@ -715,7 +715,7 @@ when dump-expand [\n\
 		? has-target if 'false' return.\n\
 		= link-target get link-entry 'target'\n\
 		dump link-target linkset 'nothing'\n\
-		next-link-entry link-entry\n\
+		link-entry-next link-entry\n\
 		loop.\n\
 ]\n\
 when link-self [\n\
@@ -740,7 +740,7 @@ when dump [\n\
 		= link-target get link-entry 'target'\n\
 		write-name link-target\n\
 		write-endl\n\
-		next-link-entry link-entry\n\
+		link-entry-next link-entry\n\
 		loop1.\n\
 	done1:\n\
 	first-link-entry link-entry group\n\
@@ -757,7 +757,7 @@ when dump [\n\
 		pick expand if 'false' next2b.\n\
 		dump-expand link-target linkset\n\
 		next2b:\n\
-		next-link-entry link-entry\n\
+		link-entry-next link-entry\n\
 		loop2.\n\
 	done2:\n\
 	concept-unmake context 'link-entry'\n\
@@ -801,7 +801,7 @@ when dump [\n\
 				assign(link-target, get, link-entry, `target);
 				step(write-name, link-target);
 				step(write-endl);
-				step(next-link-entry, link-entry);
+				step(link-entry-next, link-entry);
 				wire(whilelabel);
 			rewire(whilecond);
 			step(concept-unmake, context, `link-entry);
@@ -816,7 +816,7 @@ when dump [\n\
 				// ALL IT NEEDS IS TO WORK
 				// (but might have saved an hour or two debugging if interface had been higher level)
 				step(dump, link-target);
-				step(next-link-entry, link-entry);
+				step(link-entry-next, link-entry);
 				wire(whilelabel2);
 			rewire(whilecond2);
 			step(concept-unmake, context, `link-entry);
@@ -911,7 +911,7 @@ when dump [\n\
 	//	 	link-target = get link-entry 'target'
 	//	 	write-name link-target
 	//	 	write-endl
-	//	 	next-link-entry link-entry
+	//	 	link-entry-next link-entry
 	//		while-1
 	//	break-1:
 	//	concept-unmake context 'link-entry'
@@ -921,7 +921,7 @@ when dump [\n\
 	//		has-target if false break-2
 	//		link-target = get link-entry 'target'
 	//		self link-target
-	//		next-link-entry link-entry
+	//		link-entry-next link-entry
 	//		while-2
 	//	break-2:
 	//	concept-unmake context 'link-entry'
@@ -1001,12 +1001,12 @@ when dump [\n\
 			ref le = (make-concept)().act(know-is-first-link-entry, c);
 			while (le.linked(target)) {
 				std::cout << "  " << (name-of)(le.get(type)).val<std::string>() << ": " << (name-of)(le.get(target)).val<std::string>() << std::endl;
-				(next-link-entry)(le);
+				(link-entry-next)(le);
 			}
 			(know-is-first-link-entry)(le, c);
 			while (le.linked(target)) {
 				(dump)(le.get(target));
-				(next-link-entry)(le);
+				(link-entry-next)(le);
 			}
 			(unmake-concept)(le);
 		}
