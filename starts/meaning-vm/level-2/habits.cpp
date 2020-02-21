@@ -490,7 +490,7 @@ void createhabits()
 		result = le;
 	});
 	*/
-	ahabit(next-link-entry, ((link-entry, le)),
+	ahabit(link-entry-next, ((link-entry, le)),
 	{
 		checknotepad(le);
 		++le.val<links_it>();
@@ -498,7 +498,7 @@ void createhabits()
 		result = le;
 	});
 	/*
-	ahabit(previous-link-entry, ((link-entry, le)),
+	ahabit(link-entry-previous, ((link-entry, le)),
 	{
 		checknotepad(le);
 		--le.val<links_it>();
@@ -506,7 +506,7 @@ void createhabits()
 		result = le;
 	});
 	*/
-	ahabit(same-link-entry, ((link-entry-A, lea), (link-entry-B, leb)),
+	ahabit(link-entry-same, ((link-entry-A, lea), (link-entry-B, leb)),
 	{
 		return lea.val<links_it>() == leb.val<links_it>();
 	});
