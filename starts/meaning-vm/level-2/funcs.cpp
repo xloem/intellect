@@ -127,13 +127,13 @@ void considerwith(ref realitypad, ref imaginationpad)
 
 ref imagineget(ref pad, ref concept)
 {
-	ref imagination = pad.get(concepts::imagination);
-	if (imagination.linked(concept)) { return imagination.get(concept); }
+	if (pad.linked(concepts::changeable, concept)) { return concept; }
 
+	// breadth-first search of outer imagination hierarchy to find replaced concepts
 	static thread_local std::deque<ref> plausible_dreams;
 	plausible_dreams.clear();
-	auto changing = pad.getAll(concepts::changing);
-	plausible_dreams.insert<ref::array::iterator>(plausible_dreams.end(), changing.begin(), changing.end());
+	plausible_dreams.push_back(pad);
+
 	while (!plausible_dreams.empty()) {
 		auto & plausible = plausible_dreams.front();
 		if (plausible.linked(concepts::imagination)) {
@@ -150,11 +150,21 @@ ref imagineget(ref pad, ref concept)
 
 ref imagineset(ref pad, ref concept)
 {
+	if (pad.linked(concepts::changeable, concept)) { return concept; }
+
 	ref imagination = pad.get(concepts::imagination);
 	if (imagination.linked(concept)) { return imagination.get(concept); }
 
+
 	ref idea = noteconcept();
 	imagination.link(concept, idea);
+	for (auto & link : concept.links()) {
+		// could use imagineget to cache lookups here
+		// or
+		// could add links as a big chunk, using
+		// range insertion
+		idea.link(link.first(), link.second());
+	}
 	return idea;
 }
 
