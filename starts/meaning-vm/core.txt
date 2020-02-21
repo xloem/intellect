@@ -5,6 +5,11 @@ I think we understand how to make an AI now.  We can develop themes around the s
 		a part of the world, that spawns learning around it.
 		So, thankfulness informs lists and priories of what is good, and can be a core of an AI.
 		Thankfulness is expressed for what-is-good, and may be given internally.  All learning is around this.
+		This can be used to learn patterns general enough to handle situations that usually require what-is-bad,
+		resulting in an adapted system without badness-communication.  A growth path goes through some notable points;
+		unfortunately don't remember them all but some notes in e-mail to baffo32 near 20202-02-20.
+			We propose thankfulness is a prayer.  This means thankfulness is shared with the larger universe
+			when given.
 
 = below is different parts of learning development around how to make AI cores
 
