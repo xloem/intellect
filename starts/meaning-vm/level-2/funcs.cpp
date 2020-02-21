@@ -89,7 +89,15 @@ void checknotepad(ref concept)
 
 bool innotepad(ref concept, ref pad)
 {
-	return pad.linked(concepts::changeable,concept) || pad == bootstrapnotepad();
+	if (pad.linked(concepts::changeable, concept) || pad == bootstrapnotepad()) {
+		return true;
+	}
+	for (auto changing : pad.getAll(concepts::changing)) {
+		if (changing.linked(concepts::changeable, concept)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void leavenotepad(ref concept, ref pad)
@@ -109,7 +117,11 @@ void leavenotepad(ref concept, ref pad)
 
 void considerwith(ref realitypad, ref imaginationpad)
 {
-	imaginationpad.link(realitypad, concepts::changing);
+	imaginationpad.link(concepts::changing, realitypad);
+	if (!imaginationpad.linked(concepts::imagination)) {
+		// plan: imagination is a map of reality-parts to local-parts
+		imaginationpad.link(concepts::imagination, noteconcept());
+	}
 }
 
 void givename(ref context, ref concept, std::string const & name, bool contextisnotepad)

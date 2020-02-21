@@ -17,6 +17,7 @@ static ref notepad("notepad");
 static ref outer("outer");
 static ref changeable("changeable");
 static ref changing("changing");
+static ref imagination("imagination");
 static ref habit("habit");
 static ref next("next");
 static ref information("information");

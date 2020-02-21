@@ -33,18 +33,25 @@ NOW:
 - [X] implement parsing subconcepts for drafting a core
 	- [X] change concepts to A. make names optional and B. throw if there is no lookup function and a name is provided
 	- [X] change concepts to parse to a reference to a concept understood by other parts
-- [ ] implement consideration bubbles <-- if core doesn't work we have this too
+- [ ] implement consideration bubbles
 		this is so we can try things in intended context without risking harming it.
-	- [ ] 'changing' link shows notepads being replaced
+	- [X] 'changing' link shows notepads being replaced
 	      associate notepad with replacement map
+	- [ ] build 2 functions to access node in imagination
+			how does spawning work?
+				read-only-accesses: return mapped node
+				write-accesses: spawn if nonpresent
 	- [ ] replace all habits to use 'changing' associations
 		all uses of a node, use table
+			notepad checks check changing notepads
 			alterations make new
 			lookupbyname uses changws
 			link returns are mapped
+		DANGER: current codebase provides for modifying reality if marked as imagining it.
+		must review all accesses and implement copying prior to changing.
 		- [ ] level-2
-			- [ ] habits.cpp
 			- [ ] funcs.cpp
+			- [ ] habits.cpp
 			- [ ] level2.cpp
 		- [ ] level-3
 			- [ ] habits.cpp
