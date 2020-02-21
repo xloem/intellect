@@ -52,6 +52,10 @@ NOW:
 			- [ ] level3.cpp
 - [ ] make a structure that can hold subnotepads, consideration bubbles in a queue.  it should represent its current notepad, and
       have queued children of the same structure as itself.
+- [ ] split _steps into single-step and all-steps
+- [ ] make a habit-made vm that does single-step and spawns consideration bubbles for decisions
+- [ ] MOVE LOWER, PREVENTS HARMFUL COGNITIVE-WAY: learn to make good, harmless decisions without spawning whole consideration bubbles
+	this lets inner structure map to normal life, where we can't undo error.
 - [ ] modify existing code with random change using small chunk habits, maybe that take habits as arguments
 	Idea of habits: (remember small chunks!)
 	- [ ] find a spot in a process and return the spot
