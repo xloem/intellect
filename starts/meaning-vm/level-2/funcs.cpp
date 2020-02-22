@@ -93,11 +93,6 @@ bool innotepad(ref concept, ref pad)
 	if (pad.linked(concepts::changeable, concept) || pad == bootstrapnotepad()) {
 		return true;
 	}
-	for (auto changing : pad.getAll(concepts::changing)) {
-		if (changing.linked(concepts::changeable, concept)) {
-			return true;
-		}
-	}
 	return false;
 }
 
@@ -154,7 +149,6 @@ ref imagineset(ref pad, ref concept)
 
 	ref imagination = pad.get(concepts::imagination);
 	if (imagination.linked(concept)) { return imagination.get(concept); }
-
 
 	ref idea = noteconcept();
 	imagination.link(concept, idea);
