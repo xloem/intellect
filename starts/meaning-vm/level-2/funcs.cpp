@@ -80,11 +80,12 @@ ref noteconcept(std::any data)
 	level2::notepad().link(concepts::changeable, result);
 	return result;
 }
+static ref _is("is"), conceptnotinnotepad("concept-not-in-notepad"), _concept("concept"), _notepad("notepad"), _context("context");
 void checknotepad(ref concept)
 {
 	ref pad = level2::notepad();
 	if (!innotepad(concept, pad)) {
-		throw noteconcept().link("is", "concept-not-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
+		throw noteconcept().link(_is, conceptnotinnotepad, _concept, concept, _notepad, pad, _context, level2::context());
 	}
 }
 
@@ -149,6 +150,17 @@ ref imagineset(ref pad, ref concept)
 
 	ref imagination = pad.get(concepts::imagination);
 	if (imagination.linked(concept)) { return imagination.get(concept); }
+
+	bool found = false;
+	for (auto & reality : pad.getAll(concepts::changing)) {
+		if (reality.linked(concepts::changeable, concept)) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		throw noteconcept().link(_is, conceptnotinnotepad, _concept, concept, _notepad, pad, _context, level2::context());
+	}
 
 	ref idea = noteconcept();
 	imagination.link(concept, idea);
