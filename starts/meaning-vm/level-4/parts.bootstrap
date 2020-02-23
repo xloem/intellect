@@ -242,25 +242,8 @@ self-building: consideration hierarchies around how to make yourself.
 		we relax into 'consideration hierarchies of how to prioritize items in the consideration hierarchies'
 	we are in the middle of writing software that does this.
 		we are implementing a sub-part: consideration hierarchies of what to plan to do, roughly.
+it _looks_ like habit core is roughly obvious, and we should work on the easiest or etc available work, not the hardest.
 1. CLEAN UP SURROUNDING WORDS, THEY ARE MOSTLY REDUNDANT.
-2. MAKE A STRUCTURE THAT CAN USE NOTEPADS IN A QUEUE?.
-			SOLUTION: Notepads and consideration bubbles are this structure.
-
-		<UNSURE HOW TO CONSIDER HABITS-FIRST HERE>
-			each child would be have further parts for the habit.
-					it looks like the habit _could_be_ the consideration context.
-					oh I see.  ---v REVIEW REQUEST WAS WARRANTED AND QUALITY.
-				<TRYING TO COMPLETE REVIEW-OBLIGATION: BEST-CHOICE-FOR-HABIT-BUILDING-GOAL>
-				[why isn't process closing to TODO? [entry reason is lost] hmm]		
-				[the reason to stay here is it is more commonly harder to work on core pattern than side goals]
-				GOAL: can we work on habit-core before implementing consideration bubbles?
-						yes, we can implement builder-parts.
-					USE: we need full consideration bubbles anyway, to test new code safely. please propagate.
-					we plan to use consideration bubbles for habit building, now.
-					unless they make it harder.
-				
-		'consideration' uses these structures.  'action' happens in a context.  some 'action' could be in a sub-notepad.
-	later learning may do this with notepads at each part of the hierarchy, for learning what action is.
 3. Write code that uses the structure in a way that would exhaust all possible plans of behavior.
 		it can just be a single function looping through queues of queues.
 			looks like updating a lower queue updates the upper queue.

@@ -40,9 +40,8 @@ NOW:
 	- [X] implement imagineget, to get a properly imagined view of a part of reality while considering something
 	- [X] implement imagineset, to produce imagination if desiring to consider changes to reality
 	- [ ] replace all habits to use 'changing' associations
-			======> [ ] propose instead make a ref that respects imagination.
-			worry: we are not exhausting possible options here, and we added a hole mentioned DANGER below.  can address?	
-			[ ] ===> RESTORE innotepad, then make ref that moves into notepad when needed.
+			[ ] make ref that moves into notepad when needed.
+			======> (propose instead make a ref that respects imagination.)
 		all uses of a node, use table
 			[X] notepad checks check changing notepads
 			alterations make new <- everything that checks innotepad needs to use the return value of imagineset.

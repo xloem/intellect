@@ -23,6 +23,10 @@ next-word: do-next [space underlying]
 concept '/*' [
 	quiet true
 ]
+concept 'bootstrap-list-word-context' [
+	"//" '//'
+	"/*" '/*'
+]
 
 parser call [ space result ] [ result ] [
 	set do-next get space 'do-next'
@@ -45,7 +49,7 @@ habit first-link-entry-of [ concept type ] [ result ] [
 		set link-type get result 'type'
 		set done same link-type type
 		pick done if true return.
-		next-link-entry result
+		link-entry-next result
 		next.
 	failure:
 	error type-not-on-concept [ 'concept' concept ] [ 'type' type ]
@@ -72,9 +76,34 @@ habit inner-get [ concept inner type ] [ result ] [
 	set result get inner type
 ]
 
-// 'link' below is being parsed as a link-command.
-// could fix by setting word-context again
 habit random-target [ concept type ] [ ] [
 	set link random-link concept
 	set result get link-target link
+]
+
+habit get-or-nothing [concept type][result][
+	set is-linked linked concept type
+	pick is-linked
+		if 'true' not-nothing.
+		if 'false' nothing.
+	error 'linked-not-true-or-false'
+nothing:
+	set result to 'nothing'
+	return.
+not-nothing:
+	set result get concept type
+]
+
+// i don't remember how to do variable arguments, or if they are doable.  hard to make function wrappers.
+habit norm-0 [norms norm][][
+	set thing-to-do get norms norm
+	thing-to-do
+]
+habit norm-1 [norms norm arg][][
+	set thing-to-do get norms norm
+	thing-to-do arg
+]
+habit norm-2 [norms norm arg-1 arg-2][][
+	set thing-to-do get norms norm
+	thing-to-do arg-1 arg-2
 ]
