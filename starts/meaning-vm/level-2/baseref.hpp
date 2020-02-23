@@ -10,8 +10,15 @@ namespace intellect {
 namespace level2 {
 
 template <typename ref>
-struct baseref : public level1::baseref<ref>
+struct baseref : private level1::baseref<ref>
 {
+	// constructor will need to check imagination
+	baseref() : baseref("nothing") { }
+	template <typename T>
+	baseref(T arg) : level1::template baseref<ref>(arg)
+	{
+
+	}
 	using level1::template baseref<ref>::baseref;
 	/*
 	baseref(std::string & name, bool create = false) : baseref(getnamed(name, create)) { }
