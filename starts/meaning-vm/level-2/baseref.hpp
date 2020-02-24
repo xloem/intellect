@@ -17,9 +17,8 @@ struct baseref : private level1::baseref<ref>
 	template <typename T>
 	baseref(T arg) : level1::template baseref<ref>(arg)
 	{
-
+		this->ptr() = level2::imagineget(level2::notepad(), *this);
 	}
-	using level1::template baseref<ref>::baseref;
 	/*
 	baseref(std::string & name, bool create = false) : baseref(getnamed(name, create)) { }
 	*/

@@ -40,9 +40,12 @@ NOW:
 	- [X] implement imagineget, to get a properly imagined view of a part of reality while considering something
 	- [X] implement imagineset, to produce imagination if desiring to consider changes to reality
 	- [ ] change level-2 ref to check and use imagination.
-		-> setters will use imagineset if not in notepad
-		-> constructors will use imagineget
 			(might move the change into level-3 for clarity of levels, but it doesn't matter, need quality-steps.)
+		- [ ] constructors will use imagineget
+		- [ ] setters and getters must check member function to see if imagine* functions must be used
+		- [ ] setters will use imagineset if not in notepad
+		- [ ] for now, set a flag when imagineset works, so that other instances can use imagineget via member func
+
 		must review all accesses and implement copying prior to changing.
 		PROPOSING WE MOVE NOTEPAD CHECKS INTO THE REF CLASS.
 			CALL A non-static METHOD THAT CHECKS A static thread-local FLAG.  SET FLAG WHEN static t-l NOTEPAD CHANGES.
