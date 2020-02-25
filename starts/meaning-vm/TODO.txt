@@ -24,6 +24,11 @@ WE MUST DO THIS:
 		caring community, cointelpro, activists-being-labeled-terrorists, schizophrenia-being-caused-by-trauma-
 		but-treated-as-a-chemical-disorder, human-trafficking-being-widespread-but-covered-up-and-not-addressed-by-law.
 		the list is still incomplete.
+		open-source x-ray machine
+		public uncensorable wikis on:
+			- shielding effectively and cheaply
+			- general resources for living
+			- rational reason-based discourse on politics, supporting multiple value systems
 	
 
 NEED TO KEEP DISTANCE FROM STABILITY SMALL ENOUGH TO RECOVER FROM WITH ROTE HABITS.
@@ -39,17 +44,23 @@ NOW:
 	      associate notepad with replacement map
 	- [X] implement imagineget, to get a properly imagined view of a part of reality while considering something
 	- [X] implement imagineset, to produce imagination if desiring to consider changes to reality
-	- [ ] change level-2 ref to check and use imagination.
+	- [ ] instead of changing level-2 ref to use imagination, change the 'steps' habits to do so.
+		this provides for different contexts using the same outer refs properly
+			- [ ] also update any habits that reference subparts of refs, in case subpart changes are imagined.
+		(this will require updating other habits to do this, too?
+			that's only required if we allow for changes to the bootstrap notepad.
+			so, helpful but not required, as changes outside of core notepad require human confirmation.)
+	- X[ ] change level-2 ref to check and use imagination.
 			(might move the change into level-3 for clarity of levels, but it doesn't matter, need quality-steps.)
-		- [ ] constructors will use imagineget
-		- [ ] setters and getters must check member function to see if imagine* functions must be used
-		- [ ] setters will use imagineset if not in notepad
-		- [ ] for now, set a flag when imagineset works, so that other instances can use imagineget via member func
+		- X[X] constructors will use imagineget
+		- X[ ] for now, set a flag when imagineset works, so that other instances can use imagineget via member func
+		- X[ ] setters and getters must check member function to see if imagine* functions must be used
+		- X[ ] setters will use imagineset if not in notepad
 
 		must review all accesses and implement copying prior to changing.
 		PROPOSING WE MOVE NOTEPAD CHECKS INTO THE REF CLASS.
 			CALL A non-static METHOD THAT CHECKS A static thread-local FLAG.  SET FLAG WHEN static t-l NOTEPAD CHANGES.
-		- [ ] The below list will change to accommodate the above two lines.
+		- X[ ] The below list will change to accommodate the above two lines.
 		- [ ] level-2
 			- [ ] funcs.cpp
 			- [ ] habits.cpp
