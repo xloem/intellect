@@ -14,9 +14,12 @@ namespace level0 {
 struct concept
 {
 	// a concept is made of concept-typed links to other concepts
-	std::unordered_multimap<concept*,concept*> links;
+	using links_t = std::unordered_multimap<concept*,concept*>;
+	using linkit = links_t::const_iterator;
+	links_t links;
 	// and optional associated arbitrary data
 	std::any data;
+
 
 	concept();
 	~concept() noexcept(false); // throws if referenced
@@ -28,14 +31,15 @@ struct concept
 	void link(concept* type, concept* target);
 	void unlink(concept* type, concept* target);
 	void unlink(concept* type);
-	void unlink(decltype(links)::const_iterator it);
+	linkit unlink(linkit & it);
+	void relink(linkit & it, concept* target);
 
 	bool crucial() { return iscrucial || crucialparts.size(); }
 	bool crucial(concept* type, concept* target);
-	bool crucial(decltype(links)::const_iterator it) { return crucialparts.count(it); }
+	bool crucial(linkit it) { return crucialparts.count(it); }
 	void setcrucial() { iscrucial = true; }
 	void setcrucial(concept* type, concept* target);
-	void setcrucial(decltype(links)::const_iterator it) { crucialparts.insert(it); }
+	void setcrucial(linkit it) { crucialparts.insert(it); }
 
 	bool linked(concept* type) const;
 	bool linked(concept* type, concept* target) const;
@@ -64,7 +68,6 @@ struct concept
 	size_t refcount() { return _refcount; }
 
 	struct array {
-		using linkit = decltype(links)::const_iterator;
 		array() = default;
 		array(array const &) = default;
 		array(array &&) = default;
@@ -96,12 +99,12 @@ private:
 	bool iscrucial;
 	struct linksit_hash
 	{
-		size_t operator()(decltype(links)::const_iterator const &it) const
+		size_t operator()(linkit const &it) const
 		{
 			return std::hash<decltype(&*it)>()(&*it);
 		}
 	};
-	std::unordered_set<decltype(links)::const_iterator, linksit_hash> crucialparts;
+	std::unordered_set<linkit, linksit_hash> crucialparts;
 };
 
 }

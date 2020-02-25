@@ -91,7 +91,18 @@ void concept::unlink(concept* type)
 	unlink(ls.first);
 }
 
-void concept::unlink(decltype(links)::const_iterator it)
+void concept::relink(concept::linkit & it, concept* target)
+{
+	if (target == 0) { throw null_reference(); }
+	if (crucialparts.count(it)) {
+		throw crucial_link_type_target(selfref, it->first, it->second);
+	}
+	if (it->second != this) { -- it->second->_refcount; }
+	if (target != this) { ++ target->_refcount; }
+	it->second = target;
+}
+
+concept::linkit concept::unlink(concept::linkit & it)
 {
 	if (crucialparts.count(it)) {
 		throw crucial_link_type_target(selfref, it->first, it->second);
@@ -99,6 +110,7 @@ void concept::unlink(decltype(links)::const_iterator it)
 	if (it->first != this) { -- it->first->_refcount; }
 	if (it->second != this) { -- it->second->_refcount; }
 	links.erase(it++);
+	return it;
 }
 
 bool concept::linked(concept* type) const

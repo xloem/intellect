@@ -85,10 +85,10 @@ ref settranslationmap(ref c, ref m, ref k = nothing)
 
 void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = false)
 {
-	checknotepad(c2);
+	checknotepad(c2); // caller should ensure imagineset, so imagined changes can be returned
 	decl(translation); decl(known); decl(nothing);
 	if (!quiet) { std::cerr << "[context-map"; }
-	for (auto link : m.get(translation).links()) {
+	for (auto link : m.imagineget(translation).links()) {
 		if (!quiet) { std::cerr << " "; }
 		if (reverse) {
 			if (!quiet) { std::cerr << link.second.name() << ":" << link.first.name() << "="; }
@@ -100,8 +100,8 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = fa
 						"map", m
 						);
 			}
-			c2.set(link.second, c1.get(link.first));
-			if (!quiet) { std::cerr << c1.get(link.first).name(); }
+			c2.set(link.second, c1.imagineget(link.first));
+			if (!quiet) { std::cerr << c1.imagineget(link.first).name(); }
 		} else {
 			if (!quiet) { std::cerr << link.first.name() << ":" << link.second.name() << "="; }
 			if (!c1.linked(link.second)) {
@@ -112,22 +112,25 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = fa
 						"map", m
 						);
 			}
-			c2.set(link.first, c1.get(link.second));
-			if (!quiet) { std::cerr << c1.get(link.second).name(); }
+			c2.set(link.first, c1.imagineget(link.second));
+			if (!quiet) { std::cerr << c1.imagineget(link.second).name(); }
 		}
 	}
-	if (m.linked(known) && m.get(known) != nothing) {
-		for (auto link : m.get(known).links()) {
-			if (reverse) {
-				if (!quiet) {
-					std::cerr << " " << link.second.name() << ":" << link.first.name();
+	if (m.linked(known)) {
+		auto known = m.imagineget(known);
+		if (known != nothing) {
+			for (auto link : known.links()) {
+				if (reverse) {
+					if (!quiet) {
+						std::cerr << " " << link.second.name() << ":" << link.first.name();
+					}
+					c2.set(link.second, link.first);
+				} else {
+					if (!quiet) {
+						std::cerr << " " << link.first.name() << ":" << link.second.name();
+					}
+					c2.set(link.first, link.second);
 				}
-				c2.set(link.second, link.first);
-			} else {
-				if (!quiet) {
-					std::cerr << " " << link.first.name() << ":" << link.second.name();
-				}
-				c2.set(link.first, link.second);
 			}
 		}
 	}
@@ -148,8 +151,10 @@ void _steps(ref s, ref ctx)
 	// 	for one thing, this might help the structure of the system represent
 	// 	meaningful thought if it optimizes for speed
 
+	s = imagineget(intellect::level2::notepad(), s);
+
 	bool quiet = s.linked(intellect::level2::concepts::quiet, true) || ctx.linked(intellect::level2::concepts::quiet, true);
-	checknotepad(ctx);
+	ctx = imagineset(intellect::level2::notepad(), ctx);
 	ref astate = noteconcept();
 	ref c = ctx;
 	bool cleanupcontext = false;
@@ -162,12 +167,12 @@ void _steps(ref s, ref ctx)
 	c.set(context, c);
 
 	if (s.linked(next-step)) {
-		astate.set(next-step, s.get(next-step));
+		astate.set(next-step, s.imagineget(next-step));
 	}
 	while (astate.linked(next-step) && astate.get(next-step) != nothing) {
 		s = astate.get(next-step);
 		astate.set(active-step, s);
-		astate.set(next-step, s.linked(next-step) ? s.get(next-step).ptr() : nothing.ptr());
+		astate.set(next-step, s.linked(next-step) ? s.imagineget(next-step).ptr() : nothing.ptr());
 		// if needed-map, load subcontext
 		ref subctx = c;
 		if (!quiet) {
@@ -179,7 +184,7 @@ void _steps(ref s, ref ctx)
 		}
 		if (s.linked(needed-map)) {
 			subctx = noteconcept();
-			contextmapinto(c, s.get(needed-map), subctx, false, quiet);
+			contextmapinto(c, s.imagineget(needed-map), subctx, false, quiet);
 			subctx.set(outer-context, c);
 			subctx.set(active-state, astate);
 			subctx.set(context, subctx);
@@ -190,12 +195,11 @@ void _steps(ref s, ref ctx)
 		if (!quiet) {
 			std::cerr << "[step " << subctx.get("self").name() << "]" << std::endl;
 		}
-		checknotepad(subctx);
 		if (quiet) { subctx.set(intellect::level2::concepts::quiet, true); }
 		//subctx.set("self", s.get(action));
 		ref habit = subctx.get("self");//s.get(action);
 		{ // check arguments
-			ref infn = habit.get("information-needed");
+			ref infn = habit.imagineget("information-needed");
 			for (auto link : infn.links()) {
 				if (!link.second.linked("information", link.first)) { continue; }
 				if (subctx.linked(link.first)) { continue; }
@@ -205,18 +209,19 @@ void _steps(ref s, ref ctx)
 							"habit", habit,
 							"information", link.second);
 				}
-				subctx.link(link.first, link.second.get("assume"));
+				subctx.link(link.first, link.second.imagineget("assume"));
 			}
 		}
+		checknotepad(subctx); // should be impossible to fail, but good habit
 		habit.fun<ref>()(subctx);
 		if (s.linked(made-map)) {
-			contextmapinto(subctx, s.get(made-map), c, true, quiet);
+			contextmapinto(subctx, s.imagineget(made-map), c, true, quiet);
 		}
 		if (s.linked(needed-map)) {
 			c = subctx.get(outer-context);
 			ref::context() = c;
 			astate.set(context, c);
-			checknotepad(subctx);
+			checknotepad(subctx); // should be impossible to fail, but good habit
 			conceptunmake(subctx);
 		}
 	}
@@ -229,13 +234,14 @@ void _steps(ref s, ref ctx)
 
 void _condition(ref ctx, ref cond, ref steps, ref state)
 {
-	checknotepad(state);
+	checknotepad(state); // caller should ensure imagineset
+
 	// because this sets active-state's next-step instead of calling something,
 	// a subcontext is not opened for the steps unless they have one.
 	ref next = nothing;
 	if (!steps.linked(cond)) {
-		if (steps.linked("anything")) {
-			next = steps["anything"];
+		if (steps.linked(intellect::level2::concepts::anything)) {
+			next = steps.imagineget(intellect::level2::concepts::anything);
 		} else {
 			throw noteconcept().link(
 					is, "unknown-condition",
@@ -244,11 +250,11 @@ void _condition(ref ctx, ref cond, ref steps, ref state)
 					"context", ctx);
 		}
 	} else {
-		next = steps[cond];
+		next = steps.imagineget(cond);
 	}
 
 	//if (next != nothing) {
-		state.set("next-step", next);
+		state.set(intellect::level2::concepts::next-_tep, next);
 	//}
 }
 
@@ -327,6 +333,33 @@ void createhabits()
 	{
 		return intellect::level2::notepad();
 	});
+
+	decls(imagine, set);
+	ahabit(imagine-set, ((concept, c)),
+	{
+		// this still won't propagate the change to other uses.
+		// what's the worst that can happen?
+		// 	we could have another function/stepslist running in the same imagination.
+		// 	we may have it paused, and are handling something, and plan to resume it
+		// 	so we would want to update all contexts with the imagination change.
+		// 	all context in this imagination.
+		// 		note: each running stepslist is associated with a notepad, but this is not tracked anywhere.
+		// 		atm the only way to change notepads is by entering a steps list.
+		// 		so: in the notepad, maintain a list of contexts
+		// 		update them all when imagineset is used.
+		// 			a context has a map of information.
+		// 			the label on the information doesn't need much worry
+		// 			the target of the link is the big important thing.
+		// 				=S we could change a label to.
+		// 			okay, hmm
+		// 			so we want to update the links of other objects, when we imagineset.
+		// 			that means iterating every object in the notepad, and looking for uses, for now.
+		//			this has been implemented.  it has not been tested. both targets and types are
+		//			updated.  things outside the notepad are not imagined in.
+		//				that wouldn't be hard to add.
+		//					let's add it, it will reduce possible errors found later.
+		return imagineset(c);
+	})
 
 	decls(link, source, type, target);
 	ahabit(link, ((source, s), (type, t), (target, dst)),

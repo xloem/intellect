@@ -20,6 +20,7 @@ static ref changing("changing");
 static ref imagination("imagination");
 static ref habit("habit");
 static ref next("next");
+static ref next_step("next-step");
 static ref information("information");
 static ref needed("needed");
 static ref result("result");
@@ -28,6 +29,7 @@ static ref unexpected("unexpected");
 static ref value("value");
 static ref self_("self");
 static ref quiet("quiet");
+static ref anything("anything");
 
 }
 

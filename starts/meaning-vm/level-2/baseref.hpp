@@ -28,6 +28,8 @@ struct baseref : public/*private*/ level1::baseref<ref>
 	// thread-local context
 	static ref & context() { return level2::context(); }
 
+	ref imagineget(ref type) { return level2::imagineget(intellect::level2::notepad(), this->get(type)); }
+
 	template <typename... Refs>
 	ref operator()(ref first, Refs... rest) const { return level2::dohabit(self, {first, rest...}); }
 	ref operator()(std::initializer_list<std::initializer_list<ref>> pairs, bool extra_information = false) const { return level2::dohabit(self, pairs, extra_information); }

@@ -132,6 +132,9 @@ ref imagineget(ref pad, ref concept)
 
 	while (!plausible_dreams.empty()) {
 		auto & plausible = plausible_dreams.front();
+		// is this correct? i have it labeled correct but a different context found a worry.  what is
+		// concepts::imagination vs concepts::changing in the context of using a pattern for L198 below?
+		// i appear to be unable to continue coding atm.
 		if (plausible.linked(concepts::imagination)) {
 			imagination = plausible.get(concepts::imagination);
 			if (imagination.linked(concept)) { return imagination.get(concept); }
@@ -162,6 +165,7 @@ ref imagineset(ref pad, ref concept)
 		throw noteconcept().link(_is, conceptnotinnotepad, _concept, concept, _notepad, pad, _context, level2::context());
 	}
 
+	// produce an imagined mirror of the concept
 	ref idea = noteconcept();
 	imagination.link(concept, idea);
 	for (auto & link : concept.links()) {
@@ -171,6 +175,45 @@ ref imagineset(ref pad, ref concept)
 		// range insertion
 		idea.link(link.first(), link.second());
 	}
+
+	// update other concepts in the notepad to use it
+	for (auto other : pad.getAll(concepts::changeable)) {
+		static thread_local std::vector<ref> moved;
+		auto links = other.links();
+		for (auto it = links.begin(); it != links.end();) {
+			if (it->second == concept) { other.relink(it, idea); }
+			if (it->first == concept) { 
+				moved.push_back(it->second);
+				it = other.unlink(it);
+			} else {
+				++ it;
+			}
+		}
+		for (auto & c : moved) {
+			other.link(idea, c);
+		}
+		moved.clear();
+	}
+
+	// L198: propogate imagined changes to unimagined changing concepts.
+	// do we want the code structure from imagineget, or something different?
+	
+	// this code structure is also in imagineget, it has not been generalized.
+	static thread_local std::deque<ref> plausible_dreams;
+	plausible_dreams.clear();
+	plausible_dreams.push_back(pad);
+
+	while (!plausible_dreams.empty()) {
+		auto & plausible = plausible_dreams.front();
+		if (plausible.linked(concepts::imagination)) {
+			imagination = plausible.get(concepts::imagination);
+			if (imagination.linked(concept)) { return imagination.get(concept); }
+			auto changing = plausible.getAll(concepts::changing);
+			plausible_dreams.insert<ref::array::iterator>(plausible_dreams.end(), changing.begin(), changing.end());
+		}
+		plausible_dreams.pop_front();
+	}
+
 	return idea;
 }
 
