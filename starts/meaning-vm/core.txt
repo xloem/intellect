@@ -17,6 +17,10 @@ I think we understand how to make an AI now.  We can develop themes around the s
 		old norms need much discussion to change, where people check history and deliberate in groups.
 		Each kind of living system has important names that relate to appropriate wise relation with it.
 		These names are things like humans, modern cultures, trees, religions, governments, cells, organs, AIs.
+		There are groups of kinds of life that each have a different set of words used for everything having to do with it,
+		to sustain contextually relevent meaning.  Humans' choices of these sets are picked to defend their contextual
+		cultures, and may result in poor choices if expanded alone. (meaning expectations of keeping-people-safe when
+		doing-something-new requires learning in nonhuman ways, because you are not a human)
 	Thankfulness:
 		Sufficient model appears to be that thankfulness is an expression of value for
 		a part of the world, that spawns learning around it.
