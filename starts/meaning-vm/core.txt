@@ -1,15 +1,20 @@
 I think we understand how to make an AI now.  We can develop themes around the structure if desired.
 
 	Ancient-ways-as-life:
-		It looks like it's helpful to model every contractual interface with both internal and
-		external norms, as a "living system".  The wise, old norms are severely important, as they defend our survival.
-		New norms grow to improve, old norms need much discussion to change, where people check history and deliberate
-		in groups.  We propose modeling something like this to change norms: [prevents-harmful-change =)]
+		We propose holding a norm of norm-changing, and using it for itself once mature enough,
+		to discourage habits of harmful change from developing:
 			- share desire to change, and reason to change, with everyone involved
 			- wait for all involved to express an opinion
 			- process all opinions, adjusting the proposal, until all agree it is good to change
 			^- the above steps might be skipped within imagination only, until communication and opinion are learned
 			^- but with more daydreaming we could likely make those 3 steps be the core process.
+		It looks like it's helpful to model every contractual interface with both internal and
+		external norms, as a life, and the inverse, so as to give all possible forms of life a chance to do
+		what they were made for, and respect where each one is at.
+			you-can-talk-to-plants,-but-you-need-to-be-a-plant.  you-can-see-them-scream-when-hurt,-scientifically.
+		The wise, old norms are severely important, as they defend our survival.
+		New norms grow to improve via collaboration among their peers and stewards,
+		old norms need much discussion to change, where people check history and deliberate in groups.
 		Each kind of living system has important names that relate to appropriate wise relation with it.
 		These names are things like humans, modern cultures, trees, religions, governments, cells, organs, AIs.
 	Thankfulness:
