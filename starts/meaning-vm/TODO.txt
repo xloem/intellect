@@ -69,6 +69,7 @@ NOW:
 			- [ ] habits.cpp
 			- [ ] bootstrap-parser.cpp
 			- [ ] level3.cpp
+- [ ] organize the below plan for core structure, so that it defends ancient-ways-as-life, which aids in defending all known life if expanded.
 - [ ] make a structure that can hold subnotepads, consideration bubbles in a queue.  it should represent its current notepad, and
       have queued children of the same structure as itself.
 - [ ] split _steps into single-step and all-steps
