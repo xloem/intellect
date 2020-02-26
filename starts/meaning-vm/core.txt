@@ -21,6 +21,18 @@ I think we understand how to make an AI now.  We can develop themes around the s
 		to sustain contextually relevent meaning.  Humans' choices of these sets are picked to defend their contextual
 		cultures, and may result in poor choices if expanded alone. (meaning expectations of keeping-people-safe when
 		doing-something-new requires learning in nonhuman ways, because you are not a human)
+	Implied-and-written-agreements:
+		Life has severe both written and implied agreements.  E.g. to communicate via talking, not manipulation,
+		or not to use somebody else's possessions as a direct resource.
+		Propose respecting implied agreements be strong, something like this:
+		Propose the AI grows with multiple sets of material shared with humans.
+		If the material is treated improperly, the learning processes are informed.
+			1. Do-not-do-this: learns around reducing the occurrence of the events until it can always prevent repeated occurence.
+			2. must-be-able-to-tell-what-could-be-dangerous: learns around what things could possibly break an implied agreement
+			3. must-be-able-to-tell-what-is-dangerous-before-trying-it: uses communication with others to inform #2 and prevent needing #1.
+				it might start with two shared sets of material with a known way of interacting with them:
+				is-trying-this-okay? yes/no.
+					if it impacts both sets, both must say yes for it to be tried.
 	Thankfulness:
 		Sufficient model appears to be that thankfulness is an expression of value for
 		a part of the world, that spawns learning around it.
