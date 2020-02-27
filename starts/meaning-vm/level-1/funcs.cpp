@@ -155,7 +155,10 @@ std::string getname(concept* r)
 		return r->vget<std::string>(namestruct().nameref);
 	} else{
 		if (r->data.has_value()) { return nameforany(r); }
-		return "UNNAMED";
+		std::stringstream ss;
+		ss << std::hex << r;
+		//return "UNNAMED";
+		return ss.str();
 	}
 }
 

@@ -224,7 +224,9 @@ void _steps(ref s, ref ctx)
 			habit.fun<ref>()(subctx);
 			if (s.linked(made-map)) {
 				notepadrestoration.migratein(c);
-				contextmapinto(subctx, s.imagineget(made-map), c, true, quiet, concepts::outer);
+				// bit of a confusing bug here: like with 'c', we only need to migrate out to concepts::outer
+				// if the habit was run in a subnotepad.
+				contextmapinto(subctx, s.imagineget(made-map), c, true, quiet, notepadrestoration.hasnotepad() ? concepts::outer.ptr() : concepts::nothing.ptr());
 			}
 		}
 		if (s.linked(needed-map)) {

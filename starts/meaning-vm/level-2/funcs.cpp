@@ -26,8 +26,7 @@ ref & context()
 
 ref const & bootstrapnotepad()
 {
-	static auto notes = ref("bootstrap-space").link("is","notepad");
-	notes.link("self", notes);
+	static auto notes = ref("bootstrap-space").link("is","notepad", "self", "bootstrap-space");
 	return notes;
 }
 
