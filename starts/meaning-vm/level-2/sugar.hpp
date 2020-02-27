@@ -30,11 +30,26 @@ public:
 		this->ctx = ctx;
 		enter();
 	}
+	void migrateout(ref concept)
+	{
+		if (hasnotepad()) {
+			intellect::level2::entersubnotepad(concept, intellect::level2::concepts::outer, true, false);
+		}
+	}
+	void migratein(ref concept) {
+		if (hasnotepad()) {
+			intellect::level2::entersubnotepad(concept, intellect::level2::concepts::self_, false, true);
+		}
+	}
+	bool hasnotepad()
+	{
+		return innernotepad != intellect::level1::concepts::nothing;
+	}
 	void rethrow(ref e)
 	{
-		if (innernotepad != "nothing") {
+		if (hasnotepad()) {
 			e.link("notepad", innernotepad);
-			intellect::level2::entersubnotepad(e, "outer", true);
+			migrateout(e);
 			leave();
 		}
 		throw e;
@@ -51,7 +66,7 @@ private:
 
 	void leave()
 	{
-		if (innernotepad == intellect::level1::concepts::nothing) { return; }
+		if (!hasnotepad()) { return; }
 		if (intellect::level2::notepad() != innernotepad) { throw intellect::level2::noteconcept().link("is", "not-in-correct-subnotepad", "notepad", intellect::level2::notepad(), "inner-notepad", innernotepad, "outer-notepad", outernotepad); }
 		leavenotepad(ctx, innernotepad);
 		intellect::level2::notepad() = outernotepad;

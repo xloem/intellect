@@ -20,7 +20,7 @@ struct baseref : public level0::baseref<ref>
 	baseref(bool b) : baseref(b ? "true" : "false") { }
 	baseref() : baseref("nothing") { }
 	
-	std::string dbglinks() const { return level1::dbglinks(this->ptr()); }
+	char const * dbglinks(int depth = 0) const { return level1::dbglinks(this->ptr(), depth); }
 
 	bool isa(ref group) const { return level1::isa(self, group); }
 	bool isan(ref group) const { return isa(group); }

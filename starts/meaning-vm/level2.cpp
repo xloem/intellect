@@ -719,6 +719,7 @@ when dump-expand [\n\
 		loop.\n\
 ]\n\
 when link-self [\n\
+	set test make-concept\n\
 	link 'link-self' 'type' 'target'\n\
 ]\n\
 when dump [\n\
@@ -761,7 +762,7 @@ when dump [\n\
 		loop2.\n\
 	done2:\n\
 	concept-unmake context 'link-entry'\n\
-]";
+]";//*/
 	std::stringstream ss(script);
 	std::string simpleparsername;
 	ss >> simpleparsername;
@@ -1030,14 +1031,10 @@ when dump [\n\
 		dump(dump, linksofinterest, "runtime");
 		assert(intellect::level2::notepad() == outernotepad);
 #undef ref
-	} catch(intellect::level2::ref r) {
-		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;
-		for (auto i : r.getAll("is")) {
-			std::cerr << i.name() << std::endl;
-		}
-		throw;
 	} catch(intellect::level1::ref r) {
-		std::cerr << intellect::level1::ref(r.ptr()).dump(makeconcept()) << std::endl;
+		throw intellect::level2::ref(r);
+	} catch(intellect::level2::ref r) {
+		std::cerr << std::endl << "[" << r.dbglinks(0) << "]" <<std::endl;
 		for (auto i : r.getAll("is")) {
 			std::cerr << i.name() << std::endl;
 		}

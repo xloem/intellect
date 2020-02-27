@@ -584,6 +584,10 @@ void rethrowref()
 		throw noteconcept().link(
 			"is", "null-reference"
 			);
+	} catch(std::bad_any_cast const & e) {
+		throw noteconcept().link(
+			"is", "wrong-value-type"
+			);
 	} catch(...) {
 		throw noteconcept().link(
 			"is", "system-exception"

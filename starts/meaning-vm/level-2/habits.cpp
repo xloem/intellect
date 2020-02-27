@@ -113,7 +113,7 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = fa
 					"map", m
 					);
 		}
-		auto concept = c1.imagineget(intellect::level2::notepad(), name1);
+		auto concept = c1.imagineget(name2);
 		c2.set(name1, concept);
 		if (trustedrecipient != concepts::nothing && intellect::level2::notepad().linked(concepts::changeable, concept)) {
 			entersubnotepad(concept, trustedrecipient, true, false);
@@ -121,7 +121,7 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = fa
 		if (!quiet) { std::cerr << c1.get(name2).name(); }
 	}
 	if (m.linked(known)) {
-		auto knownmap = m.imagineget(intellect::level2::notepad(), known);
+		auto knownmap = m.imagineget(known);
 		if (knownmap != nothing) {
 			for (auto link : knownmap.links()) {
 				ref val1, val2;
@@ -223,7 +223,7 @@ void _steps(ref s, ref ctx)
 			notepadrestoration.switchwith(subctx);
 			habit.fun<ref>()(subctx);
 			if (s.linked(made-map)) {
-				entersubnotepad(c, concepts::self_, false, true);
+				notepadrestoration.migratein(c);
 				contextmapinto(subctx, s.imagineget(made-map), c, true, quiet, concepts::outer);
 			}
 		}

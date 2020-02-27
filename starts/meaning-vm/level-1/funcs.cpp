@@ -159,15 +159,22 @@ std::string getname(concept* r)
 	}
 }
 
-std::string dbglinks(concept* r)
+char const * dbglinks(concept* r, int depth)
 {
 	std::stringstream ret;
+	static std::string dat;
 	for (auto & link : r->links) {
-		ret << getname(link.first) << "=" << getname(link.second);
+		ret << getname(link.first) << "=";
+		if (depth == 0) {
+			ret << getname(link.second);
+		} else {
+			ret << "[" << dbglinks(link.second, depth - 1) << "]";
+		}
 		ret << " ";
 	}
 	ret << std::hex << r;
-	return ret.str();
+	dat = ret.str();
+	return dat.c_str();
 }
 
 bool isa(concept* member, concept* group)

@@ -48,6 +48,8 @@ struct baseref : public/*private*/ level1::baseref<ref>
 
 	void replace(ref other) { *self.ptr() = *other.ptr(); }
 
+	char const * dbglinks(int depth = 0) const { return level1::dbglinks(level2::imagineget(level2::notepad(), *this), depth); }
+
 	/*
 	// TODO: undo this work and move work to steps() habit
 	// progress identifying this as more effective path

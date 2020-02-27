@@ -14,7 +14,7 @@ namespace level1 {
 concept* gettext(std::string const & str);
 concept* getnamed(std::string const & name, concept* allocator = nullptr);
 std::string getname(concept* r);
-std::string dbglinks(concept* r);
+char const * dbglinks(concept* r, int depth = 0);
 void givename(concept* con, std::string const & name);
 
 bool isa(concept* member, concept* group);
