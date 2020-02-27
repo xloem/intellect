@@ -37,4 +37,4 @@ $(OBJDIR)/%.ii: %.cpp $(OBJDIR)/%.d
 	ranlib $@
 
 clean:
-	-rm $(OBJDIR)/*.ii $(OBJDIR)/*.o level? *.a $(OBJDIR)/*/*.o $(OBJDIR)/*/*.ii $(OBJDIR)/*.d $(OBJDIR)/*/*.d
+	-rm -rf $(OBJDIR) *.o *.a

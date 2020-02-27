@@ -145,15 +145,15 @@ public:
 
 	struct links_t
 	{
-		using iterator = mutated_it<std::pair<ref,ref>,typename decltype(concept::links)::iterator>;
-		iterator begin() { return links.begin(); }
-		iterator end() { return links.end(); }
+		using iterator = mutated_it<std::pair<ref,ref>,typename concept::linkit>;
+		iterator begin() { return iterator(links.begin()); }
+		iterator end() { return iterator(links.end()); }
 
-		decltype(concept::links) & links;
+		typename concept::links_t & links;
 	};
 
-	typename array::iterator unlink(typename array::iterator & it) { return p->unlink(static_cast<concept::linkit&>(it.underlying())); }
-	typename links_t::iterator unlink(typename links_t::iterator it) { return p->unlink(it.underlying()); }
+	typename array::iterator unlink(typename array::iterator it) { return p->unlink(static_cast<concept::linkit&>(it.underlying())); }
+	typename links_t::iterator unlink(typename links_t::iterator it) { return typename links_t::iterator(p->unlink(it.underlying())); }
 	void relink(typename links_t::iterator it, ref target) { p->relink(it.underlying(), target.ptr()); }
 	bool crucial(typename links_t::iterator it) { return self.p->crucial(it.underlying()); }
 	void setcrucial(typename links_t::iterator it) { self.p->setcrucial(it.underlying()); }

@@ -14,7 +14,7 @@ ref & context();
 
 ref & notepad();
 ref newnotepad(ref name, bool imaginechanges = false);
-ref subnotepad(ref name, bool allowouter = false);
+ref subnotepad(ref name, bool allowouter = false, bool allowself = false);
 ref noteconcept(std::any data = {});
 void checknotepad(ref concept);
 bool innotepad(ref concept, ref pad);

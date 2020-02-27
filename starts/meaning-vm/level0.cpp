@@ -68,7 +68,7 @@ int main()
 	for (auto c : { a, a.get(codelink), a.get(numlink) } )
 	for (auto it = c.links().begin(); it != c.links().end();) {
 		if (!c.crucial(it) && !it->first.linked(concepts::allocator(), concepts::level0allocations())) {
-			c.unlink(it++);
+			it = c.unlink(it);
 		} else {
 			++ it;
 		}

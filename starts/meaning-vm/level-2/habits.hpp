@@ -79,7 +79,7 @@ namespace concepts {
 	// place a concept in a new group.
 	// forms a new link of type 'is', fails if one aleady exists
 	// concept = (know-is)(concept, group)
-	static ref know("know"), is("is")  ;
+	static ref know("know");//, is("is")  ;
 
 	// fill any concept with information about the first link entry in a concept
 	// if there is a link in the entry, then [type] and [target] will be present

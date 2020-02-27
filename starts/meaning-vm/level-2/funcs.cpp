@@ -49,7 +49,7 @@ ref newnotepad(ref name, bool fakechanges)
 	// any additional links must be blocked in subnotepad()
 	newnotes.link(level2::concepts::is, level2::concepts::notepad);
 	newnotes.link(level2::concepts::outer, level2::notepad());
-	newnotes.link(level2::concepts::self, newnotes);
+	newnotes.link(level2::concepts::self_, newnotes);
 	newnotes.link(level2::concepts::name, name.isa(level2::concepts::text) ? name : name.get(level2::concepts::name));
 	level2::notepad().link(name, newnotes); // linked by name to find easily when used
 	if (fakechanges) {
@@ -60,7 +60,7 @@ ref newnotepad(ref name, bool fakechanges)
 
 ref subnotepad(ref name, bool allowouter, bool allowself)
 {
-	if (name == level2::concepts::is || name == level2::concepts::name || (name == level2::concepts::outer && !allowouter) || (name == level2::concepts::_self && !allowself) || name == level2::concepts::names || !level2::notepad().linked(name)) {
+	if (name == level2::concepts::is || name == level2::concepts::name || (name == level2::concepts::outer && !allowouter) || (name == level2::concepts::self_ && !allowself) || name == level2::concepts::names || !level2::notepad().linked(name)) {
 		throw noteconcept().link("is","subnotepad-does-not-exist", "notepad", level2::notepad(), "subnotepad", name);
 	}
 	ref result = level2::notepad().get(name);

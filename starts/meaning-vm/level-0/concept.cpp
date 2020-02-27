@@ -12,8 +12,8 @@ concept::concept()
 concept::~concept() noexcept(false)
 {
 	if (refcount() != 0) { throw still_referenced(this); }
-	for (auto it = links.begin(); it != links.end();) {
-		unlink(it++);
+	for (auto it = links.cbegin(); it != links.cend();) {
+		it = unlink(it);
 	}
 }
 
@@ -91,7 +91,7 @@ void concept::unlink(concept* type)
 	unlink(ls.first);
 }
 
-void concept::relink(concept::linkit & it, concept* target)
+void concept::relink(concept::linkit it, concept* target)
 {
 	if (target == 0) { throw null_reference(); }
 	if (crucialparts.count(it)) {
@@ -99,18 +99,18 @@ void concept::relink(concept::linkit & it, concept* target)
 	}
 	if (it->second != this) { -- it->second->_refcount; }
 	if (target != this) { ++ target->_refcount; }
-	it->second = target;
+	// calling erase on an empty range returns a mutable iterator without changing the container
+	links.erase(it, it)->second = target;
 }
 
-concept::linkit concept::unlink(concept::linkit & it)
+concept::linkit concept::unlink(concept::linkit it)
 {
 	if (crucialparts.count(it)) {
 		throw crucial_link_type_target(selfref, it->first, it->second);
 	}
 	if (it->first != this) { -- it->first->_refcount; }
 	if (it->second != this) { -- it->second->_refcount; }
-	links.erase(it++);
-	return it;
+	return links.erase(it);
 }
 
 bool concept::linked(concept* type) const

@@ -98,11 +98,11 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = fa
 
 		ref name1, name2;
 		if (reverse) {
-			name1 = imagineget(link.second);
-			name2 = imagineget(link.first);
+			name1 = imagineget(intellect::level2::notepad(), link.second);
+			name2 = imagineget(intellect::level2::notepad(), link.first);
 		} else {
-			name1 = imagineget(link.first);
-			name2 = imagineget(link.second);
+			name1 = imagineget(intellect::level2::notepad(), link.first);
+			name2 = imagineget(intellect::level2::notepad(), link.second);
 		}
 		if (!quiet) { std::cerr << name1.name() << ":" << name2.name() << "="; }
 		if (!c1.linked(name2)) {
@@ -113,24 +113,24 @@ void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = fa
 					"map", m
 					);
 		}
-		auto concept = c1.imagineget(name1, !copychangeablenessout);
+		auto concept = c1.imagineget(intellect::level2::notepad(), name1);
 		c2.set(name1, concept);
-		if (trustedrecipient != concepts::nothing && notepad().linked(concepts::changeable, concept)) {
+		if (trustedrecipient != concepts::nothing && intellect::level2::notepad().linked(concepts::changeable, concept)) {
 			entersubnotepad(concept, trustedrecipient, true, false);
 		}
 		if (!quiet) { std::cerr << c1.get(name2).name(); }
 	}
 	if (m.linked(known)) {
-		auto known = m.imagineget(known);
-		if (known != nothing) {
-			for (auto link : known.links()) {
+		auto knownmap = m.imagineget(intellect::level2::notepad(), known);
+		if (knownmap != nothing) {
+			for (auto link : knownmap.links()) {
 				ref val1, val2;
 				if (reverse) {
-					val1 = imagineget(link.second);
-					val2 = imagineget(link.first);
+					val1 = imagineget(intellect::level2::notepad(), link.second);
+					val2 = imagineget(intellect::level2::notepad(), link.first);
 				} else {
-					val1 = imagineget(link.first);
-					val2 = imagineget(link.second);
+					val1 = imagineget(intellect::level2::notepad(), link.first);
+					val2 = imagineget(intellect::level2::notepad(), link.second);
 				}
 				if (!quiet) {
 					std::cerr << " " << val1.name() << ":" << val2.name();
@@ -171,13 +171,13 @@ void _steps(ref s, ref ctx)
 	c.set(active-state, astate);
 	c.set(context, c);
 
-	if (s.linked(next-step)) {
-		astate.set(next-step, s.imagineget(next-step));
+	if (s.linked(next_step)) {
+		astate.set(next_step, s.imagineget(next_step));
 	}
-	while (astate.linked(next-step) && astate.get(next-step) != nothing) {
-		s = astate.get(next-step);
+	while (astate.linked(next_step) && astate.get(next_step) != nothing) {
+		s = astate.get(next_step);
 		astate.set(active-step, s);
-		astate.set(next-step, s.linked(next-step) ? s.imagineget(next-step).ptr() : nothing.ptr());
+		astate.set(next_step, s.linked(next_step) ? s.imagineget(next_step).ptr() : nothing.ptr());
 		// if needed-map, load subcontext
 		ref subctx = c;
 		if (!quiet) {
@@ -223,7 +223,7 @@ void _steps(ref s, ref ctx)
 			notepadrestoration.switchwith(subctx);
 			habit.fun<ref>()(subctx);
 			if (s.linked(made-map)) {
-				entersubnotepad(c, concepts::_self, false, true);
+				entersubnotepad(c, concepts::self_, false, true);
 				contextmapinto(subctx, s.imagineget(made-map), c, true, quiet, concepts::outer);
 			}
 		}
@@ -264,7 +264,7 @@ void _condition(ref ctx, ref cond, ref steps, ref state)
 	}
 
 	//if (next != nothing) {
-		state.set(intellect::level2::concepts::next-_tep, next);
+		state.set(intellect::level2::concepts::next_step, next);
 	//}
 }
 
@@ -358,7 +358,7 @@ void createhabits()
 		// so that if this moved them in, they are updated.  that happens in the .imagineget(,true) call in contextmapinto,
 		// when the value is mapped out of the context.
 		// there might be a bug mapping the return value out.
-		return imagineset(c);
+		return imagineset(intellect::level2::notepad(), c);
 	})
 
 	decls(link, source, type, target);
@@ -409,7 +409,7 @@ void createhabits()
 		}
 	});
 
-	decls(get, set);
+	decls(get);
 	ahabit(get, ((source, s), (type, t)),
 	{
 		result = s.get(t);
@@ -791,7 +791,7 @@ void createhabits()
 		checknotepad(t);
 		if (ps != nothing) { checknotepad(ps); }
 		if (t.linked(needed-map) || t.linked(made-map)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
-		if (ps != nothing && ps.linked(next-step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
+		if (ps != nothing && ps.linked(next_step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
 		int ct = (literals.linked("self")?1:0)+(in.linked("self")?1:0)+(act!=nothing?1:0);
 		if (ct > 1) {
 			throw noteconcept().link("is","conflicting-actions-specified",  "habit", self, "context", ctx);
@@ -807,14 +807,14 @@ void createhabits()
 			//habit, context-action,
 			needed-map, settranslationmap(noteconcept(), in, literals),
 			made-map, settranslationmap(noteconcept(), out));
-		if (ps != nothing) { ps.set(next-step, result); }
+		if (ps != nothing) { ps.set(next_step, result); }
 	});
 
 	decls(order, steps);
 	ahabit(set-steps, ((target, t), (information-order, io, nothing)),
 	{
 		checknotepad(t);
-		if (t.linked(information-needed) || t.linked(next-step)) {
+		if (t.linked(information-needed) || t.linked(next_step)) {
 			throw noteconcept().link(is, "concept-links-collide",
 					concept, t,
 					context, ctx);
@@ -855,14 +855,14 @@ void createhabits()
 		checknotepad(t);
 		if (ps != nothing) { checknotepad(ps); }
 		if (t.linked(needed-map) || t.linked(made-map)) { throw noteconcept().link(is, "concept-links-collide", concept, t, context, ctx); }
-		if (ps != nothing && ps.linked(next-step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
+		if (ps != nothing && ps.linked(next_step)) { throw noteconcept().link(is, "previous-step-already-has-next-step", previous-step, ps, context, ctx); }
 		if (s == nothing) { s = noteconcept(); }
 		result = t;
 		t.link(
 			is, "condition-step",
 			needed-map, settranslationmap(noteconcept(), noteconcept().link(condition, cond), noteconcept().link(next-steps, s, "self", condition))
 		);
-		if (ps != nothing) { ps.set(next-step, result); }
+		if (ps != nothing) { ps.set(next_step, result); }
 	});
 	ahabit(condition-step-get, ((condition-step, ca), (value, v)),
 	{
@@ -950,7 +950,7 @@ void createhabits()
 		checknotepad(state);
 		(know-is)(state, steps-state);
 		state.set(context, c);
-		state.set(next-step, s.get(first-step));
+		state.set(next_step, s.get(first-step));
 		state.set(task, s);
 		state.set(habit, steps-state);
 	});
@@ -994,7 +994,7 @@ void createhabits()
 	{
 		// make resumable
 		ref s = (make-steps-state)(s, c);
-		while (s.get(next-step) != nothing)
+		while (s.get(next_step) != nothing)
 		{
 			act(runstate, c);
 		}
@@ -1005,10 +1005,10 @@ void createhabits()
 	{
 		checknotepad(s);
 		c.set(active-state, s);
-		ref step = s.get(next-step);
+		ref step = s.get(next_step);
 		s.set(active-step, step);
-		if (step.linked(next-step)) { s.set(next-step, step.get(next-step); }
-		else { s.set(next-step, nothing); }
+		if (step.linked(next_step)) { s.set(next_step, step.get(next_step); }
+		else { s.set(next_step, nothing); }
 		act(step, c);
 		// do to context not using runstate, can't pause mid-subtask without finding subtask runstate.
 		// basically, changing subcontext to alter next-step like condition
@@ -1057,7 +1057,7 @@ void createhabits()
 		}
 		if (outerctx.linked(active-state)) {
 			checknotepad(outerctx.get(active-state));
-			outerctx.get(active-state).set(next-step, next);
+			outerctx.get(active-state).set(next_step, next);
 		} else {
 			act(next, outerctx);
 		}
@@ -1097,7 +1097,7 @@ void createhabits()
 		}
 		// TODO AFTER SUBCONTEXTS, so we can consider role of action
 		// handlers in context.  likely will be unchanged.
-		// old: outerctx.get(active-state).set(next-step, next);
+		// old: outerctx.get(active-state).set(next_step, next);
 	});
 	ahabit(condition, ((condition, cond), (actions, acts), (context, actctx)),
 	{

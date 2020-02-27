@@ -15,7 +15,8 @@ struct concept
 {
 	// a concept is made of concept-typed links to other concepts
 	using links_t = std::unordered_multimap<concept*,concept*>;
-	using linkit = links_t::const_iterator;
+	using linkcit = links_t::const_iterator;
+	using linkit = linkcit; //links_t::iterator;
 	links_t links;
 	// and optional associated arbitrary data
 	std::any data;
@@ -31,8 +32,8 @@ struct concept
 	void link(concept* type, concept* target);
 	void unlink(concept* type, concept* target);
 	void unlink(concept* type);
-	linkit unlink(linkit & it);
-	void relink(linkit & it, concept* target);
+	linkit unlink(linkit it);
+	void relink(linkit it, concept* target);
 
 	bool crucial() { return iscrucial || crucialparts.size(); }
 	bool crucial(concept* type, concept* target);
@@ -72,20 +73,20 @@ struct concept
 		array(array const &) = default;
 		array(array &&) = default;
 		array &operator=(array const &) = default;
-		array(linkit b, linkit e)
+		array(linkcit b, linkcit e)
 		: itb(b), ite(e) { }
-		struct iterator : public linkit {
+		struct iterator : public linkcit {
 			iterator() = default;
 			iterator(iterator const &) = default;
 			iterator(iterator &&) = default;
 			iterator& operator=(iterator const &) = default;
-			iterator(linkit it) : linkit(it) { }
-			iterator operator++() { return linkit::operator++(); }
-			iterator operator++(int i) { return linkit::operator++(i); }
+			iterator(linkcit it) : linkcit(it) { }
+			iterator operator++() { return linkcit::operator++(); }
+			iterator operator++(int i) { return linkcit::operator++(i); }
 			//iterator operator--() { return linkit::operator--(); }
 			//iterator operatir--(int i) { return linkit::operator--(i); }
-			concept*const& operator*() { return linkit::operator*().second; }
-			concept*const* operator->() { return &linkit::operator->()->second; }
+			concept*const& operator*() { return linkcit::operator*().second; }
+			concept*const* operator->() { return &linkcit::operator->()->second; }
 		};
 		iterator begin() { return itb; }
 		iterator end() { return ite; }
