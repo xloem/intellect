@@ -45,6 +45,9 @@ NOW:
 	- [X] implement imagineget, to get a properly imagined view of a part of reality while considering something
 	- [X] implement imagineset, to produce imagination if desiring to consider changes to reality
 	- [ ] fix imagination work to use only 1 parent per bubble.  >1 was an error, and indicates cognitive problems.
+		IF IT IS HARD TO MAKE IMAGINATION WORK, MAYBE JUST COPY EVERYTHING IN AT THE START?
+			This means all changeable concepts, and all concepts that use changeable concepts.
+			Since everything is copied, no outer recursion needed.  Ignore outer imaginations made after ours.
 	- [ ] instead of changing level-2 ref to use imagination, change the 'steps' habits to do so.
 		this provides for different contexts using the same outer refs properly
 			- [ ] also update any habits that reference subparts of refs, in case subpart changes are imagined.
