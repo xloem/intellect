@@ -13,16 +13,16 @@ namespace level2 {
 ref & context();
 
 ref & notepad();
-ref newnotepad(ref name);
+ref newnotepad(ref name, bool imaginechanges = false);
 ref subnotepad(ref name, bool allowouter = false);
 ref noteconcept(std::any data = {});
 void checknotepad(ref concept);
 bool innotepad(ref concept, ref pad);
 void leavenotepad(ref concept, ref pad);
-void considerwith(ref realitypad, ref imaginationpad);
-ref imagineget(ref pad, ref concept);
-ref imagineset(ref pad, ref concept); // this will update references _only_ within pad, so relevent concepts must also be brought in
-void entersubnotepad(ref concept, ref name, bool allowouter = false);
+//void considerwith(ref realitypad, ref imaginationpad);
+ref imagineget(ref pad, ref concept, bool change = false, bool allowoutofcontext = false);
+ref imagineset(ref pad, ref concept, bool allowoutofcontext = false); // this does not presently update concepts that use the one passed.
+void entersubnotepad(ref concept, ref name, bool allowouter = false, bool allowself = false);
 //void givename(ref context, ref concept, std::string const & name, bool contextisnotepad = false);
 //ref namelookup(std::string name, ref context, ref outerlink, bool makelocal, bool contextisnotepad = false);
 ref getnamed(std::string name, bool create = false);

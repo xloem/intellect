@@ -84,63 +84,58 @@ ref settranslationmap(ref c, ref m, ref k = nothing)
 //							make a function to wire to end
 
 // caller calls imagineget on 'm', and imagineset on 'c1' and 'c2'.
-void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = false)
+void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = false, ref trustedrecipient = concepts::nothing)
 {
 	checknotepad(c1);
 	checknotepad(c2);
 	decl(translation); decl(known); decl(nothing);
 	if (!quiet) { std::cerr << "[context-map"; }
-	// if we don't want to call imagineget so much, we could store discovered changes in our local imagination in imagineget.
+	// if we don't want to call imagineget so much, we could store discovered changes in our local imagination, in imagineget.
 	// just remember that needs to be done respecting bounds of what can be changed at all.
 	
 	for (auto link : m.imagineget(translation).links()) {
 		if (!quiet) { std::cerr << " "; }
 
-		auto name1 = imagineget(link.first);
-		auto name2 = imagineget(link.second);
+		ref name1, name2;
 		if (reverse) {
-			if (!quiet) { std::cerr << name2.name() << ":" << name1.name() << "="; }
-			if (!c1.linked(name1)) {
-				throw noteconcept().link(
-						"is", "not-in-context",
-						"value", name1,
-						"context", c1,
-						"map", m
-						);
-			}
-			c2.set(name2, c1.imagineget(name1, true));
-			if (!quiet) { std::cerr << c1.get(name1).name(); }
+			name1 = imagineget(link.second);
+			name2 = imagineget(link.first);
 		} else {
-			if (!quiet) { std::cerr << name1.name() << ":" << name2.name() << "="; }
-			if (!c1.linked(name2)) {
-				throw noteconcept().link(
-						"is", "not-in-context",
-						"value", name2,
-						"context", c1,
-						"map", m
-						);
-			}
-			c2.set(name1, c1.imagineget(name2, true));
-			if (!quiet) { std::cerr << c1.get(name2).name(); }
+			name1 = imagineget(link.first);
+			name2 = imagineget(link.second);
 		}
+		if (!quiet) { std::cerr << name1.name() << ":" << name2.name() << "="; }
+		if (!c1.linked(name2)) {
+			throw noteconcept().link(
+					"is", "not-in-context",
+					"value", name2,
+					"context", c1,
+					"map", m
+					);
+		}
+		auto concept = c1.imagineget(name1, !copychangeablenessout);
+		c2.set(name1, concept);
+		if (trustedrecipient != concepts::nothing && notepad().linked(concepts::changeable, concept)) {
+			entersubnotepad(concept, trustedrecipient, true, false);
+		}
+		if (!quiet) { std::cerr << c1.get(name2).name(); }
 	}
 	if (m.linked(known)) {
 		auto known = m.imagineget(known);
 		if (known != nothing) {
 			for (auto link : known.links()) {
-				auto val1 = imagineget(link.first);
-				auto val2 = imagineget(link.second);
+				ref val1, val2;
 				if (reverse) {
-					if (!quiet) {
-						std::cerr << " " << val2.name() << ":" << val1.name();
-					}
-					c2.set(val2, val1);
+					val1 = imagineget(link.second);
+					val2 = imagineget(link.first);
 				} else {
-					if (!quiet) {
-						std::cerr << " " << val1.name() << ":" << val2.name();
-					}
-					c2.set(val1, val2);
+					val1 = imagineget(link.first);
+					val2 = imagineget(link.second);
 				}
+				if (!quiet) {
+					std::cerr << " " << val1.name() << ":" << val2.name();
+				}
+				c2.set(val1, val2);
 			}
 		}
 	}
@@ -223,12 +218,14 @@ void _steps(ref s, ref ctx)
 			}
 		}
 		checknotepad(subctx); // should be impossible to fail, but good habit
-		habit.fun<ref>()(subctx); // TODO ERROR: I don't see subnotepad spawning happening anywhere here.
-						// it looks like subnotepads are entered for c++ habit calls but not script calls.
-		if (s.linked(made-map)) {
-			// TODO ERROR: this mapping is happening in the wrong imagination.
-			// it should happen in the one of the subhabit, which could have imagined changes.
-			contextmapinto(subctx, s.imagineget(made-map), c, true, quiet);
+		{
+			intellect::level2::restorenotepad notepadrestoration;
+			notepadrestoration.switchwith(subctx);
+			habit.fun<ref>()(subctx);
+			if (s.linked(made-map)) {
+				entersubnotepad(c, concepts::_self, false, true);
+				contextmapinto(subctx, s.imagineget(made-map), c, true, quiet, concepts::outer);
+			}
 		}
 		if (s.linked(needed-map)) {
 			c = subctx.get(outer-context);

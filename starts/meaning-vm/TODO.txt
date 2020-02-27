@@ -48,9 +48,9 @@ NOW:
 		IF IT IS HARD TO MAKE IMAGINATION WORK, MAYBE JUST COPY EVERYTHING IN AT THE START?
 			This means all changeable concepts, and all concepts that use changeable concepts.
 			Since everything is copied, no outer recursion needed.  Ignore outer imaginations made after ours.
-	- [ ] fix the 'TODO ERROR's in level-2/habits.cpp .  like uses restorenotepad from sugar.hpp .
-		- [ ] remember to imagineget() the return value in case the last step changed it, in sugar.hpp
-		- [ ] remember to imagineget() the return value in case the last step changed it, in habits.cpp
+	- [X] fix the 'TODO ERROR's in level-2/habits.cpp .  like uses restorenotepad from sugar.hpp .
+		- [X] remember to imagineget() the return value in case the last step changed it, in sugar.hpp
+		- [X] remember to imagineget() the return value in case the last step changed it, in habits.cpp
 	- [ ] instead of changing level-2 ref to use imagination, change the 'steps' habits to do so.
 		this provides for different contexts using the same outer refs properly
 			- [ ] also update any habits that reference subparts of refs, in case subpart changes are imagined.

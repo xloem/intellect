@@ -125,6 +125,7 @@ private:
 				return result; \
 			})(); \
 			if (result != intellect::level1::concepts::nothing || !ctx.linked(intellect::level2::concepts::result)) { \
+				result = intellect::level2::imagineget(result); \
 				if (intellect::level2::innotepad(result, intellect::level2::notepad()) && intellect::level2::notepad().linked(intellect::level2::concepts::outer)) { \
 					if(!intellect::level2::innotepad(result, intellect::level2::subnotepad(intellect::level2::concepts::outer, true))) { \
 						intellect::level2::entersubnotepad(result, intellect::level2::concepts::outer, true); \

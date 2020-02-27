@@ -152,9 +152,9 @@ public:
 		decltype(concept::links) & links;
 	};
 
-	typename array::iterator unlink(typename array::iterator & it) { return p->unlink(static_cast<concept::array::linkit&>(it.underlying())); }
+	typename array::iterator unlink(typename array::iterator & it) { return p->unlink(static_cast<concept::linkit&>(it.underlying())); }
 	typename links_t::iterator unlink(typename links_t::iterator it) { return p->unlink(it.underlying()); }
-	void relink(typename links_t::iterator it, ref target) { p->relink(it.underlying(), target.ptr());
+	void relink(typename links_t::iterator it, ref target) { p->relink(it.underlying(), target.ptr()); }
 	bool crucial(typename links_t::iterator it) { return self.p->crucial(it.underlying()); }
 	void setcrucial(typename links_t::iterator it) { self.p->setcrucial(it.underlying()); }
 };

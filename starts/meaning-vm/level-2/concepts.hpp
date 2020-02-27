@@ -10,9 +10,12 @@ namespace concepts {
 
 using level1::concepts::nothing;
 using level1::concepts::name;
+using level1::concepts::is;
+using level1::concepts::text;
 
 static ref context("context");
 static ref root("root");
+static ref names("names");
 static ref notepad("notepad");
 static ref outer("outer");
 static ref changeable("changeable");

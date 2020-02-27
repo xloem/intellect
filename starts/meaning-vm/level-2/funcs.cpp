@@ -27,6 +27,7 @@ ref & context()
 ref const & bootstrapnotepad()
 {
 	static auto notes = ref("bootstrap-space").link("is","notepad");
+	notes.link("self", notes);
 	return notes;
 }
 
@@ -48,6 +49,7 @@ ref newnotepad(ref name, bool fakechanges)
 	// any additional links must be blocked in subnotepad()
 	newnotes.link(level2::concepts::is, level2::concepts::notepad);
 	newnotes.link(level2::concepts::outer, level2::notepad());
+	newnotes.link(level2::concepts::self, newnotes);
 	newnotes.link(level2::concepts::name, name.isa(level2::concepts::text) ? name : name.get(level2::concepts::name));
 	level2::notepad().link(name, newnotes); // linked by name to find easily when used
 	if (fakechanges) {
@@ -56,9 +58,9 @@ ref newnotepad(ref name, bool fakechanges)
 	return newnotes;
 }
 
-ref subnotepad(ref name, bool allowouter)
+ref subnotepad(ref name, bool allowouter, bool allowself)
 {
-	if (name == level2::concepts::is || name == level2::concepts::name || (name == level2::concepts::outer && !allowouter) || name == level2::concepts::names || !level2::notepad().linked(name)) {
+	if (name == level2::concepts::is || name == level2::concepts::name || (name == level2::concepts::outer && !allowouter) || (name == level2::concepts::_self && !allowself) || name == level2::concepts::names || !level2::notepad().linked(name)) {
 		throw noteconcept().link("is","subnotepad-does-not-exist", "notepad", level2::notepad(), "subnotepad", name);
 	}
 	ref result = level2::notepad().get(name);
@@ -117,17 +119,24 @@ void leavenotepad(ref concept, ref pad)
 
 static thread_local std::vector<ref> outer_pads;
 
-ref imagineget(ref pad, ref concept)
+// convert an imagined-thing to what it is imagined as being.
+ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
 {
 	if (pad.linked(concepts::changeable, concept)) { return concept; }
 
 	outer_pads.clear();
 	outer_pads.push_back(pad);
-	// convert all imagined-things.
 	
 		// imagineget means get-the-right-concept-for-this-one
 		// so we want to look upwards for imaginations that could map it down.
-	// this could be faster if we stored a list of the path from the root to reach this pad, in the pad.
+	
+	// ways to speed up:
+	// - copy a concept into local imagination when it is found used changed, to speed reuse.  this means respecting
+	//   having a concept in concepts::imagination without it being concepts::changeable.  code currently assumes the
+	//   one implies the other.
+	// - store a link to the rootmost imagination, instead of walking up (or try walking down from total root, or keep a hint)
+	// - set a norm of linking to the most-real concept at every stage, and then walking up can stop on first match.
+	
 	while (true) {
 		auto & plausible = outer_pads.back();
 		if (plausible.linked(concepts::imagination)) {
@@ -145,105 +154,78 @@ ref imagineget(ref pad, ref concept)
 		}
 	}
 	// now we walk back down, replacing the concept as needed as we go
+	bool could_be_changed = true;
 	while (!outer_pads.empty()) {
 		auto & plausible = outer_pads.back();
 		if (plausible.linked(concepts::imagination)) {
 			auto imagination = plausible.get(concepts::imagination);
 			if (imagination.linked(concept)) {
 				concept = imagination.get(concept);
+				could_be_changed = true;
+				outer_pads.pop_back();
+				continue;
 			}
+		} else {
+			could_be_changed = false;
+		}
+		if (plausible.linked(concepts::changeable, concept)) {
+			could_be_changed = true;
 		}
 		outer_pads.pop_back();
 	}
 	// now concept has been replaced for everything in the hierarchy, in the proper order.
 	
+	if (change) {
+	       	if (!could_be_changed && !allowoutofcontext) {
+			throw noteconcept().link("is", "imagination-out-of-context", "concept", concept, "pad", pad);
+		}
+		if (!pad.linked(concepts::changeable, concept)) {
+			// produce an imagined mirror of the concept
+			ref idea = noteconcept();
+			pad.get(concepts::imagination).link(concept, idea);
+			for (auto & link : concept.links()) {
+				// if we implemented concept-cloning, we might be able to do this faster inside the concept class,
+				// using range insertion, but refcounting might make that hard.  (do we need refcounting?)
+				idea.link(link.first(), link.second());
+			}
+			concept = idea;
+
+			// we now could update every concept in the universe to use our imagined thing.
+			// alternatively we could set a norm of calling imagineget on their link types and targets,
+			// and using imagineget to check they haven't changed.
+
+			/*
+			// update other concepts in the notepad to use it
+			for (auto other : pad.getAll(concepts::changeable)) {
+				static thread_local std::vector<ref> moved;
+				auto links = other.links();
+				for (auto it = links.begin(); it != links.end();) {
+					if (it->second == concept) { other.relink(it, idea); }
+					if (it->first == concept) { 
+						moved.push_back(it->second);
+						it = other.unlink(it);
+					} else {
+						++ it;
+					}
+				}
+				for (auto & c : moved) {
+					other.link(idea, c);
+				}
+				moved.clear();
+			}
+			*/
+
+			// propogate imagined changes to unimagined changing concepts?
+		}
+	}
+	
 	return concept;
 }
 
-ref imagineset(ref pad, ref concept)
+// imagine something as being different, returns reference to copy
+ref imagineset(ref pad, ref concept, bool allowoutofcontext)
 {
-	if (pad.linked(concepts::changeable, concept)) { return concept; }
-
-	// breadth-first search of outer imagination hierarchy to find replaced concepts
-	plausible_dreams.clear();
-	plausible_dreams.push_back(pad);
-	while (!plausible_dreams.empty()) {
-		auto & plausible = plausible_dreams.front();
-		if (plausible.linked(concepts::changeable, concept)) {
-			found = true;
-			break;
-		}
-		if (plausible.linked(concepts::imagination)) {
-			auto imagination = plausible.get(concepts::imagination);
-			if (imagination.linked(concept)) {
-				concept = imagination.get(concept);
-				// TODO: this only needs to check pads between us and the one it was found in
-				// but recursion is easier for now
-				return imagineset(concept);
-			}
-			auto changing = plausible.getAll(concepts::changing);
-			plausible_dreams.insert<ref::array::iterator>(plausible_dreams.end(), changing.begin(), changing.end());
-		}
-		plausible_dreams.pop_front();
-	}
-
-	if (!found) {
-		throw noteconcept().link(_is, conceptnotinnotepad, _concept, concept, _notepad, pad, _context, level2::context());
-	}
-
-	// produce an imagined mirror of the concept
-	ref idea = noteconcept();
-	imagination.link(concept, idea);
-	for (auto & link : concept.links()) {
-		// could use imagineget to cache lookups here
-		// or
-		// could add links as a big chunk, using
-		// range insertion, but would need to make sure innards of concept are managed (it does refcounting)
-		idea.link(link.first(), link.second());
-	}
-
-	// update other concepts in the notepad to use it
-	for (auto other : pad.getAll(concepts::changeable)) {
-		static thread_local std::vector<ref> moved;
-		auto links = other.links();
-		for (auto it = links.begin(); it != links.end();) {
-			if (it->second == concept) { other.relink(it, idea); }
-			if (it->first == concept) { 
-				moved.push_back(it->second);
-				it = other.unlink(it);
-			} else {
-				++ it;
-			}
-		}
-		for (auto & c : moved) {
-			other.link(idea, c);
-		}
-		moved.clear();
-	}
-
-	// propogate imagined changes to unimagined changing concepts.
-	
-	// TODO: like imagineget and probably-imagineset, this code needs to walk all outer contexts to be correct, for now
-	//       but  what it does will be different: it will copy-in all concepts that use the changed concept.
-	// code structure below was likely copy-pasted from imagineget, unsure
-	
-	// this code structure is also in imagineget, it has not been generalized.
-	static thread_local std::deque<ref> plausible_dreams;
-	plausible_dreams.clear();
-	plausible_dreams.push_back(pad);
-
-	while (!plausible_dreams.empty()) {
-		auto & plausible = plausible_dreams.front();
-		if (plausible.linked(concepts::imagination)) {
-			imagination = plausible.get(concepts::imagination);
-			if (imagination.linked(concept)) { return imagination.get(concept); }
-			auto changing = plausible.getAll(concepts::changing);
-			plausible_dreams.insert<ref::array::iterator>(plausible_dreams.end(), changing.begin(), changing.end());
-		}
-		plausible_dreams.pop_front();
-	}
-
-	return idea;
+	return imagineget(pad, concept, true, allowoutofcontext);
 }
 
 void givename(ref context, ref concept, std::string const & name, bool contextisnotepad)
@@ -306,10 +288,10 @@ void bootstrap2notepad(std::string name)
 }
 */
 
-void entersubnotepad(ref concept, ref name, bool allowouter)
+void entersubnotepad(ref concept, ref name, bool allowouter, bool allowself)
 {
 	checknotepad(concept);
-	ref pad = subnotepad(name, allowouter);
+	ref pad = subnotepad(name, allowouter, allowself);
 	if (pad.linked(concepts::changeable,concept)) {
 		throw noteconcept().link("is", "already-in-notepad", "concept", concept, "notepad", pad, "context", level2::context());
 	}
