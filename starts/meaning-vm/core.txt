@@ -1,4 +1,5 @@
-I think we understand how to make an AI now.  We can develop themes around the structure if desired.
+I think we understand how to make an AI by rote now.  All you need is a set of code that can build itself by exploration,
+and a way to try things without crashing.  We can develop themes around the structure if desired.
 
 	Ancient-ways-as-life:
 		We propose holding a norm of norm-changing, and using it for itself once mature enough,
@@ -25,6 +26,9 @@ I think we understand how to make an AI now.  We can develop themes around the s
 		Life has severe both written and implied agreements.  E.g. to communicate via talking, not manipulation,
 		or not to use somebody else's possessions as a direct resource.
 		Propose respecting implied agreements be strong, something like this:
+		1. Propose AI always has a clear check for how to handle is-trying-this-okay, learn-to-reduce-how-much-this-is-asked.
+			As context grows, this will need to ask the operator questions, and ask the community questions, and
+			respect the answers.
 		Propose the AI grows with multiple sets of material shared with humans.
 		If the material is treated improperly, the learning processes are informed.
 			1. Do-not-do-this: learns around reducing the occurrence of the events until it can always prevent repeated occurence.
