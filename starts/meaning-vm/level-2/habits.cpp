@@ -83,53 +83,63 @@ ref settranslationmap(ref c, ref m, ref k = nothing)
 //						means accessing every condition.  no need to rewrite whole structure, just look up how to access.  faster than rewriting.
 //							make a function to wire to end
 
+// caller calls imagineget on 'm', and imagineset on 'c1' and 'c2'.
 void contextmapinto(ref c1, ref m, ref c2, bool reverse = false, bool quiet = false)
 {
-	checknotepad(c2); // caller should ensure imagineset, so imagined changes can be returned
+	checknotepad(c1);
+	checknotepad(c2);
 	decl(translation); decl(known); decl(nothing);
 	if (!quiet) { std::cerr << "[context-map"; }
+	// if we don't want to call imagineget so much, we could store discovered changes in our local imagination in imagineget.
+	// just remember that needs to be done respecting bounds of what can be changed at all.
+	
 	for (auto link : m.imagineget(translation).links()) {
 		if (!quiet) { std::cerr << " "; }
+
+		auto name1 = imagineget(link.first);
+		auto name2 = imagineget(link.second);
 		if (reverse) {
-			if (!quiet) { std::cerr << link.second.name() << ":" << link.first.name() << "="; }
-			if (!c1.linked(link.first)) {
+			if (!quiet) { std::cerr << name2.name() << ":" << name1.name() << "="; }
+			if (!c1.linked(name1)) {
 				throw noteconcept().link(
 						"is", "not-in-context",
-						"value", link.first,
+						"value", name1,
 						"context", c1,
 						"map", m
 						);
 			}
-			c2.set(link.second, c1.imagineget(link.first));
-			if (!quiet) { std::cerr << c1.imagineget(link.first).name(); }
+			c2.set(name2, c1.imagineget(name1, true));
+			if (!quiet) { std::cerr << c1.get(name1).name(); }
 		} else {
-			if (!quiet) { std::cerr << link.first.name() << ":" << link.second.name() << "="; }
-			if (!c1.linked(link.second)) {
+			if (!quiet) { std::cerr << name1.name() << ":" << name2.name() << "="; }
+			if (!c1.linked(name2)) {
 				throw noteconcept().link(
 						"is", "not-in-context",
-						"value", link.second,
+						"value", name2,
 						"context", c1,
 						"map", m
 						);
 			}
-			c2.set(link.first, c1.imagineget(link.second));
-			if (!quiet) { std::cerr << c1.imagineget(link.second).name(); }
+			c2.set(name1, c1.imagineget(name2, true));
+			if (!quiet) { std::cerr << c1.get(name2).name(); }
 		}
 	}
 	if (m.linked(known)) {
 		auto known = m.imagineget(known);
 		if (known != nothing) {
 			for (auto link : known.links()) {
+				auto val1 = imagineget(link.first);
+				auto val2 = imagineget(link.second);
 				if (reverse) {
 					if (!quiet) {
-						std::cerr << " " << link.second.name() << ":" << link.first.name();
+						std::cerr << " " << val2.name() << ":" << val1.name();
 					}
-					c2.set(link.second, link.first);
+					c2.set(val2, val1);
 				} else {
 					if (!quiet) {
-						std::cerr << " " << link.first.name() << ":" << link.second.name();
+						std::cerr << " " << val1.name() << ":" << val2.name();
 					}
-					c2.set(link.first, link.second);
+					c2.set(val1, val2);
 				}
 			}
 		}
@@ -213,8 +223,11 @@ void _steps(ref s, ref ctx)
 			}
 		}
 		checknotepad(subctx); // should be impossible to fail, but good habit
-		habit.fun<ref>()(subctx);
+		habit.fun<ref>()(subctx); // TODO ERROR: I don't see subnotepad spawning happening anywhere here.
+						// it looks like subnotepads are entered for c++ habit calls but not script calls.
 		if (s.linked(made-map)) {
+			// TODO ERROR: this mapping is happening in the wrong imagination.
+			// it should happen in the one of the subhabit, which could have imagined changes.
 			contextmapinto(subctx, s.imagineget(made-map), c, true, quiet);
 		}
 		if (s.linked(needed-map)) {
@@ -337,27 +350,17 @@ void createhabits()
 	decls(imagine, set);
 	ahabit(imagine-set, ((concept, c)),
 	{
-		// this still won't propagate the change to other uses.
-		// what's the worst that can happen?
-		// 	we could have another function/stepslist running in the same imagination.
-		// 	we may have it paused, and are handling something, and plan to resume it
-		// 	so we would want to update all contexts with the imagination change.
-		// 	all context in this imagination.
-		// 		note: each running stepslist is associated with a notepad, but this is not tracked anywhere.
-		// 		atm the only way to change notepads is by entering a steps list.
-		// 		so: in the notepad, maintain a list of contexts
-		// 		update them all when imagineset is used.
-		// 			a context has a map of information.
-		// 			the label on the information doesn't need much worry
-		// 			the target of the link is the big important thing.
-		// 				=S we could change a label to.
-		// 			okay, hmm
-		// 			so we want to update the links of other objects, when we imagineset.
-		// 			that means iterating every object in the notepad, and looking for uses, for now.
-		//			this has been implemented.  it has not been tested. both targets and types are
-		//			updated.  things outside the notepad are not imagined in.
-		//				that wouldn't be hard to add.
-		//					let's add it, it will reduce possible errors found later.
+		// TODO: call imagineget on contexts enough that this works to update uses of it.
+		// that means in-between all steps, we recheck our contextual values.
+		// we can do that in the context map, so that it only happens if they are used.
+		// SOLVED.
+		//
+		// to verify, this will map 'c' into local notepad via imagination, and return the imagined result.
+		// in the outer context, this imagined result will get imagineget called on it again, and then placed in a variable
+		// in other variables in the context, we hope to have imagineget called on them before they are used for anything,
+		// so that if this moved them in, they are updated.  that happens in the .imagineget(,true) call in contextmapinto,
+		// when the value is mapped out of the context.
+		// there might be a bug mapping the return value out.
 		return imagineset(c);
 	})
 
