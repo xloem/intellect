@@ -51,9 +51,16 @@ NOW:
 	- [X] fix the 'TODO ERROR's in level-2/habits.cpp .  like uses restorenotepad from sugar.hpp .
 		- [X] remember to imagineget() the return value in case the last step changed it, in sugar.hpp
 		- [X] remember to imagineget() the return value in case the last step changed it, in habits.cpp
+	- [ ] change unmakeconcept to remap imagined concepts to 'nothing'
+	- [ ] change imagineget to throw a severe error if used on an unmade value, but note this shouldn't be thrown, see next item
+	- [ ] change unmakeconcept to check use of imagined values, via walking up imagination hierarchy and using the memory-manager function to check all the forms.  likely collect them into a static vector and pass the container to the function.
 	- [ ] instead of changing level-2 ref to use imagination, change the 'steps' habits to do so.
 		this provides for different contexts using the same outer refs properly
 			- [ ] also update any habits that reference subparts of refs, in case subpart changes are imagined.
+	- [ ] replace checknotepad() with imagineset in level-2 and level-3
+		-> i'm a little through level-2/habits.cpp, and I realized I didn't implement imagining erasure.
+		
+	- [ ] use imagineget on subparts in level-3
 		(this will require updating other habits to do this, too?
 			that's only required if we allow for changes to the bootstrap notepad.
 			so, helpful but not required, as changes outside of core notepad require human confirmation.)
