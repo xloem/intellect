@@ -34,6 +34,7 @@ struct concept
 	void unlink(concept* type);
 	linkit unlink(linkit it);
 	void relink(linkit it, concept* target);
+	void replace(concept* other);
 
 	bool crucial() { return iscrucial || crucialparts.size(); }
 	bool crucial(concept* type, concept* target);

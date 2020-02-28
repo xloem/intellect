@@ -60,6 +60,19 @@ void concept::setcrucial(concept* type, concept* target)
 	throw no_such_link_type(selfref, type);
 }
 
+void concept::replace(concept* other)
+{
+	for (auto it = links.cbegin(); it != links.cend();) {
+		it = unlink(it);
+	}
+	links = other->links;
+	data = other->data;
+	for (auto & link : links) {
+		if (link.first != this) { ++ link.first->_refcount; }
+		if (link.second != this) { ++ link.second->_refcount; }
+	}
+}
+
 void concept::unlink(concept* type, concept* target)
 {
 	auto ls = links.equal_range(type);

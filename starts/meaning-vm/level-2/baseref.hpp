@@ -46,7 +46,7 @@ struct baseref : public/*private*/ level1::baseref<ref>
 	template <typename... Refs>
 	ref act(ref habit, Refs... rest) const { return level2::dohabit(habit, {self, rest...}); }
 
-	void replace(ref other) { *self.ptr() = *other.ptr(); }
+	void replace(ref other) { self.ptr()->replace(other.ptr()); }
 
 	char const * dbglinks(int depth = 0) const { return level1::dbglinks(level2::imagineget(level2::notepad(), *this), depth); }
 

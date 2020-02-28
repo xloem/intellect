@@ -19,16 +19,16 @@ ref makeconcept()
 	return intellect::level0::basic_alloc();
 }
 
-void conceptunmake(ref c)
+/*void conceptunmake(ref c)
 {
 	leavenotepad(c, level2::notepad());
 	intellect::level0::basic_dealloc(c);
-}
+}*/
 
 using links_it = intellect::level0::baseref<ref>::links_t::iterator;
 void poplinkentry(ref le)
 {
-	checknotepad(le);
+	imagineset(intellect::level2::notepad(), le);
 	auto & it = le.val<links_it>();
 	if (it != le["source"].links().end()) {
 		le.set("type", it->first);
@@ -246,7 +246,7 @@ void _steps(ref s, ref ctx)
 
 void _condition(ref ctx, ref cond, ref steps, ref state)
 {
-	checknotepad(state); // caller should ensure imagineset
+	imagineset(intellect::level2::notepad(), state);
 
 	// because this sets active-state's next-step instead of calling something,
 	// a subcontext is not opened for the steps unless they have one.
@@ -289,45 +289,45 @@ void createcontainer(std::string name)
 	decls(set, push, front, back, iterator, begin, end, entry);
 	ahabitraw(set-container, ((concept, c)),
 	{
-		checknotepad(c);
+		imagineset(intellect::level2::notepad(), c);
 		data<T>(c).clear();
 		return c;
 	});
 	ahabitraw(container-push-back, ((container, c), (value, v)),
 	{
-		checknotepad(c);
+		imagineset(intellect::level2::notepad(), c);
 		c.val<T>().push_back(v.ptr());
 		return c;
 	});
 	ahabitraw(set-begin-container-entry, ((entry, e), (container, c)),
 	{
-		checknotepad(c);
-		checknotepad(e);
+		imagineset(intellect::level2::notepad(), c);
+		imagineset(intellect::level2::notepad(), e);
 		data<typename T::iterator>(e) = (c.val<T>()).begin();
 		return e;
 	});
 	ahabitraw(set-end-container-entry, ((entry, e), (container, c)),
 	{
-		checknotepad(c);
-		checknotepad(e);
+		imagineset(intellect::level2::notepad(), c);
+		imagineset(intellect::level2::notepad(), e);
 		data<typename T::iterator>(e) = (c.val<T>()).end();
 		return e;
 	});
 	ahabitraw(container-entry-same, ((entry-a, ea), (entry-b, eb)),
 	{
-		checknotepad(ea);
-		checknotepad(eb);
+		imagineset(intellect::level2::notepad(), ea);
+		imagineset(intellect::level2::notepad(), eb);
 		return ea.val<typename T::iterator>() == eb.val<typename T::iterator>();
 	});
 	ahabitraw(container-entry-next, ((entry, e)),
 	{
-		checknotepad(e);
+		imagineset(intellect::level2::notepad(), e);
 		++ e.val<typename T::iterator>();
 		return e;
 	});
 	ahabitraw(container-entry-value, ((entry, e)),
 	{
-		checknotepad(e);
+		imagineset(intellect::level2::notepad(), e);
 		return *e.val<typename T::iterator>();
 	});
 }
@@ -346,27 +346,22 @@ void createhabits()
 		return intellect::level2::notepad();
 	});
 
-	decls(imagine, set);
-	ahabit(imagine-set, ((concept, c)),
+	decls(imagine, set, get, in, notepad);
+	ahabit(imagine, ((concept, c)),
 	{
-		// TODO: call imagineget on contexts enough that this works to update uses of it.
-		// that means in-between all steps, we recheck our contextual values.
-		// we can do that in the context map, so that it only happens if they are used.
-		// SOLVED.
-		//
-		// to verify, this will map 'c' into local notepad via imagination, and return the imagined result.
-		// in the outer context, this imagined result will get imagineget called on it again, and then placed in a variable
-		// in other variables in the context, we hope to have imagineget called on them before they are used for anything,
-		// so that if this moved them in, they are updated.  that happens in the .imagineget(,true) call in contextmapinto,
-		// when the value is mapped out of the context.
-		// there might be a bug mapping the return value out.
 		return imagineset(intellect::level2::notepad(), c);
-	})
+	});
+	// imagine-get doesn't need a habit because _steps
+	// auto-imagines everything.
+	ahabit(in-notepad, ((concept, c)),
+	{
+		return innotepad(c);
+	});
 
 	decls(link, source, type, target);
 	ahabit(link, ((source, s), (type, t), (target, dst)),
 	{
-		checknotepad(s);
+		imagineset(intellect::level2::notepad(), s);
 		s.link(t, dst);
 	});
 
@@ -403,7 +398,7 @@ void createhabits()
 	decls(unlink);
 	ahabit(unlink, ((source, s), (type, t), (target, dst, anything)),
 	{
-		checknotepad(s);
+		imagineset(intellect::level2::notepad(), s);
 		if (dst == anything) {
 			s.unlink(t);
 		} else {
@@ -411,7 +406,6 @@ void createhabits()
 		}
 	});
 
-	decls(get);
 	ahabit(get, ((source, s), (type, t)),
 	{
 		result = s.get(t);
@@ -419,13 +413,13 @@ void createhabits()
 
 	ahabit(set, ((source, s), (type, t), (target, dst)),
 	{
-		checknotepad(s);
+		imagineset(intellect::level2::notepad(), s);
 		s.set(t, dst);
 	});
 
 	ahabit(put, ((source, s), (type, t), (target, dst)),
 	{
-		checknotepad(s);
+		imagineset(intellect::level2::notepad(), s);
 		s.set(t, dst);
 	});
 
@@ -436,7 +430,7 @@ void createhabits()
 	}); 
 	ahabit(copy-to, ((source, s), (target, t)),
 	{
-		checknotepad(t);
+		imagineset(intellect::level2::notepad(), t);
 		// copies data too
 		if (t.hasval() || t.ptr()->links.size() != 0) { throw noteconcept().link(is, "concept-not-empty", concept, t); }
 		result = t;
@@ -444,7 +438,7 @@ void createhabits()
 	});
 	ahabit(copy-data-to, ((source, s), (target, t)),
 	{
-		checknotepad(t);
+		imagineset(intellect::level2::notepad(), t);
 		if (t.hasval()) { throw noteconcept().link(is, "concept-has-data", concept, t); }
 		t.ptr()->data = s.ptr()->data;
 	});
@@ -454,9 +448,8 @@ void createhabits()
 	{
 		checknotepad(c);
 		ref r = c.get(n);
-		checknotepad(r);
 		c.unlink(n);
-		conceptunmake(r);
+		conceptunnote(r);
 	});
 	// if a concept or link is set crucial deleting it will be denied.  no way
 	// to remove crucial mark is provided.  nothing is marked crucial yet.
@@ -545,14 +538,15 @@ void createhabits()
 	{
 		return lea.val<links_it>() == leb.val<links_it>();
 	});
-	ahabit(link-entry-insert-before, ((link-entry, le), (target, t)),
+	/*ahabit(link-entry-insert-before, ((link-entry, le), (target, t)),
 	{
 		ref s = le.get(source);
 		checknotepad(s);
 		// todo: make clean
 		auto & it = le.val<links_it>();
+		// DOESN'T RESPECT INTERFACE
 		s.ptr()->links.emplace_hint(it.underlying(), le.get(type), t);
-	})
+	})*/
 	ahabit(link-entry-unlink, ((link-entry, le)),
 	{
 		ref s = le.get(source);
@@ -827,6 +821,7 @@ void createhabits()
 		result.set(information-needed, infn);
 		ref posinf = infn;
 		for (auto inf : data<vector>(io)) {
+			inf = imagineget(intellect::level2::notepad(), inf);
 			ref nextinf = noteconcept().link(is, habit-information);
 			nextinf.set(information, inf);
 			posinf.set(next-information, nextinf);
@@ -842,7 +837,7 @@ void createhabits()
 				}
 			}
 		}
-		result.ptr()->data = steps.ptr()->data;
+		result.val(steps.val<std::any>());
 	});
 
 	decls(active, outer, state);
@@ -868,15 +863,15 @@ void createhabits()
 	});
 	ahabit(condition-step-get, ((condition-step, ca), (value, v)),
 	{
-		result = ca.get(needed-map).get(known).get(next-steps).get(v);
+		result = ca.imagineget(needed-map).imagineget(known).imagineget(next-steps).imagineget(v);
 	});
 	ahabit(condition-step-has, ((condition-step, ca), (value, v)),
 	{
-		result = ca.get(needed-map).get(known).get(next-steps).linked(v);
+		result = ca.imagineget(needed-map).imagineget(known).imagineget(next-steps).linked(v);
 	});
 	ahabit(condition-step-set, ((condition-step, ca), (value, v), (step, s)),
 	{
-		ref ns = ca.get(needed-map).get(known).get(next-steps);
+		ref ns = ca.imagineget(needed-map).imagineget(known).imagineget(next-steps);
 		checknotepad(ns);
 		ns.set(v, s);
 	});

@@ -384,7 +384,7 @@ bool istxtref(ref r)
 }
 ref txt2ref(std::string t)
 {
-	return ref(t).get(name_);
+	return ref(t).imagineget(name_);
 }
 ref txtref2bootstrap(ref txt)
 {
@@ -407,17 +407,19 @@ ref ctxlookup(ref context, ref item)
 	while (!nesteds.empty()) {
 		context = nesteds.front(); nesteds.pop_front();
 		for (auto link : context.links()) {
-			if (link.first == item) {
-				return link.second;
-			} else if (link.first == "is" || link.second == "outer-context") {
-				if (encountered.count(link.second)) { continue; }
-				nesteds.push_back(link.second);
-				encountered.insert(link.second);
-			} else if (link.first.isan("exclusive-context-group")) {
-				if (!exclusive_ctx_groups.count(link.first)) {
-					exclusive_ctx_groups[link.first] = link.second;
-					nesteds.push_back(link.second);
-					encountered.insert(link.second);
+			ref type = intellect::level2::imagineget(intellect::level2::notepad(), link.first);
+			ref target = intellect::level2::imagineget(intellect::level2::notepad(), link.second);
+			if (type == item) {
+				return target;
+			} else if (type == "is" || type == "outer-context") {
+				if (encountered.count(target)) { continue; }
+				nesteds.push_back(target);
+				encountered.insert(target);
+			} else if (type.isan("exclusive-context-group")) {
+				if (!exclusive_ctx_groups.count(type)) {
+					exclusive_ctx_groups[type] = target;
+					nesteds.push_back(target);
+					encountered.insert(target);
 				}
 			}
 		}

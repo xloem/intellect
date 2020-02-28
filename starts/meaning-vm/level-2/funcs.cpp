@@ -84,6 +84,21 @@ ref noteconcept(std::any data)
 	level2::notepad().link(concepts::changeable, result);
 	return result;
 }
+void conceptunnote(ref c)
+{
+	c = imagineset(level2::notepad(), c);
+	if (level2::notepad().linked(concepts::imagination)) {
+		ref imagination = level2::notepad().get(concepts::imagination());
+		for (auto & link : imagination.links()) {
+			if (link.second == c) {
+				imagination.relink(link, concepts::nothing);
+				break;
+			}
+		}
+	}
+	leavenotepad(c, level2::notepad());
+	level0::basic_dealloc(c);
+}
 static ref _is("is"), conceptnotinnotepad("concept-not-in-notepad"), _concept("concept"), _notepad("notepad"), _context("context");
 void checknotepad(ref concept)
 {
@@ -141,7 +156,10 @@ ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
 		if (plausible.linked(concepts::imagination)) {
 			auto imagination = plausible.get(concepts::imagination);
 			if (imagination.linked(concept)) {
-				concept = imagination.get(concept);
+				ref imaginedconcept = imagination.get(concept);
+				if (imaginedconcept == concepts::nothing) { throw noteconcept().link("is", "concept-no-longer-exists", "concept", concept, "pad", plausible, "source-pad", pad); }
+				concept = imaginedconcept;
+
 				outer_pads.pop_back();
 				break;
 			}
@@ -187,6 +205,7 @@ ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
 				// using range insertion, but refcounting might make that hard.  (do we need refcounting?)
 				idea.link(link.first(), link.second());
 			}
+			idea.val(concept.val<std::any>());
 			concept = idea;
 
 			// we now could update every concept in the universe to use our imagined thing.
