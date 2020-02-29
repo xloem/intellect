@@ -17,7 +17,7 @@ int main()
 		intellect::level2::newnotepad(txt2ref(fn));
 		std::cerr << intellect::level2::notepad().dbglinks() << std::endl;
 		::ref file = ::ref("parse-file")(txt2ref(fn));
-		intellect::level2::conceptunmake(file);
+		intellect::level2::conceptunnote(file);
 	} catch (intellect::level2::ref const & e) {
 		std::cerr << "Error: " << e.getAll("is").begin()->name() << std::endl;
 		std::cerr << e.dbglinks() << std::endl;;

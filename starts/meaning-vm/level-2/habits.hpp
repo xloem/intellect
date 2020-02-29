@@ -12,7 +12,7 @@ void createhabits();
 
 ref makeconcept();
 ref notepadconcept();
-void conceptunmake(ref c);
+//void conceptunmake(ref c);
 
 template<typename T>
 T & data(ref c) {

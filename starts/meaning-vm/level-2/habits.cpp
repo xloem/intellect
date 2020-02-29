@@ -28,7 +28,7 @@ ref makeconcept()
 using links_it = intellect::level0::baseref<ref>::links_t::iterator;
 void poplinkentry(ref le)
 {
-	imagineset(intellect::level2::notepad(), le);
+	checknotepad(le);
 	auto & it = le.val<links_it>();
 	if (it != le["source"].links().end()) {
 		le.set("type", it->first);
@@ -234,19 +234,19 @@ void _steps(ref s, ref ctx)
 			ref::context() = c;
 			astate.set(context, c);
 			checknotepad(subctx); // should be impossible to fail, but good habit
-			conceptunmake(subctx);
+			conceptunnote(subctx);
 		}
 	}
 	checknotepad(c);
 	checknotepad(astate);
 	c.unlink(active-state, astate);
-	conceptunmake(astate);
-	if (cleanupcontext) { conceptunmake(c); }
+	conceptunnote(astate);
+	if (cleanupcontext) { conceptunnote(c); }
 }
 
 void _condition(ref ctx, ref cond, ref steps, ref state)
 {
-	imagineset(intellect::level2::notepad(), state);
+	checknotepad(state);
 
 	// because this sets active-state's next-step instead of calling something,
 	// a subcontext is not opened for the steps unless they have one.
@@ -289,45 +289,49 @@ void createcontainer(std::string name)
 	decls(set, push, front, back, iterator, begin, end, entry);
 	ahabitraw(set-container, ((concept, c)),
 	{
-		imagineset(intellect::level2::notepad(), c);
+		c = imagineset(intellect::level2::notepad(), c);
 		data<T>(c).clear();
 		return c;
 	});
 	ahabitraw(container-push-back, ((container, c), (value, v)),
 	{
-		imagineset(intellect::level2::notepad(), c);
-		c.val<T>().push_back(v.ptr());
+		c = imagineset(intellect::level2::notepad(), c);
 		return c;
 	});
 	ahabitraw(set-begin-container-entry, ((entry, e), (container, c)),
 	{
-		imagineset(intellect::level2::notepad(), c);
-		imagineset(intellect::level2::notepad(), e);
+		// the container is brought in here in case
+		// the entry can be used to alter it
+		c = imagineset(intellect::level2::notepad(), c);
+		e = imagineset(intellect::level2::notepad(), e);
 		data<typename T::iterator>(e) = (c.val<T>()).begin();
 		return e;
 	});
 	ahabitraw(set-end-container-entry, ((entry, e), (container, c)),
 	{
-		imagineset(intellect::level2::notepad(), c);
-		imagineset(intellect::level2::notepad(), e);
+		// the container is brought in here in case
+		// the entry can be used to alter it
+		c = imagineset(intellect::level2::notepad(), c);
+		e = imagineset(intellect::level2::notepad(), e);
+		e.set(container, c);
 		data<typename T::iterator>(e) = (c.val<T>()).end();
 		return e;
 	});
 	ahabitraw(container-entry-same, ((entry-a, ea), (entry-b, eb)),
 	{
-		imagineset(intellect::level2::notepad(), ea);
-		imagineset(intellect::level2::notepad(), eb);
 		return ea.val<typename T::iterator>() == eb.val<typename T::iterator>();
 	});
 	ahabitraw(container-entry-next, ((entry, e)),
 	{
-		imagineset(intellect::level2::notepad(), e);
+		// entry is not brought into imagination
+		// in case functions are added to alter container
+		// from it
+		checknotepad(e);
 		++ e.val<typename T::iterator>();
 		return e;
 	});
 	ahabitraw(container-entry-value, ((entry, e)),
 	{
-		imagineset(intellect::level2::notepad(), e);
 		return *e.val<typename T::iterator>();
 	});
 }
@@ -355,13 +359,18 @@ void createhabits()
 	// auto-imagines everything.
 	ahabit(in-notepad, ((concept, c)),
 	{
-		return innotepad(c);
+		return innotepad(intellect::level2::notepad(), c);
+	});
+
+	ahabit(make-notepad, ((notepad-name, n), (imagine-changes, ic, false)),
+	{
+		return newnotepad(n, ic == ref(true));
 	});
 
 	decls(link, source, type, target);
 	ahabit(link, ((source, s), (type, t), (target, dst)),
 	{
-		imagineset(intellect::level2::notepad(), s);
+		s = imagineset(intellect::level2::notepad(), s);
 		s.link(t, dst);
 	});
 
@@ -398,7 +407,7 @@ void createhabits()
 	decls(unlink);
 	ahabit(unlink, ((source, s), (type, t), (target, dst, anything)),
 	{
-		imagineset(intellect::level2::notepad(), s);
+		s = imagineset(intellect::level2::notepad(), s);
 		if (dst == anything) {
 			s.unlink(t);
 		} else {
@@ -413,24 +422,24 @@ void createhabits()
 
 	ahabit(set, ((source, s), (type, t), (target, dst)),
 	{
-		imagineset(intellect::level2::notepad(), s);
+		s = imagineset(intellect::level2::notepad(), s);
 		s.set(t, dst);
 	});
 
 	ahabit(put, ((source, s), (type, t), (target, dst)),
 	{
-		imagineset(intellect::level2::notepad(), s);
+		s = imagineset(intellect::level2::notepad(), s);
 		s.set(t, dst);
 	});
 
-	decls(make, unmake, know, concept, is, group, already, in, iter);
+	decls(make, unmake, know, concept, is, group, already, iter);
 	ahabit(make-concept, (),
 	{
 		return noteconcept();
 	}); 
 	ahabit(copy-to, ((source, s), (target, t)),
 	{
-		imagineset(intellect::level2::notepad(), t);
+		t = imagineset(intellect::level2::notepad(), t);
 		// copies data too
 		if (t.hasval() || t.ptr()->links.size() != 0) { throw noteconcept().link(is, "concept-not-empty", concept, t); }
 		result = t;
@@ -438,7 +447,7 @@ void createhabits()
 	});
 	ahabit(copy-data-to, ((source, s), (target, t)),
 	{
-		imagineset(intellect::level2::notepad(), t);
+		t = imagineset(intellect::level2::notepad(), t);
 		if (t.hasval()) { throw noteconcept().link(is, "concept-has-data", concept, t); }
 		t.ptr()->data = s.ptr()->data;
 	});
@@ -877,7 +886,7 @@ void createhabits()
 	});
 	ahabit(condition, ((condition, cond), (next-steps, steps), (active-state, state)),
 	{
-		checknotepad(state);
+		state = imagineset(intellect::level2::notepad(), state);
 		_condition(ctx, cond, steps, state);
 	});
 

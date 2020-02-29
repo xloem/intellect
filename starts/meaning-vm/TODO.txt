@@ -53,7 +53,8 @@ NOW:
 		- [X] remember to imagineget() the return value in case the last step changed it, in habits.cpp
 	- [X] change unmakeconcept to remap imagined concepts to 'nothing'
 	- [X] change imagineget to throw a severe error if used on an unmade value, but note this shouldn't be thrown, see next item
-	- [ ] change conceptunnote to check use of imagined values, via walking up imagination hierarchy and using the memory-manager function to check all the forms.  likely collect them into a static vector and pass the container to the function.
+	- X[ ] change conceptunnote to check use of imagined values, via walking up imagination hierarchy and using the memory-manager function to check all the forms.  likely collect them into a static vector and pass the container to the function.
+		-> for now, we just mirrored all deletable concepts in, anyway.
 	- [ ] instead of changing level-2 ref to use imagination, change the 'steps' habits to do so.
 		this provides for different contexts using the same outer refs properly
 			- [ ] also update any habits that reference subparts of refs, in case subpart changes are imagined.
@@ -64,6 +65,12 @@ NOW:
 		(this will require updating other habits to do this, too?
 			that's only required if we allow for changes to the bootstrap notepad.
 			so, helpful but not required, as changes outside of core notepad require human confirmation.)
+	- [ ] after this round of work, maybe add 1 goal towards testsuites.
+	      If an error is likely hard to fix, maybe add INTEGRATION tests for the underlying changes.  cld increase the investment of the fix.
+		Note: imagination errors likely hard to fix
+	      DON'T WASTE TIME MAKING NEEDLESS TESTS.  PROBLEM MUST BE SLOW TO FIX. _DO_MAKE TESTS FOR SLOW-TO-FIX-HIGHLY-LIKELY-ERRS
+		atm wait until next workstage.  [gives cognition space to grow]
+		MOST-RECENT-AT-BOTTOM: DO-INTEGRATION-TESTS-WITH-RELEVENCE, THAT-IS-ALL-YOU-NEED.
 	- X[ ] change level-2 ref to check and use imagination.
 			(might move the change into level-3 for clarity of levels, but it doesn't matter, need quality-steps.)
 		- X[X] constructors will use imagineget

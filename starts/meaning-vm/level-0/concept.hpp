@@ -57,10 +57,11 @@ struct concept
 	T & vget(concept* type) const { return get(type)->val<T>(); }
 
 	template <typename T>
-	T & val() { return std::any_cast<T&>(data); }
+	T & val() { if (typeid(T) == typeid(decltype(data))) { return *(T*)&data; } else { return std::any_cast<T&>(data); } }
 
 	template <typename T>
 	void val(T const & v) { data = v; }
+	void val(decltype(data) const & v) { data = v; }
 
 	bool hasval() { return data.has_value(); }
 

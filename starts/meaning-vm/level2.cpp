@@ -492,7 +492,7 @@ void parse(ref stream, ref subnotepad)
 			for (ref arg: order.val<intellect::level2::vector>()) {
 				values.insert(arg.name());
 			}
-			conceptunmake(order);
+			conceptunnote(order);
 			// need to seed values with argument names
 			ref laststep = name;
 			labels["return"] = nothing;
@@ -635,7 +635,7 @@ void parse(ref stream, ref subnotepad)
 							knownmap.link(arg, lookup(argname));
 						}
 					}
-					conceptunmake(order);
+					conceptunnote(order);
 					dealloc(stream2, intellect::level0::concepts::allocations());
 					ref mademap = makeconcept();
 					if (result.size()) {
@@ -706,7 +706,6 @@ int main()
 // this is a line comment\n\
 information dump group linkset notepad\n\
 information dump-expand group linkset\n\
-information link-self notepad\n\
 when dump-expand [\n\
 	set link-entry make-concept\n\
 	first-link-entry link-entry group\n\
@@ -718,9 +717,21 @@ when dump-expand [\n\
 		link-entry-next link-entry\n\
 		loop.\n\
 ]\n\
+information link-self notepad\n\
 when link-self [\n\
 	set test make-concept\n\
 	link 'link-self' 'type' 'target'\n\
+]\n\
+information subnotepad-test notepad\n\
+information subnotepad-innards notepad value\n\
+when subnotepad-test [\n\
+	make-notepad 'subpad' true\n\
+	set test make-concept\n\
+	subnotepad-innards 'subpad' test\n\
+	concept-unmake context 'test'\n\
+]\n\
+when subnotepad-innards [\n\
+	concept-unmake context 'value'\n\
 ]\n\
 when dump [\n\
 	= is-in-set in-set group\n\
@@ -1026,8 +1037,9 @@ when dump [\n\
 			if(!r.isa("concept-not-in-notepad")) { throw r; }
 			leavenotepad(r, subnotepad("runtime"));
 			checknotepad(r);
-			conceptunmake(r);
+			conceptunnote(r);
 		}
+		ref("subnotepad-test")("runtime");
 		dump(dump, linksofinterest, "runtime");
 		assert(intellect::level2::notepad() == outernotepad);
 #undef ref

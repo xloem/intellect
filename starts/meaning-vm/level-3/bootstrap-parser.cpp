@@ -476,7 +476,7 @@ public:
 
 	~ConceptException()
 	{
-		if (r.ptr()) { intellect::level2::conceptunmake(r); }
+		if (r.ptr()) { intellect::level2::conceptunnote(r); }
 	}
 
 	ref r;
@@ -489,7 +489,7 @@ public:
 	: C(C) { }
 	~ConceptUnmaker()
 	{
-		conceptunmake(C);
+		conceptunnote(C);
 	}
 private:
 	ref C;
@@ -603,7 +603,7 @@ ref bootstrap_word(ref self, ref stm, ref spc)
 		std::cerr << "(" << letter << ")";
 	} catch(ref r) {
 		if (r.isa("end-of-stream") && !quote.size()) {
-			conceptunmake(r);
+			conceptunnote(r);
 			// just another way to terminate the loop
 		} else {
 			throw r;
@@ -842,8 +842,8 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			} else {
 				subhabit = wctx.get(txt2ref("lookup"))(subhabit);
 				if (!subhabit.linked(informationneeded)) {
-					conceptunmake(neededmap);
-					conceptunmake(knownmap);
+					conceptunnote(neededmap);
+					conceptunnote(knownmap);
 					throw intellect::level2::noteconcept().link(
 							"is", "habit-not-found",
 						        "subhabit", subhabit,
@@ -856,7 +856,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 			}
 			while (true) {
 				if (order != nothing && orderit == orderitems.end()) {
-					conceptunmake(order);
+					conceptunnote(order);
 					order = nothing;
 				}
 				fctx.set(wordcontext, bootstraplistwordcontext);
@@ -894,7 +894,7 @@ ref bootstrap_parse_habit(ref tokennameref, ref file, ref ws, ref ctx, ref self,
 				++ orderit;
 			}
 			// TODO: could check to make sure all ordered information is provided.
-			if (order != nothing) { conceptunmake(order); }
+			if (order != nothing) { conceptunnote(order); }
 			ref mademap = intellect::level2::noteconcept();
 			if (result.size()) {
 				mademap.link("result", txtref2bootstrap(txt2ref(result)));
@@ -1015,7 +1015,7 @@ ref parsefile(ref fn, ref fctx)
 
 	
 	
-	conceptunmake(parserstm);
+	conceptunnote(parserstm);
 	ref("keep-stream-unmake")(letterspace);
 	ref("c++-stream-unmake")(cxxstm);
 
@@ -1065,8 +1065,8 @@ void loadhabits()
 	ahabit(c++-stream-unmake, ((stream, stm)), {
 		ref src = stm.get("source");
 		std::iostream * ss = src.val<std::iostream*>();
-		intellect::level2::conceptunmake(stm);
-		intellect::level2::conceptunmake(src);
+		intellect::level2::conceptunnote(stm);
+		intellect::level2::conceptunnote(src);
 		delete ss;
 	});
 
@@ -1277,8 +1277,8 @@ void loadhabits()
 		return ret;
 	});
 	ahabit(keep-stream-unmake, ((keep-stream, stm)), {
-		conceptunmake(stm.get(entry));
-		conceptunmake(stm);
+		conceptunnote(stm.get(entry));
+		conceptunnote(stm);
 	});
 	ahabit(keep-stream-value, ((space, stm)), {
 		return stm.get(entry).get(value);
@@ -1348,7 +1348,7 @@ void loadhabits()
 			}
 		} catch(ref r) {
 			if (r.isa("end-of-stream")) {
-				conceptunmake(r);
+				conceptunnote(r);
 				// just another way to terminate the loop
 			} else {
 				throw r;
@@ -1388,7 +1388,7 @@ void loadhabits()
 	ahabit(stream-move-relative, ((space, stm), (where, txt)), {
 		ref offsetref = ref("parse-relative-index")(txt);
 		int64_t offset = offsetref.val<int64_t>();
-		conceptunmake(offsetref);
+		conceptunnote(offsetref);
 		if (offset != 0) {
 			ref dir;
 			if (offset < 0) {
@@ -1465,7 +1465,7 @@ void loadhabits()
 	});
 	ahabit(bootstrap-file-stream-unmake, ((parse-context, pctx)), {
 		ref("keep-stream-unmake")(pctx.get("wordspace"));
-		conceptunmake(pctx.get("parser-stream"));
+		conceptunnote(pctx.get("parser-stream"));
 		ref("keep-stream-unmake")(pctx.get("letterspace"));
 		ref("c++-stream-unmake")(pctx.get("c++-stream"));
 		pctx.unlink("wordspace");
@@ -1761,7 +1761,7 @@ void parsebootstrap(ref stream, ref context)
 						}
 					}
 					knownmap.link("information-names", informationnames);
-					conceptunmake(order);
+					conceptunnote(order);
 					dealloc(stream2, intellect::level0::concepts::allocations());
 					ref mademap = intellect::level2::noteconcept();
 					if (result.size()) {

@@ -52,10 +52,49 @@ ref newnotepad(ref name, bool fakechanges)
 	newnotes.link(level2::concepts::name, name.isa(level2::concepts::text) ? name : name.get(level2::concepts::name));
 	level2::notepad().link(name, newnotes); // linked by name to find easily when used
 	if (fakechanges) {
-		newnotes.link(concepts::imagination, noteconcept());
+		auto imagination = noteconcept();
+		newnotes.link(concepts::imagination, imagination);
+
+		// for now, copy anything we change into their imagination to change too
+		// many ideas to speed this up, but none of them seem quick and easy.  consider refcounts when something is
+		// deleted.
+		// 1. spawning a subprocess seems simple and safe, takes some struts.  
+		// 2. could change concepts to use a reference to a store and an index, and blit the store
+		// 3. could manage imagined-refs and do deallocation in level-2.  only need to manage changeable concepts.
+		//    seems to require changing link/unlink/etc functions.  might be safe only to change habits.
+		// 4. could disallow destroying things
+		// *5. could allow destruction failures, and catch them in higher notepad <- seems good.
+		for (auto changeable : level2::notepad().getAll(concepts::changeable)) {
+			//(void)imagineget(newnotes, changeable, true, false);
+			auto imagined = noteconcept({}, newnotes);
+			imagined.replace(changeable);
+			imagination.link(changeable, imagined);
+		}
+		for (auto imagined : newnotes.getAll(concepts::changeable)) {
+			auto links = imagined.links();
+			for (auto it = links.begin(); it != links.end();) {
+				if (imagination.linked(it->second)) {
+					imagined.relink(it, imagination.get(it->second));
+				}
+				if (imagination.linked(it->first)) {
+					auto type = it->first;
+					auto target = it->second;
+					it = imagined.unlink(it ++);
+					imagined.link(type, target);
+				} else {
+					++ it;
+				}
+			}
+		}
+		for (auto link : imagination.links()) {
+			if (link.first.ptr()->refcount() > link.second.ptr()->refcount()) {
+				newnotes.link(concepts::needed, link.second);
+			}
+		} // we could use a test for this.  the only reason we're scared is it will show errors, so best to do it early.
 	}
 	return newnotes;
-}
+} // DANGER: we haven't stopped subnotepads from imagining changes to their parents' notepad structures or their own.
+	
 
 ref subnotepad(ref name, bool allowouter, bool allowself)
 {
@@ -78,26 +117,93 @@ ref outernotepad()
 }
 */
 
-ref noteconcept(std::any data)
+ref noteconcept(std::any data, level0::concept* pad)
 {
+	if (pad == 0) { pad = level2::notepad(); }
 	ref result = intellect::level0::basic_alloc(data);
-	level2::notepad().link(concepts::changeable, result);
+	ref(pad).link(concepts::changeable, result);
 	return result;
 }
-void conceptunnote(ref c)
+void conceptunnote(ref concept)
 {
-	c = imagineset(level2::notepad(), c);
+	// for accuracy, we want to throw if it is used, including outside imagination.
+	// walk up imagination, to collect parts needed.
+	// 	imagineset_ex, gives all components?
+	
+	// issue later: checking for use should only include this notepad's view.  that means the memory manager using
+	// imagineget, which isn't available to it (to prevent complex recursion).
+	// 	this likely relates to refcounting.
+	// 		so
+	// 		1. if we don't check for access, then code will function different in imagination than reality.
+	// 		   this could be changed by not checking for use on removal in reality, either.  dangerous.
+	// 		2. another way is to actually iterate every object in view of the notepad, checking for access,
+	// 		   either here or when the notepad is closed.  this could be sped up by doing it in bulk.
+	// 		   refcounting is better.
+	// 		3. imagined refcounting sounds complex.  let's imagine everything has a refcount, number times used.
+	// 		   how does that move down imagination?
+	// 		   we start either mirroring every object using an object when imagined, or we store information on
+	// 		   refcount changes.
+	// 		   	so if i imagine removing a link, the things i link to, need imaginary refcounts that drop.
+	// 		   	this would mean that linking and unlinking produce imaginary refcounts.
+	// 		   	that's not too hard to do.
+	// 		4. we could deny removing things inside notepads.
+	// 			That seems a reasonable stopgap measure.  It also supports nonharm-habits.
+	// 				we have many small algorithms that need to remove things
+	// 					you could set a norm of mark-for-cleanup. ^_^
+	// 					uhh did not mean to reference coverup-scenarios-and-related-problems
+	// 		here's a simplification: the only refcounts that matter are the ones on objects that can be
+	// 		   deleted.  so, if an object has a refcount in a nonmodifiable notepad, it can never be deleted.
+	// 		5. we could iterate only objects that can be changed.  this still could grow large sometimes.
+	// 		6. imagineset could spawn an imaginary refcount, if the refcount is zero when set, or if the
+	// 		   copied-down object had one too.
+	// 		7. would existing refcounts work, then?
+	// 			A->B->C
+	// 			A refcount is zero
+	// 			B refcount is 3
+	// 			C refcount is 0
+	// 				without knowing what references B, we can't really check if C can be deleted.
+	// 				(note also the imagination will bump the refcount, since it refers to things.)
+	// 		8. we could mirror everything into every notepad
+	// 		9. we could mirror only changeable items in, to every notepad
+	//			so when new notepad is made with imagination, everything in
+	//			the upper notepad is copied down.  provides for easy-to-check code.
+	//		10. we could only allow things we spawned to be deleted, preventing imagination of deletion?
+	//			and then you imagine the managing notepad to move things in if they want them imagined deleted
+	//				doesn't seem to work?  i can imagine something changing, and then I can imagine
+	//				deleting it?
+	//		11. we could imagine deleting with fewer checks?
+	//			i think we're in cognitive loop now ... what is issue with walking up and checking changeable
+	//			ones for references? A: we can dereference in imagination
+	//		12. when you copy-down a referenced object, you have to find the things referencing it, and copy them
+	//		    down, too, and update the links to reference your imagined-thing.
+	// 		   	
+	// [like when you iterate an object, you often make a new iterator, go through it, then delete iterator]
+	// 	i could change all my algorithms to not make new objects.
+	// 	it would be helpful to add associated non-allocated data to habits in the scripting language, which is
+	// 	hard to engage.
+	// 		
+	
+	/*static thread_local std::unordered_set<ref> equivalent_concepts;
+	equivalent_concepts.clear();
+	ref imagination_entry;
+	concept = imagineget(level2::notepad(), concept, true, false, &equivalent_concepts, &imagination_entry);
+	// ?TODO: use equivalent_concepts to do referenced check
+	// ?TODO: use imagination_entry
+	*/
+	concept = imagineset(level2::notepad(), concept);
+	
 	if (level2::notepad().linked(concepts::imagination)) {
 		ref imagination = level2::notepad().get(concepts::imagination());
-		for (auto & link : imagination.links()) {
-			if (link.second == c) {
-				imagination.relink(link, concepts::nothing);
+		auto links = imagination.links();
+		for (auto it = links.begin(); it != links.end(); ++ it) {
+			if (it->second == concept) {
+				imagination.relink(it, concepts::nothing);
 				break;
 			}
 		}
 	}
-	leavenotepad(c, level2::notepad());
-	level0::basic_dealloc(c);
+	leavenotepad(concept, level2::notepad());
+	level0::basic_dealloc(concept);
 }
 static ref _is("is"), conceptnotinnotepad("concept-not-in-notepad"), _concept("concept"), _notepad("notepad"), _context("context");
 void checknotepad(ref concept)
@@ -134,10 +240,14 @@ void leavenotepad(ref concept, ref pad)
 static thread_local std::vector<ref> outer_pads;
 
 // convert an imagined-thing to what it is imagined as being.
-ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
+ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext/*, std::unordered_set<ref> * equivalent_concepts, ref * imagination_entry*/)
 {
 	if (pad.linked(concepts::changeable, concept)) { return concept; }
+	if (change && !pad.linked(concepts::imagination)) {
+		throw noteconcept().link(_is, conceptnotinnotepad, _concept, concept, _notepad, pad, _context, level2::context());
+	}
 
+	// THERE IS ANOTHER FORM OF THIS ALGORITHM IN conceptunnote NOW
 	outer_pads.clear();
 	outer_pads.push_back(pad);
 	
@@ -159,6 +269,8 @@ ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
 				ref imaginedconcept = imagination.get(concept);
 				if (imaginedconcept == concepts::nothing) { throw noteconcept().link("is", "concept-no-longer-exists", "concept", concept, "pad", plausible, "source-pad", pad); }
 				concept = imaginedconcept;
+				
+				//if (equivalent_concepts) { equivalent_concepts->insert(concept); }
 
 				outer_pads.pop_back();
 				break;
@@ -167,7 +279,7 @@ ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
 		if (plausible.linked(concepts::outer)) {
 			outer_pads.push_back(plausible.get(concepts::outer));
 		} else {
-			return concept;
+			break;
 		}
 	}
 	// now we walk back down, replacing the concept as needed as we go
@@ -178,6 +290,7 @@ ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
 			auto imagination = plausible.get(concepts::imagination);
 			if (imagination.linked(concept)) {
 				concept = imagination.get(concept);
+				//if (equivalent_concepts) { equivalent_concepts->insert(concept); }
 				could_be_changed = true;
 				outer_pads.pop_back();
 				continue;
@@ -207,6 +320,8 @@ ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
 			}
 			idea.val(concept.val<std::any>());
 			concept = idea;
+
+			//if (equivalent_concepts) { equivalent_concepts->insert(concept); }
 
 			// we now could update every concept in the universe to use our imagined thing.
 			// alternatively we could set a norm of calling imagineget on their link types and targets,
@@ -243,7 +358,9 @@ ref imagineget(ref pad, ref concept, bool change, bool allowoutofcontext)
 // imagine something as being different, returns reference to copy
 ref imagineset(ref pad, ref concept, bool allowoutofcontext)
 {
-	return imagineget(pad, concept, true, allowoutofcontext);
+	checknotepad(concept);
+	return concept;
+	//return imagineget(pad, concept, true, allowoutofcontext);
 }
 
 void givename(ref context, ref concept, std::string const & name, bool contextisnotepad)
@@ -422,7 +539,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	for (ref const & arg : args) {
 		if (!posinf.linked(nextinformation)) {
 			ref::context() = subctx.get(outercontext);
-			conceptunmake(subctx);
+			conceptunnote(subctx);
 			throw noteconcept().link
 				(is, unexpected-information,
 				 concepts::habit, habit,
@@ -436,7 +553,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 		posinf = posinf[nextinformation];
 		if (!posinf.linked(assume)) {
 			ref::context() = subctx.get(outercontext);
-			conceptunmake(subctx);
+			conceptunnote(subctx);
 			throw noteconcept().link
 				("is", information-needed,
 				 concepts::habit, habit,
@@ -457,7 +574,7 @@ ref dohabit(ref habit, std::initializer_list<ref> args)
 	//	ref::context().unlink(posinf[information]);
 	//}
 	ref::context() = subctx.get(outercontext);
-	conceptunmake(subctx);
+	conceptunnote(subctx);
 	return ret;
 }
 
@@ -477,7 +594,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 		auto second = pair.begin(); ++ second;
 		if (!infn.linked(*pair.begin()) && !extra_information) {
 			ref::context() = ctx.get(outercontext);
-			conceptunmake(ctx);
+			conceptunnote(ctx);
 			throw noteconcept().link
 				("is", unexpected-information,
 				 concepts::habit, habit,
@@ -486,7 +603,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 		}
 		if (provided.count(*pair.begin())) {
 			ref::context() = ctx.get(outercontext);
-			conceptunmake(ctx);
+			conceptunnote(ctx);
 			throw noteconcept().link
 				("is", "multiple-instances-same-name-not-implemented",
 				 concepts::habit, habit,
@@ -505,7 +622,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 				ctx.link(inf, nextinf.get(assume));
 			} else {
 				ref::context() = ctx.get(outercontext);
-				conceptunmake(ctx);
+				conceptunnote(ctx);
 				throw noteconcept().link
 					("is", information-needed,
 					 concepts::habit, habit,
@@ -538,7 +655,7 @@ ref dohabit(ref habit, std::initializer_list<std::initializer_list<ref>> pairs, 
 		//ctx.unlink(result, ret);
 	}
 	ref::context() = ctx.get(outercontext);
-	conceptunmake(ctx);
+	conceptunnote(ctx);
 	return ret;
 }
 
