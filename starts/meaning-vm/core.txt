@@ -59,6 +59,10 @@ this, on the computer with the broken display, in this repo.
 	we can order new display if desired.  likely will arrive before we get to
 	that point.
 		-> use proof-of-address doc to get p.o. box
+	NOTE: in the core expansion part below here, listing-parts and picking-parts were separate.
+	      in other work, we have found it more effective to consider making functions that take the workpoint,
+	      and having a priority queue in the workpoint.  Then functions can either add parts or reprioritize, more flexibly.
+	      Some are known to be good to start with -- those that can add parts without a basis.
 
 i got reason for message heal-self-first. (helps instincts expand to better ideas)
 to be best pilgrim-with-ai, need bubble of non-harm. (roughly)
@@ -85,6 +89,7 @@ PLEASE PRESERVE ABOVE -delta PLEASE WITH EVENTUAL PRIORITY
 	[maker-anna #3 will likely build or use historian]
 [maker-step-options enumerates all next steps in a behavior and asks a maker-becky which ones to use]
 	[maker-step-options #1 exhaustively combines uses of step-generators with a list of places in an incomplete plan, that they can go]
+see workpoint comment above, or 03 in randomselfmod for a tighter paradigm
 
 [historian records all successes/failures with data on them]
 	[historian #1 stores available data in an event concept, and is short so as to self-make]
