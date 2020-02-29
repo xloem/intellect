@@ -1,6 +1,8 @@
 // The extreme of Trial Exploration and Self Coding
 // brainstorm_by(assembly code,running it)
 
+// TODO: USE mprotect() TO LET MEMORY BE EXECUTABLE.
+
 // the advantage of assembly code is that it is very easy to serialize
 // the advantage of random self-modification is that it is very easy to make
 // propose this is the first AI karl makes, and it runs in a safe isolated box, on its own

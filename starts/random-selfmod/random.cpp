@@ -1,5 +1,7 @@
 // let's try to make it very simple
 
+// YOU NEED TO USE mprotect() TO LET MEMORY BE EXECUTABLE.
+
 #include <fcntl.h>
 #include <signal.h>
 #include <sys/mman.h>
