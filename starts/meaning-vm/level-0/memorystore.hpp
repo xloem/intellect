@@ -53,10 +53,18 @@ extern ref level0allocations(); // allocator for concepts internal to level0
 ref basic_alloc(std::any data = {});
 void basic_dealloc(ref allocated);
 
-ref alloc(ref allocator, std::any data = {}); // new concept
-void alloc(ref allocated, ref allocator); // extra ownership for concept
-void realloc(ref allocated, ref allocator); // move ownership for concept to allocator
-void dealloc(ref allocated, ref allocator); // remove ownership for concept
+// Below functions manage allocation assuming ownership.
+// When all ownership is removed from a concept,
+// it is deallocated, and relinquishes everything it owns.
+// The last owner of an in-use concept is prevented from
+// deallocating it until it is no longer in use.
+ref alloc(ref owner, std::any data = {}); // new concept
+bool alloced(ref concept, ref owner); // discern whether concept is owned by owner
+void alloc(ref concept, ref owner); // extra ownership for concept
+void realloc(ref concept, ref owner); // move ownership for concept to new owner
+void dealloc(ref concept, ref owner); // remove ownership for concept
+
+// To track leaks, total number of concepts allocated
 std::size_t allocated();
 
 }

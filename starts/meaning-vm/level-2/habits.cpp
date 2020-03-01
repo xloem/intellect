@@ -220,7 +220,7 @@ void _steps(ref s, ref ctx)
 		checknotepad(subctx); // should be impossible to fail, but good habit
 		{
 			intellect::level2::restorenotepad notepadrestoration;
-			notepadrestoration.switchwith(subctx);
+			notepadrestoration.switchwithcontext(subctx);
 			habit.fun<ref>()(subctx);
 			if (s.linked(made-map)) {
 				notepadrestoration.migratein(c);

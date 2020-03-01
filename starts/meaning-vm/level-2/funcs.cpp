@@ -53,6 +53,7 @@ ref newnotepad(ref name, bool fakechanges)
 	level2::notepad().link(name, newnotes); // linked by name to find easily when used
 	if (fakechanges) {
 		auto imagination = noteconcept();
+		imagination.link(concepts::is, concepts::imagination);
 		newnotes.link(concepts::imagination, imagination);
 
 		// for now, copy anything we change into their imagination to change too
@@ -110,6 +111,27 @@ ref subnotepad(ref name, bool allowouter, bool allowself)
 	return result;
 }
 
+void notepadunmake(ref name)
+{
+	auto pad = subnotepad(name);
+	{
+		// unmake child notepads
+		restorenotepad notepadrestoration;
+		notepadrestoration.switchwithname(name);
+		for (auto link : pad.links()) {
+			if (link.second.isa(concepts::notepad) && link.first == link.second.get(concepts::name)) {
+				notepadunmake(link.first);
+			}
+		}
+	}
+
+	// we now want to deallocate everything in the notepad.
+	// this would best be done by assigning ownership of
+	// concepts properly.
+	// i'm thinking of the notepad structures referenced in the DANGER warning that are changeable by the parent notepad.
+	// i think the cleanest solution would be creation of immutable concepts for them.  then they can be owned by this notepad, but not changeable by it.
+}
+
 /*
 ref outernotepad()
 {
@@ -117,11 +139,21 @@ ref outernotepad()
 }
 */
 
-ref noteconcept(std::any data, level0::concept* pad)
+ref noteconcept(std::any data, level0::concept* pad, bool immutable, level0::concept* owner)
 {
 	if (pad == 0) { pad = level2::notepad(); }
-	ref result = intellect::level0::basic_alloc(data);
-	ref(pad).link(concepts::changeable, result);
+	if (owner == 0) { owner = pad; }
+	if (owner != pad && !alloced(owner, pad)) {
+		throw noteconcept().link(
+				"is", "concept-owner-not-owned-by-notepad",
+				"concept-owner", owner,
+				"notepad", pad
+				);
+	}
+	ref result = intellect::level0::alloc(data, owner);
+	if (!immutable) {
+		ref(pad).link(concepts::changeable, result);
+	}
 	return result;
 }
 void conceptunnote(ref concept)
@@ -718,6 +750,12 @@ void rethrowref()
 	} catch(null_reference const & e) {
 		throw noteconcept().link(
 			"is", "null-reference"
+			);
+	} catch(memory_norm_disrespected const & e) {
+		throw noteconcept().link(
+			"is", "memory-norm-disrespected",
+			"allocator", e.allocator,
+			"allocated", e.allocated
 			);
 	} catch(std::bad_any_cast const & e) {
 		throw noteconcept().link(

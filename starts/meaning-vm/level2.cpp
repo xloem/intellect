@@ -728,6 +728,7 @@ when subnotepad-test [\n\
 	make-notepad 'subpad' true\n\
 	set test make-concept\n\
 	subnotepad-innards 'subpad' test\n\
+	notepad-unmake 'subpad'\n\
 	concept-unmake context 'test'\n\
 ]\n\
 when subnotepad-innards [\n\

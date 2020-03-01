@@ -18,26 +18,37 @@ namespace sugar {
 class restorenotepad
 {
 public:
-	restorenotepad(ref ctx = intellect::level1::concepts::nothing)
+	restorenotepad(/*ref ctx = intellect::level1::concepts::nothing*/)
 	: outernotepad(intellect::level2::notepad()),
-	  ctx(ctx)
+	  bringwith(intellect::level2::concepts::nothing),
+	  innername(intellect::level2::concepts::self_)/*
+	  ctx(ctx)*/
 	{
 		enter();
        	}
-	void switchwith(ref ctx)
+	void switchwithcontext(ref ctx)
 	{
 		leave();
-		this->ctx = ctx;
+		this->bringwith = ctx;
+		if (ctx != intellect::level1::concepts::nothing && ctx.linked(intellect::level2::concepts::notepad)) {
+			innername = ctx.get(intellect::level2::concepts::notepad);
+		}
+		enter();
+	}
+	void switchwithname(ref name)
+	{
+		leave();
+		innername = name;
 		enter();
 	}
 	void migrateout(ref concept)
 	{
-		if (hasnotepad()) {
+		if (hasnotepad() && concept != intellect::level1::concepts::nothing) {
 			intellect::level2::entersubnotepad(concept, intellect::level2::concepts::outer, true, false);
 		}
 	}
 	void migratein(ref concept) {
-		if (hasnotepad()) {
+		if (hasnotepad() && concept != intellect::level1::concepts::nothing) {
 			intellect::level2::entersubnotepad(concept, intellect::level2::concepts::self_, false, true);
 		}
 	}
@@ -61,26 +72,31 @@ public:
 	}
 private:
 	ref outernotepad;
+	ref bringwith;
+	ref innername;
 	ref innernotepad;
-	ref ctx;
 
 	void leave()
 	{
 		if (!hasnotepad()) { return; }
 		if (intellect::level2::notepad() != innernotepad) { throw intellect::level2::noteconcept().link("is", "not-in-correct-subnotepad", "notepad", intellect::level2::notepad(), "inner-notepad", innernotepad, "outer-notepad", outernotepad); }
-		leavenotepad(ctx, innernotepad);
+		if (bringwith != intellect::level1::concepts::nothing) {
+			leavenotepad(bringwith, innernotepad);
+			bringwith = intellect::level1::concepts::nothing;
+		}
 		intellect::level2::notepad() = outernotepad;
 		innernotepad = intellect::level1::concepts::nothing;
+		innername = intellect::level2::concepts::self_;
 	}
 	void enter()
 	{
-		if (ctx == intellect::level1::concepts::nothing) { return; }
-		if (!ctx.linked(intellect::level2::concepts::notepad)) { return; }
-		ref inner = ctx.get(intellect::level2::concepts::notepad);
-		if (inner == intellect::level1::concepts::nothing) { return; }
-		innernotepad = intellect::level2::subnotepad(inner);
-		intellect::level2::entersubnotepad(ctx, inner);
-		if (innernotepad.get(intellect::level2::concepts::outer) != outernotepad) { throw intellect::level2::noteconcept().link("is","not-subnotepad-of-outer","inner-notepad",innernotepad,"outer-notepad",outernotepad,"name",inner,"context",ctx); }
+		if (innername == intellect::level2::concepts::self_) { return; }
+		innernotepad = intellect::level2::subnotepad(innername);
+		if (innernotepad == intellect::level1::concepts::nothing) { return; }
+		if (innernotepad.get(intellect::level2::concepts::outer) != outernotepad) { throw intellect::level2::noteconcept().link("is","not-subnotepad-of-outer","inner-notepad",innernotepad,"outer-notepad",outernotepad,"name",innername,"bring-with",bringwith); }
+		if (bringwith != intellect::level1::concepts::nothing) {
+			intellect::level2::entersubnotepad(bringwith, innername);
+		}
 		intellect::level2::notepad() = innernotepad;
 	}
 };
@@ -122,7 +138,7 @@ private:
 				static int delay = intellect::level2::sugar::rand(200000, 400000); \
 				intellect::level2::sugar::usleep(delay); \
 			} \
-			notepadrestoration.switchwith(ctx); \
+			notepadrestoration.switchwithcontext(ctx); \
 			ref result; (void)result; \
 			static ref const compiled_self(rnam);\
 			ref self;\

@@ -107,5 +107,17 @@ struct null_reference : public std::invalid_argument
 	{ }
 };
 
+struct memory_norm_disrespected : public std::invalid_argument
+{
+	memory_norm_disrespected(concept* allocator, concept* allocated)
+	: std::invalid_argument("memory norm disrespected"),
+	  allocator(allocator),
+	  allocated(allocated)
+	{ }
+
+	concept* allocator;
+	concept* allocated;
+};
+
 }
 }

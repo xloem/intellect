@@ -135,9 +135,20 @@ void alloc(ref r, ref source)
 	source.link(concepts::allocates(), r);
 }
 
+bool alloced(ref r, ref source)
+{
+	if (source.linked(concepts::allocates(), r) != r.linked(concepts::allocator(), source)) {
+		throw memory_norm_disrespected(source, r);
+	}
+	return source.linked(concepts::allocates(), r);
+}
+
 void realloc(ref r, ref newsource)
 {
 	ref oldsource = r.get(concepts::allocator());
+	if (oldsource.linked(concepts::allocates(), r) != r.linked(concepts::allocator(), oldsource)) {
+		throw memory_norm_disrespected(oldsource, r);
+	}
 	alloc(r, newsource);
 	dealloc(r, oldsource);
 }
@@ -252,6 +263,10 @@ void dealloc(ref r, ref source)
 {
 	auto it = index().find(r);
 	if (it == index().end()) { throw no_such_concept(r); }
+
+	if (source.linked(concepts::allocates(), r) != r.linked(concepts::allocator(), source)) {
+		throw memory_norm_disrespected(source, r);
+	}
 
 	source.unlink(concepts::allocates(), r);
 	r.unlink(concepts::allocator(), source);
