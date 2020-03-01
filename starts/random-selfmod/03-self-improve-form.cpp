@@ -76,8 +76,10 @@ public:
 };
 */
 
-#include <vector>
+#include <cstring>
+#include <iostream>
 #include <map>
+#include <vector>
 
 template <typename T>
 class vector
@@ -99,10 +101,10 @@ public:
 	{
 		data.insert(priority, item);
 	}
-	template <typename T>
-	void store(T const & others)
+	template <typename I>
+	void store(I const & others)
 	{
-		data.insert(T.begin(), T.end());
+		data.insert(others.begin(), others.end());
 	}
 	T peek()
 	{
@@ -120,7 +122,6 @@ private:
 };
 
 
-
 template <typename F>
 using function_provider_A = F(*)();
 
@@ -128,7 +129,7 @@ template <typename Workpoint>
 using idea_improvement_A = void(*)(Workpoint & workpoint);
 
 template <typename Workpoint>
-using idea_improvement_generator_A = idea_improvement_A(*)(Workpoint & workpoint)
+using idea_improvement_generator_A = idea_improvement_A<Workpoint>(*)(Workpoint & workpoint);
 
 // we need way to pick what code to use to engage workpoint.
 // i think it can just be idea_improvement
@@ -145,15 +146,15 @@ template <typename Workpoint>
 void try_all_values(Workpoint & workpoint)
 {
 	auto & data = workpoint.data[try_all_values<Workpoint>];
-	if (!data) { data = decltype(workpoint.ideas::Priority)(0); }
-	Workpoint::Part a;
-	for (a = std::numeric_limits<Workpoint::Part>::lowest(); a < std::numeric_limits<Workpoint::Part>::max();) {
+	if (!data) { data = decltype(decltype(workpoint.ideas)::Priority)(0); }
+	typename Workpoint::Part a;
+	for (a = std::numeric_limits<typename Workpoint::Part>::lowest(); a < std::numeric_limits<typename Workpoint::Part>::max();) {
 		workpoint.ideas.store(0, a);
 	}
 	workpoint.ideas.store(0, a);
 }
 
-template <Workpoint> idea_improvement_A<Workpoint>
+template <typename Workpoint> idea_improvement_A<Workpoint>
 try_all_values_generator()
 {
 	return try_all_values<Workpoint>;
@@ -179,6 +180,7 @@ public:
 	virtual bool hasParent();
 };
 
+/*
 template <typename Reflection>
 class LocalWorkpoint : public BasicWorkpoint
 {
@@ -202,6 +204,7 @@ public:
 private:
 	Reflection & image;
 };
+*/
 
 // confusing generalization? try more virtual functions
 
@@ -209,7 +212,7 @@ template <typename Parent, typename _Part = uint8_t, typename Priority = double>
 class TrialWorkpoint : public BasicWorkpoint
 {
 public:
-	using Workspace = Parent::Workspace;
+	using Workspace = typename Parent::Workspace;
 	using Part = _Part;
 
 	TrialWorkpoint(Parent * parent)
@@ -229,8 +232,8 @@ public:
 
 	Part * place()
 	{
-		workspace.sequence[_partspot] = _part;
-		return &workspace.sequence[_partspot];
+		workspace().sequence[_partspot] = _part;
+		return &workspace().sequence[_partspot];
 	}
 
 	virtual Workspace & workspace()
@@ -251,15 +254,15 @@ public:
 protected:
 	virtual Part * idea()
 	{
-		Part * _nextspot = workspace.nextspot(*this, _partspot);
+		Part * _nextspot = workspace().nextspot(*this, _partspot);
 		*_nextspot = ideas.use();
 		return _nextspot;
 	}
 
 	Parent * _parent;
 	Workspace * _workspace;
-	Parent::Part _part;
-	Workspace::PartPosition _partspot;
+	typename Parent::Part _part;
+	typename Workspace::PartPosition _partspot;
 };
 
 template <typename _Part = uint8_t, typename Priority = double>
@@ -271,13 +274,13 @@ public:
 	using PartPosition = signed size_t;
 
 	TrialWorkspace()
-	: TrialWorkpoint(*this, this)
+	: TrialWorkpoint<TrialWorkspace<_Part,Priority>,_Part,Priority>(*this, this)
 	{ }
 
 	template <typename T>
 	Part * nextspot(T workpoint, Part * lastspot)
 	{
-		auto newspot = lastspot + 1
+		auto newspot = lastspot + 1;
 		auto newsize = newspot - &sequence[0];
 		if (newsize > sequence.size()) {
 			sequence.resize(newsize);
@@ -370,11 +373,11 @@ public:
 
 // too much functions-of-functions ...
 template <typename Workpoint>
-void fillinname()(Workpoint & workpoint)
+void fillinname(Workpoint & workpoint)
 {
 	auto & data = workpoint.data[fillinname<Workpoint>];
 	if (!data) { data = try_all_values_generator; }
-	data()
+	data();
 	// try_all_values_generator returns try_all_values
 	
 	try_all_values(workpoint);
@@ -387,17 +390,94 @@ void fillinname()(Workpoint & workpoint)
 template <typename SourceWorkpoint, typename NextWorkpoint>
 NextWorkpoint explore_step_A(SourceWorkpoint & workpoint)
 {
-	idea_improvement_generator_A & stepper = workpoint.data[explore_step_A];
+	idea_improvement_generator_A<SourceWorkpoint> & stepper = workpoint.data[explore_step_A];
 	if (!stepper) { stepper = try_all_values_generator; }
-	idea_improvement_A step = stepper(workpoint);
+	idea_improvement_A<SourceWorkpoint> step = stepper(workpoint);
 	try_all_values(workpoint);
 	return TrialWorkpoint(workpoint);
 }
 
+// let's start from the most basic approach.
+
+// next-upgrade: make able to be breadth-first,unlimited-depth instead of max-depth-depth-first
+// 		really it would be nice if we could judge at each step if we've found a good one, and pursue deeper.
+
+void empty_function() { return; }
+
+#include "capstone.i"
+
+Capstone capstone;
+
+struct Workspace1 {
+	int low_depth;
+	int high_depth;
+	std::vector<uint8_t> code;
+};
+
+void w1_init1(Workspace1 & wk)
+{
+	wk.low_depth = 0;
+	wk.high_depth = 0;
+	wk.code.reserve(64);
+	wk.code.resize(1);
+}
+
+void w1_step1(Workspace1 & wk);
+bool w1_test1(Workspace1 & wk);
+bool w1_test2(Workspace1 & wk);
+
+#define func1 w1_go1
+#define func2 w1_step1
+
+void w1_go1(Workspace1 & wk)
+{
+	while (!w1_test2(wk)) {
+		w1_step1(wk);
+	}
+	//std::cout << "match" << std::endl;
+}
+
+// okay.  to use capstone, we'll want to go back to spawning things, i suppose.
+
+void w1_step1(Workspace1 & wk)
+{
+	wk.code[wk.low_depth] ++;
+	if (wk.code[wk.low_depth] == 0) {
+		if (wk.low_depth == 0) {
+			wk.high_depth = wk.code.size();
+			wk.low_depth = wk.high_depth;
+			wk.code.resize(wk.high_depth + 1);
+			wk.code[wk.high_depth] = 0;
+			std::cout << "New depth = " << wk.code.size() << " / " << ((uint8_t*)func2 - (uint8_t*)func1) << std::endl;
+		} else {
+			-- wk.low_depth;
+			return w1_step1(wk);
+		}
+	} else if (wk.low_depth != wk.high_depth) {
+		wk.low_depth = wk.high_depth;
+		return w1_step1(wk);
+	}
+}
+
+bool w1_test1(Workspace1 & wk)
+{
+	return std::memcmp(wk.code.data(), (void*)w1_step1, ((uint8_t*)func2 - (uint8_t*)func1)) == 0;
+}
+
+bool w1_test2(Workspace1 & wk)
+{
+	auto len = capstone.check(wk.code);
+	return len && len == wk.code.size();
+}
+
+
 
 int main()
 {
-	TrialWorkspace habitworkspace;
+	//TrialWorkspace habitworkspace;
+	Workspace1 wk1;
+	w1_init1(wk1);
+	w1_go1(wk1);
 	
 
 	// let's copy-in how to use mprotect() to run buffers as functions.
