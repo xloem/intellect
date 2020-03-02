@@ -1,0 +1,81 @@
+An Attempt To Outline A Manual Relevence Path
+
+Manual relevence provides triggers associated with aspects of situations,
+verbosely enough to give tools that result in enough behavior to learn or build code to meet a goal.
+
+
+
+
+
+notes/monologue
+[active-memory]
+	[active-goal]
+		name=pick-good-next-step
+		work=[point in possible sequences of steps]
+		reason=other-goal [build-good-step-to-try]
+	[things-to-try, a priority-queue-by-guessed-likelihood of habits]
+
+[goal build-good-step-to-try]
+	reason=[goal build-code-that-makes-better-decisions]
+[goal build-code-that-makes-better-decisions]
+	way=building-code
+	reason=[goal learn-new-tasks]
+
+then our question is, what things-to-try do we give it?
+
+	its goal is to do itself better, learn-new-tasks.
+	it wants to build a good step to try.
+		it will be in a testing environment where it repeatedly tries things, hopign to learn to manage its priority queue better.
+		it may have test-goals in this environment, like build-code-that-does-a-part-better
+			so we may have rote parts that are like try-each-option-sequentially, try-each-option-randomly, or copy-other-uses
+
+				okay, clearly the idea of holding a gaol
+				and doing something relevent to that goal, is helpful.  we already have it written
+	when i do soemthing new, what do I do?
+		i hold a goal, and do something relevent to it.
+		i have a plan that adjusts.
+
+			say we give it some distant relevence, like learn-to-give-nurturing-wellness.
+				what do we need to learn, to be able to learn nurturing-wellnes?
+					to observe things and comprehend their meaning
+					to consider behaviors and imagine their impact
+					to choose among these behaviors and act on them, informed by what we know
+				roughly, meaning.  we want to learn meaning, and how to act on it.
+
+				
+
+previous notes/monologue
+
+so, we have 2 goals.
+goal 1: make function A, reason: self-building
+goal 2: add a step to ongoing function, reason: goal 1
+goal 3: pick a step to try adding, reason: goal 2
+
+consider a function needed.  ideas: copy-existing-function.  sounds good, but lets make it goal-oriented.
+	say the existing function is try-all-options.
+	so, we have a priority queue of options already.
+the reason for 2 is 1
+
+
+-- distraction 1
+let's cast the whole thing as reason-oriented goals.
+goal: learn new tasks
+	how? build-code-that-makes-better-decisions
+	how? use priority-queues with 'relevence'
+		build-code-that-produces-relevent-workable-steps
+		build-code-that-picks-from-other-code-to-improve-choices, -given-a-priority-queue
+		build-code-that-can-produce-similary-quality-indiciators-from-situations
+	how do we build helpful relevent code?  ask a human for inspiration.
+
+let's try to make a closed form of a way to hold relevence.
+	-> we imagine holding a changing priority queue of likelihood.
+	   this priority queue will likely be of indicators or ways to work in the current situation.  things-to-try.
+	-> we need actual steps to try.  so these things-to-try will need to eventually make steps.
+	-> so, we need a workpoint in a plan to make instructions to execute
+
+let's assume meaning-vm.  lets us have more flexible runtime data.
+our goal now has working-data.  possible lists of steps we're expanding.
+	
+
+propose you work on this rather than imagination in meaning-vm, karl
+
