@@ -1,0 +1,25 @@
+Eleanor replied to my post on shielding-for-TIs.
+She implicitly proposes that people just talk about what is up, in ways that _work_,
+to the public.
+Clearly her supports agree with her, and want to ally around the goal.
+
+1. that is incredibly hard, but we could do it
+2. what do we want the public to _do_ when convince?
+	it sounds like producing larger bubbles of belief and support helps a lot
+	e.g. people can get supports when the system doesn't support them
+
+there is also somebody named 'Roger Tolces' hawkspirit who has a real shielded room, which he has tested, with a Tektronix
+spectrum analyser, which he said 'usually flatlines the RF spectrum' indicating his spectrum analyzer has limited bandwidth.
+		i also indicated limitations in my expression.
+	he marked two of our paragraphs in our email, without explanation, likely accidentally.
+	the marks feel like we said something important.
+
+Roger Tolces is an electronic countermeasures PI.
+	he doesn't sound like he speaks honestly.  i could be wrong.  additionally, TI's are generally pushed to lie, by
+	the experiences.
+		he's the bugsweeps.com guy =/
+		there's a big likelihood he's talking to advertise.
+	roger tolces took credit for naming 'electronic'-harassment.
+	he said he found a neighbor irradiating a neighbor with a high voltage Tesla coil.
+		karl ended up trying to (in-our-opinion) 'one-up' roger tolces in the shielding conversation.
+			let's see how it plays out to see if it's true.
