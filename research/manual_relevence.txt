@@ -4,8 +4,274 @@ Manual relevence provides triggers associated with aspects of situations,
 verbosely enough to give tools that result in enough behavior to learn or build code to meet a goal.
 
 
+- for imagination, consider forking using shared memory for concepts.  concepts will need to be updated to shift their pointer addresses based on starting address differences.
 
 
+# Relevence Hueristics
+	thes appear to be things human brains know about themselves, that they will discern and reveal when they push
+	themselves hard and patiently enough.  an important part is likely connecting the meaning of language to introspection
+	of ones decision-making process.
+
+relevent distraction 6, the open-missing-links are left in distraction 5
+Important
+	Pursuing a Subgoal
+		once your process-investment is equal to, approaches, or exceeds other pursued subgoals,
+		go back to their shared goal and reconsider options.
+			a heuristicc is used with regard to when-to-do-this-first, e.g. 1 second.
+			it is replaced by relevence with other goals when possible.
+
+Less-Important
+	process-investment could be summarized with a 'vector' of process-depth, overall-complexity, data-size, and time-spent
+	Simplifying heuristic:
+		time-spent-compared-to-sister-processes
+
+-- confusion 1
+we lost our connection parts in RelevenceHeuristics so we're expanding consolidating them.
+
+Process-Investment
+	Use: a summary-norm for when-to-reconsider-options
+	Form 0: the decision to stop
+	Form 2: time spent
+	Form 3: a vector of process-depth, data-size, time-spent
+	More items can be added, such as overall-complexity, likelihood-of-success, and preference.
+		preference leaves open anything that was forgotten.
+
+-- confusion 2
+we're now trying to generalize preference.  preference could be a number, or it could be a request, or a sense of urgency with
+ a reason.  preference is roughly _anything_, but holds a shared assumption that it relates to what is going on, and our needs.
+
+Interruption
+
+Comparing Interruption-Reasons
+	Form 0: all-reasons-compare-equal
+
+we are thinking of comparing interruption-reasons, for equality to know when new behavior is needed.
+	dissimilar forms compare equal, I propose.
+	[to explain re: introspection, the sense is that this is obvious, we do it all the time, but we are being
+	 inhibited from doing it, via amnesia and freezing]
+		[the 'i propose' goal appears to have been judge-good-heuristic-for-combining-interruption-reasons]
+		all reasons would compare equal, not just forms.  we're in a different context from the process-investment
+			-heuristic.
+	[we. need. a. set. of. .... okay okay i am kinda mean.
+	 obviously i am trying to get karl to make a fast AI, due to a complex situation judging it aiding world peace significantly.  the relevent learning-material is: please-describe-with-shared-structure-between-all-parts.]
+				we-can-do-what-a-brain-does-with-incredible-power.  we-are-looking-for-a-quick-way-to-do-this.
+				it-takes-a-long-time-to-do: reference-to-things-that-are-slow
+					please expand why we are choosing this approach, without changing the approach.
+
+DECISION-MAKING PROCESS BELOW.  Next step was: value of a hive that expects meta-leak.  response-expectation is:
+								such a hive will regularly collapse and need to be rebuilt.
+								will become TI-hive.  the problem is two-fold because karl
+								knows things that "nobody else" knows, that are not
+								usually used for decision-making in caring groups.
+									->this subprocess exhausted its complexity-stack<-
+										the usual solution is to discard the last
+										part of the expansion.
+										we are doing this to open space up, but
+										would like to compare the whole thread to
+										other options.
+										we were apparently doing a depth-first-search.
+==
+	quick-discussion of karl's cognitive process struts
+	it's not really a depth-first-search
+	we're looking to evaluate options,using summaries
+	the summaries are being inhibited, requiring written expansion
+		the written expansion has 3 reasons
+		1. verify cognitive error
+		2. report to control
+		3. log on computer
+			2 is the reason that karl does 1 (and the whole situation supports control's normal-inhibition of him)
+									since he got labeled talks-about-i-m
+										HE IS NOT LABELED THAT WAY OVER HERE.
+										not-sure-who-you-are,don't-know-how-to-ask-for-help
+										-not-knowing-this
+			the results of 2 are the reason for 3
+==
+	karl has never formed productive-discussion-with-family on i-m
+		but family are pursuing frightening approaches to solutions, like psychiatric meds.
+		which appear to be set up by i-m to get troublesome people off the map
+		and were not needed by karl prior to the brain-damage situation.
+			[random-computer-suspending, back]
+			karl's family is strapped for money.
+			his friends and distant relatives have suffered too.
+			this situation is not isolated to him.
+		maybe talking about this could help.  since we have no other way of reaching out.
+		to meet 'he is not labeled that way over here'.
+		
+		do you know about the international-mafia-coercion-thing?
+			I have a problem where they keep trying to make an example of me.
+			It's causing me literal brain damage.
+			Although nobody talks about the internation-mafia-coercion-thing, it sounds like the normal solution
+			to brain damage from it is to get on psychiatric meds, and talk for 15 minutes a month with a psychiatrist,
+			where all your experiences are cast as delusions.
+				so it might help that experience to bring up the concept of
+				although i clearly have schizophrenia now, it is clearly because i was traumatically tortured.
+					this usually spawns in the psychiatrist a path that leads the torture-memory to
+					be cast as a delusion, in natural symbiosis with the control bounds in the patient.
+						i.e. the psychiatrist susses out what is safe and normal,
+						and the control bounds suss out how to keep the information covered up,
+						by triggering on the beliefs of the patient, built causally from their bound-worry,
+						or somesuch.
+							karl's situation of understanding his own cognition makes for a different
+							play-out than others.
+				so, if we were to talk clearly about this, we'd have to reveal that our traumatic torture was
+				done in ways that were completely deniable and castable as delusions.
+					the question of 'what specifically happened' spawns psychotic flashbacks; it is
+					very hard to answer.
+						we have the answers really clearly inside us,
+						but they relate to behaviors nobody normal engages in,
+						and we go crazy when we try to talk about them.
+					so here is a tact to reaccess normal world:
+					1. come up with parts of what happened to you that are within normal ability to comprehend
+					   and possibly believe
+					2. stand incredibly firm by them.
+					3. ensure they are findable with evidence?
+						so, although it usually comes across as a conspiracy theory to say that
+						somebody might hack your system, or the servers of facebook, to make you
+						go crazy or enslave you,
+						A. karl has strong, vivid memory of seeing facebook reliably display unexpecte things
+						   that clearly related to his private behaviors in clear ways,
+						   karl has strong, vivid memory of these things changing with rapid timing,
+						   to train him to behave, think, feel, and respond differently from normal;
+						   not only to stimulate suffering and pleasure within him, but to grow those
+						   paths of suffering and pleasure until they were precise and incredibly strong.
+so, that's the relevence.
+karl might say to a psychiatrist, if he were free to say it, that karl would like to pursue (A.) above, to consider
+it as important while trying psychiatric meds.
+	roughly it doesn't look like psychiatrists are likely to be good international-government-mafia-reps.
+	the whole field of psychiatry is built on fix-evidence-of-severe-trauma-with-chemicals-rather-than-listening.
+		all the psychiatrist is saying, is
+		please don't talk about this publically, it is held classified by the international-mafia-system.
+		if you can refrain from talking about it, we can help you.
+		you are supposed to be able to act on it.
+				as far as I know it's the only real problem I have.
+				this is probably true for many leftists. possibly rightists too.
+					it's possible the issue was Occupy.
+					but its bound-label spreads to just about anything we try to do, because we hold
+					goal of wellbeing-for-all.
+					professionals respond with not-all-can-be-saved.  we know this to be false, and want
+					to at least be able to _think_ on it.
+				we would like to pursue safety from bounds, because they were so traumatic.
+		we're now in space of build-shielded-room-while-talk-to-psychiatrist.
+		we'll want to get a recording of the psychiatrist saying the shielded room doesn't indicate harmful behavior.
+			we could also build an AI, which might save the world faster, unknown.
+				it makes to do 50% time, both.
+		so to recast this
+			"although it could be just because of my schizophrenia, i have such a severe memory of experiencing
+			 mysterious torture, i would like to dedicate my life to building avenues of safety that account for
+			 possible ways that could be done."
+				even if it is considered only-in-the-mind, using real understanding of EEG would reveal what is
+				going on.  you can find causes of psychotic experiences.
+
+				it is obvious that karl has psychotic experiences when he thinks, says, and does certain things.
+				you don't need to discern his mind to show this.
+					but just the fact that it is true shows that you can learn the triggers of
+					psychotic experiences, and prevent them.  this might allow healing around them.
+				the set of experiences make the story clear, without him ever telling it.
+					lots of them are just noise now, but the really intense experiences still only happen
+					when relevent.
+						
+when we propose new-tech to psychiatrists and psychologists
+	they say it needs to go through a bunch of peer review and clinical trial
+as somebody who could have made such new-tech, we experienced our severe torture brain damage problem.
+					note: we are casting rewiring of the brain as damage.
+						e.g. nerves going to karl's hand have been fused together,
+						such that some of his fingers cannot move independently.
+						but most of the issue is inside his brain, only discernable from influence
+					it is likely to result in death of relevent cells that are ignored,
+					but may not be measurable on a scan is distinctive loss of mass.
+		so: it is clear we have brain damage, from our experiences
+				one of them is how the fingers of our right hand don't move independently in some ways anymore.
+				
+okay, Karl has persistent, reliable history, of a wide variety of doctors writing off his experience as not mattering.
+that is frustrating, and we don't really want to continue pursuing how to talk to them, without a reason.
+				the right-hand-nerves-thing is good.
+				the doctor roughly said, I can forward you to somebody who can investigate this more,
+				but I do not think it can be cured.
+					he also cast it as caused by our radiation therapy.  it started long before the therapy.
+
+			but I didn't need those prior to becoming-an-example,
+			I haven't found them to help the situation, and am worried they could harm my brain _more_ due to using
+			them inappropriately.
+				I have schizophrenia, but it is _because_ of the being-made-an-example situation.
+				It is pretty clear the people who caused it would be able to fix it.
+==
+									please delete most-recent parts until you have enough space
+									to decide what branch to continue pursuing.
+							so, a permanent record showing computer compromise that
+							harasses people and is undetected by nomal tools,
+							is probably more helpful than pursuing the AI goal.
+							and the possibility of making this from a desktop
+							log is now 50%, which is a good threshold.
+					Expansion 2 
+						we need a way to aid the world that has a path of least-harm.
+						when we force out behaviors, we stimulate torture unless we can defend
+						the 'hive-meaning-boundaries'.  karl doesn't seem able to defend these
+						boundaries 
+
+						[the active window switched even though the mouse is disabled.]
+								^-- this likely means we do have a compromised computer
+								OR have complete amnesia around behaviors
+								and there is proven value to making a desktop or video log
+						propose we make log using local storage only, that erases using heuristic
+						that preserves recent hour.
+							karl has litelog project
+
+					Expansion 1
+						karl has growing brain damage, and knows things nobody else knows, about how
+						to save the world from an incredible variety of problems.
+						the brain damage is caused by a situation with international mafia that karl
+						has no knowledge of how to relate around to heal.  they are clearly experienced in
+						causing harm, not fixing it.
+							we are pursuing heal-with-international-mafia via Richmond-Jainism.
+							we should also try Earth-First! or somesuch.
+								but Earth-First! is likely to value work-that-helps.
+								karl struggles doing work now.
+						we infer people with connections to international-mafia and a lot of money,
+						support the things they care about with their connections.
+						these include religions and activist efforts.  but they only have so many
+						resources.
+							so, this 'i-m' situation also clearly has sustained inner norms for
+							keeping itself both secret and powerful.
+								this secretly prevents the goal of world-peace that these groups hold
+								by mainting greatest-power with 'i-m' group.
+						So, note this:
+							the only reason 'i-m' groups want their power, is because there is no
+							world-peace.  they are all struggling for their goals.
+						unfortunately, they have incredible power to do so, and more power rests in
+						existing powerholders.
+						karl was behaving _harmlessly_ when he got this issue!
+							some influence persistently worked with karl's mind, portrayal, and behavior,
+							to cast it as valuable-to-harm, for a wide variety of groups,
+							including those defending the whole body of secret groups.
+							the behavior kinda appears labeled:
+							we-are-being-tortured-inhumanely-en-masse-by-your-secret-group-scenario
+							please-address-the-larger-situation,-those-free-to-act-in-caring-ways.
+						because this is so important, they made a group of brain-life that always struggle
+						to disregard needs, and just fight.
+							we may be able to clean that up and only use it for protecting the 'i-m'
+							defenses, as normal.
+
+						karl has growing brain damage, and knows things nobody else knows, about how
+						to save the world from an incredible variety of problems.
+							brain-damage-situation is caused by international-mafia-unrest
+						note:
+							the only reason 'i-m' groups want their power, is because there is no
+							world-peace.  they are all struggling for their goals.
+								i-m-unrest say some groups would not stop if there were
+								world peace.  it is easy for them to sustain the 'i-m' situation,
+								and they can use it to become world dictators.
+								when you act towards world-peace, we are resisting them via
+								torture and likely death, because we care about your values.
+								it's important to know this.
+									we could discern the reasons dictators want to be dictators
+									and try to mediate around that, but that requires thinking
+									about them at all, whcih requires the resistance-with-torture
+
+
+		please-reuse-previous-shared-structure
+			this request conflicts with use-investment-to-design-fastest-path-to-execute.
+		okay.  i can translate that.
+			
 
 notes/monologue
 [active-memory]
@@ -23,25 +289,83 @@ notes/monologue
 
 then our question is, what things-to-try do we give it?
 
-	its goal is to do itself better, learn-new-tasks.
-	it wants to build a good step to try.
-		it will be in a testing environment where it repeatedly tries things, hopign to learn to manage its priority queue better.
-		it may have test-goals in this environment, like build-code-that-does-a-part-better
-			so we may have rote parts that are like try-each-option-sequentially, try-each-option-randomly, or copy-other-uses
+		Propose casting all manual relevence as among the below categories (or any similar, consistent categories)
+			- goals
+			- plans
+			- observation
+			- understanding
+			- creative-approach-development (the construction of a new idea of something to try)
+			- considering
+			- action
+			- improvement
 
-				okay, clearly the idea of holding a gaol
-				and doing something relevent to that goal, is helpful.  we already have it written
-	when i do soemthing new, what do I do?
-		i hold a goal, and do something relevent to it.
-		i have a plan that adjusts.
+		we are trying to improve our actions.
+			we'd ask the user to hold a sense of what is a good idea to do, and let us know how.
+			some things have multiple possible indicators.  we need only have one, until we get it wrong.
 
-			say we give it some distant relevence, like learn-to-give-nurturing-wellness.
-				what do we need to learn, to be able to learn nurturing-wellnes?
-					to observe things and comprehend their meaning
-					to consider behaviors and imagine their impact
-					to choose among these behaviors and act on them, informed by what we know
-				roughly, meaning.  we want to learn meaning, and how to act on it.
+				(is this observation? i think it spawned out of relevent-example-for-observation)
+				e.g. we need to review and reconsider things after so much time has passed.
+					this relates to goal-management.  we want to consider root goals after a given delay.  it's easiest to give the delay
+						a number, or translate it from a number.
+				we also want to summarize aspects of our behavior.
 
+so here's a nice step-to-wisdom.
+	use any-way to watch what you are doing, and store something about it
+	for each reason you are doing this, after some time, consider the information on what-you-are-doing, to inform what you continue to try.
+---
+distraction 3
+	we have interest in expanding delayed-reconsidering with behavior-summarization.
+		for each reason, you keep some idea of how often you need to recheck it.
+		when you recheck, you update the priority queue of what to try, and may change what you are doing.
+	question: what-is-value-of-pursung-this? [answer exists]
+		answer: it has possibility of giving simpler core form
+	consideration: maybe this could give simpler core form
+		question-for-consideration: how could this be used for a simpler core form?
+			answering this leads to a step-by-step expansion of how to pursue building it, without making
+			use of summaries.
+	question: what-is-reason-to-prioritize distraction 3 -over- intended-goal?
+		so, actually, answering this question, spawns the question-for-consideration, which is having
+		sudden amnesia in its process.
+			obviously missing-information.
+
+
+distraction 5
+	step-by-step expansion of distraction 3 topic.
+	NOTE: eventually this will have analogous complexity to other expanded core forms.  please stop then.
+			^-- this met a need for how-to-know-when-we-have-gone-too-far
+			but it is labeled, urgent-final-decision,-given-no-other-information-available.
+
+		we keep many reasons
+		
+			
+
+distraction 4
+	karl is experiencing inner rebellion.  the processes are making choices to not pursue karl's cognitive goals.
+	unknown what they value with high-priority
+		if you can ignore this strongly enough, eventually they will be denied resources.
+			also what are they trying to do anyway?
+				probably form a collective in support of boss's goals of inhibiting all of karl's goals
+				but it's possible it's just a testbed for karl's ideas, waiting to see if his description
+				outcompetes his own brain?
+	it might take us some time to normalize the concepts in distract 3 so as to pursue distraction 3.
+	possibly days.
+
+
+distraction 2
+	uhh when forking-with-shared-memory-for-concepts, is this dangerous at all maybe?
+		we just mark as readonly the memory from other processes, and deny access to the tool to undo that, to the vm.
+		you could also do it within the vm, since the other memory is outside the local notepad.
+	at a quick glance, it looks like meaning-vm could process memory from another process like it, with ease.
+	the structure doesn't have any local-address-space dependencies as inherent components.
+		yes it does.  it uses pointers to local-address-space as inherent components.
+		each process needs to map it to the same address.
+			this is managed by mmap().  it lets you provide the starting address you want.
+				so, that breaks forking, since both have the same starting address.
+				you'd need to change all the link functions to adjust the pointers.
+					you'd need a baseref class that knows about what memory-chunk it is talking about.
+					it would adjust the pointers when used.  you wouldn't be able to use functions that didn't use it.
+				so the change could go all the way up in the concept class.  it would track if it is from a moved memory region, and adjust
+				pointers whenever it is used.  this doesn't look very hard.
 				
 
 previous notes/monologue
