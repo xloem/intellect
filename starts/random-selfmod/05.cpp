@@ -28,11 +28,13 @@ void vector_sort(vector_t<Value> & vector, vector_t<Index> * indices = 0, bool r
 struct sbc_t;
 sbc_t * sbc_init();
 void sbc_update_pair(sbc_t * sbc, uint8_t byte1, uint8_t byte2);
-void sbc_update_block(sbc_t * sbc, uint8_t* start, uint8_t * tail);
+void sbc_update_block(sbc_t * sbc, vector_t<uint8_t> & block);
 void sbc_update(sbc_t * sbc, vector_t<void*> const & sorted_functions);
 void sbc_generate_priority_row(sbc_t * sbc, vector_t<unsigned long> & value_row, vector_t<uint8_t> & index_row);
 void sbc_generate_priority(sbc_t * sbc);
 void sbc_free(sbc_t * sbc);
+
+vector_t<uint8_t> memblock_from_range(void * head, void * tail);
 
 void * functions[]={
 	(void*)main,
@@ -104,24 +106,21 @@ void sbc_update_pair(sbc_t * sbc, uint8_t byte1, uint8_t byte2)
 	sbc->next_table[byte1].data[byte2] ++;
 	sbc->prev_table[byte2].data[byte1] ++;
 }
-void sbc_update_block(sbc_t * sbc, uint8_t* start, uint8_t* tail)
+void sbc_update_block(sbc_t * sbc, vector_t<uint8_t> & block)
 {
 	// for each byte, accumulate events of it being
 	// before or after other bytes.
 	// this means each entry in the table is a count.
 	
-	uint8_t * iterator = start;
-	++ iterator;
-	while (iterator != tail) {
-		sbc_update_pair(sbc, *(iterator - 1), *iterator);
-
-		++ iterator;
+	for (size_t i = 1; i < block.size; ++ i) {
+		sbc_update_pair(sbc, block.data[i - 1], block.data[i]);
 	}
 }
 void sbc_update(sbc_t * sbc, vector_t<void*> const & sorted_functions)
 {
 	for (size_t i = 1; i < sorted_functions.size; ++ i) {
-		sbc_update_block(sbc, (uint8_t*)sorted_functions.data[i-1], (uint8_t*)sorted_functions.data[i]);
+		vector_t<uint8_t> block = memblock_from_range(sorted_functions.data[i-1], sorted_functions.data);
+		sbc_update_block(sbc, block);
 	}
 }
 void sbc_generate_priority_row(sbc_t * sbc, vector_t<unsigned long> & value_row, vector_t<uint8_t> & index_row)
@@ -151,6 +150,11 @@ void sbc_free(sbc_t * sbc)
 	delete sbc;
 }
 
+vector_t<uint8_t> memblock_from_range(void * head, void * tail)
+{
+	return vector_shadow((uint8_t*)head, (uint8_t*)tail - (uint8_t*)head);
+}
+
 int main()
 {
 	// 1. sort functions so we know the bounds of each.
@@ -164,7 +168,7 @@ int main()
 
 	sbc_generate_priority(sbc);
 
-	/*
+	///*
 	// TESTING -> passed
 
 	printf("Sorting ...\n");
@@ -305,33 +309,124 @@ void vector_sort(vector_t<Value> & values, vector_t<Index> * indices, bool rever
 // okay.  we will try to build take-work-offline.
 // we are now offline.
 // if we want our work not to go online when karl is in a disparate state of mind, we should move the repo out of the care repo.
-
-// guessing.
-struct guess
-{
-	vector_t<uint8_t> data; // <-- current work
-	vector_t<unsigned long> certainty; // <-- for now, a linked list to last thing
-		// propose each entry in certainty links to previous guess-location.  to undo knowing it.
-		// TODO LEFT OFF HERE.  Let's implement templates.
-	size_t focus;
-};
-// okay, guess shows our working data.
-// we want to be able to undo a guess.  we could turn certainty into a linked-list.
-// 		problem: doesn't allow for resizing, also history of changing is lost.
-// 				this is okay for current work.
-// 				i see your alternative is a list of step structures.
-// 					this will need to have enumerated types of behavior.
-// 					the enum is likely to index the function that did the step.
-// 				okay, we can try it a little bit.
-
-function general_step(Work & work, State & state)
-template <typename Work, typename State>
-using step_function = void(Work & work, State & state, bool undo = false, bool advance = false);
+// the repo is now out of the online repo.  changes are being stored to Karl's 2020 laptop.
 
 template <typename Work, typename State>
-struct step
+struct step_t
 {
-	using function_t = void(*)(Work & work, State & state, bool undo, bool advance);
+	using function_t = bool(*)(Work & work, State & state, bool undo, bool init);
 	State state;
 	function_t function;
 };
+
+template <typename Work, typename State>
+struct plan_t
+{
+	Work work;
+	vector_t<step_t<Work, State>> steps;
+};
+
+template <typename Work, typename State>
+step_t<Work,State> step_init(plan_t<Work,State> & plan, typename step_t<Work,State>::function_t function);
+/*{
+	step_t<Work,State> step;
+	step.function = function;
+	function(plan.work, step.state, false, true);
+}*/
+
+// we'll have an sbc_t, and we want to extend from a focus with attempted bytes.
+// the focus is what we want to get right.
+
+struct sbc_state_t
+{
+	sbc_t * sbc;
+	uint8_t next_try;
+	size_t focus;
+};
+struct sbc_work_t
+{
+	vector_t<uint8_t> data;
+	sbc_t * sbc;
+};
+using sbc_step_t = step_t<sbc_work_t, sbc_state_t>;
+using sbc_plan_t = plan_t<sbc_work_t, sbc_state_t>;
+
+sbc_step_t step_init(sbc_plan_t & plan, sbc_step_t::function_t function)
+{
+	sbc_step_t step;
+	step.function = function;
+	if (plan.steps.size) {
+		auto  last_step = plan.steps.data[plan.steps.size-1];
+		step.state.sbc = last_step.state.sbc;
+		step.state.focus = last_step.state.focus ++;
+	} else {
+		step.state.sbc = plan.work.sbc;
+		step.state.focus = 0;
+	}
+	function(plan.work, step.state, false, true);
+	return step;
+}
+
+bool try_next_byte(sbc_work_t & work, sbc_state_t & state, bool undo, bool init)
+{
+	if (init) {
+		state.next_try = 0;
+		return true;
+	}
+
+	if (work.data.size < state.focus) {
+		vector_resize(work.data, state.focus);
+	}
+
+	if (!undo) {
+		if (state.focus == 0) {
+			while (state.sbc->prev_prio[state.next_try].data[0] == 0) {
+				++ state.next_try;
+				if (state.next_try == 0) {
+					return false;
+				}
+			}
+			work.data.data[state.focus] = state.next_try;
+			++ state.next_try;
+			if (state.next_try == 0) {
+				return false;
+			}
+			while (state.sbc->prev_prio[state.next_try].data[0] == 0) {
+				++ state.next_try;
+				if (state.next_try == 0) {
+					return false;
+				}
+			}
+		} else {
+			work.data.data[state.focus] = state.sbc->next_prio[work.data.data[state.focus-1]].data[state.next_try];
+			++ state.next_try;
+			if (state.next_try == 0) {
+				return false;
+			}
+			if (state.sbc->next_prio[work.data.data[state.focus-1]].data[state.next_try] == 0) {
+				state.next_try = 0;
+				return false;
+			}
+		}
+		return true;
+	} else {
+		// undo
+		assert(false);
+	}
+}
+
+void try_to_reach(vector_t<uint8_t> & target)
+{
+
+}
+
+
+
+
+
+
+
+// NOTE: sbc is a summarization.
+// it could even be applied to itself.
+// it could be used to infer good decisions, if it is known
+// about the result.
