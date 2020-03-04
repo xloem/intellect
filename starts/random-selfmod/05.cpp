@@ -35,11 +35,13 @@ template <typename Value> void vector_free(vector_t<Value> & vector);
 template <typename Value, typename Index = size_t>
 void vector_sort(vector_t<Value> & vector, vector_t<Index> * indices = 0, bool reverse = false);
 
-template <typename Count, typename Frequency, typename Option, size_t options>
+template <typename Count, typename Frequency, typename Option, size_t _options>
 struct sbc_t {
 	using count_t = Count;
 	using frequency_t = Frequency;
 	using option_t = Option;
+
+	static size_t constexpr options = _options;
 
 	struct direction_t {
 		vector_t<Count> count[options];
@@ -66,26 +68,28 @@ void sbc_free(sbc_t<C,F,O,o> * sbc);
 
 vector_t<uint8_t> memblock_from_range(void * head, void * tail);
 
+using SBC = sbc_t<unsigned long,unsigned long,uint8_t,256>;
+
 void * functions[]={
 	(void*)main,
 
-	(void*)vector_init<real>,
-	(void*)vector_shadow<real>,
-	(void*)vector_resize<real>,
-	(void*)vector_swap<real>,
-	(void*)vector_front<real>,
-	(void*)vector_back<real>,
-	(void*)vector_free<real>,
-	(void*)vector_sort<real>,
+	(void*)vector_init<SBC::direction_t>,
+	(void*)vector_shadow<SBC::direction_t>,
+	(void*)vector_resize<SBC::direction_t>,
+	(void*)vector_swap<SBC::direction_t>,
+	(void*)vector_front<SBC::direction_t>,
+	(void*)vector_back<SBC::direction_t>,
+	(void*)vector_free<SBC::direction_t>,
+	//(void*)vector_sort<SBC::direction_t>,
 
-	(void*)vector_init<unsigned long>,
-	(void*)vector_shadow<unsigned long>,
-	(void*)vector_resize<unsigned long>,
-	(void*)vector_swap<unsigned long>,
-	(void*)vector_front<unsigned long>,
-	(void*)vector_back<unsigned long>,
-	(void*)vector_free<unsigned long>,
-	(void*)vector_sort<unsigned long>,
+	(void*)vector_init<SBC::count_t>,
+	(void*)vector_shadow<SBC::count_t>,
+	(void*)vector_resize<SBC::count_t>,
+	(void*)vector_swap<SBC::count_t>,
+	(void*)vector_front<SBC::count_t>,
+	(void*)vector_back<SBC::count_t>,
+	(void*)vector_free<SBC::count_t>,
+	(void*)vector_sort<SBC::count_t>,
 
 	(void*)vector_init<void *>,
 	(void*)vector_shadow<void *>,
@@ -96,21 +100,21 @@ void * functions[]={
 	(void*)vector_free<void *>,
 	(void*)vector_sort<void *>,
 
-	(void*)vector_init<uint8_t>,
-	(void*)vector_shadow<uint8_t>,
-	(void*)vector_resize<uint8_t>,
-	(void*)vector_swap<uint8_t>,
-	(void*)vector_front<uint8_t>,
-	(void*)vector_back<uint8_t>,
-	(void*)vector_free<uint8_t>,
-	(void*)vector_sort<uint8_t>,
+	(void*)vector_init<SBC::option_t>,
+	(void*)vector_shadow<SBC::option_t>,
+	(void*)vector_resize<SBC::option_t>,
+	(void*)vector_swap<SBC::option_t>,
+	(void*)vector_front<SBC::option_t>,
+	(void*)vector_back<SBC::option_t>,
+	(void*)vector_free<SBC::option_t>,
+	(void*)vector_sort<SBC::option_t>,
 
-	(void*)sbc_init<unsigned long,unsigned long,uint8_t,256>,
-	(void*)sbc_update_axis<sbc_t<unsigned long,unsigned long,uint8_t,256>>,
-	(void*)sbc_update_block<sbc_t<unsigned long,unsigned long,uint8_t,256>>,
-	(void*)sbc_generate_priority_row<sbc_t<unsigned long,unsigned long,uint8_t,256>>,
-	(void*)sbc_generate_priority<sbc_t<unsigned long,unsigned long,uint8_t,256>>,
-	(void*)sbc_free<unsigned long,unsigned long,uint8_t,256>,
+	(void*)sbc_init<SBC::count_t,SBC::frequency_t,SBC::option_t,SBC::options>,
+	(void*)sbc_update_axis<SBC>,
+	(void*)sbc_update_block<SBC>,
+	(void*)sbc_generate_priority_row<SBC>,
+	(void*)sbc_generate_priority<SBC>,
+	(void*)sbc_free<SBC::count_t,SBC::frequency_t,SBC::option_t,SBC::options>,
 
 	(void*)memblock_from_range//,
 //	(void*)printf
@@ -202,21 +206,19 @@ void sbc_generate_priority_row(SBC * sbc, size_t axis_direction, typename SBC::o
 	auto occurrences = sbc->totals.data[option];
 	if (!occurrences) { return; }
 
-	const auto options = sbc->totals.size;
-
 	auto & direction = sbc->directions.data[axis_direction];
 	auto & guess = direction.guess[option];
 	auto & chance = direction.chance[option];
 	auto & count = direction.count[option];
 
-	for (size_t a = 0; a < options; ++ a) {
+	for (size_t a = 0; a < sbc->options; ++ a) {
 		guess.data[a] = a;
 		chance.data[a] = count.data[a];
 	}
 
 	vector_sort(chance, &guess, true);
 
-	for (size_t a = 0; a < options; ++ a) {
+	for (size_t a = 0; a < sbc->options; ++ a) {
 		// attempt to round up likelihood.
 		chance.data[a] = (occurrences - 1 + chance.data[a] * 1024) / occurrences;
 	}
@@ -224,10 +226,9 @@ void sbc_generate_priority_row(SBC * sbc, size_t axis_direction, typename SBC::o
 template <typename SBC>
 void sbc_generate_priority(SBC * sbc)
 {
-	const auto options = sbc->totals.size;
 	const auto directions = sbc->directions.size;
 	for (size_t d = 0; d < directions; ++ d) {
-		for (size_t a = 0; a < options; ++ a) {
+		for (size_t a = 0; a < sbc->options; ++ a) {
 			sbc_generate_priority_row(sbc, d, a);
 		}
 	}
@@ -605,7 +606,7 @@ enum class Property {
 // 		so which-property-is-chosen is one of them.
 // 			hmm different groups
 
-enum class SBC {
+enum class SBCType {
 	value,
 	value_priority,
 	step,
