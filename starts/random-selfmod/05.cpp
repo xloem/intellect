@@ -20,19 +20,30 @@ template <typename Value> vector_t<Value> vector_init(size_t size = 0);
 template <typename Value> vector_t<Value> vector_shadow(Value * array, size_t bytes);
 template <typename Value> void vector_set(vector_t<Value> & vector, Value value);
 template <typename Value> void vector_resize(vector_t<Value> & vector, size_t size);
-template <typename Value> void vector_free(vector_t<Value> & vector);
 template <typename Value> void vector_swap(vector_t<Value> & vector, size_t index1, size_t index2);
+template <typename Value> Value & vector_front(vector_t<Value> & vector);
+template <typename Value> Value & vector_back(vector_t<Value> & vector);
+template <typename Value> void vector_free(vector_t<Value> & vector);
 template <typename Value, typename Index = size_t>
 void vector_sort(vector_t<Value> & vector, vector_t<Index> * indices = 0, bool reverse = false);
 
+template <typename Frequency, typename Option, size_t options>
 struct sbc_t;
-sbc_t * sbc_init();
-void sbc_update_pair(sbc_t * sbc, uint8_t byte1, uint8_t byte2);
-void sbc_update_block(sbc_t * sbc, vector_t<uint8_t> & block);
-void sbc_update(sbc_t * sbc, vector_t<void*> const & sorted_functions);
-void sbc_generate_priority_row(sbc_t * sbc, vector_t<unsigned long> & value_row, vector_t<uint8_t> & index_row);
-void sbc_generate_priority(sbc_t * sbc);
-void sbc_free(sbc_t * sbc);
+
+template <typename F, typename O, size_t o>
+sbc_t<F,O,o> * sbc_init();
+template <typename F, typename O, size_t o>
+void sbc_update_pair(sbc_t<F,O,o> * sbc, O option1, O option2);
+template <typename F, typename O, size_t o>
+void sbc_update_block(sbc_t<F,O,o> * sbc, vector_t<O> & block);
+//template <typename F, typename O, size_t o>
+//void sbc_update(sbc_t<F,O,o> * sbc, vector_t<void*> const & sorted_functions);
+template <typename F, typename O, size_t o>
+void sbc_generate_priority_row(sbc_t<F,O,o> * sbc, vector_t<F> & value_row, vector_t<O> & index_row);
+template <typename F, typename O, size_t o>
+void sbc_generate_priority(sbc_t<F,O,o> * sbc);
+template <typename F, typename O, size_t o>
+void sbc_free(sbc_t<F,O,o> * sbc);
 
 vector_t<uint8_t> memblock_from_range(void * head, void * tail);
 
@@ -42,31 +53,39 @@ void * functions[]={
 	(void*)vector_init<unsigned long>,
 	(void*)vector_shadow<unsigned long>,
 	(void*)vector_resize<unsigned long>,
-	(void*)vector_free<unsigned long>,
 	(void*)vector_swap<unsigned long>,
+	(void*)vector_front<unsigned long>,
+	(void*)vector_back<unsigned long>,
+	(void*)vector_free<unsigned long>,
 	(void*)vector_sort<unsigned long>,
 
 	(void*)vector_init<void *>,
 	(void*)vector_shadow<void *>,
 	(void*)vector_resize<void *>,
-	(void*)vector_free<void *>,
 	(void*)vector_swap<void *>,
+	(void*)vector_front<uint8_t>,
+	(void*)vector_back<uint8_t>,
+	(void*)vector_free<void *>,
 	(void*)vector_sort<void *>,
 
 	(void*)vector_init<uint8_t>,
 	(void*)vector_shadow<uint8_t>,
 	(void*)vector_resize<uint8_t>,
-	(void*)vector_free<uint8_t>,
 	(void*)vector_swap<uint8_t>,
+	(void*)vector_front<uint8_t>,
+	(void*)vector_back<uint8_t>,
+	(void*)vector_free<uint8_t>,
 	(void*)vector_sort<uint8_t>,
 
-	(void*)sbc_init,
-	(void*)sbc_update_pair,
-	(void*)sbc_update_block,
-	(void*)sbc_update,
-	(void*)sbc_generate_priority_row,
-	(void*)sbc_generate_priority,
-	(void*)sbc_free//,
+	(void*)sbc_init<unsigned long,uint8_t,256>,
+	(void*)sbc_update_pair<unsigned long,uint8_t,256>,
+	(void*)sbc_update_block<unsigned long,uint8_t,256>,
+	//(void*)sbc_update<unsigned long,uint8_t,256>,
+	(void*)sbc_generate_priority_row<unsigned long,uint8_t,256>,
+	(void*)sbc_generate_priority<unsigned long,uint8_t,256>,
+	(void*)sbc_free<unsigned long,uint8_t,256>,
+
+	(void*)memblock_from_range//,
 //	(void*)printf
 };
 
@@ -78,70 +97,82 @@ struct vector_t
 	size_t allocated;
 };
 
-// sequential-byte-chance 1
+// sequential-behavior-chance, growing slowly
+template <typename Frequency, typename Option, size_t options>
 struct sbc_t {
-	vector_t<unsigned long> next_table[256];
-	vector_t<unsigned long> prev_table[256];
-	vector_t<uint8_t> next_prio[256];
-	vector_t<uint8_t> prev_prio[256];
+	using frequency_t = Frequency;
+	using option_t = Option;
+	using index_t = size_t;
+	vector_t<Frequency> next_table[options];
+	vector_t<Frequency> prev_table[options];
+	vector_t<Option> next_prio[options];
+	vector_t<Option> prev_prio[options];
 };
 
-sbc_t * sbc_init()
+template <typename Frequency, typename Option, size_t options>
+sbc_t<Frequency,Option,options> * sbc_init()
 {
-	sbc_t * sbc = new sbc_t();
-	for (int i = 0; i < 256; ++ i) {
-		sbc->next_table[i] = vector_init<unsigned long>(256);
-		sbc->prev_table[i] = vector_init<unsigned long>(256);
-		sbc->next_prio[i] = vector_init<uint8_t>(256);
-		sbc->prev_prio[i] = vector_init<uint8_t>(256);
-		vector_set<unsigned long>(sbc->next_table[i], 0);
-		vector_set<unsigned long>(sbc->prev_table[i], 0);
-		vector_set<uint8_t>(sbc->next_prio[i], 0);
-		vector_set<uint8_t>(sbc->prev_prio[i], 0);
+	sbc_t<Frequency,Option,options> * sbc = new sbc_t<Frequency,Option,options>();
+	for (typename sbc_t<Frequency,Option,options>::index_t i = 0; i < options; ++ i) {
+		sbc->next_table[i] = vector_init<Frequency>(options);
+		sbc->prev_table[i] = vector_init<Frequency>(options);
+		sbc->next_prio[i] = vector_init<Option>(options);
+		sbc->prev_prio[i] = vector_init<Option>(options);
+		vector_set<Frequency>(sbc->next_table[i], 0);
+		vector_set<Frequency>(sbc->prev_table[i], 0);
+		vector_set<Option>(sbc->next_prio[i], 0);
+		vector_set<Option>(sbc->prev_prio[i], 0);
 	}
 	return sbc;
 };
-void sbc_update_pair(sbc_t * sbc, uint8_t byte1, uint8_t byte2)
+template <typename F, typename O, size_t o>
+void sbc_update_pair(sbc_t<F,O,o> * sbc, O option1, O option2)
 {
-	sbc->next_table[byte1].data[byte2] ++;
-	sbc->prev_table[byte2].data[byte1] ++;
+	sbc->next_table[option1].data[option2] ++;
+	sbc->prev_table[option2].data[option1] ++;
 }
-void sbc_update_block(sbc_t * sbc, vector_t<uint8_t> & block)
+template <typename F, typename O, size_t o>
+void sbc_update_block(sbc_t<F,O,o> * sbc, vector_t<O> & block)
 {
-	// for each byte, accumulate events of it being
-	// before or after other bytes.
-	// this means each entry in the table is a count.
+	// for each optio , accumulate events of it being
+	// before or after other options.
+	// this means each frequency entry in the table is a count.
 	
 	for (size_t i = 1; i < block.size; ++ i) {
 		sbc_update_pair(sbc, block.data[i - 1], block.data[i]);
 	}
 }
-void sbc_update(sbc_t * sbc, vector_t<void*> const & sorted_functions)
+/*
+template <typename F, typename O, size_t o>
+void sbc_update(sbc_t * sbc, vector_t<O*> const & sorted_functions)
 {
 	for (size_t i = 1; i < sorted_functions.size; ++ i) {
-		vector_t<uint8_t> block = memblock_from_range(sorted_functions.data[i-1], sorted_functions.data);
+		vector_t<O> block = memblock_from_range(sorted_functions.data[i-1], sorted_functions.data);
 		sbc_update_block(sbc, block);
 	}
-}
-void sbc_generate_priority_row(sbc_t * sbc, vector_t<unsigned long> & value_row, vector_t<uint8_t> & index_row)
+}*/
+template <typename F, typename O, size_t o>
+void sbc_generate_priority_row(sbc_t<F,O,o> * sbc, vector_t<F> & value_row, vector_t<O> & index_row)
 {
-	for (size_t a = 0; a < 256; ++ a) {
+	for (size_t a = 0; a < o; ++ a) {
 		index_row.data[a] = a;
 	}
-	for (size_t a = 0; a < 256; ++ a) {
+	for (size_t a = 0; a < o; ++ a) {
 		vector_sort(value_row, &index_row, true);
 	}
 }
-void sbc_generate_priority(sbc_t * sbc)
+template <typename F, typename O, size_t o>
+void sbc_generate_priority(sbc_t<F,O,o> * sbc)
 {
-	for (size_t a = 0; a < 256; ++ a) {
+	for (size_t a = 0; a < o; ++ a) {
 		sbc_generate_priority_row(sbc, sbc->next_table[a], sbc->next_prio[a]);
 		sbc_generate_priority_row(sbc, sbc->prev_table[a], sbc->prev_prio[a]);
 	}
 }
-void sbc_free(sbc_t * sbc)
+template <typename F, typename O, size_t o>
+void sbc_free(sbc_t<F,O,o> * sbc)
 {
-	for (int i = 0; i < 256; ++ i) {
+	for (typename sbc_t<F,O,o>::index_t i = 0; i < o; ++ i) {
 		vector_free(sbc->next_table[i]);
 		vector_free(sbc->prev_table[i]);
 		vector_free(sbc->next_prio[i]);
@@ -163,8 +194,13 @@ int main()
 	//sortVector(functions, sizeof(functions));
 	
 	// 2. compare each interesting function with each other interesting function, to build statistics
-	sbc_t * sbc = sbc_init();
-	sbc_update(sbc, functions);
+	
+	// UPDATE: we are just building them off the whole range now, since the result is the same for the present approach.
+	auto * sbc = sbc_init<unsigned long, uint8_t, 256>();
+
+	//sbc_update(sbc, functions);
+	vector_t<uint8_t> block = memblock_from_range(vector_front(functions), vector_back(functions));
+	sbc_update_block(sbc, block);
 
 	sbc_generate_priority(sbc);
 
@@ -283,6 +319,20 @@ void vector_swap(vector_t<Value> & vector, size_t index1, size_t index2)
 	vector.data[index2] = temp;
 }
 
+template <typename Value>
+Value & vector_front(vector_t<Value> & vector)
+{
+	assert(vector.size);
+	return vector.data[0];
+}
+
+template <typename Value>
+Value & vector_back(vector_t<Value> & vector)
+{
+	assert(vector.size);
+	return vector.data[vector.size - 1];
+}
+
 template <typename Value, typename Index>
 void vector_sort(vector_t<Value> & values, vector_t<Index> * indices, bool reverse)
 {
@@ -328,35 +378,33 @@ struct plan_t
 
 template <typename Work, typename State>
 step_t<Work,State> step_init(plan_t<Work,State> & plan, typename step_t<Work,State>::function_t function);
-/*{
-	step_t<Work,State> step;
-	step.function = function;
-	function(plan.work, step.state, false, true);
-}*/
 
-// we'll have an sbc_t, and we want to extend from a focus with attempted bytes.
-// the focus is what we want to get right.
-
+template <typename SBC>
 struct sbc_state_t
 {
-	sbc_t * sbc;
-	uint8_t next_try;
+	SBC * sbc;
+	typename SBC::index_t next_try;
 	size_t focus;
 };
+template <typename SBC>
 struct sbc_work_t
 {
-	vector_t<uint8_t> data;
-	sbc_t * sbc;
+	vector_t<typename SBC::option_t> data;
+	SBC * sbc;
 };
-using sbc_step_t = step_t<sbc_work_t, sbc_state_t>;
-using sbc_plan_t = plan_t<sbc_work_t, sbc_state_t>;
+template <typename SBC>
+using sbc_step_t = step_t<sbc_work_t<SBC>, sbc_state_t<SBC>>;
+template <typename SBC>
+using sbc_plan_t = plan_t<sbc_work_t<SBC>, sbc_state_t<SBC>>;
 
-sbc_step_t step_init(sbc_plan_t & plan, sbc_step_t::function_t function)
+template <typename SBC>
+sbc_step_t<SBC> & step_init(sbc_plan_t<SBC> & plan, typename sbc_step_t<SBC>::function_t function)
 {
-	sbc_step_t step;
+	vector_resize(plan.steps, plan.steps.size + 1);
+	sbc_step_t<SBC> & step = vector_back(plan.steps);
 	step.function = function;
-	if (plan.steps.size) {
-		auto  last_step = plan.steps.data[plan.steps.size-1];
+	if (plan.steps.size > 1) {
+		auto  last_step = plan.steps.data[plan.steps.size - 2];
 		step.state.sbc = last_step.state.sbc;
 		step.state.focus = last_step.state.focus ++;
 	} else {
@@ -366,8 +414,16 @@ sbc_step_t step_init(sbc_plan_t & plan, sbc_step_t::function_t function)
 	function(plan.work, step.state, false, true);
 	return step;
 }
+template <typename Work, typename State>
+bool step_try(plan_t<Work, State> & plan, bool undo)
+{
+	assert(plan.steps.size());
+	auto & step = vector_back(plan.steps);
+	step.function(plan.work, step.state, undo, false);
+}
 
-bool try_next_byte(sbc_work_t & work, sbc_state_t & state, bool undo, bool init)
+template <typename SBC>
+bool try_next_byte(sbc_work_t<SBC> & work, sbc_state_t<SBC> & state, bool undo, bool init)
 {
 	if (init) {
 		state.next_try = 0;
@@ -415,10 +471,44 @@ bool try_next_byte(sbc_work_t & work, sbc_state_t & state, bool undo, bool init)
 	}
 }
 
-void try_to_reach(vector_t<uint8_t> & target)
+template <typename SBC>
+void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 {
+	sbc_plan_t<SBC> plan;
+	plan.work.sbc = sbc;
 
+	step_init(plan, try_next_byte);
+
+	while (true) {
+		bool success = step_try(plan, false);
+		//if (
+	}
+
+		// this path doesn't reach very fast.
+		// given size of data.
+		// it may reach if data is shrunk.
+			// it would be better if it
+			// were to try the most likely
+			// option of all the options.
+			// to prefer all steps be low index.
+
+			// let's get to working-point so we
+			// can grow with relevence rather
+			// than guessing.
+
+		// wait, what about the alternative of learning
+		// an effective sbc path?
+
+	// for now, it doesn't matter, it's just where it checks
+	// we have to decide when to test.
+	// option 1, test every byte.  easy to get there.
+	// 	this opens a space for learning what is good.
+	// option 2, don't test until length is right.
+	// 	this is kinda contrived but tests the
+	// 	speed of the approach.
 }
+
+
 
 
 
