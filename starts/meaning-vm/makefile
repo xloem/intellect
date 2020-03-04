@@ -1,5 +1,6 @@
 # Please support Karl working on this intelligence framework.  The framework needs to be quality, so that the rest may function.
 
+CXX=g++-7
 CXXFLAGS=-Wall -Werror -Wno-error=deprecated-declarations -Wno-gnu-zero-variadic-macro-arguments -std=gnu++17 -fno-operator-names -ggdb -fno-omit-frame-pointer -O0
 #-Wno-error=unused-command-line-argument 
 #-fsanitize-memory-track-origins -fsanitize=memory -fPIE -pie -v

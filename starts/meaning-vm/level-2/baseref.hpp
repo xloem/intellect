@@ -21,6 +21,7 @@ struct baseref : public/*private*/ level1::baseref<ref>
 		this->ptr() = level2::imagineget(level2::notepad(), *this);
 	}*/
 	using level1::template baseref<ref>::baseref;
+	//baseref(intellect::level1::ref const &other) : level1::baseref<ref>(other.ptr()) { }
 	/*
 	baseref(std::string & name, bool create = false) : baseref(getnamed(name, create)) { }
 	*/

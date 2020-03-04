@@ -55,6 +55,10 @@ static auto & namestruct()
 			give(textref, "text");
 			give(isref, "is");
 			give(level1ref, "level1");
+			give(level0::concepts::allocator(), "allocator");
+			give(level0::concepts::allocates(), "allocates");
+			give(level0::concepts::allocations(), "allocations");
+			give(level0::concepts::level0allocations(), "level0-allocations");
 		}
 		void give(concept* con, std::string const & name)
 		{

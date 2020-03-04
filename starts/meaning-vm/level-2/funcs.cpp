@@ -1,4 +1,5 @@
 #include "funcs.hpp"
+#include "sugar.hpp"
 
 #include "../level-1/sugar.hpp"
 #include "ref.hpp"
@@ -42,9 +43,7 @@ ref newnotepad(ref name, bool fakechanges)
 	if (level2::notepad().linked(name)) {
 		throw noteconcept().link("is","notepad-already-linked", "notepad", level2::notepad(), "link", name);
 	}
-		// makeconcept instead of noteconcept because we don't want
-		// random things from outer read-only context added
-	ref newnotes = makeconcept();
+	ref newnotes = noteconcept({}, 0, true);
 	// any additional links must be blocked in subnotepad()
 	newnotes.link(level2::concepts::is, level2::concepts::notepad);
 	newnotes.link(level2::concepts::outer, level2::notepad());
@@ -52,7 +51,7 @@ ref newnotepad(ref name, bool fakechanges)
 	newnotes.link(level2::concepts::name, name.isa(level2::concepts::text) ? name : name.get(level2::concepts::name));
 	level2::notepad().link(name, newnotes); // linked by name to find easily when used
 	if (fakechanges) {
-		auto imagination = noteconcept();
+		auto imagination = noteconcept({},0,true,newnotes);
 		imagination.link(concepts::is, concepts::imagination);
 		newnotes.link(concepts::imagination, imagination);
 
@@ -94,7 +93,7 @@ ref newnotepad(ref name, bool fakechanges)
 		} // we could use a test for this.  the only reason we're scared is it will show errors, so best to do it early.
 	}
 	return newnotes;
-} // DANGER: we haven't stopped subnotepads from imagining changes to their parents' notepad structures or their own.
+} 
 	
 
 ref subnotepad(ref name, bool allowouter, bool allowself)
@@ -114,6 +113,9 @@ ref subnotepad(ref name, bool allowouter, bool allowself)
 void notepadunmake(ref name)
 {
 	auto pad = subnotepad(name);
+	// when you bump into this later:
+	// WE CAN PROBABLY COMMENT THIS BLOCK OUT.
+	// LIABLE TO THROW ERRORS NEEDLESSLY, in recursion.
 	{
 		// unmake child notepads
 		restorenotepad notepadrestoration;
@@ -125,11 +127,12 @@ void notepadunmake(ref name)
 		}
 	}
 
-	// we now want to deallocate everything in the notepad.
-	// this would best be done by assigning ownership of
-	// concepts properly.
 	// i'm thinking of the notepad structures referenced in the DANGER warning that are changeable by the parent notepad.
 	// i think the cleanest solution would be creation of immutable concepts for them.  then they can be owned by this notepad, but not changeable by it.
+		// note: immutability was implemented in noteconcept() which has a new signature
+	
+	// IF THIS THROWS, SEE BLOCK ABOVE
+	intellect::level0::dealloc(pad, intellect::level2::notepad());
 }
 
 /*
@@ -150,7 +153,7 @@ ref noteconcept(std::any data, level0::concept* pad, bool immutable, level0::con
 				"notepad", pad
 				);
 	}
-	ref result = intellect::level0::alloc(data, owner);
+	ref result = intellect::level0::alloc(owner, data);
 	if (!immutable) {
 		ref(pad).link(concepts::changeable, result);
 	}
