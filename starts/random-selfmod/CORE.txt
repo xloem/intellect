@@ -1,0 +1,3 @@
+This is a binary, assembler-code approach to a hyperintellect seed.
+
+The plan is to produce code that can mutate functions into each other reliably, by altering their assembler code using probability weightings, and then trending the system towards better ability to build each of its parts, and its whole.
