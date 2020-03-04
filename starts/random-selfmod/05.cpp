@@ -40,11 +40,13 @@ struct sbc_t {
 	using count_t = Count;
 	using frequency_t = Frequency;
 	using option_t = Option;
+
 	struct direction_t {
 		vector_t<Count> count[options];
 		vector_t<Frequency> chance[options];
 		vector_t<Option> guess[options];
 	};
+
 	vector_t<direction_t> directions;
 	vector_t<Count> totals;
 };
@@ -193,15 +195,7 @@ void sbc_update_block(SBC * sbc, vector_t<typename SBC::option_t> & block, size_
 		sbc_update_axis(sbc, block.data[i - 1], block.data[i], axis);
 	}
 }
-/*
-template <typename F, typename O, size_t o>
-void sbc_update(sbc_t * sbc, vector_t<O*> const & sorted_functions)
-{
-	for (size_t i = 1; i < sorted_functions.size; ++ i) {
-		vector_t<O> block = memblock_from_range(sorted_functions.data[i-1], sorted_functions.data);
-		sbc_update_block(sbc, block);
-	}
-}*/
+
 template <typename SBC>
 void sbc_generate_priority_row(SBC * sbc, size_t axis_direction, typename SBC::option_t option)
 {
@@ -211,15 +205,21 @@ void sbc_generate_priority_row(SBC * sbc, size_t axis_direction, typename SBC::o
 	const auto options = sbc->totals.size;
 
 	auto & direction = sbc->directions.data[axis_direction];
+	auto & guess = direction.guess[option];
+	auto & chance = direction.chance[option];
+	auto & count = direction.count[option];
 
 	for (size_t a = 0; a < options; ++ a) {
-		direction.guess[option].data[a] = a;
+		guess.data[a] = a;
+		chance.data[a] = count.data[a];
 	}
-	vector_sort(direction.count[option], &direction.guess[option], true);
-	//for (size_t a = 0; a < o; ++ a) {
-	//	// attempt to round up likelihood.
-	//	value_row.data[a] = (1023 + value_row.data[a]) * 1024 / occurrences;
-	//}
+
+	vector_sort(chance, &guess, true);
+
+	for (size_t a = 0; a < options; ++ a) {
+		// attempt to round up likelihood.
+		chance.data[a] = (occurrences - 1 + chance.data[a] * 1024) / occurrences;
+	}
 }
 template <typename SBC>
 void sbc_generate_priority(SBC * sbc)
@@ -278,8 +278,8 @@ int main()
 	for (int a = 0; a < 256; ++ a) {
 		printf("%02x:", a);
 		int b = 0;
-		for (; b < 256 && sbc->directions.data[0].count[a].data[b]; ++ b) {
-			printf(" %02lx", sbc->directions.data[0].count[a].data[b]);
+		for (; b < 256 && sbc->directions.data[0].chance[a].data[b]; ++ b) {
+			printf(" %02x", sbc->directions.data[0].guess[a].data[b]);
 		}
 		//for (int j = 0; b < 256 && j < 3; ++ b, ++ j) {
 		//	printf(" (%02x)", sbc->next_priority[a*256+b]);
