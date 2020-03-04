@@ -300,15 +300,38 @@ void vector_sort(vector_t<Value> & values, vector_t<Index> * indices, bool rever
 	}
 }
 
+
+// does transparency group see the habit we have to call-out-to-mind-control-dictatorship-leader-with-matching-symbols?
+// okay.  we will try to build take-work-offline.
+// we are now offline.
+// if we want our work not to go online when karl is in a disparate state of mind, we should move the repo out of the care repo.
+
 // guessing.
 struct guess
 {
-	vector_t<uint8_t> data;
-	vector_t<unsigned long> certainty;
+	vector_t<uint8_t> data; // <-- current work
+	vector_t<unsigned long> certainty; // <-- for now, a linked list to last thing
 		// propose each entry in certainty links to previous guess-location.  to undo knowing it.
 		// TODO LEFT OFF HERE.  Let's implement templates.
 	size_t focus;
 };
 // okay, guess shows our working data.
 // we want to be able to undo a guess.  we could turn certainty into a linked-list.
+// 		problem: doesn't allow for resizing, also history of changing is lost.
+// 				this is okay for current work.
+// 				i see your alternative is a list of step structures.
+// 					this will need to have enumerated types of behavior.
+// 					the enum is likely to index the function that did the step.
+// 				okay, we can try it a little bit.
 
+function general_step(Work & work, State & state)
+template <typename Work, typename State>
+using step_function = void(Work & work, State & state, bool undo = false, bool advance = false);
+
+template <typename Work, typename State>
+struct step
+{
+	using function_t = void(*)(Work & work, State & state, bool undo, bool advance);
+	State state;
+	function_t function;
+};

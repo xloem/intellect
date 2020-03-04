@@ -1,5 +1,5 @@
 CXX=g++-8
-CXXFLAGS=-Wall -Werror -std=gnu++17 -fno-operator-names -ggdb -O3 -pthread -fno-toplevel-reorder -m32
+CXXFLAGS=-Wall -Werror -std=gnu++17 -fno-operator-names -ggdb -O0 -pthread -fno-toplevel-reorder -m32
 LDFLAGS=-m32
 LDLIBS=-lcapstone
 LINK.o=$(LINK.cc) -v

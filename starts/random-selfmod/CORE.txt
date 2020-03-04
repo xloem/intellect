@@ -1,3 +1,9 @@
 This is a binary, assembler-code approach to a hyperintellect seed.
 
 The plan is to produce code that can mutate functions into each other reliably, by altering their assembler code using probability weightings, and then trending the system towards better ability to build each of its parts, and its whole.
+
+NOTE: this approach is inferior to the meaning-vm approach with
+respect to safety and human interaction.  there's a small chance
+it will give results faster.  it's good to do when it's fun.
+ideally it would be merged with meaning-vm, and bytes and
+vectors stored in concepts, so the efforts could be shared.
