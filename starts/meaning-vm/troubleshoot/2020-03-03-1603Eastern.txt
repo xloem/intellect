@@ -1,0 +1,19 @@
+2020-03-03 16:03
+	a concept is being deallocated when it is still referenced by a notepad.
+	the concept is a subcontext from some habit caller
+	its address is 872ed0
+	the link-type from the notepad ('ssr') is an anonymous concept with address 7fe230
+	the link is straight within the notepad.  not in an imagination.
+		maybe this is allocation ownership.
+		we added .. uh ..
+16:05
+			we added ... notepads holding ownership of their data.
+			so now, when removing them, notepads have the 'allocation' link
+			allocation links appear as anonymous because they are below names in the levels
+			it wouldn't be hard to name them
+16:10
+	okay .. i gave these concepts a name to aid debugging.
+	weirdly, when the error is thrown now, the debugger shows no stack frame.
+	i added 'catch throw' and now can see the stack.
+	it looks like my guess was correct; the ssr notepad is linked as the allocator for this subcontext 872d60.
+		taking-break
