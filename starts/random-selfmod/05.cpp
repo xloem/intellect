@@ -15,7 +15,14 @@ using uint8_t = unsigned char;
 int main();
 
 template <typename Value>
-struct vector_t;
+struct vector_t
+{
+	using value_t = Value;
+
+	value_t * data;
+	size_t size;
+	size_t allocated;
+};
 
 template <typename Value> vector_t<Value> vector_init(size_t size = 0);
 template <typename Value> vector_t<Value> vector_shadow(Value * array, size_t bytes);
@@ -28,23 +35,32 @@ template <typename Value> void vector_free(vector_t<Value> & vector);
 template <typename Value, typename Index = size_t>
 void vector_sort(vector_t<Value> & vector, vector_t<Index> * indices = 0, bool reverse = false);
 
-template <typename Frequency, typename Option, size_t options>
-struct sbc_t;
+template <typename Count, typename Frequency, typename Option, size_t options>
+struct sbc_t {
+	using count_t = Count;
+	using frequency_t = Frequency;
+	using option_t = Option;
+	struct direction_t {
+		vector_t<Count> count[options];
+		vector_t<Frequency> chance[options];
+		vector_t<Option> guess[options];
+	};
+	vector_t<direction_t> directions;
+	vector_t<Count> totals;
+};
 
-template <typename F, typename O, size_t o>
-sbc_t<F,O,o> * sbc_init();
-template <typename F, typename O, size_t o>
-void sbc_update_pair(sbc_t<F,O,o> * sbc, O option1, O option2);
-template <typename F, typename O, size_t o>
-void sbc_update_block(sbc_t<F,O,o> * sbc, vector_t<O> & block);
-//template <typename F, typename O, size_t o>
-//void sbc_update(sbc_t<F,O,o> * sbc, vector_t<void*> const & sorted_functions);
-template <typename F, typename O, size_t o>
-void sbc_generate_priority_row(sbc_t<F,O,o> * sbc, vector_t<F> & value_row, vector_t<O> & index_row, F occurrences);
-template <typename F, typename O, size_t o>
-void sbc_generate_priority(sbc_t<F,O,o> * sbc);
-template <typename F, typename O, size_t o>
-void sbc_free(sbc_t<F,O,o> * sbc);
+template <typename C, typename F, typename O, size_t o>
+sbc_t<C,F,O,o> * sbc_init(size_t axes);
+template <typename SBC>
+void sbc_update_axis(SBC * sbc, typename SBC::option_t option1, typename SBC::option_t option2, size_t axis);
+template <typename SBC>
+void sbc_update_block(SBC * sbc, vector_t<typename SBC::option_t> & block, size_t axis);
+template <typename SBC>
+void sbc_generate_priority_row(SBC * sbc, size_t axis, typename SBC::option_t option);
+template <typename SBC>
+void sbc_generate_priority(SBC * sbc);
+template <typename C, typename F, typename O, size_t o>
+void sbc_free(sbc_t<C,F,O,o> * sbc);
 
 vector_t<uint8_t> memblock_from_range(void * head, void * tail);
 
@@ -87,24 +103,15 @@ void * functions[]={
 	(void*)vector_free<uint8_t>,
 	(void*)vector_sort<uint8_t>,
 
-	(void*)sbc_init<real,uint8_t,256>,
-	(void*)sbc_update_pair<real,uint8_t,256>,
-	(void*)sbc_update_block<real,uint8_t,256>,
-	//(void*)sbc_update<real,uint8_t,256>,
-	(void*)sbc_generate_priority_row<real,uint8_t,256>,
-	(void*)sbc_generate_priority<real,uint8_t,256>,
-	(void*)sbc_free<real,uint8_t,256>,
+	(void*)sbc_init<unsigned long,unsigned long,uint8_t,256>,
+	(void*)sbc_update_axis<sbc_t<unsigned long,unsigned long,uint8_t,256>>,
+	(void*)sbc_update_block<sbc_t<unsigned long,unsigned long,uint8_t,256>>,
+	(void*)sbc_generate_priority_row<sbc_t<unsigned long,unsigned long,uint8_t,256>>,
+	(void*)sbc_generate_priority<sbc_t<unsigned long,unsigned long,uint8_t,256>>,
+	(void*)sbc_free<unsigned long,unsigned long,uint8_t,256>,
 
 	(void*)memblock_from_range//,
 //	(void*)printf
-};
-
-template <typename Value>
-struct vector_t
-{
-	Value * data;
-	size_t size;
-	size_t allocated;
 };
 
 // sequential-behavior-chance, growing slowly
@@ -112,36 +119,21 @@ struct vector_t
 // for a following state.  the information type is 'Option'
 // 'Option' must be an integral type for now, as it is used as an
 // array index into a table of frequencies.
-template <typename Frequency, typename Option, size_t options>
-struct sbc_t {
-	using frequency_t = Frequency;
-	using option_t = Option;
-	vector_t<Frequency> occurrences;
-	vector_t<Frequency> next_frequency[options];
-	vector_t<Frequency> prev_frequency[options];
-	vector_t<Frequency> next_chance[options];
-	vector_t<Frequency> prev_chance[options];
-	vector_t<Option> next_priority[options];
-	vector_t<Option> prev_priority[options];
-};
 
-template <typename Frequency, typename Option, size_t options>
-sbc_t<Frequency,Option,options> * sbc_init()
+template <typename Count, typename Frequency, typename Option, size_t options>
+sbc_t<Count,Frequency,Option,options> * sbc_init(size_t axes)
 {
-	sbc_t<Frequency,Option,options> * sbc = new sbc_t<Frequency,Option,options>();
-	sbc->occurrences = vector_init<Frequency>(options);
-	vector_set<Frequency>(sbc->occurrences, 0);
-	for (size_t i = 0; i < options; ++ i) {
-		sbc->next_frequency[i] = vector_init<Frequency>(options);
-		sbc->prev_frequency[i] = vector_init<Frequency>(options);
-		sbc->next_chance[i] = vector_init<Frequency>(options);
-		sbc->prev_chance[i] = vector_init<Frequency>(options);
-		sbc->next_priority[i] = vector_init<Option>(options);
-		sbc->prev_priority[i] = vector_init<Option>(options);
-		vector_set<Frequency>(sbc->next_frequency[i], 0);
-		vector_set<Frequency>(sbc->prev_frequency[i], 0);
-		vector_set<Option>(sbc->next_priority[i], 0);
-		vector_set<Option>(sbc->prev_priority[i], 0);
+	auto * sbc = new sbc_t<Count,Frequency,Option,options>();
+	sbc->totals = vector_init<Count>(options);
+	vector_set<Count>(sbc->totals, 0);
+	sbc->directions = vector_init<typename decltype(sbc->directions)::value_t>(axes * 2);
+	for (size_t d = 0; d < axes * 2; ++ d) {
+		for (size_t i = 0; i < options; ++ i) {
+			sbc->directions.data[d].count[i] = vector_init<Count>(options);
+			sbc->directions.data[d].chance[i] = vector_init<Frequency>(options);
+			sbc->directions.data[d].guess[i] = vector_init<Option>(options);
+			vector_set<Count>(sbc->directions.data[d].count[i], 0);
+		}
 	}
 	return sbc;
 };
@@ -181,23 +173,24 @@ sbc_t<Frequency,Option,options> * sbc_init()
 //	but you'll like change your second-to-leaf link.  to see if you can find a better guess.
 //	you may also want to change your root link, or your parts links.
 // 				
-template <typename F, typename O, size_t o>
-void sbc_update_pair(sbc_t<F,O,o> * sbc, O option1, O option2)
+
+template <typename SBC>
+void sbc_update_axis(SBC * sbc, typename SBC::option_t option1, typename SBC::option_t option2, size_t axis)
 {
-	sbc->occurrences.data[option1] ++;
-	sbc->occurrences.data[option2] ++;
-	sbc->next_frequency[option1].data[option2] ++;
-	sbc->prev_frequency[option2].data[option1] ++;
+	sbc->totals.data[option1] ++;
+	sbc->totals.data[option2] ++;
+	sbc->directions.data[axis*2+0].count[option1].data[option2] ++;
+	sbc->directions.data[axis*2+1].count[option2].data[option1] ++;
 }
-template <typename F, typename O, size_t o>
-void sbc_update_block(sbc_t<F,O,o> * sbc, vector_t<O> & block)
+template <typename SBC>
+void sbc_update_block(SBC * sbc, vector_t<typename SBC::option_t> & block, size_t axis)
 {
 	// for each optio , accumulate events of it being
 	// before or after other options.
 	// this means each frequency entry in the table is a count.
 	
 	for (size_t i = 1; i < block.size; ++ i) {
-		sbc_update_pair(sbc, block.data[i - 1], block.data[i]);
+		sbc_update_axis(sbc, block.data[i - 1], block.data[i], axis);
 	}
 }
 /*
@@ -209,37 +202,49 @@ void sbc_update(sbc_t * sbc, vector_t<O*> const & sorted_functions)
 		sbc_update_block(sbc, block);
 	}
 }*/
-template <typename F, typename O, size_t o>
-void sbc_generate_priority_row(sbc_t<F,O,o> * sbc, vector_t<F> & value_row, vector_t<O> & index_row, F occurrences)
+template <typename SBC>
+void sbc_generate_priority_row(SBC * sbc, size_t axis_direction, typename SBC::option_t option)
 {
+	auto occurrences = sbc->totals.data[option];
 	if (!occurrences) { return; }
-	for (size_t a = 0; a < o; ++ a) {
-		index_row.data[a] = a;
+
+	const auto options = sbc->totals.size;
+
+	auto & direction = sbc->directions.data[axis_direction];
+
+	for (size_t a = 0; a < options; ++ a) {
+		direction.guess[option].data[a] = a;
 	}
-	vector_sort(value_row, &index_row, true);
+	vector_sort(direction.count[option], &direction.guess[option], true);
 	//for (size_t a = 0; a < o; ++ a) {
 	//	// attempt to round up likelihood.
 	//	value_row.data[a] = (1023 + value_row.data[a]) * 1024 / occurrences;
 	//}
 }
-template <typename F, typename O, size_t o>
-void sbc_generate_priority(sbc_t<F,O,o> * sbc)
+template <typename SBC>
+void sbc_generate_priority(SBC * sbc)
 {
-	for (size_t a = 0; a < o; ++ a) {
-		sbc_generate_priority_row(sbc, sbc->next_frequency[a], sbc->next_priority[a], sbc->occurrences.data[a]);
-		sbc_generate_priority_row(sbc, sbc->prev_frequency[a], sbc->prev_priority[a], sbc->occurrences.data[a]);
+	const auto options = sbc->totals.size;
+	const auto directions = sbc->directions.size;
+	for (size_t d = 0; d < directions; ++ d) {
+		for (size_t a = 0; a < options; ++ a) {
+			sbc_generate_priority_row(sbc, d, a);
+		}
 	}
 }
-template <typename F, typename O, size_t o>
-void sbc_free(sbc_t<F,O,o> * sbc)
+template <typename C, typename F, typename O, size_t o>
+void sbc_free(sbc_t<C,F,O,o> * sbc)
 {
-	for (size_t i = 0; i < o; ++ i) {
-		vector_free(sbc->next_frequency[i]);
-		vector_free(sbc->prev_frequency[i]);
-		vector_free(sbc->next_priority[i]);
-		vector_free(sbc->prev_priority[i]);
+	for (size_t a = 0; a < sbc->directions.size; ++ a) {
+		auto & direction = sbc->directions.data[a];
+		for (size_t i = 0; i < o; ++ i) {
+			vector_free(direction.count[i]);
+			vector_free(direction.chance[i]);
+			vector_free(direction.guess[i]);
+		}
 	}
-	vector_free(sbc->occurrences);
+	vector_free(sbc->totals);
+	vector_free(sbc->directions);
 	delete sbc;
 }
 
@@ -258,11 +263,11 @@ int main()
 	// 2. compare each interesting function with each other interesting function, to build statistics
 	
 	// UPDATE: we are just building them off the whole range now, since the result is the same for the present approach.
-	auto * sbc = sbc_init<unsigned long, uint8_t, 256>();
+	auto * sbc = sbc_init<unsigned long, unsigned long, uint8_t, 256>(2);
 
 	//sbc_update(sbc, functions);
 	vector_t<uint8_t> block = memblock_from_range(vector_front(functions), vector_back(functions));
-	sbc_update_block(sbc, block);
+	sbc_update_block(sbc, block, 0);
 
 	sbc_generate_priority(sbc);
 
@@ -273,8 +278,8 @@ int main()
 	for (int a = 0; a < 256; ++ a) {
 		printf("%02x:", a);
 		int b = 0;
-		for (; b < 256 && sbc->next_frequency[a].data[b]; ++ b) {
-			printf(" %02x", sbc->next_priority[a].data[b]);
+		for (; b < 256 && sbc->directions.data[0].count[a].data[b]; ++ b) {
+			printf(" %02lx", sbc->directions.data[0].count[a].data[b]);
 		}
 		//for (int j = 0; b < 256 && j < 3; ++ b, ++ j) {
 		//	printf(" (%02x)", sbc->next_priority[a*256+b]);
@@ -676,7 +681,7 @@ struct property_map_context_t
 	context_t<Value> * context;
 	vector_t<Value> inputs; // 0: priority, 1: map-input
 	size_t output;
-	sbc_t<unsigned long, Value, 256> * map; // <-- using a map takes a priority input.
+	sbc_t<unsigned long, unsigned long, Value, 256> * map; // <-- using a map takes a priority input.
 
 	property_map_context_t<Value> * parent;
 	// each index will be a combination of an input with a guessed output
