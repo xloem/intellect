@@ -901,30 +901,33 @@ void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 			}
 		}
 
+		bool keep_going = true;
+
 		if (plans.data[best_plan].work.data.size > target.size) {
 			// we've gotten long enough
 			if (vector_back(plans.data[best_plan].work.data) != END_TOKEN) {
 				plans.data[best_plan].chance = 0;
 				//printf("Missed plan\n");
-				goto failure;
-			}
-			for (size_t i = 0; i < target.size; ++ i) {
+				keep_going = false;
+			} else for (size_t i = 0; i < target.size; ++ i) {
 				if (plans.data[best_plan].work.data.data[i] != target.data[i]) {
 					plans.data[best_plan].chance = 0;
-					printf("Missed plan\n");
-					goto failure;
+					//printf("Missed plan\n");
+					keep_going = false;
 				}
 			}
-			printf("Success\n");
-			// success
-			return;
+			if (keep_going) {
+				printf("Success\n");
+				// success
+				return;
+			}
 		}
 
-		// when we backtrack, this makes another step off the same old data, retrying the same thing forever.
-		// step_try below advances its step pointer, but then is destroyed before it can be reused.
-		step_init(plans.data[best_plan], try_next_byte);
+		if (keep_going) {
+			step_init(plans.data[best_plan], try_next_byte);
+		}
 
-		{
+		while (true) { // this no longer does 2.  it just gets a guess, which is also written to the data, and checks if it's ok.
 			// 2. make two guesses that assume it, spawning 1 new plan
 			// 	if a guess makes a wrong result, stop guessing there.
 
@@ -936,9 +939,34 @@ void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 				first_error ++;
 				last_adjustment = target.size;
 			}
-			if (!chance1) {
-				goto failure;
+			if (chance1) { break; }
+
+			/*
+			 * I think we could try walking back along our steps until we find the alternate path with the highest chance,
+			 * for now.
+			 * This would mean each step holding accumulated chance.
+			 *
+			 * Alternatively we could track the second-best option as we go.
+			 */
+			// let's just undo back for now
+			// up the step index, and then resize steps down when it reaches 0 chance.
+			assert(plans.data[best_plan].steps.size);
+			//printf("Backtracking.\n");
+			vector_resize(plans.data[best_plan].work.data, plans.data[best_plan].work.data.size - 1);
+			vector_resize(plans.data[best_plan].steps, plans.data[best_plan].steps.size - 1);
+			assert(plans.data[best_plan].work.data.size == vector_back(plans.data[best_plan].steps).state.focus + 1);
+			if (plans.data[best_plan].work.data.size < last_adjustment) {
+				last_adjustment = plans.data[best_plan].work.data.size;
+				printf("work:");
+				for (size_t i = 0; i < plans.data[best_plan].work.data.size; ++ i) {
+					printf(" %02x", plans.data[best_plan].work.data.data[i]);
+				}
+				printf("\n");
 			}
+
+			// chance1 == 0, therefore
+			// can't make any more guesses here
+			
 			/*
 			// 2 b -> copy the plan
 			size_t second_best_plan = plans.size;
@@ -954,31 +982,9 @@ void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 
 			// 3. repeat
 			*/
-		}
+		};
 		continue;
-failure:
-		/*
-		 * I think we could try walking back along our steps until we find the alternate path with the highest chance,
-		 * for now.
-		 * This would mean each step holding accumulated chance.
-		 *
-		 * Alternatively we could track the second-best option as we go.
-		 */
-		// let's just undo back for now
-		// up the step index, and then resize steps down when it reaches 0 chance.
-		assert(plans.data[best_plan].steps.size);
-		//printf("Backtracking.\n");
-		vector_resize(plans.data[best_plan].work.data, plans.data[best_plan].work.data.size - 1);
-		vector_resize(plans.data[best_plan].steps, plans.data[best_plan].steps.size - 1);
-		assert(plans.data[best_plan].work.data.size == vector_back(plans.data[best_plan].steps).state.focus + 1);
-		if (plans.data[best_plan].work.data.size < last_adjustment) {
-			last_adjustment = plans.data[best_plan].work.data.size;
-			printf("work:");
-			for (size_t i = 0; i < plans.data[best_plan].work.data.size; ++ i) {
-				printf(" %02x", plans.data[best_plan].work.data.data[i]);
-			}
-			printf("\n");
-		}
+//failure:
 		
 		/*
 failed:
@@ -1063,21 +1069,23 @@ failed:
 
 // logic flow error
 
-// fix try_to_reach as below
+// => fix try_to_reach as below
 
 // 1. make a new step
 // 2. try the next guess on the newest step
 // 3. if guess is bad, do what?
-//
+//		^-- this is actually checked prior to 1
 // 		FIX: if guess is bad, retry newest step until it has no more guesses.
 // 		FIX: this means goto 2
 // 3. if can't make any more guesses, do what?
 // 		FIX: if can't make any more guesses, go back to previous step and try better guess.
 // 		FIX: this means erase last step and goto 2
+// 			since its actually the 2 block (which coincidentally is also called 2.) that discerns this,
+// 			i turned it into a loop that checks, and moved the backtrack code inside it.
 // 4. if 3, erase last step <- FIX only erase for 3b
 // 5. goto 1 <-- FIX we should only go to 1 if our guess was good.
 
-// karl's mind needs a break.
+// this is hard to sustain clarity around. [might consider raising the priority of more central work.]
 
 
 
