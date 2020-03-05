@@ -293,19 +293,29 @@ int main()
 	// 1. sort functions so we know the bounds of each.
 	vector_t<void*> functions = vector_shadow(::functions, sizeof(::functions));
 	vector_sort(functions);
-	//sortVector(functions, sizeof(functions));
 	
 	// 2. compare each interesting function with each other interesting function, to build statistics
 	
 	// UPDATE: we are just building them off the whole range now, since the result is the same for the present approach.
 	auto * sbc = sbc_init<SBC::count_t, SBC::frequency_t, SBC::option_t, 257>(1);
 
-	for(size_t i = 1; i < functions.size; ++ i) {
-		vector_t<uint8_t> block = memblock_from_range(functions.data[i-1], functions.data[i]);
-		sbc_update_block(sbc, block, 0);
-		sbc_update_axis(sbc, END_TOKEN, vector_front(block), 0);
-		sbc_update_axis(sbc, vector_back(block), END_TOKEN, 0);
+	vector_t<vector_t<uint8_t>> function_blocks = vector_init<vector_t<uint8_t>>(functions.size - 1);
+	vector_t<uint8_t> * shortest_function = 0;
+	for (size_t i = 1; i < functions.size; ++ i) {
+		function_blocks.data[i] = memblock_from_range(functions.data[i-1], functions.data[i]);
+		if (function_blocks.data[i].size) {
+			if (!shortest_function) {
+				shortest_function = &function_blocks.data[i];
+			}
+			if (function_blocks.data[i].size < shortest_function->size) {
+				shortest_function = &function_blocks.data[i];
+			}
+		}
 	}
+
+	sbc_update_block(sbc, *shortest_function, 0);
+	sbc_update_axis(sbc, END_TOKEN, vector_front(*shortest_function), 0);
+	sbc_update_axis(sbc, vector_back(*shortest_function), END_TOKEN, 0);
 
 	sbc_generate_priority(sbc);
 
@@ -314,7 +324,7 @@ int main()
 
 	printf("Sorting ...\n");
 	for (size_t a = 0; a < SBC::options; ++ a) {
-		printf("%02x -> ", sbc->directions.data[1].guess[a].data[0]);
+		//printf("%02x -> ", sbc->directions.data[1].guess[a].data[0]);
 		printf("%02x:", a);
 		size_t b = 0;
 		for (; b < SBC::options && sbc->directions.data[0].chance[a].data[b]; ++ b) {
@@ -329,8 +339,17 @@ int main()
 	//*/
 	
 	// 2b. use the statistics to generate a function?
-	auto function = memblock_from_range(functions.data[0], functions.data[1]);
-	auto function_converted = vector_copy<SBC::option_t>(function);
+	
+	///*
+	// TESTING
+	printf("goal:");
+	for (size_t i = 0; i < shortest_function->size; ++ i) {
+		printf(" %02x", shortest_function->data[i]);
+	}
+	printf("\n");
+	// TESTING
+	//*/
+	auto function_converted = vector_copy<SBC::option_t>(*shortest_function);
 	try_to_reach(sbc, function_converted);
 	vector_free(function_converted);
 
@@ -344,33 +363,6 @@ int main()
 	vector_free(functions);
 	return 0;
 }
-
-/*
-template <typename Value, typename Index>
-void sortVector(Value * values, size_t bytes, Index * indices, bool reverse)
-{
-	size_t count = bytes / sizeof(decltype(*values));
-	size_t index = 1;
-	while (index != count) {
-		if ((!reverse && values[index - 1] > values[index]) || (reverse && values[index - 1] < values[index])) {
-			Value temp;
-			temp = values[index];
-			values[index] = values[index - 1];
-			values[index - 1] = temp;
-			if (indices) {
-				Index temp;
-				temp = indices[index];
-				indices[index] = indices[index - 1];
-				indices[index - 1] = temp;
-			}
-			if (index > 1) {
-				-- index;
-				continue;
-			}
-		}
-		++ index;
-	}
-}*/
 
 template <typename Value>
 vector_t<Value> vector_init(size_t size)
@@ -396,7 +388,13 @@ vector_t<Value> vector_copy(vector_t<OriginalValue> const & original)
 {
 	vector_t<Value> copy;
 	copy.size = original.size;
-	copy.allocated = original.allocated;
+	if (original.allocated) {
+		copy.allocated = original.allocated;
+	} else if (original.size) {
+		copy.allocated = original.size;
+	} else {
+		copy.allocated = 16;
+	}
 	copy.data = new Value[copy.allocated];
 	for (size_t i = 0; i < original.size; ++ i) {
 		copy.data[i] = original.data[i];
@@ -494,8 +492,9 @@ void vector_sort(vector_t<Value> & values, vector_t<Index> * indices, bool rever
 template <typename Frequency, typename Work, typename State>
 struct step_t
 {
-	using function_t = Frequency(*)(Work & work, State & state, bool undo, bool init);
+	using function_t = Frequency(*)(Work & work, State & state, bool undo, bool peek, bool init);
 	State state;
+	Frequency chance;
 	function_t function;
 };
 
@@ -584,25 +583,27 @@ sbc_step_t<SBC> & step_init(sbc_plan_t<SBC> & plan, typename sbc_step_t<SBC>::fu
 	step.function = function;
 	if (plan.steps.size > 1) {
 		auto  last_step = plan.steps.data[plan.steps.size - 2];
+		step.chance = last_step.chance;
 		step.state.sbc = last_step.state.sbc;
 		step.state.focus = last_step.state.focus + 1;
 	} else {
+		step.chance = plan.chance;
 		step.state.sbc = plan.work.sbc;
 		step.state.focus = 0;
 	}
-	function(plan.work, step.state, false, true);
+	function(plan.work, step.state, false, true, true);
 	return step;
 }
 template <typename Frequency, typename Work, typename State>
-Frequency step_try(plan_t<Frequency, Work, State> & plan, bool undo)
+Frequency step_try(plan_t<Frequency, Work, State> & plan, bool undo, bool peek)
 {
 	assert(plan.steps.size);
 	auto & step = vector_back(plan.steps);
-	return step.function(plan.work, step.state, undo, false);
+	return step.function(plan.work, step.state, undo, peek, false);
 }
 
 template <typename SBC>
-typename SBC::frequency_t try_next_byte(sbc_work_t<SBC> & work, sbc_state_t<SBC> & state, bool undo, bool init)
+typename SBC::frequency_t try_next_byte(sbc_work_t<SBC> & work, sbc_state_t<SBC> & state, bool undo, bool peek, bool init)
 {
 	if (init) {
 		state.next_try = 0;
@@ -626,8 +627,10 @@ typename SBC::frequency_t try_next_byte(sbc_work_t<SBC> & work, sbc_state_t<SBC>
 		}
 		auto & direction = state.sbc->directions.data[0];
 		typename SBC::frequency_t chance = direction.chance[last_value].data[state.next_try];
-		work.data.data[state.focus] = direction.guess[last_value].data[state.next_try];
-		++ state.next_try;
+		if (!peek) {
+			work.data.data[state.focus] = direction.guess[last_value].data[state.next_try];
+			++ state.next_try;
+		}
 		return chance;
 	} else {
 		// undo
@@ -886,6 +889,9 @@ void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 	// ==============================================
 	// update below to do above.
 
+	size_t first_error = 0;
+	size_t last_adjustment = target.size;
+
 	while (true) {
 		// 1. find the best available guess
 		size_t best_plan = 0;
@@ -895,13 +901,18 @@ void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 			}
 		}
 
-		if (plans.data[best_plan].work.data.size >= target.size) {
+		if (plans.data[best_plan].work.data.size > target.size) {
 			// we've gotten long enough
+			if (vector_back(plans.data[best_plan].work.data) != END_TOKEN) {
+				plans.data[best_plan].chance = 0;
+				//printf("Missed plan\n");
+				goto failure;
+			}
 			for (size_t i = 0; i < target.size; ++ i) {
 				if (plans.data[best_plan].work.data.data[i] != target.data[i]) {
 					plans.data[best_plan].chance = 0;
 					printf("Missed plan\n");
-					continue;
+					goto failure;
 				}
 			}
 			printf("Success\n");
@@ -909,29 +920,66 @@ void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 			return;
 		}
 
+		// when we backtrack, this makes another step off the same old data, retrying the same thing forever.
+		// step_try below advances its step pointer, but then is destroyed before it can be reused.
 		step_init(plans.data[best_plan], try_next_byte);
 
-		// 2. make two guesses that assume it, spawning 1 new plan
-		// 	if a guess makes a wrong result, stop guessing there.
+		{
+			// 2. make two guesses that assume it, spawning 1 new plan
+			// 	if a guess makes a wrong result, stop guessing there.
 
-		// 2 a -> call step_try to fill this data
-		auto chance1 = plans.data[best_plan].chance * step_try(plans.data[best_plan], false) / fixed_point_unity;
-		/*
-		// 2 b -> copy the plan
-		size_t second_best_plan = plans.size;
-		vector_resize(plans, plans.size + 1); // <- this invalidates best_plan.
-		plans.data[second_best_plan] = plan_copy(plans.data[best_plan]);
-		// 2 c -> call step_try to fill the other data
-		auto chance2 = plans.data[second_best_plan].chance * step_try(plans.data[second_best_plan], false) / fixed_point_unity;
-		// 2 d -> call step_init to make further steps
-		// */
-		plans.data[best_plan].chance = chance1;
-		/*
-		plans.data[second_best_plan].chance = chance2;
+			// 2 a -> call step_try to fill this data
+			auto chance1 = step_try(plans.data[best_plan], false, false);// * plans.data[best_plan].chance/ fixed_point_unity;
 
-		// 3. repeat
-		*/
+			if (vector_back(plans.data[best_plan].steps).state.focus == first_error && plans.data[best_plan].work.data.data[first_error] == target.data[first_error]) {
+				printf("Got byte %i right\n", first_error);
+				first_error ++;
+				last_adjustment = target.size;
+			}
+			if (!chance1) {
+				goto failure;
+			}
+			/*
+			// 2 b -> copy the plan
+			size_t second_best_plan = plans.size;
+			vector_resize(plans, plans.size + 1); // <- this invalidates best_plan.
+			plans.data[second_best_plan] = plan_copy(plans.data[best_plan]);
+			// 2 c -> call step_try to fill the other data
+			auto chance2 = plans.data[second_best_plan].chance * step_try(plans.data[second_best_plan], false) / fixed_point_unity;
+			// 2 d -> call step_init to make further steps
+			// */
+			//plans.data[best_plan].chance = chance1;
+			/*
+			plans.data[second_best_plan].chance = chance2;
+
+			// 3. repeat
+			*/
+		}
 		continue;
+failure:
+		/*
+		 * I think we could try walking back along our steps until we find the alternate path with the highest chance,
+		 * for now.
+		 * This would mean each step holding accumulated chance.
+		 *
+		 * Alternatively we could track the second-best option as we go.
+		 */
+		// let's just undo back for now
+		// up the step index, and then resize steps down when it reaches 0 chance.
+		assert(plans.data[best_plan].steps.size);
+		//printf("Backtracking.\n");
+		vector_resize(plans.data[best_plan].work.data, plans.data[best_plan].work.data.size - 1);
+		vector_resize(plans.data[best_plan].steps, plans.data[best_plan].steps.size - 1);
+		assert(plans.data[best_plan].work.data.size == vector_back(plans.data[best_plan].steps).state.focus + 1);
+		if (plans.data[best_plan].work.data.size < last_adjustment) {
+			last_adjustment = plans.data[best_plan].work.data.size;
+			printf("work:");
+			for (size_t i = 0; i < plans.data[best_plan].work.data.size; ++ i) {
+				printf(" %02x", plans.data[best_plan].work.data.data[i]);
+			}
+			printf("\n");
+		}
+		
 		/*
 failed:
 
@@ -1008,6 +1056,34 @@ failed:
 // 	consider focus-direction selection.
 // 		yes that merges with hints a little
 // ---
+
+
+
+
+
+// logic flow error
+
+// fix try_to_reach as below
+
+// 1. make a new step
+// 2. try the next guess on the newest step
+// 3. if guess is bad, do what?
+//
+// 		FIX: if guess is bad, retry newest step until it has no more guesses.
+// 		FIX: this means goto 2
+// 3. if can't make any more guesses, do what?
+// 		FIX: if can't make any more guesses, go back to previous step and try better guess.
+// 		FIX: this means erase last step and goto 2
+// 4. if 3, erase last step <- FIX only erase for 3b
+// 5. goto 1 <-- FIX we should only go to 1 if our guess was good.
+
+// karl's mind needs a break.
+
+
+
+
+
+
 
 
 
