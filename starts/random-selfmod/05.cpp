@@ -4,6 +4,9 @@
 using real = float;
 //using size_t = unsigned long;
 using uint8_t = unsigned char;
+using uint16_t = unsigned short;
+
+constexpr unsigned long fixed_point_unity = 1024;
 
 #define NDEBUG
 // FOR TESTING
@@ -26,6 +29,7 @@ struct vector_t
 
 template <typename Value> vector_t<Value> vector_init(size_t size = 0);
 template <typename Value> vector_t<Value> vector_shadow(Value * array, size_t bytes);
+template <typename Value, typename OriginalValue> vector_t<Value> vector_copy(vector_t<OriginalValue> const & original);
 template <typename Value> void vector_set(vector_t<Value> & vector, Value value);
 template <typename Value> void vector_resize(vector_t<Value> & vector, size_t size);
 template <typename Value> void vector_swap(vector_t<Value> & vector, size_t index1, size_t index2);
@@ -47,18 +51,21 @@ struct sbc_t {
 		vector_t<Count> count[options];
 		vector_t<Frequency> chance[options];
 		vector_t<Option> guess[options];
+		//vector_t<Count> totals; // TODO: move totals over here if you want >1 axes to be easier
 	};
+	vector_t<Count> totals;
 
 	vector_t<direction_t> directions;
-	vector_t<Count> totals;
+
+	option_t maximum_guesses;
 };
 
 template <typename C, typename F, typename O, size_t o>
 sbc_t<C,F,O,o> * sbc_init(size_t axes);
 template <typename SBC>
 void sbc_update_axis(SBC * sbc, typename SBC::option_t option1, typename SBC::option_t option2, size_t axis);
-template <typename SBC>
-void sbc_update_block(SBC * sbc, vector_t<typename SBC::option_t> & block, size_t axis);
+template <typename SBC, typename Source>
+void sbc_update_block(SBC * sbc, vector_t<Source> & block, size_t axis);
 template <typename SBC>
 void sbc_generate_priority_row(SBC * sbc, size_t axis, typename SBC::option_t option);
 template <typename SBC>
@@ -68,13 +75,16 @@ void sbc_free(sbc_t<C,F,O,o> * sbc);
 
 vector_t<uint8_t> memblock_from_range(void * head, void * tail);
 
-using SBC = sbc_t<unsigned long,unsigned long,uint8_t,256>;
+template <typename SBC> void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target);
+
+using SBC = sbc_t<unsigned long,unsigned long,uint16_t,257>;
 
 void * functions[]={
 	(void*)main,
 
 	(void*)vector_init<SBC::direction_t>,
 	(void*)vector_shadow<SBC::direction_t>,
+	(void*)vector_copy<SBC::direction_t,SBC::direction_t>,
 	(void*)vector_resize<SBC::direction_t>,
 	(void*)vector_swap<SBC::direction_t>,
 	(void*)vector_front<SBC::direction_t>,
@@ -84,6 +94,7 @@ void * functions[]={
 
 	(void*)vector_init<SBC::count_t>,
 	(void*)vector_shadow<SBC::count_t>,
+	(void*)vector_copy<SBC::count_t,SBC::count_t>,
 	(void*)vector_resize<SBC::count_t>,
 	(void*)vector_swap<SBC::count_t>,
 	(void*)vector_front<SBC::count_t>,
@@ -93,6 +104,7 @@ void * functions[]={
 
 	(void*)vector_init<void *>,
 	(void*)vector_shadow<void *>,
+	(void*)vector_copy<void *,void *>,
 	(void*)vector_resize<void *>,
 	(void*)vector_swap<void *>,
 	(void*)vector_front<uint8_t>,
@@ -102,6 +114,8 @@ void * functions[]={
 
 	(void*)vector_init<SBC::option_t>,
 	(void*)vector_shadow<SBC::option_t>,
+	(void*)vector_copy<SBC::option_t,SBC::option_t>,
+	(void*)vector_copy<SBC::option_t,uint8_t>,
 	(void*)vector_resize<SBC::option_t>,
 	(void*)vector_swap<SBC::option_t>,
 	(void*)vector_front<SBC::option_t>,
@@ -111,7 +125,7 @@ void * functions[]={
 
 	(void*)sbc_init<SBC::count_t,SBC::frequency_t,SBC::option_t,SBC::options>,
 	(void*)sbc_update_axis<SBC>,
-	(void*)sbc_update_block<SBC>,
+	(void*)sbc_update_block<SBC, uint8_t>,
 	(void*)sbc_generate_priority_row<SBC>,
 	(void*)sbc_generate_priority<SBC>,
 	(void*)sbc_free<SBC::count_t,SBC::frequency_t,SBC::option_t,SBC::options>,
@@ -132,6 +146,7 @@ sbc_t<Count,Frequency,Option,options> * sbc_init(size_t axes)
 	auto * sbc = new sbc_t<Count,Frequency,Option,options>();
 	sbc->totals = vector_init<Count>(options);
 	vector_set<Count>(sbc->totals, 0);
+	sbc->maximum_guesses = 0;
 	sbc->directions = vector_init<typename decltype(sbc->directions)::value_t>(axes * 2);
 	for (size_t d = 0; d < axes * 2; ++ d) {
 		for (size_t i = 0; i < options; ++ i) {
@@ -184,12 +199,19 @@ template <typename SBC>
 void sbc_update_axis(SBC * sbc, typename SBC::option_t option1, typename SBC::option_t option2, size_t axis)
 {
 	sbc->totals.data[option1] ++;
-	sbc->totals.data[option2] ++;
+	//sbc->totals.data[option2] ++; // commented out because this function is usually called twice for each value
+	
+	//sbc->directions.data[axis*2+0].totals[option1] ++; // TODO: move totals over here if you want >1 axes to be easier
+	//sbc->directions.data[axis*2+1].totals[option2] ++;
+
 	sbc->directions.data[axis*2+0].count[option1].data[option2] ++;
 	sbc->directions.data[axis*2+1].count[option2].data[option1] ++;
+
+		// when i worry about totals, i am thinking about chance
+		// so i want the total for option1 to be the sum of its data.
 }
-template <typename SBC>
-void sbc_update_block(SBC * sbc, vector_t<typename SBC::option_t> & block, size_t axis)
+template <typename SBC, typename Source>
+void sbc_update_block(SBC * sbc, vector_t<Source> & block, size_t axis)
 {
 	// for each optio , accumulate events of it being
 	// before or after other options.
@@ -211,16 +233,26 @@ void sbc_generate_priority_row(SBC * sbc, size_t axis_direction, typename SBC::o
 	auto & chance = direction.chance[option];
 	auto & count = direction.count[option];
 
+	typename SBC::frequency_t total = 0;
 	for (size_t a = 0; a < sbc->options; ++ a) {
 		guess.data[a] = a;
 		chance.data[a] = count.data[a];
+		total += count.data[a];
 	}
+	assert(total == sbc->totals.data[option]);
 
 	vector_sort(chance, &guess, true);
 
 	for (size_t a = 0; a < sbc->options; ++ a) {
+		if (!chance.data[a]) {
+			if (a >= sbc->maximum_guesses) {
+				assert(size_t(a) + 1 < SBC::options);
+				sbc->maximum_guesses = a + 1;
+			}
+			break;
+		}
 		// attempt to round up likelihood.
-		chance.data[a] = (occurrences - 1 + chance.data[a] * 1024) / occurrences;
+		chance.data[a] = (occurrences - 1 + chance.data[a] * fixed_point_unity) / occurrences;
 	}
 }
 template <typename SBC>
@@ -254,6 +286,8 @@ vector_t<uint8_t> memblock_from_range(void * head, void * tail)
 	return vector_shadow((uint8_t*)head, (uint8_t*)tail - (uint8_t*)head);
 }
 
+#define END_TOKEN 256
+
 int main()
 {
 	// 1. sort functions so we know the bounds of each.
@@ -264,11 +298,14 @@ int main()
 	// 2. compare each interesting function with each other interesting function, to build statistics
 	
 	// UPDATE: we are just building them off the whole range now, since the result is the same for the present approach.
-	auto * sbc = sbc_init<unsigned long, unsigned long, uint8_t, 256>(2);
+	auto * sbc = sbc_init<SBC::count_t, SBC::frequency_t, SBC::option_t, 257>(1);
 
-	//sbc_update(sbc, functions);
-	vector_t<uint8_t> block = memblock_from_range(vector_front(functions), vector_back(functions));
-	sbc_update_block(sbc, block, 0);
+	for(size_t i = 1; i < functions.size; ++ i) {
+		vector_t<uint8_t> block = memblock_from_range(functions.data[i-1], functions.data[i]);
+		sbc_update_block(sbc, block, 0);
+		sbc_update_axis(sbc, END_TOKEN, vector_front(block), 0);
+		sbc_update_axis(sbc, vector_back(block), END_TOKEN, 0);
+	}
 
 	sbc_generate_priority(sbc);
 
@@ -276,13 +313,14 @@ int main()
 	// TESTING -> passed
 
 	printf("Sorting ...\n");
-	for (int a = 0; a < 256; ++ a) {
+	for (size_t a = 0; a < SBC::options; ++ a) {
+		printf("%02x -> ", sbc->directions.data[1].guess[a].data[0]);
 		printf("%02x:", a);
-		int b = 0;
-		for (; b < 256 && sbc->directions.data[0].chance[a].data[b]; ++ b) {
+		size_t b = 0;
+		for (; b < SBC::options && sbc->directions.data[0].chance[a].data[b]; ++ b) {
 			printf(" %02x", sbc->directions.data[0].guess[a].data[b]);
 		}
-		//for (int j = 0; b < 256 && j < 3; ++ b, ++ j) {
+		//for (int j = 0; b < SBC::options && j < 3; ++ b, ++ j) {
 		//	printf(" (%02x)", sbc->next_priority[a*256+b]);
 		//}
 		printf("\n");
@@ -290,7 +328,14 @@ int main()
 	// TESTING
 	//*/
 	
-	// 3. use the statistics to morph a function into another
+	// 2b. use the statistics to generate a function?
+	auto function = memblock_from_range(functions.data[0], functions.data[1]);
+	auto function_converted = vector_copy<SBC::option_t>(function);
+	try_to_reach(sbc, function_converted);
+	vector_free(function_converted);
+
+	// 3. use the statistics to morph a function into another <-- the reason for this is to pick nearby functions that
+	// 							      can shrink the relevence space.
 	
 	// 4. discern how much data is needed for #3 to succeed rapidly, and present the missing space to the user.
 	
@@ -346,6 +391,18 @@ vector_t<Value> vector_shadow(Value * array, size_t bytes)
 	vector.data = array;
 	return vector;
 }
+template <typename Value, typename OriginalValue>
+vector_t<Value> vector_copy(vector_t<OriginalValue> const & original)
+{
+	vector_t<Value> copy;
+	copy.size = original.size;
+	copy.allocated = original.allocated;
+	copy.data = new Value[copy.allocated];
+	for (size_t i = 0; i < original.size; ++ i) {
+		copy.data[i] = original.data[i];
+	}
+	return copy;
+}
 template <typename Value>
 void vector_set(vector_t<Value> & vector, Value value)
 {
@@ -359,16 +416,20 @@ void vector_resize(vector_t<Value> & vector, size_t size)
 	assert(vector.allocated);
 
 	size_t allocated = vector.allocated;
-	while (allocated < size) { allocated *= 2; }
-	Value * new_data = new Value[allocated];
+	if (allocated < size) {
+		do {
+			allocated *= 2;
+		} while (allocated < size);
+		Value * new_data = new Value[allocated];
+	
+		for (size_t i = 0; i < vector.size; ++ i) {
+			new_data[i] = vector.data[i];
+		}
+		delete [] vector.data;
 
-	for (size_t i = 0; i < vector.size; ++ i) {
-		new_data[i] = vector.data[i];
+		vector.data = new_data;
+		vector.allocated = allocated;
 	}
-	delete [] vector.data;
-
-	vector.data = new_data;
-	vector.allocated = allocated;
 	vector.size = size;
 }
 template <typename Value>
@@ -443,7 +504,34 @@ struct plan_t
 {
 	Work work;
 	vector_t<step_t<Frequency, Work, State>> steps;
+	Frequency chance;
 };
+
+template <typename Frequency, typename Work, typename State>
+plan_t<Frequency,Work,State> plan_init(Work work)
+{
+	plan_t<Frequency,Work,State> plan;
+	plan.work = work;
+	plan.steps = vector_init<step_t<Frequency, Work, State>>(0);
+	plan.chance = fixed_point_unity;
+	return plan;
+}
+template <typename Frequency, typename Work, typename State>
+void plan_free(plan_t<Frequency,Work,State> & plan)
+{
+	work_free(plan.work);
+	vector_free(plan.steps);
+	plan.chance = 0;
+}
+template <typename Frequency, typename Work, typename State>
+plan_t<Frequency,Work,State> plan_copy(plan_t<Frequency,Work,State> const & original)
+{
+	plan_t<Frequency,Work,State> copy;
+	copy.work = work_copy(original.work);
+	copy.steps = vector_copy(original.steps);
+	copy.chance = original.chance;
+	return copy;
+}
 
 template <typename Frequency, typename Work, typename State>
 step_t<Frequency,Work,State> step_init(plan_t<Frequency,Work,State> & plan, typename step_t<Frequency,Work,State>::function_t function);
@@ -462,6 +550,28 @@ struct sbc_work_t
 	SBC * sbc;
 };
 template <typename SBC>
+sbc_work_t<SBC> sbc_work_init(SBC * sbc, size_t length)
+{
+	sbc_work_t<SBC> work;
+	work.data = vector_init<typename SBC::option_t>(length);
+	work.sbc = sbc;
+	return work;
+}
+template <typename SBC>
+sbc_work_t<SBC> work_copy(sbc_work_t<SBC> const & original)
+{
+	sbc_work_t<SBC> copy;
+	copy.data = vector_copy(original.data);
+	copy.sbc = original.sbc;
+	return copy;
+}
+template <typename SBC>
+void work_free(sbc_work_t<SBC> & work)
+{
+	vector_free(work->data);
+	work->sbc = 0;
+}
+template <typename SBC>
 using sbc_step_t = step_t<typename SBC::frequency_t, sbc_work_t<SBC>, sbc_state_t<SBC>>;
 template <typename SBC>
 using sbc_plan_t = plan_t<typename SBC::frequency_t, sbc_work_t<SBC>, sbc_state_t<SBC>>;
@@ -475,7 +585,7 @@ sbc_step_t<SBC> & step_init(sbc_plan_t<SBC> & plan, typename sbc_step_t<SBC>::fu
 	if (plan.steps.size > 1) {
 		auto  last_step = plan.steps.data[plan.steps.size - 2];
 		step.state.sbc = last_step.state.sbc;
-		step.state.focus = last_step.state.focus ++;
+		step.state.focus = last_step.state.focus + 1;
 	} else {
 		step.state.sbc = plan.work.sbc;
 		step.state.focus = 0;
@@ -484,11 +594,11 @@ sbc_step_t<SBC> & step_init(sbc_plan_t<SBC> & plan, typename sbc_step_t<SBC>::fu
 	return step;
 }
 template <typename Frequency, typename Work, typename State>
-bool step_try(plan_t<Frequency, Work, State> & plan, bool undo)
+Frequency step_try(plan_t<Frequency, Work, State> & plan, bool undo)
 {
-	assert(plan.steps.size());
+	assert(plan.steps.size);
 	auto & step = vector_back(plan.steps);
-	step.function(plan.work, step.state, undo, false);
+	return step.function(plan.work, step.state, undo, false);
 }
 
 template <typename SBC>
@@ -496,44 +606,29 @@ typename SBC::frequency_t try_next_byte(sbc_work_t<SBC> & work, sbc_state_t<SBC>
 {
 	if (init) {
 		state.next_try = 0;
-		return true;
+		return 0;
 	}
 
-	if (work.data.size < state.focus) {
-		vector_resize(work.data, state.focus);
+	if (state.next_try >= state.sbc->maximum_guesses) {
+		return 0;
+	}
+
+	if (work.data.size <= state.focus) {
+		vector_resize(work.data, state.focus + 1);
 	}
 
 	if (!undo) {
+		typename SBC::option_t last_value;
 		if (state.focus == 0) {
-			while (state.sbc->prev_priority[state.next_try].data[0] == 0) {
-				++ state.next_try;
-				if (state.next_try == 0) {
-					return false;
-				}
-			}
-			work.data.data[state.focus] = state.next_try;
-			++ state.next_try;
-			if (state.next_try == 0) {
-				return false;
-			}
-			while (state.sbc->prev_priority[state.next_try].data[0] == 0) {
-				++ state.next_try;
-				if (state.next_try == 0) {
-					return false;
-				}
-			}
+			last_value = END_TOKEN;
 		} else {
-			work.data.data[state.focus] = state.sbc->next_priority[work.data.data[state.focus-1]].data[state.next_try];
-			++ state.next_try;
-			if (state.next_try == 0) {
-				return false;
-			}
-			if (state.sbc->next_priority[work.data.data[state.focus-1]].data[state.next_try] == 0) {
-				state.next_try = 0;
-				return false;
-			}
+			last_value = work.data.data[state.focus-1];
 		}
-		return true;
+		auto & direction = state.sbc->directions.data[0];
+		typename SBC::frequency_t chance = direction.chance[last_value].data[state.next_try];
+		work.data.data[state.focus] = direction.guess[last_value].data[state.next_try];
+		++ state.next_try;
+		return chance;
 	} else {
 		// undo
 		assert(false);
@@ -778,31 +873,86 @@ template <typename SBC>
 void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 {
 	auto plans = vector_init<sbc_plan_t<SBC>>(1);
-	auto chances = vector_init<SBC::frequency_t>(1);
 
-	auto * plan = & plans.front();
-	auto * chance = & chances.front();
-	plan->work.sbc = sbc;
-	*chance = 1;
+	vector_front(plans) = plan_init<typename SBC::frequency_t,sbc_work_t<SBC>,sbc_state_t<SBC>>(sbc_work_init(sbc, 0));
 
-	step_init(plan, try_next_byte);
+	// guesses are now parallel to chances, which are fixed-point integers where fixed_point_unity = 1.0
 
-	// plan: try 1st guess until length is right, then try 2nd guesses.
+	// ==============================================
+	// ...
+	// we start off with 1 step prepared in the plan.
+	// we get 2 guesses from the step.  both of these should be placed on plans, with updated chances.
+	// so now we have 2 plans.  we find the plan with the highest chance, and get 2 guesses from it again.
+	// ==============================================
+	// update below to do above.
+
 	while (true) {
-		bool success = step_try(plan, false);
-		if (success && target.size <= plan.work.data.size) {
+		// 1. find the best available guess
+		size_t best_plan = 0;
+		for (size_t i = 1; i < plans.size; ++ i) {
+			if (plans.data[i].chance > plans.data[best_plan].chance) {
+				best_plan = i;
+			}
+		}
+
+		if (plans.data[best_plan].work.data.size >= target.size) {
 			// we've gotten long enough
 			for (size_t i = 0; i < target.size; ++ i) {
-				if (plan.work.data.data[i] != target.data[i]) {
-					success = false;
-					break;
+				if (plans.data[best_plan].work.data.data[i] != target.data[i]) {
+					plans.data[best_plan].chance = 0;
+					printf("Missed plan\n");
+					continue;
 				}
 			}
-			if (success) { return; }
+			printf("Success\n");
+			// success
+			return;
 		}
-		if (success) { continue; }
+
+		step_init(plans.data[best_plan], try_next_byte);
+
+		// 2. make two guesses that assume it, spawning 1 new plan
+		// 	if a guess makes a wrong result, stop guessing there.
+
+		// 2 a -> call step_try to fill this data
+		auto chance1 = plans.data[best_plan].chance * step_try(plans.data[best_plan], false) / fixed_point_unity;
+		/*
+		// 2 b -> copy the plan
+		size_t second_best_plan = plans.size;
+		vector_resize(plans, plans.size + 1); // <- this invalidates best_plan.
+		plans.data[second_best_plan] = plan_copy(plans.data[best_plan]);
+		// 2 c -> call step_try to fill the other data
+		auto chance2 = plans.data[second_best_plan].chance * step_try(plans.data[second_best_plan], false) / fixed_point_unity;
+		// 2 d -> call step_init to make further steps
+		// */
+		plans.data[best_plan].chance = chance1;
+		/*
+		plans.data[second_best_plan].chance = chance2;
+
+		// 3. repeat
+		*/
+		continue;
+		/*
+failed:
 
 		// we failed.  but that was our best guess.  we look for a better guess.
+		// we'd better clone the plan and remove some work.
+		// *chance contains our total chance of this being a good thing based on what we know.
+		// when we have only a partial plan, our chance will be bigger.
+		// when we pick a spot to add back onto it, the chance will drop again.
+		// why don't we go back far enough, that the chance doesn't drop to below this chance, and stop.
+		plans.resize(plans.size + 1);
+		//chances.resize(chances.size + 1);
+			// alternatively, we could keep a list of alternate approaches, and always pick the one with the
+			// highest chance.  this might work out better with this approach.
+			// so, when we take a next step, we pick from among all the branches, the one with the best chance.
+			// that is: we pursue the branch that has the highest chance.
+		auto * plan = & plans.front();
+		plan->work.sbc = sbc;
+		plan->steps = vector_init<decltype(plan->steps)::value_t>(0);
+		auto * chance = & chances.front();
+		*chance = fixed_point_unity;
+
 		// we failed.
 		// we're going to want to undo this step.
 		// let's plan tree expansion.
@@ -824,6 +974,7 @@ void try_to_reach(SBC * sbc, vector_t<typename SBC::option_t> & target)
 		// OR if we used chance, we could pursue branch with most likelihood that hasn't failed.
 		// undoing would still be okay.
 		// 
+		// */
 	}
 
 	// for now, it doesn't matter, it's just where it checks
