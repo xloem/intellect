@@ -1,0 +1,69 @@
+below we have discussion that leads off A towards meaning-vm B towards non-coding behaviors.
+	there is possibly theory that SBC-networks alone could make for really-good-behavior.
+		vm-idea: do-arbitrary-human-valued-step, make-sbc-around, destroy-sbc-around, plan
+	unless you build value around meaning-vm, which is better for human-valued-concepts,
+	let's keep going on the place-values-matching-code approach.  we can try an approach that generalizes to yours.
+
+we have a distraction context.  they want to try a new approach.
+the approach involves logging behavior with success [oh it's very similar]
+	so, you give it things it can do.  all numberable.
+	and you fill an SBC with which things are the right things.
+	i guess you store vectors of property history to make the learning get better?
+		need feedback loop.  you're doing the same work as us, you're just proposing lose the outer context?
+			they propose ignoring the SBC of bytes-that-follow.
+			and focusing solely on making behavior-and-environment-SBCs generally.
+				obviously the bytes-that-follow sbc would arise where relevent.
+			they want a vm to grow it in.  we have meaning-vm.  it doesn't run as fast, which shouldn't matter.
+			
+			say we did use meaning-vm.
+			there are a few set-behaviors, and models of what behaviors work.
+				yes, this maps to building a function from the start here.
+			okay, good.  so placing a byte is doing something.
+				yes sometimes it takes many bytes for it to happen.
+				and you have to actually do it.  we are planning rather than acting.
+					so, we are learning to behave well, where the behavior-model is building-a-plan.
+		you could drop the building-a-plan model.  you could learn to do something else.
+		but then it is harder to progress past sbc.
+			building-a-plan is a good model.  we want to build-ways-to-be-that-are-smarter-than-sbc.
+				it would make sense to train the behaviors to do more human things than assembly code.
+				so humans can nurture them better.
+		let's go back to the goal.
+
+
+
+
+
+
+karl's thoughts aren't making cognition together.
+can we form actual plan for continuing?
+
+goal: structure using SBCs and logs-of-data to make decisions.
+concept: properties of state
+	
+
+concept: behavior choices?  this focus expands around meaning too early.  we are likely to encounter it soon with more relevence.
+
+we'll likely have a core-like function that selects from the state and sbcs to move forward.
+	so, say we have the empty list of values.
+	we might have a behavior-list of use-guess, or improve-guess.
+	we might have a state-list which is empty, but has a target vector we're trying to learn to copy.
+
+		in the current-state we likely have a vector of vectors.
+		we also have a behavior that writes a byte to a vector.
+		and a behavior that writes to that byte.
+			it sounds like we produce 1 value
+				we can either use that value for thinking, or write it out.
+
+			often we are producing values for thinking from the sbcs.
+			like indexes into the priorities of other sbcs.
+			but the sbcs are labeled already with what their values are for.
+			for things-we-do-with-information, we have specialized sbcs.
+			one of the things-we-do is write a byte into a vector.
+				so, all behaviors could take 1 value.
+				using an sbc might be a behavior
+					the most important behavior is making a numbered decision.
+					this helps us write learning-plans.
+						we ... could theoretiaclly ... write byte-writing as a hierarchy of decisions ...
+						but that woudl work a lot better in meaning-vm where you could reference the source
+						material.
+							let's find any path forward.

@@ -1,0 +1,55 @@
+effective sbc path?
+	we can figure out what choices lead towards success, and prefer them
+does this work or is imaginary, here?
+
+		when building function, with category-goal, we wonder if we can have nest of sbcs to help us reach category
+		goal rapidly.  this is likely doable, and we are likely pretty close to designing something that makes those sbcs.
+					note: [can do likelihood if needed -sbc]
+		
+	okay.  we know the likely distribution of bytes.  we are interested now in a likely distribution of steps.
+			say we had N step-kinds.
+			we could quickly say which ones brought us toward the goal, from previous ones.
+
+		the space is a little funny.
+		have to split it out.
+		step-kind of add-likely-byte-next, will roughly always fail.
+			we'd have to make a step-kind of add-5th-most-likely-byte-next.
+				I see.  the step-kinds are an index into the current sbc.  an sbc-sbc.
+					yes.
+
+			what orders of these choices work.  okay.
+
+				this may not work but sounds fun, and gives a path for karl to generalize more through.
+
+		step-kinds?
+			- add byte after focus
+			let's just stick to tthat one for now.
+						other option:
+						[set-focus [where focus includes exploration direction], vs. explore-more]
+					
+		say we made add-byte-after-focus map.
+			
+			we're making an sbc of sbcs-chosen.  where we only pick sbcs that work.
+				this will make an sbc for using the sbc.  if you can generalize that process, you may have
+				something that works better.
+
+way-of-using-sbc: add-byte-after-focus
+	makes an sbc-of-data
+
+		we'll want to generalize sbc to be able to handle selectiosn within another sbc.
+			which is just data-type, and index-type.
+
+Also, for fun, we have a plan now that avoids any possibility of crashing, if needed.  Uncertain if it will be used.
+
+the system looks like it will grow to only make good decisions, and never make errors O_O [obviously it will make errors when
+confronted with new material]
+	given it is so close to closed completion, can you close the problem of process-memory?
+	it would be nice if it could remember its own behavior?
+		we have an idea of 'plans' a sequence of steps that work so far, that can be undone.
+		we could keep a separate behavior log adjacent to the plan.
+		or we could drop it entirely.  and keep only a behavior log.  takes a bit of a leap of faith that it will work.
+			let's do both-at-once for now.  wait ... we are resolving leap-of-faith.
+				plan-not-needed-to-demonstrate-success.
+				only behaviros that move towards success are valued, so it is reached quickly.
+		we tentatively propose to remove the plan-part, and replace it with a behavior log.
+			this takes expansion.  which is being done above.
