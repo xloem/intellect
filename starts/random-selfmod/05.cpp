@@ -1,6 +1,11 @@
 
 // to manage function ordering, we don't use libraries and headers atm.
 
+// INVESTMENT IDEA: identifying similar strings (esp. 4-byte-long) in all functions could reduce the relevence space.
+// -> this would make like a processing-pipeline on data, of first converting same-strings to symbols, and then making an SBC.
+//		-> if you want to adjust towards behavior a little, same-string on behavior-log appears helpful for
+//		   when-to-learn-around-a-behavior kinda stuff.  shows repeated mundane things.
+
 using real = float;
 //using size_t = unsigned long;
 using uint8_t = unsigned char;
