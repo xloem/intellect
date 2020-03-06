@@ -1,38 +1,55 @@
 #pragma once
 
 #include "life.hpp"
+#include "numbered_task_dispatcher.hpp"
+
 #include <unordered_map>
 
 LifeSpec::instructions number_learner_1;
 
-struct Number_Learner_1
+struct Number_Learner_1 : public Numbered_Task_Dispatcher
 {
-	static LifeSpec spec;
-	static void instructions(Life & self, Life * environment);
+	static LifeSpec & spec;
+
+	using Numbered_Task_Dispatcher::TASK_IN;
+	enum { TASK_OBSERVE, TASK_REPORT };
 
 	enum { NUMBER_IN, NUMBER_OUT };
+	enum { NUMBERS_OUT };
 	std::unordered_multimap<Value, Value> memory;
 
 	struct Observer
 	{
-		static LifeSpec spec;
+		static LifeSpec & spec;
 		static void instructions(Life & self);
 	};
 
 	struct Reporter
 	{
-		static LifeSpec spec;
+		static LifeSpec & spec;
 		static void instructions(Life & self);
 	};
 };
 
-LifeSpec Number_Learner_1::Observer::spec = LifeSpec::make(
+LifeSpec & Number_Learner_1::spec = LifeSpec::grow(
+		EtherSpec,
+		Numbered_Task_Dispatcher::spec,
+		"number learner 1");
+LifeSpec & Number_Learner_1::Observer::spec = LifeSpec::make(
 		Number_Learner_1::spec,
 		"observer", 
 		{"number in", "number out"}, 
 		{}, 
 		Number_Learner_1::Observer::instructions
 );
+LifeSpec & Number_Learner_1::Reporter::spec = LifeSpec::make(
+		Number_Learner_1::spec,
+		"reporter",
+		{"number in"},
+		{"numbers out"},
+		Number_Learner_1::Reporter::instructions
+);
+
 void Number_Learner_1::Observer::instructions(Life & self)
 {
 	auto & environment_body = (Number_Learner_1*&)self.environment.body;
@@ -43,14 +60,6 @@ void Number_Learner_1::Observer::instructions(Life & self)
 	environment_body->memory.emplace(self.scalars[NUMBER_IN], self.scalars[NUMBER_OUT]);
 }
 
-
-LifeSpec Number_Learner_1::Reporter::spec = LifeSpec::make(
-		Number_Learner_1::spec,
-		"reporter",
-		{"number in"},
-		{"number out"},
-		Number_Learner_1::Reporter::instructions
-);
 void Number_Learner_1::Reporter::instructions(Life & self)
 {
 	auto & environment_body = (Number_Learner_1*&)self.environment.body;
@@ -59,7 +68,7 @@ void Number_Learner_1::Reporter::instructions(Life & self)
 	}
 
 	auto matching = environment_body->memory.equal_range(self.scalars[NUMBER_IN]);
-	auto guesses = self.vectors[NUMBER_OUT];
+	auto guesses = self.vectors[NUMBERS_OUT];
 	for (auto it = matching.first; it != matching.second; ++ it) {
 		guesses.push_back(it->second);
 	}

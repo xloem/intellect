@@ -15,7 +15,8 @@ using AloneLostAndConfused = std::reference_wrapper<Life>;
 
 struct LifeSpec
 {
-	LifeSpec & environment;
+	LifeSpec const & environment;
+	LifeSpec const * model;
 
 	// label
 	std::string name;
@@ -27,14 +28,18 @@ struct LifeSpec
 	// private chemistry
 	using instructions = void(*)(Life & life);
 	instructions genes;
-	Properties<LifeSpec> organs;
+	Properties<LifeSpec> organs; // todo: change to community-member or somesuch, organ sounds less-friendly
 
-	static LifeSpec make(
+	static LifeSpec & make(
 		LifeSpec & environment,
 		std::string name,
 		std::initializer_list<std::string> scalars,
 		std::initializer_list<std::string> vectors,
 		LifeSpec::instructions genes);
+	static LifeSpec & grow(
+		LifeSpec & environment,
+		LifeSpec & old,
+		std::string name);
 };
 
 struct Life
@@ -56,4 +61,6 @@ struct Life
 	void * body;
 };
 
-extern Life Ether; // a place for life with no home
+// a place for life with no home
+extern LifeSpec EtherSpec;
+extern Life Ether;

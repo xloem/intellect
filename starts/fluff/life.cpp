@@ -1,11 +1,28 @@
 #include "life.hpp"
 
-LifeSpec LifeSpec::make(LifeSpec & environment, std::string name, std::initializer_list<std::string> scalars, std::initializer_list<std::string> vectors, LifeSpec::instructions function)
+LifeSpec & LifeSpec::make(
+		LifeSpec & environment,
+		std::string name,
+		std::initializer_list<std::string> scalars,
+		std::initializer_list<std::string> vectors,
+		LifeSpec::instructions function)
 {
-	LifeSpec & spec = environment.organs.emplace_back(LifeSpec{environment, name});
+	LifeSpec & spec = environment.organs.emplace_back(LifeSpec{environment, 0, name});
 	spec.scalars = scalars;
 	spec.vectors = vectors;
 	spec.genes = function;
+	return spec;
+}
+
+LifeSpec & LifeSpec::grow(
+		LifeSpec & environment,
+		LifeSpec & old,
+		std::string name)
+{
+	LifeSpec & spec = environment.organs.emplace_back(LifeSpec{environment, &old, name});
+	spec.scalars = old.scalars;
+	spec.vectors = old.vectors;
+	spec.genes = old.genes;
 	return spec;
 }
 
@@ -25,6 +42,7 @@ Life & Life::make(LifeSpec & spec, Life & environment)
 
 LifeSpec EtherSpec = LifeSpec{
 	EtherSpec,
+	0,
 	"ether spec",
 	{},
 	{},
