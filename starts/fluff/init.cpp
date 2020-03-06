@@ -11,44 +11,6 @@ using PropertySpec = Properties<std::string>;
 
 struct Life;
 
-// we're considering having the two organs have a shared environment.
-// what do they do?
-// 	nl1 listens for 'learn-from-this-example'
-// 	and makes a huge sorted record of example-successes
-// 	and example-failures, so as to quickly find
-// 	what-worked and what-failed.
-//
-// 	nl2 listens for 'guess-what-might-work' and
-// 	looks in the record, spitting out what might work.
-//
-// so nl1 is bound to the ears, and can only say 'understood'
-// nl2 is bound to the mouth, and conly hear 'go with this'
-// the ears&mouth are agreed-upon-communication-channels
-//
-// but the map is shared community work
-// 	it's analogous to a shared resource, like a tribe
-// 	of buffalo that are useful for all to eat from,
-// 	and must be protected by all, in ways that work.
-// 		[if you catch all the buffalo and farm them,
-// 		 implicit agreement broken.]
-// 			example-too-distant
-// 	or a water supply in a public city.
-// 	everybody may drink from, nobody may dump in.
-// 	must always engage in ways that everybody does the same.
-// 	shared-environment.
-//
-// so nl1 and nl2 live in a shared environment.
-// they have a shared environment part.
-// 	yes.  the body they are a part of, has a class structure.
-
-/*
-struct EnvironmentSpec
-{
-	PropertySpec scalars;
-	PropertySpec vectors;
-};
-*/
-
 struct LifeSpec
 {
 	// label
@@ -59,7 +21,7 @@ struct LifeSpec
 	PropertySpec vectors;
 
 	// private chemistry
-	using instructions = void(*)(Life & life);
+	using instructions = void(*)(Life & life, Life & environment);
 	instructions genes;
 	Properties<LifeSpec> organs;
 };
