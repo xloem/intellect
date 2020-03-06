@@ -26,20 +26,16 @@ struct Number_Learner_1
 	};
 };
 
-LifeSpec Number_Learner_1::Observer::spec = make_life_spec(
+LifeSpec Number_Learner_1::Observer::spec = LifeSpec::make(
 		Number_Learner_1::spec,
 		"observer", 
-		{}, 
 		{"number in", "number out"}, 
 		{}, 
 		Number_Learner_1::Observer::instructions
 );
 void Number_Learner_1::Observer::instructions(Life & self)
 {
-	if (!self.environment) {
-		throw AloneLostAndConfused(self);
-	}
-	auto & environment_body = (Number_Learner_1*&)self.environment->body;
+	auto & environment_body = (Number_Learner_1*&)self.environment.body;
 	if (!environment_body) {
 		environment_body = new Number_Learner_1();
 	}
@@ -48,20 +44,16 @@ void Number_Learner_1::Observer::instructions(Life & self)
 }
 
 
-LifeSpec Number_Learner_1::Reporter::spec = make_life_spec(
+LifeSpec Number_Learner_1::Reporter::spec = LifeSpec::make(
 		Number_Learner_1::spec,
 		"reporter",
-		{},
 		{"number in"},
 		{"number out"},
 		Number_Learner_1::Reporter::instructions
 );
 void Number_Learner_1::Reporter::instructions(Life & self)
 {
-	if (!self.environment) {
-		throw AloneLostAndConfused(self);
-	}
-	auto & environment_body = (Number_Learner_1*&)self.environment->body;
+	auto & environment_body = (Number_Learner_1*&)self.environment.body;
 	if (!environment_body) {
 		throw AloneLostAndConfused(self);
 	}
