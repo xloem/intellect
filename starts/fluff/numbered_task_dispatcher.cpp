@@ -1,31 +1,31 @@
 #include "numbered_task_dispatcher.hpp"
 
 #include <algorithm>
+#include <cassert>
 
 
 LifeSpec & Numbered_Task_Dispatcher::spec = LifeSpec::make(
 	EtherSpec,
 	"Numbered Task Dispatcher",
-	{"task in"},
-	{},
+	{{"task in"},{},{},{}},
 	Numbered_Task_Dispatcher::instructions
 );
 
 
 void Numbered_Task_Dispatcher::instructions(Life & self)
 {
-	auto & task = self.organs[self.scalars[TASK_IN]];
+	auto & task = self.organs[self.scalars_in[TASK_IN]];
 
-	auto scalarstart = ++self.scalars.begin();
-	assert(&self.scalars[TASK_IN] == &*scalarstart);
-	auto scalarend = self.scalars.end();
-	for (size_t i = self.scalars.size(); i > task.scalars.size(); -- i) {
+	auto scalarstart = ++self.scalars_in.begin();
+	assert(&self.scalars_in[TASK_IN] == &*scalarstart);
+	auto scalarend = self.scalars_in.end();
+	for (size_t i = self.scalars_in.size(); i > task.scalars_in.size(); -- i) {
 		-- scalarend;
 	}
 
-	std::copy(scalarstart, scalarend, task.scalars.begin());
-	task.vectors = self.vectors;
+	std::copy(scalarstart, scalarend, task.scalars_in.begin());
+	task.vectors_in = self.vectors_in;
 	task.spec.genes(task);
-	std::copy(task.scalars.begin(), task.scalars.end(), scalarstart);
-	self.vectors = task.vectors;
+	self.scalars_out = task.scalars_out;
+	self.vectors_out = task.vectors_out;
 }

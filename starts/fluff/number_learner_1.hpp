@@ -38,15 +38,13 @@ LifeSpec & Number_Learner_1::spec = LifeSpec::grow(
 LifeSpec & Number_Learner_1::Observer::spec = LifeSpec::make(
 		Number_Learner_1::spec,
 		"observer", 
-		{"number in", "number out"}, 
-		{}, 
+		{{"number in", "number out"},{},{},{}},
 		Number_Learner_1::Observer::instructions
 );
 LifeSpec & Number_Learner_1::Reporter::spec = LifeSpec::make(
 		Number_Learner_1::spec,
 		"reporter",
-		{"number in"},
-		{"numbers out"},
+		{{"number in"},{},{},{"numbers out"}},
 		Number_Learner_1::Reporter::instructions
 );
 
@@ -57,7 +55,7 @@ void Number_Learner_1::Observer::instructions(Life & self)
 		environment_body = new Number_Learner_1();
 	}
 	
-	environment_body->memory.emplace(self.scalars[NUMBER_IN], self.scalars[NUMBER_OUT]);
+	environment_body->memory.emplace(self.scalars_in[NUMBER_IN], self.scalars_in[NUMBER_OUT]);
 }
 
 void Number_Learner_1::Reporter::instructions(Life & self)
@@ -67,8 +65,8 @@ void Number_Learner_1::Reporter::instructions(Life & self)
 		throw AloneLostAndConfused(self);
 	}
 
-	auto matching = environment_body->memory.equal_range(self.scalars[NUMBER_IN]);
-	auto guesses = self.vectors[NUMBERS_OUT];
+	auto matching = environment_body->memory.equal_range(self.scalars_in[NUMBER_IN]);
+	auto & guesses = self.vectors_out[NUMBERS_OUT];
 	for (auto it = matching.first; it != matching.second; ++ it) {
 		guesses.push_back(it->second);
 	}

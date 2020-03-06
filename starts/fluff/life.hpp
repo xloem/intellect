@@ -21,9 +21,12 @@ struct LifeSpec
 	// label
 	std::string name;
 
-	// muscles, mouth, ears
-	PropertySpec scalars;
-	PropertySpec vectors;
+	// ears, eyes
+	PropertySpec scalars_in;
+	PropertySpec vectors_in;
+	// mouth, muscles
+	PropertySpec scalars_out;
+	PropertySpec vectors_out;
 
 	// private chemistry
 	using instructions = void(*)(Life & life);
@@ -33,8 +36,7 @@ struct LifeSpec
 	static LifeSpec & make(
 		LifeSpec & environment,
 		std::string name,
-		std::initializer_list<std::string> scalars,
-		std::initializer_list<std::string> vectors,
+		std::initializer_list<std::initializer_list<std::string>> communication_channels,
 		LifeSpec::instructions genes);
 	static LifeSpec & grow(
 		LifeSpec & environment,
@@ -52,9 +54,12 @@ struct Life
 
 	Life & environment;
 
-	// muscles, mouth, ears
-	Properties<Value> scalars;
-	Properties<std::vector<Value>> vectors;
+	// ears, eyes
+	Properties<Value> scalars_in;
+	Properties<std::vector<Value>> vectors_in;
+	// mouth, muscles
+	Properties<Value> scalars_out;
+	Properties<std::vector<Value>> vectors_out;
 
 	// private parts
 	Properties<Life> organs;

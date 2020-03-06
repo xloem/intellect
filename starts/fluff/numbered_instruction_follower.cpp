@@ -1,11 +1,12 @@
 #include "numbered_instruction_follower.hpp"
 
+#include "numbered_task_dispatcher.hpp"
+
 
 LifeSpec & Numbered_Instruction_Follower::spec = LifeSpec::make(
 	EtherSpec,
 	"Numbered Instruction Follower",
-	{},
-	{"instructions in"},
+	{{},{"instructions in"},{},{}},
 	Numbered_Instruction_Follower::instructions
 );
 
