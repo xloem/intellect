@@ -65,6 +65,7 @@ Life & Life::make(LifeSpec & spec, Life & environment)
 	return self;
 }
 
+// static initialization order: this must be initialized first
 LifeSpec EtherSpec = LifeSpec{
 	EtherSpec,
 	0,

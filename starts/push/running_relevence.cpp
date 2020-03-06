@@ -5,8 +5,9 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <sys/mman.h>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -129,9 +130,12 @@ void run(Context & context)
 template <typename A, typename B>
 std::vector<uint8_t> memory_between(A * head, B * tail) {
 	// compile in -O0 to keep this in quick order.  use the ordering tool from 05.cpp later.
-	std::vector<uint8_t> ret((uint8_t*)tail - (uint8_t*)head);
-	memcpy(ret.data(), (void*)head, ret.size());
-	return ret;
+	std::vector<uint8_t> block((uint8_t*)tail - (uint8_t*)head);
+	memcpy(block.data(), (void*)head, block.size());
+	uint8_t* base = (uint8_t*)((uintptr_t)block.data() & (uintptr_t)~0xfff);
+	int success = mprotect(base, block.size() + (block.data() - base), PROT_READ | PROT_WRITE | PROT_EXEC);
+	if (success) { perror("mprotect"); exit(success); }
+	return block;
 }
 void run_tail() { }
 

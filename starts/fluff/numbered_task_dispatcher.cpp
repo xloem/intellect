@@ -4,6 +4,7 @@
 #include <cassert>
 
 
+// static iniitalization order: this must be initialized second
 LifeSpec & Numbered_Task_Dispatcher::spec = LifeSpec::make(
 	EtherSpec,
 	"Numbered Task Dispatcher",

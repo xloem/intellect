@@ -32,8 +32,8 @@ struct Number_Learner_1 : public Numbered_Task_Dispatcher
 };
 
 LifeSpec & Number_Learner_1::spec = LifeSpec::grow(
-		EtherSpec,
-		Numbered_Task_Dispatcher::spec,
+		EtherSpec(),
+		Numbered_Task_Dispatcher::spec(),
 		"number learner 1");
 LifeSpec & Number_Learner_1::Observer::spec = LifeSpec::make(
 		Number_Learner_1::spec,

@@ -2,6 +2,10 @@
 
 #include "life.hpp"
 
+// this is being replaced by graph.hpp .
+// by linking the parts togeter arbitrarily, arbitrary behavior may be produced.
+#if 0
+
 struct Numbered_Instruction_Follower
 {
 	static LifeSpec & spec;
@@ -20,3 +24,5 @@ struct Numbered_Instruction_Follower
 		};
 	};
 };
+
+#endif
