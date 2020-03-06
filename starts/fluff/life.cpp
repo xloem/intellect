@@ -8,6 +8,8 @@ LifeSpec & LifeSpec::make(
 		LifeSpec::instructions function)
 {
 	LifeSpec & spec = environment.organs.emplace_back(LifeSpec{environment, 0, name});
+	spec.scalars.reserve(scalars.size());
+	spec.vectors.reserve(vectors.size());
 	spec.scalars = scalars;
 	spec.vectors = vectors;
 	spec.genes = function;

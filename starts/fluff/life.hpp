@@ -59,6 +59,16 @@ struct Life
 	// private parts
 	Properties<Life> organs;
 	void * body;
+
+	/*
+	void grow(
+		std::initializer_list<Value,Value> scalars_in,
+		std::initializer_list<Value,std::vector<Value>> vectors_in,
+		std::initializer_list<Value,Value&> scalars_out,
+		std::initializer_list<Value,std::vector<Value>*> vectors_out) {
+
+	}
+	*/
 };
 
 // a place for life with no home
