@@ -158,7 +158,7 @@ proper structure.
                                                  links between brainstorming and active memory.]
                                                         [so it would be clearer for karl if the system didn't hold depth=0]
                                                 [above are very rough, to solve goal with limited resources]
-EXPANSION ATTEMPT
+EXPANSION ATTEMPT {{this was expanded a little more deeply in RESUMMARIZATION below.  there is more expansion available, unwritten.}}
 
 make find-relevance stop and reconsider whenever it found a new relevant concept helped build access to its
 proper structure. {{after this thorough investigation, a lot of the introspective links feel altered, now}}
@@ -181,4 +181,22 @@ Summary of Relevancy Process, more expansion towards goal:
                         {for this we have things like similar-string, or usually-useful-after-the-other-is-useful}
 
         [this process is the most important process we know for making intellect based on human cognition.]
-*/                                                                                                                                    
+
+RESUMMARIZATION 2020-03-08 0403A EST
+	Karl is describing a quick-model of relevant access using 3 levels.
+	When a possibly-relevant idea is found, it is classified as helpful or nonhelpful.  Helpful ideas go in level 1.
+	Nonhelpful ideas go in level 2.
+	Users of the relevancy have access to level 1, and can trigger it to produce more ideas.
+	A primary use of the relevancy is to combine level 1 with itslef and with level 2 to find more ideas, via creative methods.
+	When an idea has exhausted in use, it is placed in level 3, for use when highly determined to think of something new.
+			[when level 1 is used up, migreate level 2 to level 1, and level 3 to level 2, karl says]
+	
+	The above is a quick summary of a process that is actually a deep, complex graph [a tree].  Each 'level' is 'distance' in the
+	graph from the focus [the root of the tree].  Each
+		[the relevancy process is viewing memory as a tree, by considering only links it/they value[s]]
+		Each parent of a node in the tree is a more-helpful idea.
+		Ideas deeper in the tree are helpful in combination with their parents.
+			So, ideas can have multiple parents.
+				Each child-parent link is associated with the kind[s] of combination that are likely to produce
+				better ideas.
+
