@@ -1,3 +1,7 @@
+// STATUS: finds a little relevancy.  I haven't verified if it's finding all the relevancy I coded it to.
+// It is not yet finding any actual behaviors to run.
+// TODO: [ ] Verify this fully expands the provided relevant concepts using the coded approaches.
+
 #include "loaded_relevance.hpp"
 
 #include <cassert>
@@ -66,7 +70,7 @@ void find_relevant_string(Context & context)
 	while (ideas[0]->empty()) {
 		if (ideas[index]->empty()) {
 			++ index;
-			assert(index < ideas.size());
+			assert(index < ideas.size()); // it sounds like our ideas are getting exhausted before being used up.
 			continue;
 		}
 		auto & oldideas = *ideas[index];
@@ -111,6 +115,7 @@ void find_relevant_string(Context & context)
 			}
 
 
+			std::cout << "Dropping '" << it->second << "' from level " << index << std::endl;
 			if (index + 1 < ideas.size()) {
 				ideas[index + 1]->insert(*it);
 				// error here, deal with later if matters
@@ -200,3 +205,14 @@ RESUMMARIZATION 2020-03-08 0403A EST
 				Each child-parent link is associated with the kind[s] of combination that are likely to produce
 				better ideas.
 
+ABSTRACT NOTES:
+	[with trees we can truly have N levels, and I see now how relevency is how memory is stored, accessed, used, and reinforced]
+	[there is general relevency with combination-ways [creativity-habits] too.  first good ones are used, then lower-priority ones]
+		[by 'general relevancy' we mean the whole system: wait until tried all good ones before trying lower-priority ones]
+		[but obviously internally a mature system would try the best habits first on what they are relevant too]
+			[[[wondering on a link-structure that could represent simplified-and-complex-relevancy]]]
+				[[[similar to storage of groups of objects same as storage of 1 object]]]
+					[[[above line just means our core processes use relevancy, and provide for multiple
+					   options or uses everywhere]]]
+
+*/
