@@ -2,7 +2,6 @@
 #include "loaded_relevance.hpp"
 
 #include <cstring>
-#include <sys/mman.h>
 #include <map>
 #include <iostream>
 
@@ -44,11 +43,6 @@ Data memory_for(A * head, bool copy) {
 	uint8_t * newseg = copy ? new uint8_t[it->second - it->first] : 0;
 	auto offset = (uint8_t*)head - it->first;
 	uint8_t * addr = copy ? newseg + offset : (uint8_t*)head;
-
-	uint8_t* base = (uint8_t*)((uintptr_t)addr & (uintptr_t)~0xfff);
-	int success = mprotect(base, vecsize + (addr - base), PROT_READ | PROT_WRITE | PROT_EXEC);
-	if (success) { perror("mprotect"); exit(success); }
-
 	shadow_allocator<uint8_t>::shadowAddress(addr, vecsize);
 	if (copy) {
 		std::memcpy(newseg, it->first, it->second - it->first);
@@ -84,7 +78,7 @@ int main()
 
 	data["example-behavior"] = std::move(memory_for(example_behavior, true));
 	auto pos = data["example-behavior"].data();
-	data["copy-data"] = std::move(memory_for(copy_data, false));
+	data["copy-and-run"] = std::move(memory_for(copy_data, false));
 	data["find-relevant-string"] = std::move(memory_for(find_relevant_string, false));
 	data["core"] = std::move(memory_for(core, false));
 	data["run"] = std::move(memory_for(run, false));
@@ -106,10 +100,12 @@ int main()
 	
 	//         v--- contains word 'behavior' as substring
 	contexts["available-behaviors"].relevance["1"] = "example-behavior";
-	contexts["available-behaviors"].relevance["2"] = "copy-data";
+	contexts["available-behaviors"].relevance["2"] = "copy-and-run";
 	contexts["available-behaviors"].relevance["3"] = "find-relevant-string";
 	contexts["available-behaviors"].relevance["4"] = "core";
 	contexts["available-behaviors"].relevance["5"] = "run";
+
+	contexts["behavior"].relevance["associated"] = "available-behaviors";
 
 	contexts["copy-output"].relevance["name-idea"] = "new-";
 
@@ -117,5 +113,5 @@ int main()
 	//core(contexts["current"]);
 	run(contexts["current"]);
 	contexts["current"].relevance["behavior"] = "core";
-	run(contexts["core"]);
+	run(contexts["current"]);
 }

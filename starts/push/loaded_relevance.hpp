@@ -72,6 +72,7 @@ thread_local T* shadow_allocator<T>::expected_shadow_address = 0;
 template<typename T>
 thread_local std::unordered_multiset<T*> shadow_allocator<T>::shadowed_addresses;
 
+#include <sys/mman.h>
 class Data
 {
 public:
@@ -85,7 +86,9 @@ public:
 	: shadowed(true),
 	  length(size * sizeof(T)),
 	  pointer((uint8_t*)shadow)
-	{ }
+	{
+		init();
+	}
 	Data(Data const & other)
 	: shadowed(false),
 	  length(other.size()),
@@ -93,6 +96,7 @@ public:
 	  pointer(allocated.data())
 	{
 		std::memcpy(pointer, other.data(), size());
+		init();
 	}
 	Data(Data && other)
 	: shadowed(other.shadowed),
@@ -102,6 +106,7 @@ public:
 	{
 		other.length = 0;
 		other.pointer = 0;
+		init();
 	}
 	virtual Data & operator=(Data const & other)
 	{
@@ -110,13 +115,16 @@ public:
 		allocated.resize(length);
 		pointer = allocated.data();
 		std::memcpy(pointer, other.data(), other.size());
+		init();
 	}
 	virtual Data & operator=(Data && other)
 	{
 		shadowed = other.shadowed;
+		length = other.size();
 		pointer = other.pointer;
 		allocated = std::move(other.allocated);
 		other.pointer = 0;
+		init();
 	}
 	virtual uint8_t & operator[](size_t idx)
 	{
@@ -139,6 +147,60 @@ private:
 	size_t length;
 	std::vector<uint8_t> allocated;
 	uint8_t * pointer;
+
+	void init()
+	{
+		uint8_t* base = (uint8_t*)((uintptr_t)pointer & (uintptr_t)~0xfff);
+		int success = mprotect(base, length, PROT_READ | PROT_WRITE | PROT_EXEC);
+		if (success) { perror("mprotect"); exit(success); }
+	}
+};
+
+class Set
+{
+public:
+	virtual size_t count(char const * key)
+	{
+		return data.count(key);
+	}
+	virtual size_t count(std::string const & key)
+	{
+		return data.count(key);
+	}
+	virtual void insert(char const * key)
+	{
+		data.insert(key);
+	}
+	virtual void insert(std::string const & key)
+	{
+		data.insert(key);
+	}
+	virtual void clear()
+	{
+		data.clear();
+	}
+	virtual size_t size()
+	{
+		return data.size();
+	}
+	virtual decltype(auto) find(std::string const &key) -> auto
+	{
+		return data.find(key);
+	}
+	virtual decltype(auto) find(char const *key) -> auto
+	{
+		return data.find(key);
+	}
+	virtual decltype(auto) begin() -> auto
+	{
+		return data.begin();
+	}
+	virtual decltype(auto) end() -> auto
+	{
+		return data.end();
+	}
+private:
+	std::unordered_set<std::string> data;
 };
 
 struct Context
@@ -150,6 +212,7 @@ struct Context
 	virtual Data & peer_data(char const *name);
 };
 
+extern std::unordered_map<std::string, Set> sets;
 extern std::unordered_map<std::string, Data> data;
 extern std::unordered_map<std::string, Context> contexts;
 

@@ -5,6 +5,7 @@
 
 // We will set up a quick relevence structure that just copies the code into memory and runs it.
 
+std::unordered_map<std::string, Set> sets;
 std::unordered_map<std::string, Data> data;
 std::unordered_map<std::string, Context> contexts;
 
