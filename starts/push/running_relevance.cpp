@@ -1,3 +1,4 @@
+// for comments see find_relevent_string.cpp, maybe core.cpp
 
 #include "loaded_relevance.hpp"
 

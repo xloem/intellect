@@ -1,6 +1,4 @@
-// STATUS: finds a little relevancy.  I haven't verified if it's finding all the relevancy I coded it to.
-// It is not yet finding any actual behaviors to run.
-// TODO: [ ] Verify this fully expands the provided relevant concepts using the coded approaches.
+// STATUS: finds very minimal relevancy, and runs.  tests are hardcoded.  relevancy-ways are hardcoded.  links are global strings.
 
 #include "loaded_relevance.hpp"
 
