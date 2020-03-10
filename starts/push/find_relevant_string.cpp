@@ -6,6 +6,30 @@
 
 #include <iostream>
 
+// To move towards hypergeneralization: (reprioritize wrt ease + need, top best)
+// => do not regeneralize at this time.  if a problem is unsolved, make a quick hard-coded heuristic and label it.
+// - [ ] implement feedback as a second function
+// 		[ungeneralized atttribute.]
+// 		[feedback takes good-term, and what-from]
+// 		for now:
+// 			positive feedback needs proper-indicator specified, and eventually further feeds back into how it was picked
+// 			no negative feedback for now?
+// 			1 function provides either final-result or helpful-result, with indicator (wayness) required
+// 			usable-result and closer-but-not-usable-result are both providable, but treated as equal for now
+// 			[hot-result and warm-result]
+// {MIGHT regeneralize around this 3: [started trying in a file in this folder named '--']
+// - [ ] alter behavior to use the 3 level model as described below in "RESUMMARIZATION 2020-03-08" and "RELEVENCY HEURISTIC 2"
+// 		but do not implement inter-item linkings yet.
+// - [ ] implement inter-item linking in any way desired.  items that are useful with other items are linked to them.
+// 		see 'RELEVENCY HEURISTIC 2'.  A little regeneralization may be done to do this more properly.
+// 		remember you can change the structures the code uses freely.
+// - [ ] pick what ways to look for relevancy, based on further relevancy (recursion) in subcontexts with names derived from
+//       this context.  
+// - [ ] if a relevancy context is found relevant, pass the work off to it. <could use 50% random decision.>
+// }
+// - [ ] turn relevancy ways into separate behaviors, taking common relevancy-way inputs
+// - [ ] we'll want to try combining words together to see if we can form more terms
+
 std::vector<std::string> string_split(std::string const & string, std::string const & delimiter)
 {
 	std::vector<std::string> substrings;
@@ -277,7 +301,7 @@ we are looking for a relevancy-way.
 	okay, this looks like enough to implement a general relevancy test.  implementation details will need to be flushed
 		out, and may alter this.  pick heuristics: the value of nested feedback is higher than the value of generalizing them
 
-we can implement or adjust heuristics when we come to them.
-relevancy ways will be behaviors that take multiple inputs.
-and feedback can be a second function that parallels the lookup function.
+[X]we can implement or adjust heuristics when we come to them.
+[X]relevancy ways will be behaviors that take multiple inputs.
+[X]and feedback can be a second function that parallels the lookup function.
 */
