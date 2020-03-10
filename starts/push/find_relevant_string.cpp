@@ -269,4 +269,15 @@ is it possible to use relevant-associations to judge which associations to pursu
 
 let's open relevancy-for-ways.  when i call way-relevancy inside a relevancy, the context is the context of the relevancy, plus that
 we are looking for a relevancy-way.
+
+	it _looks_ like way-relevancy is just like normal relevancy.
+	but how would it be used?
+		we feedback into it, when we get feedback.
+		otherwise we just try its ideas.
+	okay, this looks like enough to implement a general relevancy test.  implementation details will need to be flushed
+		out, and may alter this.  pick heuristics: the value of nested feedback is higher than the value of generalizing them
+
+we can implement or adjust heuristics when we come to them.
+relevancy ways will be behaviors that take multiple inputs.
+and feedback can be a second function that parallels the lookup function.
 */
