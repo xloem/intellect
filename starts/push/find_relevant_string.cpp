@@ -213,4 +213,61 @@ ABSTRACT NOTES:
 					[[[above line just means our core processes use relevancy, and provide for multiple
 					   options or uses everywhere]]]
 
+RELEVANCY HEURISTIC 2
+Relevancy-2 works with:
+1) A cluster of relevant ideas
+    with links to relevant-for-each parts of 2)
+2) ideas that could be helpful in finding more ideas, with links to relevant-for-each parts of 3)
+3) old ideas that didn't work, kept for extreme reinvestigation
+
+New ideas are placed in 1 or 2.  Ideas from 1 that don't work are moved to 2 or 3.
+When 1 empties because all the ideas weren't good enough, move 2 to 1 and 3 to 2.
+
+So a relevent-for link type is kept, and added or removed to find the goal.  There's one starting reference of interest, that
+has links to level 1 items.
+
+
+missing: feedback
+	We want to inform the relevancy not only which ideas are good and bad, but which are helpful and unhelpful.
+	When looking for something, some things are 'closer' to it, and some things are 'farther' away.
+	There is also something associated with how or why.  Something we already know.
+	
+missing: relevancy on tools used.
+	For one thing, we have _ways_ of finding new ideas.  These ways may take only one idea, or a few, and work with them to
+	find or more new ones.  For example, looking at sub-parts of a word, or looking at nearness in a use-of-it.
+
+MONOLOGUE-STRUGGLE ON FEEDBACK.
+	when learning relevancy with advice, we get told what is helpful or unhelpful, and how we would know.
+		so while 'tying knot', we may need to find 'string', because 'knot' associated with 'string'
+			in meaning-vm, that's a reference to a link
+			here, that's a context and a key, or two paired strings.
+
+					we can use a learning tool like 05.cpp's, to learn these?
+
+						yes.  more generally, this raises ways of judging relevancy
+TRYING TO COMPLETE FEEDBACK ASSUMPTIONS
+
+is it possible to use relevant-associations to judge which associations to pursue first?
+
+	say 'tying-knot', 'knot'+'string'
+
+		so, the learning-structure _is_ the 3-level hierarchy in reference.
+		this is associated with the task.  if tasks are similar, the relevent thing is the similar-part of them,
+		to the relevancy of the other, roughly.
+
+			okay, so now we have contextual-relevancy-parts.  we're shaking, so maybe just have relevancy associated
+			with tasks.  maybe we can reuse a task's relevancy, pin some parts as staying.
+
+		what would the 3-level hierarchy do if i said 'knot' implies 'string'?
+			'knot' is good idea
+			the _way_ that 'knot' goes to 'string' is good idea
+			'string' is better idea
+
+		so 'knot' would go in level 2
+		and 'string' would go in level 1
+
+
+let's open relevancy-for-ways.  when i call way-relevancy inside a relevancy, the context is the context of the relevancy, plus that
+we are looking for a relevancy-way.
+[btw we save because of pattern-mirror 'boss steals and erases when confirmed to be easy to complete and make workable']
 */
