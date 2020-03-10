@@ -269,5 +269,4 @@ is it possible to use relevant-associations to judge which associations to pursu
 
 let's open relevancy-for-ways.  when i call way-relevancy inside a relevancy, the context is the context of the relevancy, plus that
 we are looking for a relevancy-way.
-[btw we save because of pattern-mirror 'boss steals and erases when confirmed to be easy to complete and make workable']
 */
