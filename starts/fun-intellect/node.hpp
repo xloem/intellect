@@ -3,14 +3,33 @@
 #include <memory>
 
 class node;
-using ref = std::shared_ptr<node>;
+class ref;
 
 class node
 {
 public:
-	virtual ref get();
-	virtual ref get(ref way);
+	virtual class ref ref() final;
+	virtual class ref get();
+	virtual class ref get(class ref way);
 
-	virtual ref link(ref way, ref what);
-	virtual void unlink(ref link);
+	virtual class ref link(class ref way, class ref what);
+	virtual void unlink(class ref link);
+
+protected:
+	node() = default;
+};
+
+class ref : public node
+{
+public:
+	virtual ref get() final;
+	virtual ref get(ref way) final;
+	virtual ref link(ref way, ref what) final;
+	virtual void unlink(ref link) final;
+
+private:
+	friend class node;
+	ref(node * n);
+
+	std::shared_ptr<node> p;
 };
