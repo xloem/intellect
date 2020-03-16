@@ -1,7 +1,9 @@
 #pragma once
 
+#include <memory>
+
 class node;
-using ref = node *;
+using ref = std::shared_ptr<node>;
 
 class node
 {
