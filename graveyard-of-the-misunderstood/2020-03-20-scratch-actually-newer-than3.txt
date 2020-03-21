@@ -1,0 +1,112 @@
+harmonic step-learning (mediation-by-additional-similarity)
+	-> prefer steps that use existing processes
+	-> prefer steps that, when introduced, will grow behavior closer to other helpful steps
+we expanded internally for brute-force-AI-learns-brute-force-relevance
+			choose what-it-brute-forces
+			in order to grow code that lets it choose multiple behaviors, work with higher-level structures,
+			or make better exploration-priority decisions
+sister to this we could consider disparate cultures
+say i know how to fish
+and somebody is in a fight
+	rather than introducing a fishing-pole-that-is-good-at-stopping-punches
+	we might consider how a fight is similar to fishing
+	and how fishing is similar to a fight
+		OR
+	we could consider what is needed when there is a fight
+			fight has two-people [with strong urges] [... disagreement ... unmet needs ... not expressing understanding ...]
+				two people who believe the other person is wrong and does not value them, and are acting
+				on that violently
+				we know a little about fights ... we know about general situations at least,
+				and it looks lke these people need paths to doing what they need to do, that are more effective
+				and gratifying, in the immediate moment.
+	and how fishing is similar to what is needed
+		i'm really good at waiting patiently! <- tolerance is useful for mediation/peacemaking
+							 persistence is useful for everything, and is very similar to patience
+		new-task needs persistence (contextually)
+		patience also needs persistence.  we have strong patience, it is a place to draw on for persistence.
+	that is helpful when there is a fight.  think of when you are waiting for the fish to bite.
+	the people yelling at you, they are a just a fish that hasn't found the hook.
+	cast in ways they might bite, but with your words.  give them bait that might calm them.
+
+
+let's try a simpler human behavior.
+i know how to open drawers
+i need to open a door
+	we could train in closing-hand, turning-wrist to get through doorknobs.  this avoids learning what we are doing.
+		we may have a habit of yank-on-it to open the drawer.
+		the relevent connection relates to physical objects responding to inner workings that prevent them from moving,
+		and altering that by pressuring them.
+			we could grow the idea of doorknobs by adding a string to the doorknob
+			yanking on the string turns the doorknob.  the door then sometimes jiggles out.
+			you have to yank twice now, once to turn the doorknob, and once to open the door.
+			it's more complex than drawers, but the path is much more harmonic because it uses
+			behaviors already known.
+				ideally we'd think of how they learned to open drawers, and what they know of it,
+				and provide a path to opening doorknobbed-doors, that A. uses what they already know,
+				B. gets them to use things they don't already know
+				C. keeps the newness the right amount that they develop strong understanding and could
+				   e.g. open a drawer with a turn-latch, afterwards.
+				 
+				so checkpoint 1 is to apply the new knowledge in an old situation
+				checkpoint 2 is to apply the new and old knowledge in a newer situation
+				checkpoint 3 is to learn newer situations on your own.
+				we want a smidge of checkpoint 3, ideally.
+
+			this might make it sound like we want to give an environment that is very similar to their existing one
+			but it seems we can e.g. nurture a lot of 3 in there, by giving them an environment that shows them
+			how to grow their own.  doors/drawers was an attempt to do this, may have failed.
+
+
+
+
+all our AI patterns are worn-out (labeled-poor, didn't-complete-within-a-couple-days.) [which relates to way more than just the pattern]
+
+ok let's say we choose from steps and run them.
+	what good steps could we start with?
+		choose-from-[these]-steps-[this]-way-and-run-them sounds good
+			-> implies sets of steps
+				-> implies considering what to add or remove to a set
+					-> kinda implies sets of sets
+			-> implies different processes that select and runs them
+
+		add-[this]-to-[that]-set
+		run-[this]-set-using-[that]-set
+
+let's consider priority-queues-as-basic-object
+		put-[this]-[there]-in-[that]-set
+		run-[this]-set
+
+we could consider a set of objects as a goal
+build-a-set-that-matches-this-one
+			that's doable but we want the system to grow
+			we could have the sets be the type-sets of nodes, and keep them ordered by having nodes link to queues
+			then types can hold meaning.
+				a set is now defined by a node and a type.
+			so if i want to build a set that matches 4-apples
+				i have to draw some meaning there.
+
+				4-apples, want-model: [in-set:item,in-set:item,in-set:item,in-set:item]
+				          want-category: apple
+				granny-smith, category: apple
+				red-delicious-3, category: apple
+		put-[this]-[there]-in-[that]-set
+		run-[this]-set-on-[that]-set
+
+			so the starting program is 2 sets, data and code
+				we can write code for sure that does the goal.  let's try it.
+		
+let's consider a simpler goal to help draw a path through
+	produce-final-state,-given-start-state,-and-tools-that-in-combination-could-move-to-final-state
+			like say we had computer tools like move memory, and we wanted a memory layout
+			say, load-from-address-into-register
+			move-from-register-into-address
+we're going to need a way to consider if behavior is good before trying it
+
+
+
+
+
+brute-force-AI:
+	strong reliability and persistence
+	poor choices, inadequate tools
+

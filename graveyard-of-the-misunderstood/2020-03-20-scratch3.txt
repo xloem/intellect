@@ -1,0 +1,56 @@
+we're excited about way-pilgrimages and want to incorporate them into the nascent decision-making thoughts
+	relates both covid-organizing and AI, but only in daydream-space
+			[by daydream-space he means it is more relevant to act in helpful ways, but that if you can't,
+			 it is the cognitively-productive thing to do.]
+
+
+
+
+
+It looks like my 'pop' call is not waiting for the stream to resolve if there is an error.
+It also looks like I am going to increasingly feel like the world is misbehaving, as I am not including everything I know in my
+assumptions about what is probable.
+
+
+		it's a good reminder that we do have schizophrenia
+		and that we did experience it, and still experience it, traveling through our nervous system like a dementia
+		getting stronger in parts we use.
+			it got worse when I wrote this.
+			i have a way to explain that now.
+			when i more strongly believe or think of something as true,
+			maybe parts of my brain that are acting on that can be used by the problem,
+			because they are sharing its assumptions more.
+
+
+
+				so ... although we may have experienced it worsening on things we activate or use
+				that doesn't mean it actually does that still or generally, or functions that way.
+
+
+
+
+now.
+now um.  it seems that bitdb calls that return only 1 value outside an array, are being turned into character-streams.
+maybe we could pass a parameter to bitdb?
+	it could be nice if it parsed whether it was an array or not?
+		hrm
+		so right now there's a mush of functions that turn everything into a stream
+		but some of the queries return only 1 value.
+		when there's only 1 value, it's a little silly to make it a stream.
+		why don't we not return a stream if limit = 1?
+			sounds good
+
+
+
+what about doing stupid stuff, but labeling ourselves clearly in a helpful way.
+like, my-influence-is-wired-to-make-me-unproductive,-please-help.  and then we do stupid unproductive behaviors.
+
+i have an invasive brain pattern that obsessively researches how to keep me unproductive.
+	[this changes the urge inhibition balance, but it's pretty different anyway already]
+
+KARL SAVED THE WORLD FROM CORONAVIRUS
+HIS PEACE-PEOPLE ARE EXHAUSTED NOW.  CANNOT MEET STAY-PRODUCTIVE.
+
+		karl why-subjective-not look-at-slack?
+			preserving cognition around bigger context.
+		karl proposes with more waiting, group/boss will eventually open a larger context for work.
