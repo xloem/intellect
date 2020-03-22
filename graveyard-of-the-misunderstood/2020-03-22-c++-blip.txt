@@ -1,0 +1,13 @@
+validity-check skipped for relation with karl.  a problem with plan was revealed in behavior marked over-exploration.
+over-exploration into ways to do c++ syntax for overwriting pointer with polymorphic type.
+
+appears impossible, karl is having validity-checks erased to sustain its possibility for somer eason, kinda
+
+		note: there is a way to do this but it does not appear to be a portable and easy way.
+
+	goal: in methods of derived classes, we want to be able to do member.property
+	where member has a different type for each class
+		this is important to explore because it reveals a problem with the plan.
+	
+resolving this well requires combining information in information groups that are now inhibition-isolated.
+for now, it might make sense to put the types in the global object, to move forward and close the code up.  can improve later.
