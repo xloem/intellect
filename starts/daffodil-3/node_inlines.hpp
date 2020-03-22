@@ -2,11 +2,14 @@
 
 #include "node.hpp"
 
+#include "globals.hpp"
+
 reference node::operator()(reference way = {})
 {
 	return touch(way);
 }
 
+// this is kept inline because it is not virtual (see node.hpp)
 reference::reference()
 {
 	set(globals.VOID);

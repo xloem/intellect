@@ -1,17 +1,17 @@
 # This makefile just wraps CMAKE.
 # Relevent targets are 'run' and 'debug'.
 
-run: build/main
-	build/main
+run: build-release/main
+	build-release/main
 
-debug: buildebug/main
+debug: build-debug/main
 	gdb buildebug/main
 
-buil%/main: buil%/CMakeCache.txt always-process
-	cd buil$* && make
+build-%/main: build-%/CMakeCache.txt always-process
+	cd build-$* && make
 
-buil%/CMakeCache.txt: CMakeLists.txt makefile
-	mkdir -p buil$*
-	cd buil$* && cmake .. -DCMAKE_BUILD_TYPE=$*
+build-%/CMakeCache.txt: CMakeLists.txt makefile
+	mkdir -p build-$*
+	cd build-$* && cmake .. -DCMAKE_BUILD_TYPE=$*
 
 always-process:

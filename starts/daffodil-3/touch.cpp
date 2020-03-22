@@ -1,9 +1,11 @@
-#include "touch.hpp"
+#include "daffodil.hpp"
 
+/*
 touch_ & globals_t::touch(reference node, reference way)
 {
 	return *new touch_(node, way);
 }
+*/
 
 reference touch_::touch(reference way)
 {

@@ -18,19 +18,35 @@ public:
 
 	inline touch_(reference node, reference way) { construct_touch(node, way); }
 
-	inline touch_ get_way() { return {globals.WAY, globals.GET}; };
-	inline touch_ get_node() { return {globals.NODE, globals.GET}; };
-
-	// new is called here in an inline function.  should only be called in virtual functions.
-	// in globals, we will want a virtual function to allocate something.
-	inline touch_ set_way(reference value) { return {globals.WAY, globals.touch(value, globals.SET)}; }
-	inline touch_ set_node(reference value) { return {globals.NODE, globals.touch(value, globals.SET)}; }
-
 	reference node;
 	reference way;
 
+	using type_t = struct touch_type_t;
+
 private:
+	friend type_t;
+	using node::operator new;
 	virtual void construct_touch(reference node, reference way) final;
 };
 
 using touch = touch_;
+
+struct touch_type_t {
+	::node NODE;
+	::node WAY;
+
+	/*
+	touch get_node;
+	touch get_way;
+	touch set_node;
+	touch set_way;
+
+	globals_t(::globals_t & globals);
+	: get_node(globals.NODE, globals.GET),
+	  get_way(globals.WAY, globals.GET),
+	  set_node(globals.NODE, create(globals.SET_VALUE, globals.SET)),
+	  set_node(globals.WAY, create(globals.SET_VALUE, globals.SET))
+	{ }
+	*/
+	virtual touch & create(reference node, reference way) { return *new touch(node, way); }
+};

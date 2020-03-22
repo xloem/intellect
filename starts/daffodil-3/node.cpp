@@ -1,4 +1,5 @@
 #include "node.hpp"
+#include "daffodil.hpp"
 
 reference node::touch(reference way)
 {
@@ -14,12 +15,6 @@ globals_t & node::_globals()
 {
 	return globals_t::storage;
 }
-
-globals_t globals_t::storage;
-
-globals_t::globals_t()
-: setup_done(YES)
-{ }
 
 void node::construct_node(bool heap)
 {

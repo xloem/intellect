@@ -31,12 +31,14 @@ public:
 	// make this protected to do abstract-virtual approach
 	inline node() : globals(_globals()) { construct_node(false); }
 protected:
+	void * operator new(std::size_t size);
 
 private:
 	virtual void construct_node(bool heap) final;
 
+	//std::any data;
+
 	friend class globals_t;
-	void * operator new(std::size_t size);
 	
 	friend class reference;
 	std::size_t reference_count;
@@ -69,43 +71,3 @@ private:
 
 	node * value = 0;
 };
-
-struct globals_t // defined in globals.cpp
-{
-	// import and export with a map of reference-to-reference
-	// with one entry for each node
-	
-	node VOID; // no-meaning-specified
-
-	node SUCCESS;
-	node FAILURE;
-	
-	node YES;
-	node NO;
-
-	node GET;
-	node SET;
-
-	
-	// it will likely make sense to make type information
-	// have its own thing, like in life-style-project
-	virtual class touch_ & touch(reference node, reference way);
-	node NODE;
-	node WAY;
-
-	/*
-	node ALL;
-	node ANY;
-	node NONE;
-	*/
-
-	reference const setup_done;
-
-private:
-	friend class node;
-
-	static globals_t storage;
-	globals_t();
-};
-
-#include "node_inlines.hpp"
