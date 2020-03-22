@@ -24,13 +24,18 @@ public:
 	virtual globals_t & _globals() final;
 	virtual reference _test();
 
-	inline node() : globals(_globals()) { construct_node(false); }
 	virtual ~node() noexcept(false);
 
 	globals_t & globals;
 
+	// make this protected to do abstract-virtual approach
+	inline node() : globals(_globals()) { construct_node(false); }
+protected:
+
 private:
 	virtual void construct_node(bool heap) final;
+
+	friend class globals_t;
 	void * operator new(std::size_t size);
 	
 	friend class reference;
@@ -78,6 +83,16 @@ struct globals_t // defined in globals.cpp
 	node YES;
 	node NO;
 
+	node GET;
+	node SET;
+
+	
+	// it will likely make sense to make type information
+	// have its own thing, like in life-style-project
+	virtual class touch_ & touch(reference node, reference way);
+	node NODE;
+	node WAY;
+
 	/*
 	node ALL;
 	node ANY;
@@ -85,6 +100,7 @@ struct globals_t // defined in globals.cpp
 	*/
 
 	reference const setup_done;
+
 private:
 	friend class node;
 
