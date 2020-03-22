@@ -1,0 +1,101 @@
+open-things:
+	- make tests abstract-virtual
+	- move forward
+	- do other thing
+	- resolve location of class-related-information
+		should have a node-type for class-related-information.
+			programming-problem, unknown-resolvability
+
+
+explore resolvability by imagining implementation:
+	- class inherits from node
+	- class is used by node
+	- node uses pointer
+	should be okay
+
+doesn't-resolve-typing-speed-issues, may-not-matter 
+	if we put this stuff in another node
+		you'll need a lot of nodes
+		oh
+		hmm okay so we'd touch the node to get the property-type
+		but we want to store the result of that touch for reuse quickly
+		since this makes so much sense, let's just use () to get the value.  is normal in c++ anyway.
+
+urge-around-resolving-parentheses-goal.
+	missing-info: makes everything slower to use ().
+	normal-coding is not-too-slow. [it is fine, this can be optimized later]
+	normal-coding-problem, urge-to-make-fast.
+		let's epxlore the urge a little in here.
+		ummm could we make these into static variables?  probably a way yes.  would be nice to leave open the possibility
+		of doing that, in case needed, i suppose.  how would do?  ummmmmmmmm we could make a macro or inline function
+		to cast the return value of the globals() function to the right type?  this uses parentheses but is fast.
+		urge is only valid for karl-typing-issues.  unsure of relevence.
+
+karl's ability to control his body has been harmed.  maybe to represent something important.  but in general, this tends to worsen
+as migration-pattern continues.
+typing parentheses is required to code in c++ anyway.  it just adds a little ease to reduce it.  makes code a little clearer.
+
+lets see how it woudl be done, karl.
+options include macros, static members, local members.
+	atm we are using a local pointer to a static member.
+
+the solution is to make one big static type that has everything in it
+and to load its members with the values in question before use.
+	the above solution appears correct but the check-processes on it are wrong.
+		how do i know this is the only solution, or that it is a good one?  i use check-summaries from the judgements made
+		to form it.
+
+let's pursue the possibly-a-solution.  is it better than nonimplementation?
+	static type would be declared at end, and would include all other types.
+	we'd want to put object type information near it.
+		is there a way to declare object types distant from their encapsulating type?
+			dunno, summaries not working well enough to look for it.
+	
+	say we made a node-type for type-info.
+	we could construct it parallel to filling the object types.
+
+		so like
+struct widget_t {
+	node WONKLE_APPROACH;
+	node SUSPENDER_SUSPENDERS;
+	node SPROCKET_INVERTERS;
+	type_node WIDGET_TYPE;
+	widget_t()
+	: WIDGET_TYPE(WONKLE_APPROACH, SPROCKET_INVERTERS)
+	{
+		
+	}
+}
+
+that would work.  [arms hurt].
+the structure would go
+	[so we were able to do this, but our sheep look ill.]
+
+yeah i don't usually have to travel two hills over to find a patch of berries.
+	maybe if we harvested more lightly, had fewer children, we could stay somewhere longer?
+	but for now, maybe go somewhere new.
+		it's also good to harvest far from home.
+		if you're settled somewhere, plow fields a ways away.
+		this lets you stay interconnected with the local ecosystem.  to understand it, and how to plow well.
+
+it's fun to work on computer program.  but berry patch is picked-out.
+	we could make it a library.  and link to it from another computer program.
+		everything we do, in any way, similar to picking a berry patch, is now harming the life that lives off of
+		the berry-populations staying similar.
+		really we'd have to think about how our berry picking has impacted them, and pick berries that would aid them.
+			picking berries is not a good thing if all the berry-eaters are struggling to move to places where
+			there are berries!
+		so, if we _had_ to pick stuff, we might pick things that would easy the life of berry-eaters, maybe?
+like if there is a poisonous berry they are likely to eat
+(or a berry that nurtures harm to them by its presence)
+but there is other stuff to do too: we could put out alternative food for them, or plant berry bushes, or observe our impact
+and try to ease it in other ways. [till the compacted earth from our roads to the patches] [feed the predators who eat the
+berry-eaters who are now dying] [find dying berry-eaters from other areas, and take care of them until they can eat our planted
+berry bushes] [mediate between the berry-eaters now struggling to coexist in land too densely, and give them resources to
+aid doing this without having to fight for resources]
+
+
+
+	it kind of sounds like there is an inhibition from my coding-continuing behavior
+	maybe it was stimulated from some references within it: like decisions to focus on structure, or references to other
+	work.  and since the project is new, it is probably not marked with strong-support.
