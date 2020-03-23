@@ -5,7 +5,7 @@ run: build-release/main
 	build-release/main
 
 debug: build-debug/main
-	gdb buildebug/main
+	gdb build-debug/main
 
 build-%/main: build-%/CMakeCache.txt always-process
 	cd build-$* && make

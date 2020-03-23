@@ -1,73 +1,60 @@
 #pragma once
 
 #include <cstddef>
+#include "platform.hpp"
 
-// two problems:
-// 1. we want link access
-// 2. we want allocation to be storable.
-//	We want to be able to make bubbles that _don't_ reference each other, and can be loaded / unloaded, copied, etc.
-//		For imagination, we propose copy.
+// - [ ] do not let reference alter objects with static storage, (see TODO at bottom of this file)
+// 			might make sense to add a static storage detector to platform.hpp
+// - [ ] link access
+// - [ ] storable-and-copyable-bubbles
+// - [ ] make node virtual-abstract so that each derived class must implement the important functions
 
 class reference;
-struct globals_t;
 
 // In case self-binary-modification is desired, all functions
-// are made virtual, for ease of relocation.
+// are made virtual or inline, for ease of relocation.  More in platform.hpp .
 
 class node
 {
 public:
-	inline reference operator()(reference way); // defined in node_inlines.hpp
 	virtual reference touch(reference way);
-	virtual operator reference() final;
-
-	virtual globals_t & _globals() final;
 	virtual reference _test();
+
+	virtual reference operator() final (reference way);
+	virtual operator reference() final;
 
 	virtual ~node() noexcept(false);
 
-	globals_t & globals;
-
 	// make this protected to do abstract-virtual approach
-	inline node() : globals(_globals()) { construct_node(false); }
+	inline node(char const *note = 0) { construct_node(false, note); }
 protected:
 	void * operator new(std::size_t size);
 
 private:
-	virtual void construct_node(bool heap) final;
+	virtual void construct_node(bool heap, char const * note) final;
 
-	//std::any data;
+	char const * note;
 
-	friend class globals_t;
-	
 	friend class reference;
 	std::size_t reference_count;
-	bool reference_delete;
+	bool reference_delete; // TODO: this could be true or false before initialization.
+				// reference counting should properly only impact values allocated to use it.
+				// we also want to refer to values that aren't.
 };
 
-class reference : private node // defined in reference.cpp
-{
-public:
-	virtual reference touch(reference way) final override;
 
-	inline reference(); // defined in node_inlines.hpp
-	inline reference(reference const & other) { set(other); }
-	virtual ~reference();
+define(node, VOID);
 
-	virtual reference & operator=(reference const & other);
-	virtual bool operator==(reference const & other) const;
-	virtual bool operator!=(reference const & other) const;
+define(node, SUCCESS);
+define(node, FAILURE);
 
-	virtual reference _test() override;
+define(node, YES);
+define(node, NO);
 
-private:
-	friend class node;
+define(node, GET);
+define(node, SET);
+define(node, SET_VALUE);
+define(node, TYPE);
 
-	inline reference(node * what) { set(what); }
-
-	virtual void remove();
-	virtual void set(node * to_what);
-	virtual void set(reference const & to_what);
-
-	node * value = 0;
-};
+define(node, NODE);
+define(node, WAY)

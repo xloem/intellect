@@ -1,6 +1,11 @@
 #include "node.hpp"
 #include "daffodil.hpp"
 
+reference node::operator(reference way)
+{
+	return touch(way);
+}
+
 reference node::touch(reference way)
 {
 	throw "LOGIC_ERROR: TOUCHED ABSTRACT NODE";
@@ -11,13 +16,9 @@ node::operator reference()
 	return reference(this);
 }
 
-globals_t & node::_globals()
+void node::construct_node(bool heap, char const * note)
 {
-	return globals_t::storage;
-}
-
-void node::construct_node(bool heap)
-{
+	this->note = note;
 	reference_count = 0;
 	reference_delete = heap;
 }
@@ -44,5 +45,5 @@ void* node::operator new(std::size_t size)
 reference node::_test()
 {
 	std::cout << "STUB: node test" << std::endl;
-	return globals.SUCCESS;
+	return SUCCESS();
 }

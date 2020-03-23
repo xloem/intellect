@@ -48,10 +48,12 @@ void reference::remove()
 
 void reference::set(reference const & to_what)
 {
+	/*
 	if (this != &globals.setup_done && globals.setup_done != globals.YES) {
 		// globals_t::storage has unconstructed refcounted nodes
 		throw "LOGIC ERROR: reference used statically";
 	}
+	*/
 	set(to_what.value);
 }
 
@@ -82,8 +84,8 @@ public:
 	: constructed(true) { }
 
 	reference touch(reference way) override {
-		if (way == globals.GET) {
-			return constructed ? globals.YES : globals.NO;
+		if (way == GET()) {
+			return constructed ? YES() : NO();
 		}
 		return *this;
 	}
@@ -100,8 +102,8 @@ reference reference::_test()
 	// i.e. reference n = new test_node();
 	// and looking at how that might work, it could be nice to have reference be a template or there to a templated reference.
 	// ALTERNATIVELY we could step straight into the touching-ways.
-	if (n.constructed != true) { return globals.FAILURE; }
+	if (n.constructed != true) { return FAILURE(); }
 	reference r(n);
-	if (r(n) != n) { return globals.FAILURE; }
-	return globals.SUCCESS;
+	if (r(n) != n) { return FAILURE(); }
+	return SUCCESS();
 }

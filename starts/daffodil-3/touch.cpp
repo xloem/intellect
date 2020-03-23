@@ -9,8 +9,8 @@ touch_ & globals_t::touch(reference node, reference way)
 
 reference touch_::touch(reference way)
 {
-	if (way != globals.VOID && way != node && way != *this) {
-		return globals.FAILURE;
+	if (way != VOID() && way != node && way != *this) {
+		return FAILURE();
 	}
 	return node.touch(this->way);
 }

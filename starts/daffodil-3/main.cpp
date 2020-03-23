@@ -6,7 +6,7 @@ class main_node : public node
 public:
 	virtual reference touch(reference arg) override
 	{
-		final_result = globals.SUCCESS;
+		final_result = SUCCESS();
 
 		node n;
 		handle("node", n._test());
@@ -21,7 +21,7 @@ private:
 	virtual void handle(char const * name, reference result)
 	{
 		std::cout << name << ": ";
-		if (result != globals.SUCCESS) {
+		if (result != SUCCESS()) {
 			std::cout << "non-success";
 			final_result = result;
 		} else {
@@ -36,7 +36,7 @@ private:
 int main()
 {
 	main_node the_main;
-	if (the_main() == the_main.globals.SUCCESS) {
+	if (the_main() == SUCCESS()) {
 		std::cout << "Success." << std::endl;
 		return 0;
 	} else {
