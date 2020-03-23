@@ -3,8 +3,9 @@
 #include <cstddef>
 #include "platform.hpp"
 
-// - [ ] generalize type information [generalize property access, possibly touch usage]
 // - [ ] convert touch() into a function pointer
+// - [ ] port define() to other platforms to ease reuse
+// - [ ] generalize type information [generalize property access, possibly touch usage]
 // - [ ] make node virtual-abstract so that each derived class must implement the important functions
 // - [ ] link access (is this same as previous line?)
 // - [ ] storable-and-copyable-bubbles
@@ -20,7 +21,6 @@ class reference;
 class node
 {
 public:
-
 	define(node, VOID);
 	
 	define(node, SUCCESS);
@@ -28,23 +28,28 @@ public:
 	
 	define(node, YES);
 	define(node, NO);
-
+	
 	define(node, GET);
 	define(node, SET);
+
 	
-	virtual reference touch(reference way);
 	virtual reference _test();
 
 	virtual reference operator()() final;
 	virtual reference operator()(reference way) final;
-	virtual operator reference() final;
+	virtual operator reference() final; // TODO: split this into two functions, one to reuse references, one to reference them as separate
 
 	virtual ~node() noexcept(false);
 
 	// make this protected to do abstract-virtual approach
-	inline node(char const *note = 0) { construct_node(false, note); }
+	strong_inline node(char const *note = 0) { construct_node(false, note); }
 protected:
 	void * operator new(std::size_t size);
+
+	using behavior = reference(*)(reference self, reference way);
+	behavior touch_behavior = 0;
+
+	// we could use static_touch<Type>() to produce function pointer to member.  member should be inline non-virtual class method.
 
 private:
 	virtual void construct_node(bool heap, char const * note) final;
@@ -57,4 +62,5 @@ private:
 				// reference counting should properly only impact values allocated to use it.
 				// we also want to refer to values that aren't.
 };
+
 

@@ -1,20 +1,24 @@
+#include <iostream>
 #include "touch.hpp"
 
-#include <iostream>
 class main_node : public node
 {
 public:
-	virtual reference touch(reference arg) override
+	main_node() { touch_behavior = main_node::touch; }
+
+	static reference touch(reference _self, reference arg)
 	{
-		final_result = SUCCESS();
+		main_node & self = *(main_node*)_self.value();
+
+		self.final_result = SUCCESS();
 
 		node n;
-		handle("node", n._test());
+		self.handle("node", n._test());
 
 		reference r(n);
-		handle("reference", r._test());
+		self.handle("reference", r._test());
 
-		return final_result;
+		return self.final_result;
 	}
 
 private:

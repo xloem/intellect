@@ -16,7 +16,6 @@ public:
 	define(::node, NODE);
 	define(::node, WAY);
 
-	virtual reference touch(reference way) override;
 	virtual ~touch_() = default; // virtual destructor needed for arbitrary allocation patterns if class can be derived from
 
 	inline touch_(reference node, reference way) { construct_touch(node, way); }

@@ -17,7 +17,16 @@ public:
 
 	std::unordered_map<reference, reference> properties;
 	std::unordered_set<reference, doer> ways;
+
+	virtual bool is_type(reference node) = 0;
 }
+
+template <typename T>
+class class_typed_node
+{
+	//virtual bool is_type
+};
+
 
 class type : public typed_node
 {

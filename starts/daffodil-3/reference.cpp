@@ -1,14 +1,16 @@
 #include "node.hpp"
 #include "reference.hpp"
 
-reference reference::touch(reference way)
+reference reference_touch(reference _self, reference way)
 {
-	return (*value)(way);
+	// TODO: self is converted to a reference to self in node, don't do that
+	reference & self = *(reference*)_self.value();
+	return (*self.value())(way);
 }
 
 reference::~reference() noexcept(false)
 {
-	if (value == 0) { throw "CORRUPTION: MULTIPLE FREE"; }
+	if (_value == 0) { throw "CORRUPTION: MULTIPLE FREE"; }
 	remove();
 }
 
@@ -21,26 +23,26 @@ reference & reference::operator=(reference const & other)
 
 bool reference::operator!=(reference const & other) const
 {
-	return value != other.value;
+	return _value != other._value;
 }
 
 bool reference::operator==(reference const & other) const
 {
-	return value == other.value;
+	return _value == other._value;
 }
 
 void reference::remove()
 {
-	if (value != 0) {
-		-- value->reference_count;
-		if (value->reference_count < 0) {
+	if (_value != 0) {
+		-- _value->reference_count;
+		if (_value->reference_count < 0) {
 			throw "CORRUPTION: EXCESSIVE DEREFERENCE";
 		}
-		if (value->reference_count == 0) {
-			if (value->reference_delete) {
-				delete value;
+		if (_value->reference_count == 0) {
+			if (_value->reference_delete) {
+				delete _value;
 			}
-			value = 0;
+			_value = 0;
 		}
 	}
 }
@@ -53,16 +55,17 @@ void reference::set(reference const & to_what)
 		throw "LOGIC ERROR: reference used statically";
 	}
 	*/
-	set(to_what.value);
+	set(to_what._value);
 }
 
 void reference::set(node * to_what)
 {
+	touch_behavior = reference_touch;
 	if (to_what == this || to_what == 0) {
 		throw "LOGIC ERROR: REFERENCE TO NOTHING";
 	}
-	value = to_what;
-	++ value->reference_count;
+	_value = to_what;
+	++ _value->reference_count;
 }
 
 // i'd like a way for getting the constructed value from the touch.
@@ -80,13 +83,14 @@ struct test_node : public node
 {
 public:
 	test_node()
-	: constructed(true) { }
+	: constructed(true) { touch_behavior = test_node::touch; }
 
-	reference touch(reference way) override {
-		if (way == GET()) {
-			return constructed ? YES() : NO();
+	static reference touch(reference _self, reference way) {
+		test_node & self = *(test_node*)_self.value();
+		if (way == node::GET()) {
+			return self.constructed ? node::YES() : node::NO();
 		}
-		return *this;
+		return self;
 	}
 
 	bool constructed;
