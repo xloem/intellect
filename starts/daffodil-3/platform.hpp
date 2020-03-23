@@ -7,7 +7,7 @@
 #if defined(__x86_64__)
 #define define(Type, NAME)\
 	__attribute__((always_inline))\
-	inline Type & NAME() { return absolute_reference<Type, __COUNTER__>(#NAME); }
+	static inline Type & NAME() { return absolute_reference<Type, __COUNTER__>(#NAME); }
 template <typename T, size_t id> __attribute__((always_inline))
 inline T & absolute_reference(char const *note)
 {

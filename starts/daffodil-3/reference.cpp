@@ -1,6 +1,5 @@
 #include "node.hpp"
-
-#include "daffodil.hpp"
+#include "reference.hpp"
 
 reference reference::touch(reference way)
 {

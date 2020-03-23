@@ -1,7 +1,12 @@
 #include "node.hpp"
-#include "daffodil.hpp"
+#include "reference.hpp"
 
-reference node::operator(reference way)
+reference node::operator()()
+{
+	return touch({});
+}
+
+reference node::operator()(reference way)
 {
 	return touch(way);
 }

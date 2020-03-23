@@ -1,6 +1,6 @@
 #pragma once
 
-#include "node.hpp"
+#include "reference.hpp"
 
 // let's try to use touch to make getters and setters
 // so we could make a touch that says NODE->GET, and respond to it with the node.
@@ -13,6 +13,9 @@
 class touch_ : public node
 {
 public:
+	define(::node, NODE);
+	define(::node, WAY);
+
 	virtual reference touch(reference way) override;
 	virtual ~touch_() = default; // virtual destructor needed for arbitrary allocation patterns if class can be derived from
 

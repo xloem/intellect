@@ -3,12 +3,14 @@
 #include <cstddef>
 #include "platform.hpp"
 
-// - [ ] do not let reference alter objects with static storage, (see TODO at bottom of this file)
-// 			might make sense to add a static storage detector to platform.hpp
-// - [ ] generalize property access, possibly touch usage
+// - [ ] generalize type information [generalize property access, possibly touch usage]
+// - [ ] convert touch() into a function pointer
+// - [ ] make node virtual-abstract so that each derived class must implement the important functions
 // - [ ] link access (is this same as previous line?)
 // - [ ] storable-and-copyable-bubbles
-// - [ ] make node virtual-abstract so that each derived class must implement the important functions
+// - [ ] do not let reference alter objects with static storage, (see TODO at bottom of this file)
+// 			might make sense to add a static storage detector to platform.hpp
+// 		-> the change to access things by functions probably makes this much less needed
 
 class reference;
 
@@ -18,10 +20,23 @@ class reference;
 class node
 {
 public:
+
+	define(node, VOID);
+	
+	define(node, SUCCESS);
+	define(node, FAILURE);
+	
+	define(node, YES);
+	define(node, NO);
+
+	define(node, GET);
+	define(node, SET);
+	
 	virtual reference touch(reference way);
 	virtual reference _test();
 
-	virtual reference operator() final (reference way);
+	virtual reference operator()() final;
+	virtual reference operator()(reference way) final;
 	virtual operator reference() final;
 
 	virtual ~node() noexcept(false);
@@ -43,19 +58,3 @@ private:
 				// we also want to refer to values that aren't.
 };
 
-
-define(node, VOID);
-
-define(node, SUCCESS);
-define(node, FAILURE);
-
-define(node, YES);
-define(node, NO);
-
-define(node, GET);
-define(node, SET);
-define(node, SET_VALUE);
-define(node, TYPE);
-
-define(node, NODE);
-define(node, WAY)

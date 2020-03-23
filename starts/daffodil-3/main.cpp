@@ -1,4 +1,4 @@
-#include "daffodil.hpp"
+#include "touch.hpp"
 
 #include <iostream>
 class main_node : public node
@@ -36,7 +36,7 @@ private:
 int main()
 {
 	main_node the_main;
-	if (the_main() == SUCCESS()) {
+	if (the_main() == node::SUCCESS()) {
 		std::cout << "Success." << std::endl;
 		return 0;
 	} else {
