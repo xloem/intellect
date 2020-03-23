@@ -5,7 +5,8 @@
 
 // - [ ] do not let reference alter objects with static storage, (see TODO at bottom of this file)
 // 			might make sense to add a static storage detector to platform.hpp
-// - [ ] link access
+// - [ ] generalize property access, possibly touch usage
+// - [ ] link access (is this same as previous line?)
 // - [ ] storable-and-copyable-bubbles
 // - [ ] make node virtual-abstract so that each derived class must implement the important functions
 
