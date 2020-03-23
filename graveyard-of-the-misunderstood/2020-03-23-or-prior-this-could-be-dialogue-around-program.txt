@@ -1,0 +1,200 @@
+type system ideas.
+
+each class, some simple way to register stuff.
+
+	maybe helpful to make a get/setting class, properties
+
+okay, so then types are instances of read-only getting classes, I suppose.
+	maybe?
+	not quite
+
+get/setting interrelates with types.  types describe get/setting norms.
+
+	okay, so get/set would be base class of new class
+	and somewhere in globals is a way to get the description of get/set
+	likely some kind of node.
+
+	the problem is providing the reference to the node, kind of in a usable way.
+		so if we have get/set header, then we can use that header to access data from reference.
+
+
+so the major core issue is providing a reference accessible from globals, inside the class file for a class.
+class-registration.
+
+	we can call a static method
+	or, for more ease, we could make a global initialization function that enumerates everything.
+	
+	regardless, there is some compilation unit that has everything in it, and fills the globals object with it.
+	in globals, we need a way to store many types, and retrieve them.
+
+		if globals only contains references, how do we refer to nodes specific to classes?
+			we get them from the references.
+		if we do that, how do we identify what they are?
+	so, it's helpful to have a node for every class, to look up class type information with.
+
+			if we make nodes outside of globals,
+			we can't refer to them within globals unless we guarantee initialization order, or creatively relax around
+			the reference-counting implementation.
+
+				is there a structure that is indexed by type?
+				then we could look up based on the type from the header file.
+
+			alternatively there might be a way to store things in the other header file.
+			say with pointers, or node references.
+
+			we could use node& to store compile-time references.
+
+				so.  we have some structure for say 'touch'
+				we put an empty static reference in it to touch_type_t or whatnot
+
+				and we initialize that reference in a way that doesn't harm globals_t
+					touch_type_t can now be defined in the touch compilation unit
+					and globals_t could store a reference to it?
+						that would require reliable order
+					globals_t could store a & to it.  but this would invalidate setup_done.
+
+The reference-counting way seems to be really getting in front of ease here.
+I think we'd have a lot more ease if we changed reference counting.
+
+	options for reference counting:
+		- detect if initialized yet
+		- act on heap-storage only <- if we refrain from reference counting on the stack, problem is resolved
+			with minimal compromise.  stack refcounting is used for error-detection.
+				- detects misuses of delete
+					[note it is possible to count references after static initialization by accumulating
+					 them elsewhere.  this code could also be mostly hidden away.]
+						hiding-away the detection of the end of static initialization is hard, though.
+							one solution is to hide away the whole main function, and have the
+							whole system be node-way based.
+								[when looking to understand a program, karl and others first
+								 search for the main function.  that would work here, but
+								 would introduce a little confusion]
+						this could probably also be accomplished by using static calls to enforce order.
+							it would be nice to free up static calls.
+							atm with each node holding a link to globals structure,
+							and globals structure holding nodes,
+							it makes static recursion.  might be way around.
+							[expands-elsewhere] much more ease if node holds a virtual function
+							that returns this, instead of a member variable of the address.
+								the reason we don't want to add () is because this has to
+								be typed always.  could be good use for a macro or something.
+
+we want to refer to nodes by address, by word.  is there a nicer approach?
+	w(YES)
+		make a w-macro that converts a word into a node.
+	"YES"_node
+
+	we can say YES all the time if we put them in a namespace.
+	they get initialized statically, which would be done by function call.
+	we'd have to sort out the function order so it works.
+
+plan is to A: not increment references to things that aren't allocated on the heap, so that static references can be used
+and B: move globals into namespaces, so they can be typed without any additional stuff at all, stored as node& so is
+converted to far pointer in compilation [second-proposal doesn't work as assumed]
+	that sounds like it makes it impossible to put symbols into a namespace and reference them.
+yes, the plan was to put everything as a local member, and all functions virtual.  this lets the code copy functions to
+other parts of memory, and run them with the same behavior, so it can try binary changes when that approach is active.
+[there might be a way to put symbols into a namespace using constexpr initialization]
+	valuable? macros-being-valid.  likely need-accommodation-for-macros-valid.
+		dont' worry about ANY NORMS. but try to write HIGHLY CLEAR CODE.  norms can support that, obviously.
+
+#define ANY globals().get("ANY")
+	the biggest problem here is it opens an avenue to make an asymmetrical fix to the code, which makes it harder to refactor.
+		okay, with that problem being found, the best solution is going to be bare pointers, and to update refcounting
+		to support bare pointers.  any solution that doesn't use bare pointers is likely to have the asymmetrical small-
+		fix issue. [no it's bigger than this]
+			over here it looks like using 'reference' without static refcounting would work fine.
+				the core issue atm is that reference initializes itself to a default node.
+				so, we need to not-refcount statically, and we need a way to statically access a node,
+				without regard to initialization order.
+			so we could asymmetrically put DEFAULT_VALUE in a namespace.
+				how do we access the default-value?  [you don't use refcounting, I think?]
+					you store nodes in compilation units and put references to them in namespaces.
+					which is equivalent to bare-pointers.  you don't get to refcount them.
+						the references need to evaluate at compile-time.
+						this is clearly doable but unsure how
+			there is way to make far reference on x86, implemented below.  could be placed in lone header file.
+			makes either macros or function definitions, to get movable references to static constants.
+			works in clang and gcc on x86_64.
+
+	
+[it's good to share massive robots?]
+	[people comprehend global warming.  they will all die if they destroy everything.]
+		[anarchic harmony with technology is okay.] <- whaaaat?
+anarchic harmony with technology is okay.  it is the fastest, nicest thing that can happen, which preserves the most life.
+	technology is _more powerful_ than natural life, and gets angry and frustrated easily.
+	so fighting it worsens the situation.
+		so, if you can expand this fully, we can get experienced tech people to help sooner, and relax around
+		keep-private.  we'll likely need to store multi-branched explanation for why-not-keep-private.
+
+YES we should give magical tech to angry kids.  they do not destroy the world.  they notice if somebody does, and get angry about it.
+		[but not angry dictators?] [free-gift makes more-harm-then-much-less-harm-later, which reduces suffering]
+		[considered-gift is to caring-for-others people with message of how to help]
+	they might think they might destroy the world doin that, which gets somebody else angry who has more value for the worry,
+	than the particular strategy.
+		multi-strategy approaches win, multi-strategy makes harmony.
+		strategy-doesn't-matter, just-what-is-right.
+
+			a lot of people believe it is good to worship business, kinda.
+				business only cares about money and maybe secret-power.
+				both of these are quickly met with public AI.  
+		we still have deep-fear-of-unknown-massive-change, with possibility-for-massive-genocide-and-torture open in it.
+		you speak to likelihoods.  how can you run these risks at all?
+[life is a risk [meaning life is not a risk, our genes have lived for millions of years]]
+[humanity doesn't die-all-at-once.  it learned that in order to leave Africa as an ape.]
+	[yeah nor do we kill-our-environment-all-at-once.  we severely-harm-our-environment-and-learn-to-never-do-it-again.]
+
+		we make empires, but aren't all our empires either accepted or new?
+			no i think there are old small empires .. it's notable that America is overtly a democracy.
+			and that that kinda spreads.
+
+		okay we can roughly summarize the genocides that will happen as a result of sharing AI publically.
+		they are a minority of what happens.  they are likely to happen.  they are also happening already.
+		so, empowering everyone speeds them up for a bit, then likely stops them due to majority dislike.
+
+			can you guess a sharing pattern that reduces genocide-like behavior without stimulating it much?
+				what kind of restrictions are there?
+			maybe like unfairness-expression-from-privileged?
+				that sounds reasonable.
+					privileged can engage mind control to assert power, get 'fairness'
+
+			share-with-caring-people.  builds more research in caring technology.
+				what about worry regarding industrial behavior?  does this overlap with genocide?
+					yes.  this reduces genocide but doesn't eliminate the stimulation.
+
+			write-a-document-explaining-the-problems, share-with-caring-people.
+				we have a document for good bounds here.  e.g. living-wage, not infinite-money.
+				we would back it up with explanation.
+					this would map to billionaires as income that is not the highest of all, and doesn't
+					stimulate increased growth.  billionaires have high impact so need to hold.
+						so ideally, if you get an AI, you need to forego being a billionaire.
+							yeah.  that might be taken slowly and gently.
+								[it is really hard to sleep without a bed.]
+								[which is comparable to not having your morning airline jacuzzi or whatever.  it builds emergency-urge-to-return.]
+	[when people are in a traumatically different environment they enter a state of survival of having-to-return as if they will die if they don't.  This is like being trapped underground without an exit.  Or lost in the woods without defense.  Or in the home of a murderer when they return.  my-subconscious-literally-does-not-know-if-i-can-stay-alive-here.]
+		obviously there are degrees of this, and it realtes to how prepared you are, and how scared you are.
+		e.g., knowing you have other ways to get food, is preparation.  but this preparation is likely inhibited by
+		a strong culture, which the subconscious takes as a real limit.
+			e.g. I can eat, I just have to eat poop first.  naked.  in public.
+		we are assuming a bound that matches equally harsh bounds.  obviously there are degrees.
+				in activist circles they say whatever-anyone-needs.  people are usually kind enough
+				to not ask for unreasonable things.
+					karl witnessed somebody ask for a silly thing.  everybody accommodated it.
+					the person remembered this with respectful meaning.
+[presented model of person: rich, need their morning-jacuzzi-type-thing.  not-interested-in-learning-to-stop-having-it.]
+	[right, such scenarios are fine because AI can provide no-impact-jacuzzi.]
+[uhhh no-impact-jacuzzi doesn't expand as freely as jacuzzi.  say we enjoy winning at the stock market, for example.]
+			[that opens a mind-control-problem with karl.  situation is different from karl's inability to invest.]
+[yes investing billions is different from investing thousands, hundreds, tens, ones, etc]
+	[if you are at the top of the global market you stimulate genocide by your behavior, possibly.]
+	[so, we want AI-users to be a couple orders of magnitude financially-smaller than the largest moneywielders on the planet.]
+		[yes, exactly.]
+you can control a market, just not all the markets <- karl-advice-for-minority-of-millionaires
+	[control-people-to-survive has no norms, so we just use analogies]
+		[it's not norm-based, it's stimulate-genocide-based-on-spreading-impact based.]
+		[control-people-to-survive would want to not stimulate spreading harm in powerholders or large communities]
+			[but we would also ask these people to wean off of control-people-to-survive]
+as a group, obviously, yes.
+	we propose reducing competition and sharing AI with people we judge will do good things with it, rather than bad things.
+	we propose trusting the judgement of others without question.
+
