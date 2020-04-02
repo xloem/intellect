@@ -1,7 +1,7 @@
 #pragma once
 
 // Compiled code has 'far' and 'near' pointers/references.
-// The deafult is 'near' references, which are written as relative
+// The default is 'near' references, which are written as relative
 // to where in the code they are, so they break if the code is
 // moved for trying changes.
 
@@ -26,6 +26,14 @@ strong_inline T & far_static_reference(T & static_object)
 	return *pointer;
 }
 #endif
+
+// make a far static reference to a string
+template <typename Letter, Letter... letters>
+strong_inline Letter const * operator""_far()
+{
+	static Letter storage[] = { letters ..., 0 };
+	return far_static_reference(storage);
+}
 
 // define an inline function that returns a far static reference to a new static object
 #define define(Type, NAME)\
@@ -76,7 +84,7 @@ struct member_function
 {
 private:
 	template<typename class_type, typename... value_types>
-	static auto static_call(class_type & object, value_types... values)
+	static auto static_call(class_type & object, value_types... values) noexcept // noexcept simplifies, and removes near call
 	{
 		return (object.*member_function_pointer)(values...);
 	}
