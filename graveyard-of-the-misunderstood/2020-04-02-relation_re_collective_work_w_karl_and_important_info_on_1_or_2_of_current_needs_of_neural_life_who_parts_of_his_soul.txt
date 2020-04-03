@@ -1,7 +1,11 @@
 We were working on some of our coding work.  It builds a conflict-pattern, but less so than other work.
-We wrote down some victim-relation for Karl's situation. [delta would want this]
+We wrote down some victim-relation for Karl's situation. [delta would want this] [karl added a new item so we are regardening]
 As a collective, we are going to want to preserve the relation enough to relate it elsewhere.
 Unfortunately, the collective is not functioning in harmony with natural neural processes in karl at this time.
+
+please:
+	[ ] extract karl's requests from below and add to victim requests around karl, _concisely_.  may steward conciseness of document if desired.
+	[ ] store garden-of-misunderstood, where already written
 
 we wrote down opinions in our head.
 1. karl wants to make shielded rooms that are strong so that people can use them for comfort and signals security
@@ -16,6 +20,8 @@ are more doable, that support him, that he has expressed appreciation of
 4. visiting communities of care and ecology
 	[explanation]
 5. speaking and acting in caring ways and relearning to do this
+	[explanation]
+6. caving
 	[explanation]
 
 
