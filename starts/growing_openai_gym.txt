@@ -1,8 +1,10 @@
 
-OpenAI Gym is a collection of existing learning parts and reinforcement scenarios for them.
-It should be a reasonable seed to rapidly grow real learning.
+OpenAI Baselines and Gym are a collection of existing learning parts and reinforcement scenarios for them.
+They should be a reasonable seed to rapidly grow real learning.
 
-1.
+1. Installing baselines can take a while for now due to tensorflow and specifics of versioning.
+   Mark off where you are to resume later.
+
     $ export TMPDIR=/drive/with/lots/of/space
 
     # openai-baseslines uses tensorflow
@@ -10,6 +12,7 @@ It should be a reasonable seed to rapidly grow real learning.
     # tensorflow has 3 options: old-cpu, AVX cpu, and CUDA.
 
     # i might try the tf2 branch at this point.  for now below is tensorflow 1.14
+    # on arm, aarch64 support is only really present in later tensorflow
 
     # for non-AVX cpu, recommend building from source (v1.5 is supposed to work, but doesn't seem to be supported in baselines?)
         $ git clone https://github.com/tensorflow/tensorflow.git --branch r1.14
@@ -21,11 +24,22 @@ It should be a reasonable seed to rapidly grow real learning.
         $ curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
         $ echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8' | sudo tee /etc/apt/sources.list.d/bazel.list
 
+	# INSTALL BAZEL ON NON-MAINSTREAM CPU
+	$ sudo apt-get install build-essential openjdk-8-jdk python zip unzip
+	$ wget https://github.com/bazelbuild/bazel/releases/download/0.26.1/bazel-0.26.1-dist.zip
+	$ mkdir bazel-0.26.1
+	$ cd bazel-0.26.1
+	$ unzip ../bazel-0.26.1-dist.zip
+	$ env EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk" bash ./compile.sh
+	$ sudo cp output/bazel /usr/local/bin/
+
+	# INSTALL BAZEL ON MAINSTREAM CPU
         $ go get github.com/bazelbuild/bazelisk
         $ ln -s bazelisk "$(go env GOPATH)/bin/bazel"
         $ export PATH="$PATH":"$(go env GOPATH)/bin"
         $ export USE_BAZEL_VERSION=0.26.1
 
+        # now we have bazel we can build tensorflow
         $ cd tensorflow
         $ ./configure
         $ bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
