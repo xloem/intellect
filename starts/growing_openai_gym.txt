@@ -1,0 +1,16 @@
+
+OpenAI Gym is a collection of existing learning parts and reinforcement scenarios for them.
+It should be a reasonable seed to rapidly grow real learning.
+
+1.
+    $ git clone https://github.com/openai/gym.git openai-gym
+    $ cd openai-gym
+    $ sudo apt-get install cython3 && pip3 install -e .
+
+
+
+= monologue =
+
+2020-04-05 01:10 ET
+not sure how to get myself to find this again, maybe putting in starts/ will be better anyway.
+
