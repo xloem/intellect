@@ -3,11 +3,39 @@ OpenAI Gym is a collection of existing learning parts and reinforcement scenario
 It should be a reasonable seed to rapidly grow real learning.
 
 1.
+    $ export TMPDIR=/drive/with/lots/of/space
+
+    # openai-baseslines uses tensorflow
+    # master branch uses tensorflow 1.4 to 1.14, there is tf2 branch for newer tensorflow
+    # tensorflow has 3 options: old-cpu, AVX cpu, and CUDA.
+
+    # for non-AVX cpu, either build from source
+        $ git clone https://github.com/tensorflow/tensorflow.git --branch r1.14
+    # or install version 1.5
+        $ pip3 install tensorflow==1.5
+    # for avx-supporting cpu, latest binaries should work
+        $ pip3 install tensorflow==1.14
+    # for cuda
+        $ pip3 install tensorflow-gpu==1.14
+
     $ git clone https://github.com/openai/gym.git openai-gym
-    $ cd openai-gym
-    $ sudo apt-get install libopenblas-dev liblapack-dev
+    $ git clone https://github.com/openai/baselines.git openai-baselines
+    $ sudo apt-get install libopenblas-dev liblapack-dev cmake libopenmpi-dev python3-dev zlib1g-dev python3-keras
     $ pip3 install cython
+    $ pip3 install cloudpickle==1.2
+
+
+
+    $ cd openai-baselines
+    $ pip3 install -e .
+
+    $ cd openai-gym
     $ pip3 install -e .    # slow
+    $ # pip3 install -e '.[all]' # needs some custom presetup for mujoco, a proprietary physics lib
+
+```
+python3 -m baselines.run --alg=<name of algorithm> --env=<environment_id> [additional arguments]
+```
 
 ```
 import gym
@@ -21,12 +49,28 @@ integer_space = gym.spaces.Discrete(8) # 0-7
 [ ] use meta- and planning-part- environments to produce a general-purpose algorithm
 	stuck? just work to contribute a meta- or planning-part- environment to their repo.
 
+# Lifes #
+	RandomAgent gym/examples/agents/random_agent.py
+			picks random valid step at all times
+	cem.py gym/examples/agents/em.py
+			cross-entropy life, defaults to 10 iterations of 25 episodes considering the top 20% 'elite'
+	dqn https://github.com/sherjilozair/daqn
+			DQN with Keras/Theano neural networks
+	Simple DQN https://github.com/tambetm/simple_dqn
+			simple, fast, and easy-to-extend DQN using Neon deep learning library, comes with tools
+	AgentNet https://github.com/yandexdataschool/AgentNet.git
+			provides for development of custom reinforcement neural network learning using theano/lasagne
+	rllab https://github.com/rllab/rllab.git
+			framework for development & evaluation of reinforcement learning algorithms, has many implemented
+	keras-rl https://github.com/matthiasplappert/keras-rl.git
+			implements some state-of-the-art deep reinforcement learning, uses Keras
 
 # Environments #
+	not read yet: https://github.com/openai/gym/blob/master/docs/creating-environments.md
 Ways:
 	env = gym.make('environment-name')
 	env.reset()
-	env.render() # graphics
+	env.render(mode='human') # render a frame, 'human' makes graphics
 
 	behavior_space = env.action_space
 	observation, reward = env.step(behavior_space.sample())
@@ -60,6 +104,11 @@ Premade:
 		box.high and box.low give the extent coordinates
 space.sample(): get a random value
 space.contains(v): True if v is within space
+	note: transforms:
+		Discretize (continuous -> discrete)
+		Flatten (make 1d)
+		Rescale (change continuous space size)
+		https://github.com/ngc92/space-wrappers
 		
 
 = monologue =
@@ -92,3 +141,9 @@ I'm reviewing the copy-v0 environment to learn.  It's an 'algorithmic' environme
 		data: characters to write
 		difficulty increases after repeated success
 	
+something's going wrong on the computer i'm using to learn this.  ignoring ... there it kinda goes.  some windows overlayed on
+each other.
+
+i'm now reviewing the readme instead of the docs website.
+all the agents are links to big external repos.  reviewing openai website, i recall some openai-managed agents, could be wrong.
+openai baselines.  there we go.
