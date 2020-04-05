@@ -9,15 +9,26 @@ It should be a reasonable seed to rapidly grow real learning.
     # master branch uses tensorflow 1.4 to 1.14, there is tf2 branch for newer tensorflow
     # tensorflow has 3 options: old-cpu, AVX cpu, and CUDA.
 
-    # for non-AVX cpu, either build from source
+    # i might try the tf2 branch at this point.  for now below is tensorflow 1.14
+
+    # for non-AVX cpu, recommend building from source (v1.5 is supposed to work, but doesn't seem to be supported in baselines?)
         $ git clone https://github.com/tensorflow/tensorflow.git --branch r1.14
         $ pip3 install pip six numpy wheel setuptools mock 'future>=0.17.1'
         $ pip3 install keras_applications --no-deps
         $ pip3 install keras_preprocessing --no-deps
+
+        # this doesn't work, the requested version is too old
+        $ curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+        $ echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8' | sudo tee /etc/apt/sources.list.d/bazel.list
+
         $ go get github.com/bazelbuild/bazelisk
-        $ # ...
-    # or install version 1.5
-        $ pip3 install tensorflow==1.5 # this doesn't actually work anymore it seems
+        $ ln -s bazelisk "$(go env GOPATH)/bin/bazel"
+        $ export PATH="$PATH":"$(go env GOPATH)/bin"
+        $ export USE_BAZEL_VERSION=0.26.1
+
+        $ cd tensorflow
+        $ ./configure
+        $ bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
     # for avx-supporting cpu, latest binaries should work
         $ pip3 install tensorflow==1.14
     # for cuda
