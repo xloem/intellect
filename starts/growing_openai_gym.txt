@@ -5,12 +5,63 @@ It should be a reasonable seed to rapidly grow real learning.
 1.
     $ git clone https://github.com/openai/gym.git openai-gym
     $ cd openai-gym
-    $ sudo apt-get install cython3 && pip3 install -e .
+    $ sudo apt-get install libopenblas-dev liblapack-dev
+    $ pip3 install cython
+    $ pip3 install -e .    # slow
+
+```
+import gym
+
+env = gym.make('CartPole-v0') # environment a possible life can learn in
+
+integer_space = gym.spaces.Discrete(8) # 0-7
+```
 
 
+# Environments #
+Ways:
+	env = gym.make('environment-name')
+	env.reset()
+	env.render() # graphics
+
+	behavior_space = env.action_space
+	observation, reward = env.step(behavior_space.sample())
+
+	env.close() # end
+Premade:
+	CartPole-v0: try to balance a pole on a moving cart
+	MountainCar-v0: try to drive a car up a mountain
+	Acrobat-v1
+	many many others are provided within gym: https://gym.openai.com/envs (TODO: review for planning-tasks, step-tasks, and meta-tasks)
+		gym.envs.registry.all()
+		`register()` an environment at load time to add it to the registry!
+
+# Spaces #
+	Discrete(n): contains integers from 0 to n-1
+	Box(n): contains n floats (coordinates in an n-dimensional box)
+		box.high and box.low give the extent coordinates
+space.sample(): get a random value
+space.contains(v): True if v is within space
+		
 
 = monologue =
 
 2020-04-05 01:10 ET
 not sure how to get myself to find this again, maybe putting in starts/ will be better anyway.
 
+okay, i'm waiting on the slow dependency install now.   it's 5:23 UTC .
+
+the demo displayed the attempt to balance a pole, but it went offscreen before end, and didn't respond to hitting X.
+it turns out the demo is specifically designed to only make random actions.
+
+step returns four values:
+	- observation (object), data from environment
+	- reward (float), degree of success from last action
+	- done (boolean), true when environment no longer navigable
+	- info (dict), diagnostic debugging information
+
+
+https://gym.openai.com/docs <- I have completed this page, it did not describe what I need.  it was labeled 'getting started'.
+	it also has 'environments, I'm reviewing them quickly.
+they have existing environments for computations.  they appear focused on getting fluid algorithms to behave discretely.
+i think it could be done more efficiently.  seems like a good idea to review.  handling need-to-poop-suddenly.
