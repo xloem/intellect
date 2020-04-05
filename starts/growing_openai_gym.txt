@@ -11,8 +11,13 @@ It should be a reasonable seed to rapidly grow real learning.
 
     # for non-AVX cpu, either build from source
         $ git clone https://github.com/tensorflow/tensorflow.git --branch r1.14
+        $ pip3 install pip six numpy wheel setuptools mock 'future>=0.17.1'
+        $ pip3 install keras_applications --no-deps
+        $ pip3 install keras_preprocessing --no-deps
+        $ go get github.com/bazelbuild/bazelisk
+        $ # ...
     # or install version 1.5
-        $ pip3 install tensorflow==1.5
+        $ pip3 install tensorflow==1.5 # this doesn't actually work anymore it seems
     # for avx-supporting cpu, latest binaries should work
         $ pip3 install tensorflow==1.14
     # for cuda
@@ -23,8 +28,6 @@ It should be a reasonable seed to rapidly grow real learning.
     $ sudo apt-get install libopenblas-dev liblapack-dev cmake libopenmpi-dev python3-dev zlib1g-dev python3-keras
     $ pip3 install cython
     $ pip3 install cloudpickle==1.2
-
-
 
     $ cd openai-baselines
     $ pip3 install -e .
