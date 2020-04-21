@@ -1,0 +1,183 @@
+
+OpenAI Baselines and Gym are a collection of existing learning parts and reinforcement scenarios for them.
+They should be a reasonable seed to rapidly grow real learning.
+
+1. Installing baselines can take a while for now due to tensorflow and specifics of versioning.
+   Mark off where you are to resume later.
+
+    $ export TMPDIR=/drive/with/lots/of/space
+
+    # openai-baseslines uses tensorflow
+    # master branch uses tensorflow 1.4 to 1.14, there is tf2 branch for newer tensorflow
+    # tensorflow has 3 options: old-cpu, AVX cpu, and CUDA.
+
+    # i might try the tf2 branch at this point.  for now below is tensorflow 1.14
+    # on arm, aarch64 support is only really present in later tensorflow
+
+    # for non-AVX cpu, recommend building from source (v1.5 is supposed to work, but doesn't seem to be supported in baselines?)
+        $ git clone https://github.com/tensorflow/tensorflow.git --branch r1.14
+        $ pip3 install pip six numpy wheel setuptools mock 'future>=0.17.1'
+        $ pip3 install keras_applications --no-deps
+        $ pip3 install keras_preprocessing --no-deps
+
+        # this doesn't work, the requested version is too old
+        $ curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+        $ echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8' | sudo tee /etc/apt/sources.list.d/bazel.list
+
+	# INSTALL BAZEL ON NON-MAINSTREAM CPU
+	$ sudo apt-get install build-essential openjdk-8-jdk python zip unzip
+	$ wget https://github.com/bazelbuild/bazel/releases/download/0.26.1/bazel-0.26.1-dist.zip
+	$ mkdir bazel-0.26.1
+	$ cd bazel-0.26.1
+	$ unzip ../bazel-0.26.1-dist.zip
+	$ env EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk" bash ./compile.sh
+	$ sudo cp output/bazel /usr/local/bin/
+
+	# INSTALL BAZEL ON MAINSTREAM CPU
+        $ go get github.com/bazelbuild/bazelisk
+        $ ln -s bazelisk "$(go env GOPATH)/bin/bazel"
+        $ export PATH="$PATH":"$(go env GOPATH)/bin"
+        $ export USE_BAZEL_VERSION=0.26.1
+
+        # now we have bazel we can build tensorflow
+        $ cd tensorflow
+        $ ./configure
+	# the ram_utilization_factor percentage or --local_ram_resources=2048 will reduce thrashing and oom-killing on small systems
+        $ bazel build --config=opt --config=monolithic --ram_utilization_factor=10 //tensorflow/tools/pip_package:build_pip_package
+
+	# then tensorflow is put into a pip package
+	$ bazel-bin/tensorflow/tools/pip_package/build_pip_package $TMPDIR/tensorflow-pip
+	$ pip3 install $TMPDIR/tensorflow-pip/*.whl
+
+    # for avx-supporting cpu, latest binaries should work
+        $ pip3 install tensorflow==1.14
+    # for cuda
+        $ pip3 install tensorflow-gpu==1.14
+
+    $ git clone https://github.com/openai/gym.git openai-gym
+    $ git clone https://github.com/openai/baselines.git openai-baselines
+    $ sudo apt-get install libopenblas-dev liblapack-dev cmake libopenmpi-dev python3-dev zlib1g-dev python3-keras
+    $ pip3 install cython
+    $ pip3 install cloudpickle==1.2
+
+    $ cd openai-baselines
+    $ pip3 install -e .
+
+    $ cd openai-gym
+    $ pip3 install -e .    # slow
+    $ # pip3 install -e '.[all]' # needs some custom presetup for mujoco, a proprietary physics lib
+
+```
+python3 -m baselines.run --alg=<name of algorithm> --env=<environment_id> [additional arguments]
+```
+
+```
+import gym
+
+env = gym.make('CartPole-v0') # environment a possible life can learn in
+
+integer_space = gym.spaces.Discrete(8) # 0-7
+```
+
+[ ] find a way to use existing algorithms
+[ ] use meta- and planning-part- environments to produce a general-purpose algorithm
+	stuck? just work to contribute a meta- or planning-part- environment to their repo.
+
+# Lifes #
+	RandomAgent gym/examples/agents/random_agent.py
+			picks random valid step at all times
+	cem.py gym/examples/agents/em.py
+			cross-entropy life, defaults to 10 iterations of 25 episodes considering the top 20% 'elite'
+	dqn https://github.com/sherjilozair/daqn
+			DQN with Keras/Theano neural networks
+	Simple DQN https://github.com/tambetm/simple_dqn
+			simple, fast, and easy-to-extend DQN using Neon deep learning library, comes with tools
+	AgentNet https://github.com/yandexdataschool/AgentNet.git
+			provides for development of custom reinforcement neural network learning using theano/lasagne
+	rllab https://github.com/rllab/rllab.git
+			framework for development & evaluation of reinforcement learning algorithms, has many implemented
+	keras-rl https://github.com/matthiasplappert/keras-rl.git
+			implements some state-of-the-art deep reinforcement learning, uses Keras
+
+# Environments #
+	not read yet: https://github.com/openai/gym/blob/master/docs/creating-environments.md
+Ways:
+	env = gym.make('environment-name')
+	env.reset()
+	env.render(mode='human') # render a frame, 'human' makes graphics
+
+	behavior_space = env.action_space
+	observation, reward = env.step(behavior_space.sample())
+
+	env.close() # end
+Premade:
+	CartPole-v0: try to balance a pole on a moving cart
+	MountainCar-v0: try to drive a car up a mountain
+	Acrobat-v1: try to swing two-link robot against gravity
+	MountainCarContinuous-v0: drive up hill, sounds like fluid control
+	Pendulum-v0: swing pendulum against gravity
+	Copy-v0: move a write head and write preset data with it accurately
+	DuplicatedInput-v0: remove repetition from data, with write-head
+	RepeatCopy-v0: write-head, write data multiple times
+	Reverse-v0: write-head, reverse data
+	ReversedAddition-v0: add multi-digit numbers
+	ReversedAddition3-v0: add 3 multi-digit numbers
+	gyminventory: discrete state and action spaces re inventory: https://github.com/paulhendricks/gym-inventory
+	gym-maze: maze navigation: https://github.com/tuzzer/gym-maze
+	gym-minigrid: gridworld with minimal dependencies: https://github.com/maximecb/gym-minigrid (also miniworld)
+	gym-anytrading: trading algorithms https://github.com/AminHP/gym-anytrading
+	gymgo: 'go' game https://github.com/aigagror/GymGo
+	atari: a number of games included, requires `pip install -e '.[atari]'` and cmake
+			SpaceInvaders-v0
+	robotics, physics, etc excluded from above list
+	=> do not see any meta-tasks or significant planning-parts in environment list <=
+
+# Spaces #
+	Discrete(n): contains integers from 0 to n-1
+	Box(n): contains n floats (coordinates in an n-dimensional box)
+		box.high and box.low give the extent coordinates
+space.sample(): get a random value
+space.contains(v): True if v is within space
+	note: transforms:
+		Discretize (continuous -> discrete)
+		Flatten (make 1d)
+		Rescale (change continuous space size)
+		https://github.com/ngc92/space-wrappers
+		
+
+= monologue =
+
+2020-04-05 01:10 ET
+not sure how to get myself to find this again, maybe putting in starts/ will be better anyway.
+
+okay, i'm waiting on the slow dependency install now.   it's 5:23 UTC .
+
+the demo displayed the attempt to balance a pole, but it went offscreen before end, and didn't respond to hitting X.
+it turns out the demo is specifically designed to only make random actions.
+
+step returns four values:
+	- observation (object), data from environment
+	- reward (float), degree of success from last action
+	- done (boolean), true when environment no longer navigable
+	- info (dict), diagnostic debugging information
+
+
+https://gym.openai.com/docs <- I have completed this page, it did not describe what I need.  it was labeled 'getting started'.
+	it also has 'environments, I'm reviewing them quickly.
+they have existing environments for computations.  they appear focused on getting fluid algorithms to behave discretely.
+i think it could be done more efficiently.  seems like a good idea to review.  handling need-to-poop-suddenly.
+
+I'm reviewing the copy-v0 environment to learn.  It's an 'algorithmic' environment: gym.envs.algorithmic.
+	The target is simply the input data.
+	actions for algorithm envs:
+		move tape read head along 1d or 2d axis
+		choose: write / no-write
+		data: characters to write
+		difficulty increases after repeated success
+	
+something's going wrong on the computer i'm using to learn this.  ignoring ... there it kinda goes.  some windows overlayed on
+each other.
+
+i'm now reviewing the readme instead of the docs website.
+all the agents are links to big external repos.  reviewing openai website, i recall some openai-managed agents, could be wrong.
+openai baselines.  there we go.
