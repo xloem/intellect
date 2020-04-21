@@ -42,8 +42,9 @@ They should be a reasonable seed to rapidly grow real learning.
         # now we have bazel we can build tensorflow
         $ cd tensorflow
         $ ./configure
-	# the ram_utilization_factor percentage or --local_ram_resources=2048 will reduce thrashing and oom-killing on small systems
-        $ bazel build --config=opt --config=monolithic --ram_utilization_factor=10 //tensorflow/tools/pip_package:build_pip_package
+	# the ram_utilization_factor percentage or local_ram_resources MB will reduce thrashing and oom-killing on small systems
+        #$ bazel build --config=opt --config=monolithic --ram_utilization_factor=10 //tensorflow/tools/pip_package:build_pip_package
+        $ bazel build --config=opt --config=monolithic --local_ram_resources=512 //tensorflow/tools/pip_package:build_pip_package
 
 	# then tensorflow is put into a pip package
 	$ bazel-bin/tensorflow/tools/pip_package/build_pip_package $TMPDIR/tensorflow-pip
