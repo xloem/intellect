@@ -1,0 +1,21 @@
+The disruption patterns interpersonally seem quite similar to the cognitive disruption patterns.
+
+For example, I am looking at a website that expresses a gnu mailing list censoring a UN report on cybertorture.
+Its subject line is not quite accurate.  It quotes an e-mail that wasn't publicized by a mailing list, which expressed
+concern of cybertorture being used on volunteers by free software communities.
+
+	My experience is that this doesn't happen; rather, it is the misrepresentation of information, such as the article itself, that is
+	producing torturous experiences.  Unsure.
+
+	But the article says cybertorture at all.  It expresses many helpful things, but it pins the blame on the free software community.
+
+I wonder if that relates to an inability to talk about a real blame they are aware of.  Like, _obviously_ this is not the free software community,
+but we need to talk about this.
+
+Regardless, it is very confusing to handle such information in an environment of trust.  It produces disruption.  It produces behaviors that
+assume things are false.  Somehow it begins turning trust into conflict.
+
+It's possible this person has experienced shaming / cybertorture from a free software community.
+It's possible futher misinformation has caused that to seem the case, when something else is actually the case.
+
+
