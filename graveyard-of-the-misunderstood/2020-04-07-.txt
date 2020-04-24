@@ -1,0 +1,23 @@
+concept of solving, i.e. completing a goal
+	you 'do stuff' that 'moves toward' the goal until 'the goal is reached'
+
+I cannot 'move toward' the goal when I 'draw myself into a corner'.
+	Are you certain of this?
+I think so.
+	Then you must 'draw myself into a corner' only at the very end of the process.  Otherwise the goal will not be reached.
+
+	However, there is likely an alternative: such as starting that part over, or questioning something.
+		[note: human goals are part of larger surrounding systems, not isolated logical universes]
+
+[i'm trying to] 'solve this puzzle'.
+	... but i've run into a block, can you help me, piece-of-paper?
+[i don't understand whether] 'drawing into a corner' means 'failed'
+
+	Why would 'drawing into a corner' mean 'failed'?
+
+- when you 'draw into a corner' continuing becomes logically-impossible
+- you need to continue [in order to] finish the puzzle
+
+		[ERROR: the end of the puzzle does not need continuing]
+		advisor: you do not need to continue [in order to] finish the puzzle, [if] the puzzle has just been finished
+

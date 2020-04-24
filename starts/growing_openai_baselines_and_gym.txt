@@ -15,6 +15,8 @@ They should be a reasonable seed to rapidly grow real learning.
     # on arm, aarch64 support is only really present in later tensorflow
 
     # for non-AVX cpu, recommend building from source (v1.5 is supposed to work, but doesn't seem to be supported in baselines?)
+		## NOTE: can skip to pip3 install step with this file on ubuntu 18 x86_64:
+		## https://siasky.net/AABpODF-l43-tZHMsgSDrSX-brTmHY5f1eaqS-nWgxGEgQ/tensorflow-1.14.1-cp36-cp36m-linux_x86_64.whl
         $ git clone https://github.com/tensorflow/tensorflow.git --branch r1.14
         $ pip3 install pip six numpy wheel setuptools mock 'future>=0.17.1'
         $ pip3 install keras_applications --no-deps
@@ -44,10 +46,11 @@ They should be a reasonable seed to rapidly grow real learning.
         $ ./configure
 	# the ram_utilization_factor percentage or local_ram_resources MB will reduce thrashing and oom-killing on small systems
         #$ bazel build --config=opt --config=monolithic --ram_utilization_factor=10 //tensorflow/tools/pip_package:build_pip_package
-        $ bazel build --config=opt --config=monolithic --local_ram_resources=512 //tensorflow/tools/pip_package:build_pip_package
+        $ bazel build --config=opt --config=monolithic --local_ram_resources=256 //tensorflow/tools/pip_package:build_pip_package
 
 	# then tensorflow is put into a pip package
 	$ bazel-bin/tensorflow/tools/pip_package/build_pip_package $TMPDIR/tensorflow-pip
+	# LEFT OFF RIGHT HERE.  WOULD LIKE TO UPLOAD BINARY TO SKYNET AND WRITE SKYLINK HERE.
 	$ pip3 install $TMPDIR/tensorflow-pip/*.whl
 
     # for avx-supporting cpu, latest binaries should work
