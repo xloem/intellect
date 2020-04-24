@@ -58,6 +58,9 @@ They should be a reasonable seed to rapidly grow real learning.
     # for cuda
         $ pip3 install tensorflow-gpu==1.14
 
+    # this seemed needed for me
+	$ pip3 uninstall tensorflow-tensorboard
+
     $ git clone https://github.com/openai/gym.git openai-gym
     $ git clone https://github.com/openai/baselines.git openai-baselines
     $ sudo apt-get install libopenblas-dev liblapack-dev cmake libopenmpi-dev python3-dev zlib1g-dev python3-keras
@@ -83,11 +86,40 @@ env = gym.make('CartPole-v0') # environment a possible life can learn in
 integer_space = gym.spaces.Discrete(8) # 0-7
 ```
 
-[ ] find a way to use existing algorithms
-[ ] use meta- and planning-part- environments to produce a general-purpose algorithm
+2.
+ - [ ] find a way to use existing algorithms
+ - [ ] PROPOSAL: make an algorithm that learns to use another algorithm well based on a classifier
+       OR make an algorithm that picks among the other algorithms
+       ALTERNATIVELY or FIRST: just choose 1 good algorithm to use for start
+ - [ ] use meta- and planning-part- environments to produce a general-purpose algorithm
 	stuck? just work to contribute a meta- or planning-part- environment to their repo.
 
-# Lifes #
+# Lifes (learning algorithms TODO add baselines) #
+	baselines/baselines/ddpg (--alg=ddpg) (adds parameter noise to ddpg? likely an improvement over deepq)
+		https://arxiv.org/abs/1509.02971 Jul 2019
+	baselines/baselines/her (--alg=her) (FEW STEPS) (combines with ddpg?)
+		hindsight experience replay
+		https://arxiv.org/abs/1707.01495 Feb 2018
+	baselines/baselines/ppo1 (--alg=ppo?) (simpler than TRPO, handles more tasks than ACER,ACKTR)
+		proximal policy optimization
+		PPO is a general purpose, easy-to-tune algorithm used for most work at openai-baselines
+		https://arxiv.org/abs/1707.06347 Aug 2017
+	baselines/baselines/ppo2 (--alg=ppo2) (ppo1 optimized for gpu? may also reduce needed steps?)
+	baselines/baselines/acktr (--alg=acktr)
+		an improvement on a2c and trpo
+		https://arxiv.org/abs/1708.05144 Aug 2017
+	baselines/baselines/acer (--alg=acer)
+		https://arxiv.org/abs/1611.01224 Jul 2017
+	baselines/baselines/a2c (--alg=a2c) (acktr is improvement for most scenarios)
+		synchronous deterministic variant of a3c (asynchronous advantage actor critic) that appears to be equal
+		https://arxiv.org/abs/1602.01783
+	baselines/baselines/gail
+		generative adversarial imitation learning
+		https://arxiv.org/abs/1606.03476 Jun 2016
+	baselines/baselines/trpo_mpi (--alg=trpo_mpi) (more complex than ppo)
+		https://arxiv.org/abs/1502.05477
+	baselines/baselines/deepq (--alg=deepq) (variants of dqn, the first algorithms released by baselines)
+		https://openai.com/blog/openai-baselines-dqn/
 	RandomAgent gym/examples/agents/random_agent.py
 			picks random valid step at all times
 	cem.py gym/examples/agents/em.py
