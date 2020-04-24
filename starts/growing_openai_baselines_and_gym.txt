@@ -1,3 +1,5 @@
+[we want to generalize 1 learning algorithm that can possibly encompasses all the others, and write it in terms of itself.]
+	[then we can use the others to grow it to live.]
 
 OpenAI Baselines and Gym are a collection of existing learning parts and reinforcement scenarios for them.
 They should be a reasonable seed to rapidly grow real learning.
