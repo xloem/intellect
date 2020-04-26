@@ -1,6 +1,3 @@
-[we want to generalize 1 learning algorithm that can possibly encompasses all the others, and write it in terms of itself.]
-	[then we can use the others to grow it to live.]
-
 OpenAI Baselines and Gym are a collection of existing learning parts and reinforcement scenarios for them.
 They should be a reasonable seed to rapidly grow real learning.
 
@@ -17,6 +14,7 @@ They should be a reasonable seed to rapidly grow real learning.
     # on arm, aarch64 support is only really present in later tensorflow
 
     # for non-AVX cpu, recommend building from source (v1.5 is supposed to work, but doesn't seem to be supported in baselines?)
+			(NOTE: mujoco requires AVX, so many and new demos won't work)
 		## NOTE: can skip to pip3 install step with this file on ubuntu 18 x86_64:
 		## https://siasky.net/AABpODF-l43-tZHMsgSDrSX-brTmHY5f1eaqS-nWgxGEgQ/tensorflow-1.14.1-cp36-cp36m-linux_x86_64.whl
         $ git clone https://github.com/tensorflow/tensorflow.git --branch r1.14
@@ -90,6 +88,8 @@ integer_space = gym.spaces.Discrete(8) # 0-7
 
 2.
  - [ ] find a way to use existing algorithms
+[we want to generalize 1 learning algorithm that can possibly encompasses all the others, and write it in terms of itself.]
+	[then we can use the others to grow it to live.]
  - [ ] PROPOSAL: make an algorithm that learns to use another algorithm well based on a classifier
        OR make an algorithm that picks among the other algorithms
        ALTERNATIVELY or FIRST: just choose 1 good algorithm to use for start
@@ -102,6 +102,10 @@ integer_space = gym.spaces.Discrete(8) # 0-7
 	baselines/baselines/her (--alg=her) (FEW STEPS) (combines with ddpg?)
 		hindsight experience replay
 		https://arxiv.org/abs/1707.01495 Feb 2018
+			HER uses a new kind of gym environment: GoalEnv
+			The observations from these environments can be converted to the old format using
+			   gym.wrappers.FlattenDictWrapper
+			See https://openai.com/blog/ingredients-for-robotics-research/
 	baselines/baselines/ppo1 (--alg=ppo?) (simpler than TRPO, handles more tasks than ACER,ACKTR)
 		proximal policy optimization
 		PPO is a general purpose, easy-to-tune algorithm used for most work at openai-baselines
