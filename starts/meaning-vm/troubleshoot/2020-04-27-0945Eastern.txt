@@ -1,0 +1,37 @@
+2020-04-27 09:45 Eastern
+	I've reaccessed this project, and hope to resume implementation of consideration bubbles.
+	Imagining linking it with openai, which is what we were last working with.
+	I don't recall where I was at with consideration bubbles, but I recall there may have been a design worry going on.
+	Hopefully, if present, can resolve by choosing simplification.
+	I'm inside truck, plugged into solar, at Joan's house.
+	I'm working on uploading my facebook history to sia skynet and bsv, first steps, in background.
+	
+	I tried to run the tests, and of course the first fails because we don't have reliable storage for crucial concepts
+	implemented, but an allocation error is being triggered in level2, so I'm trying to debug it.  It's 09:50 now.
+09:50
+	error is beng thrown early in execution.  only output line is [habit make-cocnept result:[allocator=ssr 0x555555873760]]
+	intellect::level0::still_referenced_by (an error object) is being thrown for something
+		backtrace is:
+		basic_dealloc
+		level2::conceptunnote
+		dohabit -> conceptunnote(subctx) [very end of function, line 612]
+	okay, inside a habit our subcontext is over-referenced?
+09:52
+	taking break to handle internal stuff
+09:54
+	trying to resume, state of mind slightly different
+09:55
+	the two concepts are 0x...872a90 and 0x...872d60
+	the subctx is the second, 0x...8762d60
+09:57
+	i passed the dangling concept to the dbglinks helper
+	changeable=0x...873760 is=notepad allocates=0x...873760 allocates=0x...872d60 <etc etc>
+	it's the ssr notepad.  it is still marked as allocating the subcontext (872d60 link).
+09:58
+	finding the above some time ago is likely the point where i discerned a design issue.  let's resolve it.
+	the immediate thought is that an allocates link shouldn't be an issue.
+	oh i see: if we are using the allocates link, we need to deallocate with the allocator.
+	let's hold this information while reviewing the code, with the goal if understanding the allocation process that
+	ties subctx to ssr.
+09:59
+	processing internal stuff
