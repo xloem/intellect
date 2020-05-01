@@ -1,0 +1,19 @@
+this ended up in code i was writing and intended to publicize, so i moved
+it here:
+
+  /* could aid relaxation to hide facebook post.
+   * for now we wait for confirmation that it has been seen by
+   * somebody who cares about it, or can talk about it.
+   * it looks too important to hide for no apparent reason.
+   */
+  /* we have years-old idea to share with police chief, inferred */
+  /* we can post 'terrorist propaganda' near it: way of making
+   *  peace with enemies, reliably.  free training material.
+   */ // please try to do this.
+  // we should offer for cory to tell us what to order, and we order it.
+  // this would mirror our request to upload something to blockchain, to
+  // demonstrate trust.
+  //
+  // cory appears to take what you say in stride.  he appears to do the what-you-meant trust. [this helps karl build trust of cory but he is confused around what it means] [what-you-meant might be normal in social interactions, unknown]
+  // [yeah, it is] [people say the wrong thing, and expect you to trust that they meant what they meant, not what they said.  it is expected you infer this, and keep working to infer it as interaction goes on.  similarly, they do the same to you.  what is rude is if you don't expect it.] <- guess
+
