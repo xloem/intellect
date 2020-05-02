@@ -1,0 +1,49 @@
+proper math.
+
+parting_slowness = Forever / 2
+duration = Forever
+
+entrance_slowness * length + (parting_slowness - entrance_slowness) * length / 2 = duration
+duration = entrance_slowness * length + (parting_slowness - entrance_slowness) * length / 2 
+duration = entrance_slowness * length + parting_slowness * length / 2 - entrance_slowness * length / 2 
+duration = entrance_slowness * length / 2 + parting_slowness * length / 2
+duration * 2 / length = entrance_slowness + parting_slowness
+entrance_slowness = duration * 2 / length - parting_slowness
+
+okay, can it fall below zero?
+
+duration is 1
+parting_slowness is 1 / 2
+entrance_slowness = 2 / length - 0.5
+yes, it becomes negative if length > 4
+
+what is the difference causing reality mismatch imagination?
+
+goal: at end, waits parting_slowness.  at start, is fast.
+
+the limit relates to the straightness of the line.  since the curve shape
+is limited to a line, if it gets too long it simply waits too long unless it
+gets negative.
+
+okay, let's make a parabola?  harder to integrate with steps?
+
+steps, curve.
+
+we want the integral to be the same if the steps form is used
+this is true of straight line because area under triangle equals area
+of missing square and filled square.
+not true of parabola.
+
+so, take total space, using parabola or sin curve
+
+or, use fluid integral, ignore error!
+
+int[entrance_slowness + b * t + c * t^2] = duration
+
+entrance_slowness + 1/2 b + 1/3 c = duration
+entrance_slowness + b + c = parting_slowness
+entrance_slowness + b + 2/3 c = duration
+c = 3 * (parting_slowness - duration)
+
+entrance_slowness + b + 3 * parting_slowness - 3 * duration = parting_slowness
+b = 3 * duration - 2 * parting_slowness - entrance_slowness

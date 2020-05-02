@@ -7,6 +7,7 @@ import math as number_dreams
 Forever = 1
 Screen = future.stdout
 
+# a bug in below makes emptiness faster than content
 def Ocean_Surf(stream):
     def Wave(part, entrance_slowness, parting_slowness, duration):
         c = 3 * (parting_slowness - duration)
