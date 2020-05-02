@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g  -shared -Wl,-soname,librun.so -o librun.so CMakeFiles/run.dir/run.o 

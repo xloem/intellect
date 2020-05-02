@@ -8,24 +8,43 @@
 // To avoid near references, static functions, static variables,
 // and non-virtual member functions, must not be used directly.
 
-// Function pointers must be to static functions, as member
-// function pointers don't have a way to identify location from
-// value.
-
 
 // force something to be inline so it is not near-called
 #define strong_inline __attribute__((always_inline)) inline
 
 // get a far static reference
-#if defined(__x86_64__)
-template <typename T>
-strong_inline T & far_static_reference(T & static_object)
+template <auto original_pointer>
+strong_inline auto far_pointer()
 {
-	T * pointer;
-	asm("movabs %1,%0":"=r"(pointer):"g"(&static_object):);
-	return *pointer;
+	decltype(original_pointer) pointer;
+	#if defined(__x86_64__)
+	asm("movabs %1,%0":"=r"(pointer):"g"(original_pointer):);
+	#elif defined(__i386__)
+		#if defined(__PIC__) || defined(__PIE__)
+			#error "please use -fno-pic to remove the near-thunk in functions"
+		#endif
+	asm("mov %1, %0":"=r"(pointer):"g"(original_pointer):);
+	#elif defined(__aarch64__)
+	// this is simplest using a musl toolchain.  glibc doesn't support it well.
+	// you can get a musl (pronounced 'muscle') toolchain at musl.cc
+	// link the binary aarch64-linux-musl-g++ from it into your path.
+	asm(
+		"movz %0, #:abs_g0_nc:%1\n"
+		"movk %0, #:abs_g1:%1\n"
+		"movk %0, #:abs_g2:%1\n" // likely not needed (second highest dword, often 0)
+		//"movk %0, #:abs_g3:%1\n" // not needed (highest dword, generally zero)
+		:"=r"(pointer):"S"(original_pointer):);
+	#elif defined(__arm__)
+	// for now i have tried building a musl toolchain to do 32bit arm.
+	// the problem for <armv6t2 appears like it would prefer a different approach.
+	// it uses lower16 and upper16 instead of abs_g0_nc etc
+	// movw for lower, movt for upper, requires >=armv6t2
+		#error "far references unimplemented on this platform; add an assembly statement here"
+	#else
+		#error "far references unimplemented on this platform; add an assembly statement here"
+	#endif
+	return pointer;
 }
-#endif
 
 // make a far static reference to a string
 template <typename Letter, Letter... letters>

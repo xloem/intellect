@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g  -shared -Wl,-soname,libcopy_data.so -o libcopy_data.so CMakeFiles/copy_data.dir/copy_data.o 

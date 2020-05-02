@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g  -shared -Wl,-soname,librunning_relevence.so -o librunning_relevence.so CMakeFiles/running_relevence.dir/running_relevance.o 

@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g  -shared -Wl,-soname,libfind_relevant_string.so -o libfind_relevant_string.so CMakeFiles/find_relevant_string.dir/find_relevant_string.o 

@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/karl/src/care/projects/xloem-intellect/starts/push/find_relevent_string.cpp
+loaded_relevance.hpp
+/home/karl/src/care/projects/xloem-intellect/starts/push/loaded_relevance.hpp
+cassert
+-
+
+/home/karl/src/care/projects/xloem-intellect/starts/push/loaded_relevance.hpp
+unordered_map
+-
+vector
+-
+

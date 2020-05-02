@@ -3,9 +3,11 @@
 import time
 
 Mountains = True
-Forever = 1000
+Forever = 1
 
-print "Patience ..."
+print('')
+
+print("Patience ...")
 
 while Mountains:
     time.sleep(Forever)

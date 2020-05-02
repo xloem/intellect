@@ -96,6 +96,10 @@ integer_space = gym.spaces.Discrete(8) # 0-7
  - [ ] use meta- and planning-part- environments to produce a general-purpose algorithm
 	stuck? just work to contribute a meta- or planning-part- environment to their repo.
 
+# Ideas
+	Decisions for branches that need to learn 'fluidly' could try all paths but use fluid choices to weigh results.
+		There are other options, such as rethinking branching to have fluid space between control paths.
+
 # Lifes (learning algorithms TODO add baselines) #
 	baselines/baselines/ddpg (--alg=ddpg) (adds parameter noise to ddpg? likely an improvement over deepq)
 		https://arxiv.org/abs/1509.02971 Jul 2019

@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g  -shared -Wl,-soname,libcore.so -o libcore.so CMakeFiles/core.dir/core.o -Wl,-rpath,/home/karl/src/care/projects/xloem-intellect/starts/push libfind_relevant_string.so 

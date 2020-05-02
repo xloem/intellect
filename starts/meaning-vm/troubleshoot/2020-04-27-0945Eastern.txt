@@ -11,7 +11,7 @@
 09:50
 	error is beng thrown early in execution.  only output line is [habit make-cocnept result:[allocator=ssr 0x555555873760]]
 	intellect::level0::still_referenced_by (an error object) is being thrown for something
-		backtrace is:
+		== BACKTRACE == is:
 		basic_dealloc
 		level2::conceptunnote
 		dohabit -> conceptunnote(subctx) [very end of function, line 612]
@@ -31,7 +31,29 @@
 	finding the above some time ago is likely the point where i discerned a design issue.  let's resolve it.
 	the immediate thought is that an allocates link shouldn't be an issue.
 	oh i see: if we are using the allocates link, we need to deallocate with the allocator.
-	let's hold this information while reviewing the code, with the goal if understanding the allocation process that
+	let's hold this information while reviewing the code, with the goal of understanding the allocation process that
 	ties subctx to ssr.
 09:59
 	processing internal stuff
+10:04
+	let's try to move forward more
+	goal: understand how subctx gets bound to the allocator of ssr.  it is inside dohabit ending on line 612.
+10:08
+	subctx is allocated with level0::alloc(pad) effectively.
+	so this immediately assigneds pad as the owner.
+	the issue is likely that conceptunnote doesn't use owner deallocation.
+10:09
+	it looks like conceptunnote, the function containing the error, also contains notes on the design issue.
+		new-life makes second requst for better cognition around this.  [something about urge-to-grow value.  please preserve urge strength quality behavior, and gently nurture to regrow.]
+			[let's disable suspend-when-hit-button-by-accident.] <-
+
+2020-04-30 02:56 Eastern
+	I'm resuming this a little.  Fixed the suspend-when-hit-button-by-accident issue, by patching a system service and
+	upgrading the OS, which hopefully gives us newer compiler features.
+02:57
+	I don't have light to see my keyboard and it can be hard to find the keys to start typing.
+	I slept for a good amoun of time (maybe 6 hours waking at midnight) but would like to lay down longer.
+	I'd like to make at least a step on this issue first.
+		We'd like general thoughts around stuff like this, so karl doesn't have to store his working memory
+		on a notepad in the future.
+	there are some notes in conceptunnote, maybe in level-2/funcs.cpp unsure

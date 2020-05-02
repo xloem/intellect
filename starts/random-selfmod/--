@@ -1,0 +1,86 @@
+karl has idea for how to make this project work.
+he plans to inspect the assembler code of two functions
+and come up with enough mutators to let one reach another.
+if the space is too large, statistical choice can be used.
+this should let it grow to intelligence.
+
+
+
+
+so, maybe let the computer figure it out by trial.
+we have two vectors.  they have similar parts.
+please make a path from one to the other.
+	what can we do to such a vector?
+	-> change bytes
+	-> insert bytes
+	-> erase bytes
+	-> move or copy bytes
+	that's about it.
+	
+		when we choose something to do with the vector
+		we have a dataset to select from to choose
+		how to do it.  or we can use random data.
+		or we can iterate choices.
+			we don't want to use random data in
+			this phase, unless it closes.
+	
+	Approach 1
+		Replace each byte with the destination byte.
+		If it is too short, insert more bytes at end.
+		If it is too long, erase bytes at end.
+			Requires knowing destination exactly.
+
+	Approach 2
+			Some bytes are missing from the destination now.
+		Do as #1, but iterate all options
+<>
+	anyway, for 2-later, we're going to want to examine the data to form likely bytes to pick.  we'll then expand this approach to other choices.  once approach 2B works we can see how far it works, until it no longer functions, then examine the space of it nonfunctioning to pick another step.  this produces enough work to see if the investment is worthwhile, maybe.
+
+So, for a step now, we want to pick axes on which to calculate
+likelihoods of bytes.
+	[byte] following-byte <- this is only 64k for whole space exploration.
+	[byte] preceding-byte
+Okay.  Let's try this basic approach out.
+See if you can modularize it.
+
+we are noting this technique would work equally well for source
+code, or any other data, as assembler code.
+	source code: compiles slow
+	assembler code: crashes system, need to handle
+	bytecode: needs different language, or an interpreter
+		chosen.
+			we googled quick, first hits
+			were all broken links.
+			system supported the search-form.
+		let's keep coding for now.
+		controversial information.  lua is fast.
+		java and javascript may also be fast.
+		they all use bytecode somewhere.
+		they also all can be parsed.
+
+
+function morphin is a task we've already tackled with confusing inhibition stuff
+
+1. copy function into memory region
+note: we are eventually going to be making another statistics table, but the plan was to not do that yet.
+	we would like to work from success back.  it gives a better space for choice.
+2. resize memory region to match new function
+3. copy new function into function.  if data is missing, use table to guess.
+
+	use-table-to-guess is the meaningful part.
+	guessing will need recursive hierarchy.
+
+		i don't know what byte goes here.
+		let me try a byte.
+			okay, now let me try a byte, assuming that byte is right.
+	
+	that's the confused pattern.  so, focus on making it happen.
+	hence, we don't value 1,2,3 so much for now.  we want to make sure we can generate function-material at all.
+
+		okay.
+		i have a byte vector.
+		some of the bytes are known, some are not.
+		i have a list of behaviors, trying bytes in it.
+		
+			propose each thread of behavior is a single vector.
+			if you want to try different things simultaneously, clone the vectors.

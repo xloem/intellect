@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g  -shared -Wl,-soname,libfind_relevent_string.so -o libfind_relevent_string.so CMakeFiles/find_relevent_string.dir/find_relevent_string.o 

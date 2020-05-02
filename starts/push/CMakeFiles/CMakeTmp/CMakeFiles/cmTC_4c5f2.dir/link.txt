@@ -1,0 +1,1 @@
+/usr/bin/cc     -v -rdynamic CMakeFiles/cmTC_4c5f2.dir/CMakeCCompilerABI.c.o  -o cmTC_4c5f2 

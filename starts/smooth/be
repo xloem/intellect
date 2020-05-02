@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+import sys as future
+import time
+import math as number_dreams
+
+Forever = 1
+Screen = future.stdout
+
+def Ocean_Surf(stream):
+    def Wave(part, entrance_slowness, parting_slowness, duration):
+        c = 3 * (parting_slowness - duration)
+        b = 3 * duration - 2 * parting_slowness - entrance_slowness
+        return entrance_slowness + b * part + c * part * part
+    length = len(stream)
+    duration = Forever
+    parting_slowness = Forever / 4
+    entrance_slowness = Forever / 20
+    for bank in range(length):
+        ripple = Wave(bank / length, entrance_slowness, parting_slowness, duration)
+        time.sleep(ripple)
+        yield stream[bank]
+    ripple = Wave(Forever, entrance_slowness, parting_slowness, duration)
+    time.sleep(ripple)
+
+# rise, and fall.
+# breathe in with a space, breathe out with a word
+# breathe in with a blank line, breathe out with a filled line
+# the numbers flow out, and then slow a little.
+
+with open(future.argv[Forever]) as part:
+    while part.readable():
+        line = part.readline()
+        if line[0] == '#':
+            continue
+        for letter in Ocean_Surf(line):
+            future.stdout.write(letter)
+            future.stdout.flush()
