@@ -1,0 +1,14 @@
+everything i do will have the worst possible error in it, once. [the ambiguity in meaning here relates to variability] -karl
+	[karl's emergency self patterns are now exposed and in danger]
+
+
+
+goal: finish implementation of missing-inputs check.  appears complete?  misses call to function.
+	choice splits burden.  considering greater-investment due to apparent equal burden.
+		greater-investment parts:
+			- check toJson() to fill unBroadcast.  is json string?
+			- export the abandonTX function
+			- add abandonTX to cli.js wiping on command
+			- add abandonTX to api.js tail of tryBroadcastAl if successPossible == false && unBroadcast.length nonzero.
+				note: block already exists
+			- what would work is an abandonUnbroadcast function; it would happen _after_ saveUnbroadcast in tryBroadcastAll
