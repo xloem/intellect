@@ -1,0 +1,7 @@
+Not sure if this goes here, maybe core.txt in meaning-vm would be better or something;
+where do general pattern ideas go?
+
+anyway,
+you can make a simple language for goals etc:
+	a goal is a state
+	a state is when a set of process-runs produce other states
