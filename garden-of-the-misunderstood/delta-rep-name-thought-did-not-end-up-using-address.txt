@@ -1,0 +1,9 @@
+
+nonauthority + authority
+		semiauthority implies authority
+		merits-of-authority
+	please accept both in name if reasonable [all-acceptance present]
+
+delta-rep-cypher-merits-of-authority
+
+	we will copy their use of protonmail
