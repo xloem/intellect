@@ -17,6 +17,8 @@ They should be a reasonable seed to rapidly grow real learning.
 			(NOTE: mujoco requires AVX, so many and new demos won't work)
 		## NOTE: can skip to pip3 install step with this file on ubuntu 18 x86_64:
 		## https://siasky.net/AABpODF-l43-tZHMsgSDrSX-brTmHY5f1eaqS-nWgxGEgQ/tensorflow-1.14.1-cp36-cp36m-linux_x86_64.whl
+		## rebundled on ubuntu 20:
+		## https://siasky.net/AADMTsyk0kZO-BNZAgu6KQFBclGVvxsH8ZTc3qM2icshOA/tensorflow-1.14.1-cp38-cp38-linux_x86_64.whl
         $ git clone https://github.com/tensorflow/tensorflow.git --branch r1.14
         $ pip3 install pip six numpy wheel setuptools mock 'future>=0.17.1'
         $ pip3 install keras_applications --no-deps
@@ -43,15 +45,23 @@ They should be a reasonable seed to rapidly grow real learning.
 
         # now we have bazel we can build tensorflow
         $ cd tensorflow
+
+	# python 3.8 MAY NEED A PATCH to tensorflow: https://github.com/tensorflow/tensorflow/issues/34197
+	# patch for 1.15: https://siasky.net/AAArHhAB2jj4iQNVmpirJYO-VtIu5ZN5gsp4wJKFWPeqVQ/tensorflow_r1.15_python3.8.patch
+
         $ ./configure
+	# ^-- If you want MPI support, for me on ubuntu 20 libopenmpi-dev installs into /usr/lib/x86_64-linux-gnu/openmpi
+
 	# the ram_utilization_factor percentage or local_ram_resources MB will reduce thrashing and oom-killing on small systems
         #$ bazel build --config=opt --config=monolithic --ram_utilization_factor=10 //tensorflow/tools/pip_package:build_pip_package
-        $ bazel build --config=opt --config=monolithic --local_ram_resources=256 //tensorflow/tools/pip_package:build_pip_package
+        $ bazel build --config=opt --config=monolithic --verbose_failures --local_ram_resources=256 //tensorflow/tools/pip_package:build_pip_package
 
 	# then tensorflow is put into a pip package
 	$ bazel-bin/tensorflow/tools/pip_package/build_pip_package $TMPDIR/tensorflow-pip
-	# LEFT OFF RIGHT HERE.  WOULD LIKE TO UPLOAD BINARY TO SKYNET AND WRITE SKYLINK HERE.
+
 	$ pip3 install $TMPDIR/tensorflow-pip/*.whl
+
+	# LEFT OFF RIGHT HERE
 
     # for avx-supporting cpu, latest binaries should work
         $ pip3 install tensorflow==1.14
@@ -225,5 +235,3 @@ something's going wrong on the computer i'm using to learn this.  ignoring ... t
 each other.
 
 i'm now reviewing the readme instead of the docs website.
-all the agents are links to big external repos.  reviewing openai website, i recall some openai-managed agents, could be wrong.
-openai baselines.  there we go.
