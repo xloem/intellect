@@ -47,6 +47,7 @@ They should be a reasonable seed to rapidly grow real learning.
         $ cd tensorflow
 
 	# python 3.8 MAY NEED A PATCH to tensorflow: https://github.com/tensorflow/tensorflow/issues/34197
+	# patch for 1.14: https://siasky.net/AACaNPKt5cFfdOxej6IfKCASmQ080kULb82Vsz9twUnTnw/tensorflow_r1.14_python3.8.patch
 	# patch for 1.15: https://siasky.net/AACMLiHk3zXL0-CR5qnXTTRCIBRDG5-F8jGnJXthR1xx8w/tensorflow_r1.15_python3.8.patch
 
         $ ./configure
