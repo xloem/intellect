@@ -18,5 +18,12 @@ public:
 		guess = (guess + answer) / 2;
 
 		// puzzle branch idea 2: we could make this update smoothness be another puzzle.
+			
+			// same context, different puzzle.
+			// the guess + answer are how much to update.
+			// but we don't get the answer until we know how smooth it is.
 	}
 };
+
+// we found we can solve more smooth puzzles
+	// one idea: keep discreteness small.  in little bundles.

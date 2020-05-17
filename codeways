@@ -1,0 +1,17 @@
+#pragma once
+
+namespace codeways {
+
+	// returns an iterator to the pair in a map with the highest value
+	template <typename Map>
+	static Map::iterator best(Map const & map) {
+		auto best = map.begin();
+		for (auto iterator = best; ++iterator != map.end();) {
+			if (iterator->second > best->second) {
+				best = iterator;
+			}
+		}
+		return best;
+	}
+
+}
