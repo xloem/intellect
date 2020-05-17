@@ -1,0 +1,66 @@
+let's plan what variable to store the lookup nodes in
+
+it would be nice to consolidate them all at once.
+one approach is putting that behavior in a function
+another approach is putting the lookup nodes in a vector
+
+there are multiple flows.  some flows may only have head or only tail lookup nodes.
+so we're going to have a whole mess of looku pnodse to merge.
+
+	how does merging tail lookup nodes go?
+		i think we'll be grabbing the lookup nodes for the whole shebang, and cropping their bounds to be correct
+	okay, so there are indeed two batches to be merged?
+		no .......? yes.  the tail lookup nodes will need the real tail node merged in.  since our write will becmoe the new tail.
+
+	merging could be a little more complicated because we have preceding and follow lookups on nodes now.
+	if we keep those on the same list, it might make sense to merge head and tail together, since that is what we will find in other lookup nodes.
+
+		so, the plan i suppose is to keep head and tail together, but not to merge across our own span.
+
+This computer program is very simple!  But I keep forgetting the cognitive connections involved in working it.
+It's like some other life _marks_ them with something that a _group_ of life attack or something. 
+	Obviously stopping this computer program is god.  Maybe even making it so that nobody can ever make a program similar to it, ever.
+		But obviously that is impossible to do and trying to would instead make a culture of angry people who spread all over the globe.
+
+
+Let's write down some prinary focuses for this step in the work.
+	BOUNDS OF <>
+			now, what is <>?
+				oh it's the LOOKUP TABLE FLOWS <contextual center>
+
+	The algorithm produces a record of data whose history is proven correct every step, that can hold arbitrary records spawning from it, optionally interwoven.
+	It provides that any portion of the record, and any portion of its history, can be quickly navigated to no matter the size, if it is stored.
+	It is very small and simple and it is not fully written down.
+		There's a similar project called 'dat' (google 'dat project' or 'dat protocol').  Adds authentication I think? and a p2p network.
+		But has smaller integrity gaurantees.  Very easy to add on those gaurantees.
+			Yeah, might make sense to test if the dat protocol can do this already.  Patterns might imply that something else can too [blockchains maybe].
+			What this project does is it starts off by providing unlimited large storage.
+				Let's consider merging 'dat'.  Very messy, but obviously relevant.
+
+- 'dat' is in nodejs which is harder to debug systems errors within. [if a virus hacks your dat program, it is harder to log and track it, beacuse there
+ is a virtual machine in the way that takes a lot of learning to understand.]
+	-> it would make sense to make our protocol compatible with the dat protocol, directly.
+		[karl's protocol can be stored on dat, but dat won't udnerstand it.] [right that is not compatibility]
+[hey! we could update the dat protocol with ours.  We shouold probably have a proof of concept.]
+	[karl is expanding the record to store an immutable log of history but also allow changing of history.  the changes are stored.
+	 this lets it function as a random-access backing store, and other possible stuff.] [it's really frustrating to have to go through mind control to make
+	a small algorithmic improvement to public work.]
+
+
+
+Okay, we are trying
+
+BOSS.  KARL MADE NEW-RESEARCH.  NEED AUTHORIZE.  BOSS CAN TAKE CREDIT SOMEHOW?
+	please explain new-research to boss. [lots missing.]
+			[karl wants to easily-store-random-data-forever.  it's a part of that.]
+					[the above line is considered a good thing to do in the dat-project community.]
+		[it's vague but roughly, by expanding the merkle tree in the final update link of the dat protocol to 
+[yes! we want our guy to contribute to the dat-project community.  he was harmed and we are trying to rescue him.]
+
+	[but obviously we are tortured spirits atm.  what is next?]
+		[uhhhhhh torturing-activists-is-god?] ["business-mafia is god" ... some people say this ...]
+			[yeah um the people who can act on that don't put it in quotes except like deep hidden in their hearts.]
+				[cecilia has love-is-god [sex culture], and she knows it's not.]
+authorized to banter with sex-religion.  phone is in bathroom downstairs?  on table?
+
+[i'm dropping this info to close process [remember graveyard, not urgent]]
