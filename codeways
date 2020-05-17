@@ -1,10 +1,14 @@
 #pragma once
 
+// this could be done with c++ generics already we suspect.
+// there is a std::max_element.
+
 namespace codeways {
 
 	// returns an iterator to the pair in a map with the highest value
 	template <typename Map>
-	static Map::iterator best(Map const & map) {
+	static Map::iterator highest_in_map(Map const & map) {
+		return std::max_element(map.begin(), map.end(), [](Map::iterator a, Map::iterator b) { return a->second > b->second; })
 		auto best = map.begin();
 		for (auto iterator = best; ++iterator != map.end();) {
 			if (iterator->second > best->second) {
@@ -13,5 +17,7 @@ namespace codeways {
 		}
 		return best;
 	}
+
+	
 
 }
