@@ -1,13 +1,6 @@
 #include <vector>
 
-// we'd better include a constant context.
-
-// want to symbolize fixing switching from one thing to
-// another without considering all the other things.
-//
-// we want to consciously think about evrything we are doing,
-// all at once, every time we do anything.
-
+// goop is atm a vector of stuff that can be moved along
 template <typename number_matter>
 class goop
 {
