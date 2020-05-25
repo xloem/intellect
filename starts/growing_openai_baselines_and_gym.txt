@@ -24,12 +24,8 @@ They should be a reasonable seed to rapidly grow real learning.
         $ pip3 install keras_applications --no-deps
         $ pip3 install keras_preprocessing --no-deps
 
-        # this doesn't work, the requested version is too old
-        $ curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-        $ echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8' | sudo tee /etc/apt/sources.list.d/bazel.list
-
 	# INSTALL BAZEL ON NON-MAINSTREAM CPU
-	$ sudo apt-get install build-essential openjdk-8-jdk python zip unzip
+	$ sudo apt-get install build-essential openjdk-8-jdk python zip unzip libgrpc-dev libopenmpi-dev
 	$ wget https://github.com/bazelbuild/bazel/releases/download/0.26.1/bazel-0.26.1-dist.zip
 	$ mkdir bazel-0.26.1
 	$ cd bazel-0.26.1

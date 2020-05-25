@@ -1,0 +1,5 @@
+please let the parts recreate when karl is on a mission, at this time
+	[if dragon is exposed]
+
+
+

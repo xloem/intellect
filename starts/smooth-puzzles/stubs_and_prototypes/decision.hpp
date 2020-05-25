@@ -1,3 +1,8 @@
+#pragma
+
+// a decision of course is a single choice
+// the developing memory around what good choices are might have a better name
+
 #include "codeways"
 
 // a decision is a something or other tha learns an option
