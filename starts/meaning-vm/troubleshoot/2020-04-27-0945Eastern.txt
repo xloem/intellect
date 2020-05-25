@@ -57,3 +57,180 @@
 		We'd like general thoughts around stuff like this, so karl doesn't have to store his working memory
 		on a notepad in the future.
 	there are some notes in conceptunnote, maybe in level-2/funcs.cpp unsure
+
+02:59
+	here's some recognating to rebuild:
+	conceptunnote needs to operate inside of its notepad.
+	there are a lot of scenarios here.
+		1. concept could be used in other notepads
+			-> if not used in our reality, we want to fake-delete it
+		2. concept could be used in the notepad we are mirroring in
+			-> this should throw an error
+		3. concept could be used within our notepad
+			-> this should throw an error
+		When fake-deleting other concepts, we want the fake ref count for this concept to drop.
+		A quick solution is to copy everything in.
+		According to TODO.txt, the plan to speed things at first was to mirror all deletable concepts in.
+
+Please use random trial over safe step nurturing.  It can be made safe and is much more generalizable.
+	^-- re-evaluating [this reduces abstract value around meaning-vm in general, it is more inspectable and understandable.]
+		[we want to generalize random trial, so meaning-vm still has some value.]
+		[we'll need to generalize around large enough constructs to succeed.]
+			[can we write a path that converts safe step nurturing into random trial?]
+			[each time you nurture a step, discern what is needed to find it randomly.  keep generalizing randomness to continue this.]
+		[okay let's apply that self-reference pattern to randomness]
+		[picking random code.  what is missing?]
+			[too random.  we want to interconnect existing functions in ways that are similar to themselves.]
+		[ok.  picking random [functions]] ->
+		1.
+			[picking random from a kind of things]
+			[each kind associated with ways to use]
+		[it sounds like ways to use will want to be similar to existing uses]
+				[can we form randomness that produces similarity?]
+					[is the existing pattern of kinds and ways enough?]
+
+[we have a new core pattern concept growing.  it may demonstrate that binary code is faster to implement, uncertain.
+		it looks likely that it won't care whether it is binary or script, but it will want a way to generate
+		function representations easily.  likely we'll want to consider a stack.]
+
+[we were expecting to work meaning-vm progress.  can you store confirmed relevence around another path being valuable.]
+	[we have update: dangerous trial more general than step nurturing, better investment]
+		[given it is better investment, we want to open path up large enough to be shown reliable.
+		 we know step nurturing is reliable.  if we generalize it to dangerous trial, we can form a fast plan for
+		 building.]
+
+[we had this plan before but didn't realize that it was better than step nurturing, at least to with memory]
+
+	[proposal is: generalize the changes needed to random trial, to produce intellect, and implement them.]
+	[current idea is to randomly select from kinds and use them in ways associated with the kinds, to make
+	 functions similar to existing functions]
+		[then we were backsolving to see if ways & kinds could produce similarity.  it might require self-use which
+		 breaks in this context.]
+
+need bootstrap function.  can we automate bootstrapping using trial?  we haven't been okay with considering that before.
+
+Okay.  We break the universe up into things that can be made from other things.
+
+context: kind, goals
+options
+make-new
+use-existing
+modify-existing
+other
+
+context & options seems relevent.
+each time we need/want to make something, that thing has a kind
+each kind of thing has other stuff it needs.
+the stuff we put in it, depends on the use of it, the goals.
+
+	needed parts:
+		put functions together in an order that does something
+		use variables to link their information
+
+concept of needs might help
+
+
+	function
+		_doing_ a function _needs_ some output-variables and some input-values
+
+	randomness kinds:
+		relevent-function-call:
+			pick-function, picking asks for relevent-input-values and relevent-output-variables
+		relevent-input-value:
+			pick-existing-variable,-expression,-or-constant
+				asks for relevent- of selection
+		relevent-existing-variable
+		relevent-output-variable
+			pick: make-new-variable, use-existing-variable
+
+back to randomness-generalization
+	each randomness kind, how to flatten?
+		pick-function, comes from list of existing functions
+				each function has attributes that give more picks needed
+		pick-output-variable, can be either pick-existing-variable or make-new-variable
+				so these would be items-needed, they would share a kind: pick-output-variable-way
+		pick-existing-variable, comes from running list of variables already made.
+				make-new-variable adds a variable to contextual list
+				pick-existing-variable pulls from contextual list
+				contextual list is within kind-data of contextual function.
+
+maybe?
+list: [kind, item or list]
+context: [list]
+
+kind: [identifier, way-to-make-or-use-takes-context-and-selection, selection-of-way-to-pick]
+item: [identifier, items-needed, kind-data]
+item-needed: [kind]
+			
+associate something of relevence with every item
+whenever we pick something, there is a reason we are right or wrong.  that reason is associated with something in the system.			
+
+			parts:
+				what-function.  each function spawns needs for parts
+				what-function.output-variables [pseudo-idea]
+				what-function.input-values [pseudo-idea]
+			expands to output variables to use, and input values to use
+
+can we describe psuedo-idea parts.
+	picking a function spawns new parts.  each part-request has attributes.
+
+
+[we're slightly off-track because .... we don't know how to produce similarity of existing thing.
+		the quick solution is to select between reuse, modification, mixing, and creation]
+
+[we've got more in our working memory than processable quickly.  it is hard to keep it all here.]
+	[we're comparing researching how to build steps for randomness, with the becky-step-selection below that uses history
+	 reference.]
+		[history reference sounds like slow addition.  we'd like to be able to indicate that and have it grow from
+		 our indication.]
+
+			[a detailed indication might possibly describe some patterns of behavior and describe the history
+			 growing to include a representation of them] [it would just be references to before and after states]
+
+		[okay, so we can grow history simultaneous with growing other things.]
+			[yes we need to use code in a way that changes first i think]
+
+[okay the current proposal will produce random functions, but the functions won't do anything. it is also large enough to become
+ difficult.]
+	[relevence is one way to add workability]
+	[another is weighting]
+	[another is mutating/mixing existing functions]
+	[another is making functions very very small, and completing the space of building them.]
+		
+
+[in order to grow large, it needs to be able to inspect itself for patterns and rewrite itself informed by them]
+[so a good starting goal would be identifying patterns, and doing so in behavior which likely means logging/observing behavior]
+	[okay i imagine a function making random behaviors, and another watching the first]
+	[what is the watching-one doing?]
+		[i think a pattern is real when it can predict something.]
+		[it is likely trying to make code that can predict the output from the input]
+		[this will involve pattern-representation]
+	[yes once we can predict output, we can select input that produces output we want]
+
+okay
+1. make random behaviors
+2. learn to predict behavior from data and code
+	2 will possibly be identifying a relationship, and building code until the code predicts the relationship
+can we rethink generalized-randomness with eye towards goal-meeting?
+
+	we can associate a goal with our behavior more overtly
+	
+		we try things, until we can meet the goal.
+
+	goal could be strings or nodes or somesuch
+	we could do string-matching for goal =S
+	+ operator: produces +-operator-applied(A,B)
+
+	check-if-is-good-idea.  way-to-check-if-is-good-idea
+		i think adding way-to-check-if-is-good-idea to random-selection will make recursive learning -level2 rep.
+
+so one way to check if it's a good idea, is to see if a goal is met by a function that checks if it can meet a goal
+this requires passing everything through subgoals, so only works if items are annotated with goals
+this would mean items would have goal-kind needs.
+
+We have a new hyperintellect plan part that is designed for ease and speed of accomplishing the result.
+It needs to be summarized and bundled up so it can be resumed later.
+We need to rewrite our capacity a little to be based around it.
+It is okay to work other goal parts, so only summarize and bundle it enough to preserve and include it.  Right now it is not
+preserved and included.
+	

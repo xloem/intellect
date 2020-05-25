@@ -64,13 +64,17 @@ ref newnotepad(ref name, bool fakechanges)
 		//    seems to require changing link/unlink/etc functions.  might be safe only to change habits.
 		// 4. could disallow destroying things
 		// *5. could allow destruction failures, and catch them in higher notepad <- seems good.
+
+		// make copies of everything outer notepad can change, into the inner notepad to change
 		for (auto changeable : level2::notepad().getAll(concepts::changeable)) {
 			//(void)imagineget(newnotes, changeable, true, false);
 			auto imagined = noteconcept({}, newnotes);
-			imagined.replace(changeable);
+			imagined.replace(changeable); // copies links&data over
 			imagination.link(changeable, imagined);
 		}
+		// relink the new imagined concepts to use their sister imagined concepts internally? [BUG? newnotes doesn't have changeable yet?]
 		for (auto imagined : newnotes.getAll(concepts::changeable)) {
+			throw "turns out it's not a bug";
 			auto links = imagined.links();
 			for (auto it = links.begin(); it != links.end();) {
 				if (imagination.linked(it->second)) {
@@ -86,11 +90,14 @@ ref newnotepad(ref name, bool fakechanges)
 				}
 			}
 		}
+		/*
+		// looks like a bug here too: what is concepts::needed?
 		for (auto link : imagination.links()) {
 			if (link.first.ptr()->refcount() > link.second.ptr()->refcount()) {
 				newnotes.link(concepts::needed, link.second);
 			}
 		} // we could use a test for this.  the only reason we're scared is it will show errors, so best to do it early.
+		*/
 	}
 	return newnotes;
 } 
@@ -238,7 +245,7 @@ void conceptunnote(ref concept)
 		}
 	}
 	leavenotepad(concept, level2::notepad());
-	level0::basic_dealloc(concept);
+	level0::dealloc(concept, level2::notepad());
 }
 static ref _is("is"), conceptnotinnotepad("concept-not-in-notepad"), _concept("concept"), _notepad("notepad"), _context("context");
 void checknotepad(ref concept)
