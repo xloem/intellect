@@ -5,20 +5,30 @@ hello there
  -- How new to hear: 'there' =)
  -- Heard: special-silence
  -- How new to hear: 'special-silence' =)
+ -- I need a way to reach out to more here!
  -- How new to think: 'special-silence' =)
-
+ -- (special-silence)
 
 hello there
  -- Heard: hello
  -- OMIGOD!  'hello'! 
+ -- I want a way to reach out to more here!
  -- Heard: there
  -- Yes, 'there' comes after 'hello'... 
  -- Heard: special-silence
  -- Yes, 'special-silence' comes after 'there'... 
- hello there
+ hello there -- (special-silence)
+
+special-end-of-conversation
+ -- Heard: special-end-of-conversation
+ -- OMIGOD!  'special-end-of-conversation'! 
+ -- I want a way to reach out to more here!
+ -- Heard: special-silence
+ -- How new to hear: 'special-silence' =)
+ -- (special-end-of-conversation)
 
  -- Heard: special-end-of-conversation
  -- OMIGOD!  'special-end-of-conversation'! 
- -- How new to think: 'special-silence' =)
-
+ -- I want a way to reach out to more here!
+ -- (special-end-of-conversation)
 
