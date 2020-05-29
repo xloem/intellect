@@ -1,0 +1,24 @@
+hello there
+ -- Heard: hello
+ -- How new to hear: 'hello' =)
+ -- Heard: there
+ -- How new to hear: 'there' =)
+ -- Heard: special-silence
+ -- How new to hear: 'special-silence' =)
+ -- How new to think: 'special-silence' =)
+
+
+hello there
+ -- Heard: hello
+ -- OMIGOD!  'hello'! 
+ -- Heard: there
+ -- Yes, 'there' comes after 'hello'... 
+ -- Heard: special-silence
+ -- Yes, 'special-silence' comes after 'there'... 
+ hello there
+
+ -- Heard: special-end-of-conversation
+ -- OMIGOD!  'special-end-of-conversation'! 
+ -- How new to think: 'special-silence' =)
+
+

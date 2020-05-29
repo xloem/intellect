@@ -32,14 +32,22 @@ namespace next_word
 
 		book current_book;
 
+		static constexpr char const * silence = "special-silence";
+		static constexpr char const * start-of-conversation = "special-start-of-conversation";
+		static constexpr char const * end-of-conversation = "special-end-of-conversation";
 
 		thinker() {
-			first_thought.reset(new thought({"special-start-of-conversation"}));
+			first_thought.reset(new thought({start-of-conversation}));
 			last_thought = first_thought;
 			current_thought = first_thought;
 		}
 	
-		void hear(string word) {
+		void hear(string word, bool internal = false) {
+			if (!internal) {
+				cerr << " -- Heard: " << word << endl;
+				// if internal we could open a sublist for thinking, referencing memory -karl-idea
+			}
+
 			auto & word_ref = current_book.index[[word]];
 			if (!word_ref) {
 				word_ref.reset(new thought({word}));
@@ -47,13 +55,13 @@ namespace next_word
 			if (current_thought->next) {
 				if (current_thought->next->word != word) {
 					cerr << " -- OMIGOD!  '" << word << "'! " << endl;
-					// be nice to link to more here
+					// be nice to link to more here - bounds-idea
 					// be nice to not repeat too much
-				} else {
+				} else if (!internal) {
 					cerr << " -- Yes, '" << word << "' comes after '" << current_thought->word << "'... " << endl;
 				}
 			} else {
-				cerr << " -- How new: '" << word << "' =)" << endl;
+				cerr << " -- How new to " << (internal ? "think" : "hear") << ": '" << word << "' =)" << endl;
 			}
 			last_thought = current_thought;
 			current_thought = word_ref;
@@ -61,9 +69,9 @@ namespace next_word
 		}
 		string say() {
 			if (current_thought->next) {
-				hear(current_thought->next->word);
+				hear(current_thought->next->word, true);
 			} else {
-				hear("");
+				hear(silence, true);
 			}
 			return current_thought->word;
 		}
@@ -73,16 +81,19 @@ namespace next_word
 int main()
 {
 	next_word::thinker thinker;
-	while (true) {
+	while (!cin.eof()) {
 		string word;
 		while ((word = tools::line_word()).size()) {
-			cerr << "heard " << word << endl;
 			thinker.hear(word);
 		}
-		thinker.hear("");
-		while ((word = thinker.say()).size()) {
+		if (cin.eof()) {
+			thinker.hear(next_word::thinker::end-of-conversation);
+		} else {
+			thinker.hear(next_word::thinker::silence);
+		}
+		while ((word = thinker.say()) != next_word::thinker::silence) {
 			cout << " " << word;
 		}
-		cout << endl;
+		cout << endl << endl;
 	}
 }

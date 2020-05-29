@@ -1,5 +1,8 @@
 CXXFLAGS=-std=c++1z
 
+test: simple
+	./test.bash
+
 all: simple
 
 .SUFFIXES:
