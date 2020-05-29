@@ -14,7 +14,23 @@ namespace next_word
 	{
 	public:
 		thought(string word)
-		: member-word(word) { }
+		: member-word(word)
+		{
+			registry.insert(this);
+		}
+		~thought()
+		{
+			registry.erase(this);
+		}
+
+		void replace(reference other)
+		{
+			for (auto thought : registry) {
+				thought->replace(this, other);
+			}
+		}
+
+		virtual void replace(thought *old, reference newer) = 0;
 
 		virtual string & word() { return member-word; }
 
@@ -30,7 +46,10 @@ namespace next_word
 
 	protected:
 		string member-word;
+
+		static unordered_set<thought*> registry;
 	};
+	unordered_set<thought*> thought::registry;
 
 	class in-a-row : public thought
 	{
@@ -41,6 +60,13 @@ namespace next_word
 
 		amount next-is-known() override { return next().get() != nullptr ? 1 : 0; }
 		ref next() override { return member-next; }
+
+		void replace(thought * old, reference newer) override
+		{
+			if (member-next.get() == old) {
+				member-next = newer;
+			}
+		}
 
 		bool note-next(reference next, bool capacity) override
 		{
@@ -68,6 +94,21 @@ namespace next_word
 		: thought(word), member-total-experiences(0)
 		{ }
 		
+		void replace(thought * old, reference newer) override
+		{
+			auto found = member-experiences.end();
+			for (auto iterator = member-experiences.begin(); iterator != found; ++ iterator) {
+				if (iterator->first.get() == old) {
+					found = iterator;
+					break;
+				}
+			}
+			if (found != member-experiences.end()) {
+				member-experiences[[newer]] = found->second;
+				member-experiences.erase(found);
+			}
+		}
+		
 		amount next-is-known() override
 		{
 			if (member-total-experiences > 2 && member-experiences.size() == 1) {
@@ -75,14 +116,6 @@ namespace next_word
 			} else if (member-total-experiences > 0) {
 				amount confidence = get-best()->second / amount(member-total-experiences + 1) * 100;
 				return confidence;
-				/*
-				if (confidence <= 50) {
-					cerr << " -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess." << endl;
-				} else {
-					cerr << " -- I want a way to reach out to more here.  I don't know how to convey that I expect " << tools::quote_special(next()->word()) << " with " << quantity(confidence) << "% confidence." << endl;
-					return true;
-				}
-				*/
 			}
 			return false;
 		}
