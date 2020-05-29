@@ -1,7 +1,7 @@
 #include "basic_includes.hpp"
 #include "tools.hpp"
 
-using value = double;
+using amount = double;
 
 namespace next_word
 {
@@ -9,14 +9,49 @@ namespace next_word
 	using reference = shared_ptr<thought>;
 	using ref = reference;
 
-	class thought {
+	class thought
+	{
 	public:
-		string word;
-		//map<value, ref> next;
-		ref next;
-	
-		shared_ptr<any> more;
-	}; 
+		virtual string & word() = 0;
+
+		virtual bool next-is-known() = 0;
+		virtual ref next() = 0;
+
+		virtual bool note-next(reference next, bool capacity) = 0;
+
+		virtual bool merge(ref) {} // TODO because spreads pointer change
+
+		shared_ptr<any> more; // could turn into a virtual function
+		//map<amount, ref> next;
+	};
+
+	class in-a-row : public thought
+	{
+	public:
+		in-a-row(string word)
+		: member-word(word)
+		{ }
+		string & word() override { return member-word; }
+
+		bool next-is-known() override { return next().get() != nullptr; }
+		ref next() override { return member-next; }
+
+		bool note-next(reference next, bool capacity) override
+		{
+			if (next-is-known() && this->next() != next) {
+				if (capacity) { return false; }
+				cerr << " -- I want a way to reach out to more here!" << endl;
+				// might randomly just return true here
+			}
+			member-next = next;
+			return true;
+		}
+
+
+	private:
+		string member-word;
+		ref member-next;
+	};
 
 	class book {
 	public:
@@ -26,9 +61,9 @@ namespace next_word
 	
 	class thinker {
 	public:
-		reference first_thought;
-		reference last_thought;
-		reference current_thought;
+		reference first-thought;
+		reference last-thought;
+		reference current-thought;
 
 		book current_book;
 
@@ -37,43 +72,42 @@ namespace next_word
 		static constexpr char const * end-of-conversation = "special-end-of-conversation";
 
 		thinker() {
-			first_thought.reset(new thought({start-of-conversation}));
-			last_thought = first_thought;
-			current_thought = first_thought;
+			first-thought.reset(new in-a-row(start-of-conversation));
+			last-thought = first-thought;
+			current-thought = first-thought;
 		}
 	
 		void hear(string word, bool internal = false) {
 			if (!internal) {
 				cerr << " -- Heard: " << word << endl;
-				// if internal we could open a sublist for thinking, referencing memory -karl-idea
+				// if internal we could recurse making a sublist of words for thinking, referencing memory -karl-idea
 			}
 
-			auto & word_ref = current_book.index[[word]];
-			if (!word_ref) {
-				word_ref.reset(new thought({word}));
-			}
-			if (current_thought->next) {
-				if (current_thought->next->word != word) {
+			auto & word-ref = current_book.index[[word]];
+			if (!word-ref) {
+				word-ref.reset(new in-a-row({word}));
+			}	
+			if (current-thought->next-is-known()) {
+				if (current-thought->next()->word() != word) {
 					cerr << " -- OMIGOD!  '" << word << "'! " << endl;
-					// be nice to link to more here - bounds-idea
-					// be nice to not repeat too much
 				} else if (!internal) {
-					cerr << " -- Yes, '" << word << "' comes after '" << current_thought->word << "'... " << endl;
+					cerr << " -- Yes, '" << word << "' comes after '" << current-thought->word() << "'... " << endl;
 				}
 			} else {
 				cerr << " -- How new to " << (internal ? "think" : "hear") << ": '" << word << "' =)" << endl;
 			}
-			last_thought = current_thought;
-			current_thought = word_ref;
-			last_thought->next = current_thought;
+			last-thought = current-thought;
+			current-thought = word-ref;
+			last-thought->note-next(current-thought, false);
 		}
 		string say() {
-			if (current_thought->next) {
-				hear(current_thought->next->word, true);
+			if (current-thought->next-is-known()) {
+				hear(current-thought->next()->word(), true);
 			} else {
+				cerr << " -- I need a way to reach out to more here!" << endl;
 				hear(silence, true);
 			}
-			return current_thought->word;
+			return current-thought->word();
 		}
 	};
 }
@@ -91,8 +125,14 @@ int main()
 		} else {
 			thinker.hear(next_word::thinker::silence);
 		}
-		while ((word = thinker.say()) != next_word::thinker::silence) {
-			cout << " " << word;
+		while (true) {
+			word = thinker.say();
+			if (word.compare(0, 8, "special-") == 0) {
+				cout << " -- [" << word << "]";
+			} else {
+				cout << " " << word;
+			}
+			if (word == next_word::thinker::silence || word == next_word::thinker::end-of-conversation) { break; }
 		}
 		cout << endl << endl;
 	}

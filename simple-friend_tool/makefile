@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++1z
+CXXFLAGS=-std=c++1z -ggdb
 
 test: simple
 	./test.bash
@@ -7,8 +7,8 @@ all: simple
 
 .SUFFIXES:
 
-%: %.o
-	g++ ${CXXFLAGS} ${LDFLAGS} $^ -o $@
+%: %.o makefile
+	g++ ${CXXFLAGS} ${LDFLAGS} $< -o $@
 
 %.o: %.cxx
 	g++ ${CXXFLAGS} ${CPPFLAGS} -c $^ -o $@
