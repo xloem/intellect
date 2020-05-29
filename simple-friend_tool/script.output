@@ -15,51 +15,43 @@ hello there
 
 hello there
  -- Heard: 'hello'
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
  -- How new to hear: 'hello' =)
  -- How helpful to consider: 'hello' =)
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
  -- Heard: 'there'
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
  -- How new to hear: 'there' =)
  -- How helpful to consider: 'there' =)
  -- Heard: [silence]
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
  -- How new to hear: [silence] =)
  -- How helpful to consider: [silence] =)
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
- -- I need a way to reach out to more here!  I don't know what to do!
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
- -- How new to think: [silence] =)
- -- How helpful to consider: [silence] =)
+ -- How new to think: 'hello' =)
+ -- How helpful to consider: 'hello' =)
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
+ hello -- How helpful to consider: 'there' =)
+ there -- How helpful to consider: [silence] =)
  [silence]
 
 special-end-of-conversation
  -- Heard: [end-of-conversation]
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
  -- How new to hear: [end-of-conversation] =)
  -- How boring to see again: [end-of-conversation]
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
  -- Heard: [silence]
  -- How new to hear: [silence] =)
  -- How helpful to consider: [silence] =)
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
- -- I need a way to reach out to more here!  I don't know what to do!
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
- -- How new to think: [silence] =)
- -- How boring to see again: [silence]
+ -- How new to think: 'hello' =)
+ -- How boring to see again: 'hello'
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
+ hello -- How new to think: 'there' =)
+ -- How boring to see again: 'there'
+ there -- How new to think: [silence] =)
+ -- How boring to see again: [silence]
  [silence]
 
  -- Heard: [end-of-conversation]
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
  -- How new to hear: [end-of-conversation] =)
  -- How boring to see again: [end-of-conversation]
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
- -- I need a way to reach out to more here!  I don't know what to do!
- -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess.
  -- How new to think: [silence] =)
  -- How helpful to consider: [silence] =)
  [silence]

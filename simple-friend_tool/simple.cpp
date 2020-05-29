@@ -18,12 +18,12 @@ namespace next_word
 
 		virtual string & word() { return member-word; }
 
-		virtual bool next-is-known() = 0;
+		virtual amount next-is-known() = 0;
 		virtual ref next() = 0;
 
 		virtual bool note-next(reference next, bool capacity) = 0;
 
-		virtual bool merge(ref) {} // TODO because spreads pointer change
+		virtual void merge(ref) {} // TODO because spreads pointer change
 
 		shared_ptr<any> more; // could turn into a virtual function
 		//map<amount, ref> next;
@@ -39,15 +39,17 @@ namespace next_word
 		: thought(word)
 		{ }
 
-		bool next-is-known() override { return next().get() != nullptr; }
+		amount next-is-known() override { return next().get() != nullptr ? 1 : 0; }
 		ref next() override { return member-next; }
 
 		bool note-next(reference next, bool capacity) override
 		{
-			if (next-is-known() && this->next() != next) {
-				if (capacity) { return false; }
-				cerr << " -- I want a way to reach out to more here!  I didn't expect to hear this!" << endl;
-				// might randomly just return true here
+			if (next-is-known() > 0) {
+				if (this->next() != next) {
+					if (capacity) { return false; }
+					cerr << " -- I want a way to reach out to more here!  I didn't expect to hear this!" << endl;
+					// might randomly just return true here
+				}
 			}
 			member-next = next;
 			return true;
@@ -66,18 +68,21 @@ namespace next_word
 		: thought(word), member-total-experiences(0)
 		{ }
 		
-		bool next-is-known() override
+		amount next-is-known() override
 		{
 			if (member-total-experiences > 2 && member-experiences.size() == 1) {
 				return true;
 			} else if (member-total-experiences > 0) {
 				amount confidence = get-best()->second / amount(member-total-experiences + 1) * 100;
+				return confidence;
+				/*
 				if (confidence <= 50) {
 					cerr << " -- I want a way to reach out to more here.  I don't know how to convey that I have a poor guess." << endl;
 				} else {
 					cerr << " -- I want a way to reach out to more here.  I don't know how to convey that I expect " << tools::quote_special(next()->word()) << " with " << quantity(confidence) << "% confidence." << endl;
 					return true;
 				}
+				*/
 			}
 			return false;
 		}
@@ -86,6 +91,8 @@ namespace next_word
 		{
 			return get-best()->first;
 		}
+
+		// for decisions we could use a note-not-next: a few different ways to handle that exist
 
 		bool note-next(reference next, bool capacity) override
 		{
@@ -106,6 +113,7 @@ namespace next_word
 			if (member-experiences.size() > 1) {
 				cerr << " -- I want a way to reach out to more here.  I don't know what to do with these multiple options." << endl;
 			}
+			return true;
 		}
 		
 	private:
@@ -159,19 +167,23 @@ namespace next_word
 			if (!word-ref) {
 				word-ref.reset(new likelihood({word}));
 			}	
-			if (current-thought->next-is-known()) {
+			auto expectation-confidence = current-thought->next-is-known();
+			if (expectation-confidence > 50) {
 				if (current-thought->next()->word() != word) {
 					cerr << " -- OMIGOD!  '" << word << "'! " << endl;
 				} else if (!internal) {
 					cerr << " -- Yes, '" << word << "' comes after '" << current-thought->word() << "'... " << endl;
 				}
 			} else {
-				// TODO: we also do this inside likelihood::note-next, and it doesn't know if it's internal.  could fix linebreak by accumulating words as a plan, dunno [breaks model-feedback-with-listener].
+				// TODO: we also do this inside likelihood::note-next, and it doesn't know if it's internal?
 				cerr << " -- How new to " << (internal ? "think" : "hear") << ": " << tools::quote_special(word) << " =)" << endl;
 			}
 			last-thought = current-thought;
 			current-thought = word-ref;
-			last-thought->note-next(current-thought, false);
+			bool expected = last-thought->note-next(current-thought, true);
+			if (!expected) {
+				cerr << " -- I need a way to reach out here.  I've promised to adjust my thinking and I'm not sure how." << endl;
+			}
 		}
 		string say() {
 			if (current-thought->next-is-known()) {
