@@ -24,23 +24,36 @@ hello there
  -- Heard: [silence]
  -- How new to hear: [silence] =)
  -- How helpful to consider: [silence] =)
+ -- I'm a little worried.  I'm stating hello as following special-silence but it could be any of hello x1 special-silence x1
  -- How new to think: 'hello' =)
- -- How helpful to consider: 'hello' =)
+ -- I got hello after special-silence and already expected: hello x1 special-silence x1
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
  hello -- How helpful to consider: 'there' =)
  there -- How helpful to consider: [silence] =)
  [silence]
 
-special-end-of-conversation
+special-silence special-end-of-conversation goodbye special-end-of-conversation
+ -- Heard: [silence]
+ -- How new to hear: [silence] =)
+ -- I got special-silence after special-silence and already expected: hello x2 special-silence x1
+ -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
  -- Heard: [end-of-conversation]
  -- How new to hear: [end-of-conversation] =)
- -- How boring to see again: [end-of-conversation]
+ -- I got special-end-of-conversation after special-silence and already expected: hello x2 special-silence x2
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
+ -- Heard: 'goodbye'
+ -- How new to hear: 'goodbye' =)
+ -- How helpful to consider: 'goodbye' =)
+ -- Heard: [end-of-conversation]
+ -- How new to hear: [end-of-conversation] =)
+ -- How helpful to consider: [end-of-conversation] =)
  -- Heard: [silence]
  -- How new to hear: [silence] =)
  -- How helpful to consider: [silence] =)
+ -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
+ -- I'm a little worried.  I'm stating hello as following special-silence but it could be any of hello x2 special-silence x2 special-end-of-conversation x1
  -- How new to think: 'hello' =)
- -- How boring to see again: 'hello'
+ -- I got hello after special-silence and already expected: hello x2 special-silence x2 special-end-of-conversation x1
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
  hello -- How new to think: 'there' =)
  -- How boring to see again: 'there'
@@ -50,9 +63,11 @@ special-end-of-conversation
 
  -- Heard: [end-of-conversation]
  -- How new to hear: [end-of-conversation] =)
- -- How boring to see again: [end-of-conversation]
+ -- I got special-end-of-conversation after special-silence and already expected: hello x3 special-silence x2 special-end-of-conversation x1
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
+ -- I'm a little worried.  I'm stating special-silence as following special-end-of-conversation but it could be any of special-silence x1 goodbye x1
  -- How new to think: [silence] =)
- -- How helpful to consider: [silence] =)
+ -- I got special-silence after special-end-of-conversation and already expected: special-silence x1 goodbye x1
+ -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
  [silence]
 

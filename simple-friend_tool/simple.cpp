@@ -89,6 +89,10 @@ namespace next_word
 
 		ref next() override
 		{
+			auto best = get-best();
+			if (best->second != member-total-experiences) {
+				cerr << " -- I'm a little worried.  I'm stating " << best->first->word() << " as following " << word() << " but it could be any of " << members-to-string() << endl;
+			}
 			return get-best()->first;
 		}
 
@@ -96,13 +100,17 @@ namespace next_word
 
 		bool note-next(reference next, bool capacity) override
 		{
-			if (member-experiences.size() == 1 && member-total-experiences > 1 && next != member-experiences.begin()->first) {
-				if (capacity) { return false; }
-				cerr << " -- I want a way to reach out to more here.  I used to know how to predict this and no longer do." << endl;
-			} else if (member-total-experiences < 3) {
-				cerr << " -- How helpful to consider: " << tools::quote_special(next->word()) << " =)" << endl;
+			if (member-experiences.size() <= 1) {
+				if (member-total-experiences > 1 && next != member-experiences.begin()->first) {
+					if (capacity) { return false; }
+					cerr << " -- I want a way to reach out to more here.  I used to know how to predict this and no longer do." << endl;
+				} else if (member-total-experiences >= 3) {
+					cerr << " -- How boring to see again: " << tools::quote_special(next->word()) << endl;
+				} else {
+					cerr << " -- How helpful to consider: " << tools::quote_special(next->word()) << " =)" << endl;
+				}
 			} else {
-				cerr << " -- How boring to see again: " << tools::quote_special(next->word()) << endl;
+				cerr << " -- I got " << next->word() << " after " << word() << " and already expected: " << members-to-string() << endl;
 			}
 			if (member-experiences.count(next) == 0) {
 				member-experiences[[next]] = 1;
@@ -130,6 +138,21 @@ namespace next_word
 				}
 			}
 			return best;
+		}
+		
+		string members-to-string()
+		{
+			string result;
+			bool first = true;
+			for (auto & item : member-experiences) {
+				if (first) {
+					first = false;
+				} else {
+					result += " ";
+				}
+				result += item.first->word() + " x" + to_string(item.second);
+			}
+			return result;
 		}
 	};
 
