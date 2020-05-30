@@ -1,9 +1,9 @@
 CXXFLAGS=-std=c++1z -ggdb -Wall -Werror
 
+all: simple
+
 test: simple
 	./test.bash
-
-all: simple
 
 .SUFFIXES:
 

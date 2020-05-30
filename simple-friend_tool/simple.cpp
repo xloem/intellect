@@ -4,24 +4,99 @@
 using amount = double;
 using quantity = size_t;
 
+namespace words
+{
+		static constexpr char const * silence = "special-silence";
+		static constexpr char const * start-of-conversation = "special-start-of-conversation";
+		static constexpr char const * end-of-conversation = "special-end-of-conversation";
+}
+
+namespace next-memory
+{
+	template <typename Data>
+	class memory;
+
+	template <typename Data = any>
+	class memory : public tools::registered<memory<Data>>
+	{
+	public:
+		using reference = shared_ptr<memory<Data>>;
+
+		static reference make(reference previous, Data data = {})
+		{
+			if (previous) {
+				new memory<Data>(previous, data);
+				return previous->member-next;
+			}
+			reference result;
+			result.reset(new memory<Data>({}, data));
+			return result;
+		}
+
+		reference previous() { return member-previous; }
+		reference next() { return member-next; }
+		Data & data() { return member-data; }
+		/*
+		template <typename Type>
+		Type & data() { return any_cast<Type>(member-data); }
+		*/
+
+		// memories could reference other memories for similarity,
+		// this would provide for prediction and learning.
+
+		shared_ptr<any> more;
+	
+	private:
+		memory(reference previous, Data data)
+		: member-previous(previous),
+		  member-data(data)
+		{
+			if (member-previous) {
+				member-previous->member-next.reset(this);
+			}
+		}
+
+		reference member-previous;
+		reference member-next;
+		Data member-data;
+	};
+
+	/*
+	class word-thinker
+	{
+	public:
+		reference first-memory;
+
+		word-thinker()
+		{
+			first-memory.reset(new memory({}), word-event{words::start-of-conversation, word-event::boundary-prior});
+		}
+
+		void hear(string word, bool internal = false)
+		{
+		}
+
+		string say()
+		{
+			return {};
+		}
+	};
+	*/
+}
+
 namespace next_word
 {
 	class thought;
 	using reference = shared_ptr<thought>;
 	using ref = reference;
 
-	class thought
+	class thought : public tools::registered<thought>
 	{
 	public:
 		thought(string word)
 		: member-word(word)
-		{
-			registry.insert(this);
-		}
-		~thought()
-		{
-			registry.erase(this);
-		}
+		{}
+		virtual ~thought() {}
 
 		void replace(reference other)
 		{
@@ -37,7 +112,9 @@ namespace next_word
 		virtual amount next-is-known() = 0;
 		virtual ref next() = 0;
 
-		virtual bool note-next(reference next, bool capacity) = 0;
+		// returns false if caller-has-capacity and event is too confusing
+		// to predict from.
+		virtual bool note-next(reference next, bool caller-has-capacity) = 0;
 
 		virtual void merge(ref) {} // TODO because spreads pointer change
 
@@ -46,10 +123,7 @@ namespace next_word
 
 	protected:
 		string member-word;
-
-		static unordered_set<thought*> registry;
 	};
-	unordered_set<thought*> thought::registry;
 
 	class in-a-row : public thought
 	{
@@ -132,6 +206,9 @@ namespace next_word
 
 		bool note-next(reference next, bool capacity) override
 		{
+			// all these words are an eumulation of smooth feedback.
+			// ideally this incrementation is a smooth understanding.
+			// we need time to act on something being new.
 			if (member-experiences.size() <= 1) {
 				if (member-total-experiences > 1 && next != member-experiences.begin()->first) {
 					if (capacity) { return false; }
@@ -193,21 +270,73 @@ namespace next_word
 		map<string, ref> index; // hmm.  a book is near context.
 	};
 
+	class word-event
+	{
+	public:
+		string word;
+		enum {
+			ongoing,
+			boundary-prior,
+			boundary-after,
+			boundary
+		} change;
+
+		word-event(string word, word-event & previous)
+		: word(word)
+		{
+			if (tools::starts_with(word, "special-")) {
+				change = boundary;
+				if (previous.change == ongoing) {
+					previous.change = boundary-after;
+				}
+			} else if (previous.change == boundary) {
+				change = boundary-prior;
+			}
+		}
+
+		word-event(string word)
+		: word(word)
+		{
+			if (tools::starts_with(word, "special-")) {
+				change = boundary;
+			} else {
+				change = boundary-prior;
+			}
+		}
+	};
+
 	
 	class thinker {
 	public:
+		using memory = next-memory::memory<word-event>;
+		using reference = shared_ptr<memory>;
+
 		reference first-thought;
 		reference last-thought;
 		reference current-thought;
 
-		book current_book;
+		// book current_book; // is there capacity to look up from the nearby graph?
 
-		static constexpr char const * silence = "special-silence";
-		static constexpr char const * start-of-conversation = "special-start-of-conversation";
-		static constexpr char const * end-of-conversation = "special-end-of-conversation";
+		static constexpr char const * silence = words::silence;
+		static constexpr char const * start-of-conversation = words::start-of-conversation;
+		static constexpr char const * end-of-conversation = words::end-of-conversation;
+
+		reference look_up_word(std::string word)
+		{
+			// it is helpful when looking up a word from likelihood,
+			// to know how we reached each state
+
+			// the intent of first-thought is to provide that,
+			// but it may not be true
+
+			// we've been avoiding for a long time having a listed
+			// record of states.  maybe we can first implement
+			// new-states.
+			return {};
+		}
 
 		thinker() {
-			first-thought.reset(new likelihood(start-of-conversation));
+			first-thought = memory::make({}, word-event(start-of-conversation));
 			last-thought = first-thought;
 			current-thought = first-thought;
 		}
@@ -218,10 +347,9 @@ namespace next_word
 				// if internal we could recurse making a sublist of words for thinking, referencing memory -karl-idea
 			}
 
-			auto & word-ref = current_book.index[[word]];
-			if (!word-ref) {
-				word-ref.reset(new likelihood({word}));
-			}	
+			reference next-thought = memory::make(current-thought, word-event(word, current-thought->data()));
+
+			/*
 			auto expectation-confidence = current-thought->next-is-known();
 			if (expectation-confidence > 50) {
 				if (current-thought->next()->word() != word) {
@@ -233,21 +361,30 @@ namespace next_word
 				// TODO: we also do this inside likelihood::note-next, and it doesn't know if it's internal?
 				cerr << " -- How new to " << (internal ? "think" : "hear") << ": " << tools::quote_special(word) << " =)" << endl;
 			}
+			*/
+
+			cerr << " -- I need a way to reach out to more here.  I don't know how to see if this has happened before." << endl;
+
+
 			last-thought = current-thought;
-			current-thought = word-ref;
+			current-thought = next-thought;
+			/*
 			bool expected = last-thought->note-next(current-thought, true);
 			if (!expected) {
-				cerr << " -- I need a way to reach out here.  I've promised to adjust my thinking and I'm not sure how." << endl;
+				cerr << " --- Woah...! " << tools::quote_special(last-thought->word()) << " " << tools::quote_special(word) << endl;
+				// we'll need a way of branching from the old situation to the new one.  the logic here atm is flawed.
+				current-thought.reset(new likelihood(word));
 			}
+			*/
 		}
 		string say() {
-			if (current-thought->next-is-known()) {
+			/*if (current-thought->next-is-known()) {
 				hear(current-thought->next()->word(), true);
-			} else {
+			} else {*/
 				cerr << " -- I need a way to reach out to more here!  I don't know what to do!" << endl;
 				hear(silence, true);
-			}
-			return current-thought->word();
+			//}
+			return current-thought->data().word;
 		}
 	};
 }
