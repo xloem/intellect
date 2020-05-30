@@ -13,11 +13,26 @@ namespace words
 
 namespace next-memory
 {
+	// GOOD OR BAD: we can update likelihood-good _everywhere_
+	// when a good or bad learning happens
 	template <typename Data>
 	class memory;
 
+	template <typename Data>
+	class memory-link
+	{
+	public:
+		enum {
+			previous,
+			next,
+			more
+		} type;
+		shared_ptr<memory<Data>> where;
+	};
+
 	template <typename Data = any>
-	class memory : public tools::registered<memory<Data>>
+	class memory : public tools::registered<memory<Data>>,
+	               public tools::place<memory<Data>, memory-link<Data>>
 	{
 	public:
 		using reference = shared_ptr<memory<Data>>;
@@ -36,6 +51,11 @@ namespace next-memory
 		reference previous() { return member-previous; }
 		reference next() { return member-next; }
 		Data & data() { return member-data; }
+
+		vector<memory-link<Data>> near-ways()
+		{
+			return {
+		}
 		/*
 		template <typename Type>
 		Type & data() { return any_cast<Type>(member-data); }
@@ -321,17 +341,13 @@ namespace next_word
 		static constexpr char const * start-of-conversation = words::start-of-conversation;
 		static constexpr char const * end-of-conversation = words::end-of-conversation;
 
-		reference look_up_word(std::string word)
+		auto look-up-word(std::string word) -> auto
 		{
-			// it is helpful when looking up a word from likelihood,
-			// to know how we reached each state
+			// try returning a lambda that when called repeatedly engages in an ongoing breadth-first search for things matching
+			// we'll like want to upgrade the matcher eventually, maybe move the function elsewhere.
 
-			// the intent of first-thought is to provide that,
-			// but it may not be true
+			// maybe we could make a class
 
-			// we've been avoiding for a long time having a listed
-			// record of states.  maybe we can first implement
-			// new-states.
 			return {};
 		}
 

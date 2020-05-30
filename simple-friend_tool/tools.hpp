@@ -3,8 +3,64 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_set>
 
 namespace tools {
+
+// a registered thing is added to a protected 'registry' set
+// that can be used to enumerate all of them
+template <typename Derived>
+class registered
+{
+public:
+	registered()
+	{
+		registry.insert((Derived*)this);
+	}
+	~registered()
+	{
+		registry.erase((Derived*)this);
+	}
+
+protected:
+	static std::unordered_set<Derived*> registry;
+};
+template <typename Derived>
+std::unordered_set<Derived*> registered<Derived>::registry;
+
+// a place has things that are immediately near to it
+template <typename Derived, typename Way>
+class place
+{
+public:
+	using reference = std::shared_ptr<Derived>;
+	virtual std::vector<Way> near-ways() = 0;
+
+	std::vector<Derived> near-places()
+	{
+		// stub
+	}
+};
+
+template <typename Place>
+class explore
+{
+public:
+	explore(Place start)
+	: queue({start})
+	{ }
+
+	Place next()
+	{
+		Place next = queue.back();
+		queue.pop_back();
+		for (Place place : next.near-places()) {
+			queue.push_back(place);
+		}
+	}
+protected:
+	vector<Place> queue;
+};
 
 bool starts_with(std::string const & word, std::string const & start)
 {
