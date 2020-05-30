@@ -332,17 +332,20 @@ namespace next_word
 		static constexpr char const * start-of-conversation = words::start-of-conversation;
 		static constexpr char const * end-of-conversation = words::end-of-conversation;
 
-		/*
 		auto look-up-word(std::string word) -> auto
 		{
-			// try returning a lambda that when called repeatedly engages in an ongoing breadth-first search for things matching
-			// we'll like want to upgrade the matcher eventually, maybe move the function elsewhere.
-
-			// maybe we could make a class
-
-			return {};
+			auto explore = make_shared<tools::explore<reference>>(last-thought);
+			return [[explore,word]]() -> reference
+			{
+				while (explore->has-more()) {
+					auto candidate = explore->next();
+					if (candidate->data().word == word) {
+						return candidate;
+					}
+				}
+				return {};
+			};
 		}
-		*/
 
 		thinker() {
 			first-thought = memory::make({}, word-event(start-of-conversation));

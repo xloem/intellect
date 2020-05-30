@@ -103,13 +103,24 @@ public:
 	Place next()
 	{
 		Place next = queue.back();
+		visited.insert(next);
 		queue.pop_back();
-		for (Place place : next.near-places()) {
+		for (Place place : next->near-places()) {
+			if (visited.count(place)) {
+				continue;
+			}
 			queue.push_back(place);
 		}
+		return next;
+	}
+
+	bool has-more()
+	{
+		return queue.size() > 0;
 	}
 protected:
 	std::vector<Place> queue;
+	std::unordered_set<Place> visited;
 };
 
 bool starts_with(std::string const & word, std::string const & start)
