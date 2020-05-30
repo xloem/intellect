@@ -88,8 +88,7 @@ namespace next_word
 
 	class likelihood : public thought
 	{
-	public: // we have unsureness with likelihood don't we
-		// don't fret about stats, try to do quick solution
+	public:
 		likelihood(string word)
 		: thought(word), member-total-experiences(0)
 		{ }
@@ -111,13 +110,13 @@ namespace next_word
 		
 		amount next-is-known() override
 		{
-			if (member-total-experiences > 2 && member-experiences.size() == 1) {
+			/*if (member-total-experiences > 2 && member-experiences.size() == 1) {
 				return true;
-			} else if (member-total-experiences > 0) {
+			} else*/ if (member-total-experiences > 0) {
 				amount confidence = get-best()->second / amount(member-total-experiences + 1) * 100;
 				return confidence;
 			}
-			return false;
+			return 0;//false;
 		}
 
 		ref next() override

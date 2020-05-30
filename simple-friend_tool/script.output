@@ -55,10 +55,8 @@ special-silence special-end-of-conversation goodbye special-end-of-conversation
  -- How new to think: 'hello' =)
  -- I got hello after special-silence and already expected: hello x2 special-silence x2 special-end-of-conversation x1
  -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
- hello -- How new to think: 'there' =)
- -- How boring to see again: 'there'
- there -- How new to think: [silence] =)
- -- How boring to see again: [silence]
+ hello -- How boring to see again: 'there'
+ there -- How boring to see again: [silence]
  [silence]
 
  -- Heard: [end-of-conversation]
