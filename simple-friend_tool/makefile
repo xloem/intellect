@@ -13,5 +13,8 @@ test: simple
 %.o: %.cxx
 	g++ ${CXXFLAGS} ${CPPFLAGS} -c $^ -o $@
 
-%.cxx: %.cpp preprocess.bash *.h*
+%.cxx: %.cpp preprocess.bash $(patsubst %.hpp,%.hxx, $(wildcard *.hpp))
+	./preprocess.bash $< $@
+
+%.hxx: %.hpp preprocess.bash
 	./preprocess.bash $< $@

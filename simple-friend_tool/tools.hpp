@@ -1,9 +1,12 @@
 #pragma once
 
+#include <any>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 namespace tools {
 
@@ -35,11 +38,58 @@ class place
 public:
 	using reference = std::shared_ptr<Derived>;
 	virtual std::vector<Way> near-ways() = 0;
+	virtual Derived way-to-place(Way &) = 0;
 
 	std::vector<Derived> near-places()
 	{
-		// stub
+		std::vector<Derived> results;
+		
+		for (auto & way : near-ways()) {
+			results.push_back(way-to-place(way));
+		}
+
+		return results;
 	}
+
+	std::shared_ptr<std::any> more; // one thing missing is distant ways
+};
+
+template <typename Derived, typename WayKind>
+class ways-kinds-place : public place<Derived, std::pair<WayKind, Derived> >
+{
+public:
+	using reference = std::shared_ptr<Derived>;
+	using Way = std::pair<WayKind, Derived>;
+
+	ways-kinds-place(std::initializer_list<Way> ways)
+	{
+		for (auto & way : ways) {
+			this->ways.insert(way);
+		}
+	}
+
+	Derived & way(WayKind type)
+	{
+		return ways[[type]];
+	}
+
+	virtual Derived way-to-place(Way & way) override
+	{
+		return way.second;
+	}
+	
+	virtual std::vector<Way> near-ways() override
+	{
+		std::vector<Way> results;
+		for (auto & way : ways)
+		{
+			results.push_back(way);
+		}
+		return results;
+	}
+
+protected:
+	std::unordered_map<WayKind, Derived> ways;
 };
 
 template <typename Place>
@@ -59,7 +109,7 @@ public:
 		}
 	}
 protected:
-	vector<Place> queue;
+	std::vector<Place> queue;
 };
 
 bool starts_with(std::string const & word, std::string const & start)

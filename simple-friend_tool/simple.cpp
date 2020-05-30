@@ -18,44 +18,37 @@ namespace next-memory
 	template <typename Data>
 	class memory;
 
-	template <typename Data>
-	class memory-link
-	{
-	public:
-		enum {
-			previous,
-			next,
-			more
-		} type;
-		shared_ptr<memory<Data>> where;
+	enum memory-link-kind {
+		previous,
+		next,
+		more
 	};
 
 	template <typename Data = any>
 	class memory : public tools::registered<memory<Data>>,
-	               public tools::place<memory<Data>, memory-link<Data>>
+	               public tools::ways-kinds-place<shared_ptr<memory<Data>>, memory-link-kind>
 	{
 	public:
 		using reference = shared_ptr<memory<Data>>;
+		using ways-kinds-place = tools::ways-kinds-place<reference, memory-link-kind>;
 
 		static reference make(reference previous, Data data = {})
 		{
 			if (previous) {
 				new memory<Data>(previous, data);
-				return previous->member-next;
+				return previous->next();
 			}
 			reference result;
 			result.reset(new memory<Data>({}, data));
 			return result;
 		}
 
-		reference previous() { return member-previous; }
-		reference next() { return member-next; }
+		using ways-kinds-place::way;
+
+		reference previous() { return way(memory-link-kind::previous); }
+		reference next() { return way(memory-link-kind::next); }
 		Data & data() { return member-data; }
 
-		vector<memory-link<Data>> near-ways()
-		{
-			return {
-		}
 		/*
 		template <typename Type>
 		Type & data() { return any_cast<Type>(member-data); }
@@ -68,16 +61,13 @@ namespace next-memory
 	
 	private:
 		memory(reference previous, Data data)
-		: member-previous(previous),
-		  member-data(data)
+		: ways-kinds-place({{memory-link-kind::previous, previous}})
 		{
-			if (member-previous) {
-				member-previous->member-next.reset(this);
+			if (previous) {
+				previous->way(memory-link-kind::next).reset(this);
 			}
 		}
 
-		reference member-previous;
-		reference member-next;
 		Data member-data;
 	};
 
@@ -314,6 +304,7 @@ namespace next_word
 			}
 		}
 
+		word-event() = default;
 		word-event(string word)
 		: word(word)
 		{
@@ -341,6 +332,7 @@ namespace next_word
 		static constexpr char const * start-of-conversation = words::start-of-conversation;
 		static constexpr char const * end-of-conversation = words::end-of-conversation;
 
+		/*
 		auto look-up-word(std::string word) -> auto
 		{
 			// try returning a lambda that when called repeatedly engages in an ongoing breadth-first search for things matching
@@ -350,6 +342,7 @@ namespace next_word
 
 			return {};
 		}
+		*/
 
 		thinker() {
 			first-thought = memory::make({}, word-event(start-of-conversation));
