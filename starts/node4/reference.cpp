@@ -6,18 +6,15 @@
 
 using namespace std;
 
-reference kindness_mistake(string("kindness_mistake"));
-reference true(string("true")), false(string("false"));
 
 namespace std { template <> struct hash<reference> {
 	size_t operator()(const reference & to_hash) const
 	{
-		return hash<shared_ptr<part>>()(to_hash.pointer());
+		return hash<shared_ptr<reference::part>>()(to_hash.pointer());
 	}
 }; }
 
-// this is what's inside a reference
-class part
+class reference::part
 {
 private:
 	friend class reference;
@@ -35,17 +32,13 @@ private:
 reference::reference(any data)
 : shared(new part(data))
 { }
-reference::reference()
-: shared(new part({}))
-{ }
 reference::reference(reference const & other)
 : shared(other.pointer())
 { }
 
-reference const reference::null((bool *)"token_for_making_null_reference");
 reference::reference(bool * token_for_making_null_reference) {}
 
-reference reference::get((std::function<reference(reference,reference)>)[](reference focus, reference key) -> reference
+reference reference::basic_get((std::function<reference(reference,reference)>)[](reference focus, reference key) -> reference
 {
 	auto & map = focus.pointer()->keyed_parts;
 	auto result = map.find(key);
@@ -56,7 +49,7 @@ reference reference::get((std::function<reference(reference,reference)>)[](refer
 	}
 });
 
-reference reference::set((std::function<reference(reference,reference,reference)>)[](reference focus, reference key, reference value) -> reference
+reference reference::basic_set((std::function<reference(reference,reference,reference)>)[](reference focus, reference key, reference value) -> reference
 {
 	auto & map = focus.pointer()->keyed_parts;
 	auto result = map.emplace(key, value);
@@ -70,6 +63,46 @@ reference reference::set((std::function<reference(reference,reference,reference)
 		return old_value;
 	}
 });
+
+reference reference::indirect_get((std::function<reference(reference,reference)>)[](reference focus, reference key) -> reference
+{
+	reference getter = basic_get(focus, indirect_getter);
+	if (getter == null) {
+		getter = basic_get;
+	}
+	return getter(focus, indirect_getter);
+});
+
+reference reference::indirect_set((std::function<reference(reference,reference,reference)>)[](reference focus, reference key, reference value) -> reference
+{
+	reference setter = basic_get(focus, indirect_setter);
+	if (setter == null) {
+		setter = basic_set;
+	}
+	return setter(focus, indirect_setter, value);
+	
+	auto & map = focus.pointer()->keyed_parts;
+	auto result = map.emplace(key, value);
+	if (result.second) {
+		// insertion happened: no old element
+		return null;
+	} else {
+		// key already present
+		reference old_value = result.first->second;
+		result.first->second = value;
+		return old_value;
+	}
+});
+
+reference reference::kindness_mistake(string("kindness_mistake"));
+reference const reference::null((bool *)"token_for_making_null_reference");
+
+reference reference::indirect_getter(string("indirect_getter"));
+reference reference::indirect_setter(string("indirect_setter"));
+
+reference reference::operator_equals(string("operator="));
+reference reference::operator_brackets(string("operator[]"));
+
 
 /*
 reference reference::operator[](reference key)
@@ -102,7 +135,7 @@ bool reference::operator==(reference const & other) const
 	return other.pointer() == pointer();
 }
 
-shared_ptr<part> reference::pointer() const
+shared_ptr<reference::part> reference::pointer() const
 {
 	return is_nonweak() ? shared : weak.lock();
 }

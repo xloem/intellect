@@ -5,52 +5,48 @@
 #include <memory>
 #include <functional>
 
-class part;
-class reference;
-
-#define true true_
-#define false false_
-
-extern reference kindness_mistake; // thrown when kind mismatches
-extern reference true, false;
-
-// a general reference to an index of pointers
 class reference
 {
 public:
-	reference(std::any data);
-	reference();
+	// construction
+	reference(std::any data = {});
 	reference(reference const & other);
+
+	// in case a weak reference is needed
+	bool is_nonweak() const;
+	void set_nonweak(bool nonweak);
+
+	// data access
 	template <typename data_type>
 		operator data_type &();
-	// throws kindness_mistak if this isn't a std::function taking and returning references
+
+	// function call if data is std::function
 	template <typename... parameter_types>
 		reference operator()(parameter_types... parameters);
 
-	static reference const null;
+	// get an immediate property
+	static reference basic_get/*(reference focus, reference key)*/;
 
-	// callable: get an immediate property
-	static reference get/*(reference focus, reference key)*/;
+	// set an immediate property, returns old value
+	static reference basic_set/*(reference focus, reference key, reference value)*/;
 
-	// callable: set an immediate property, returns old value
-	static reference set/*(reference focus, reference key, reference value)*/;
+	// get an indirect property
+	static reference indirect_get/*(reference focus, reference key)*/;
 
-	// we might like to copy one property to another
-	// but we see it relates to maps, which are more general
-		// this fucntion is set(focus2, key2, get(focus1, key1));
-		// so you see we could make a fucntional programming language
-		// by including call objects inside of call objects.
-	static reference copy/*(reference focus1, reference key1, reference focus2, reference key2)*/;
+	// set an indirect property, returns old value
+	static reference indirect_set/*(reference focus, reference key, reference value)*/;
 
-	// for calling members, structural subclasses could override?
-		// we could separate connectedness from immediateness
-		// using different operators, too?
-	//reference operator[](reference key);
+	// useful basic objects
+	static reference kindness_mistake; // thrown when kind mismatches
+	static reference const null; // empty reference
 
-	// nonweak means reference-counting.  all references start nonweak.
-	// see how these functions are used to see if that should be changed.
-	bool is_nonweak() const;
-	void set_nonweak(bool nonweak);
+	// kinds that can be used to store alternatives to the basic functions
+	static reference indirect_getter;
+	static reference indirect_setter;
+
+	// kinds that could be used to store operators in c++
+	static reference operator_equals;
+	static reference operator_brackets;
 
 	// for property-references, must treat properties as connection objects owned by this object (connectedness) [when implementing connectedness, if typedness is being implemented, we'll want gettersetterness]
 		// ^-- nonweakness relation: users of connection objects that are nonweak may be surprised if the source object for the connection is thrown out.  some way to propagate events could be relevent.
@@ -63,6 +59,7 @@ public:
 	bool operator==(reference const & other) const;
 
 private:
+	class part;
 	friend class std::hash<reference>;
 	std::shared_ptr<part> pointer() const;
 	reference(bool * token_for_making_null_reference);
