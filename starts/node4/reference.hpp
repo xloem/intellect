@@ -42,19 +42,28 @@ public:
 	static reference basic_index/*(reference focus, reference index)*/;
 
 	// get an indirect property
-	reference get(reference kind) { return (*this)(kind_get, {*this, kind}); }
+	reference get(reference kind) { return (*this)(kind_get, {kind}); }
 	
 	// set an indirect property, returns old value
-	reference set(reference kind, reference value) { return (*this)(kind_set, {*this, kind, value}); }
+	reference set(reference kind, reference value) { return (*this)(kind_set, {kind, value}); }
 	
-	// operators with no default behavior
-	reference operator=(reference other) { return (*this)(kind_operator_equals, {*this, other}); }
-	reference operator[](reference index) { return (*this)(kind_operator_brackets, {*this, index}); }
+	// count properties indirectly
+	reference count() { return (*this)(kind_count, {}); }
+
+	// get a property by index indirectly
+	reference index(reference index) { return (*this)(kind_index, {index}); }
+
+	// defaults to reseating this reference
+	reference operator=(reference other) { return (*this)(kind_operator_equals, {other}); }
+
+	// no default; kind_operator_brackets must be set to not throw
+	reference operator[](reference index) { return (*this)(kind_operator_brackets, {index}); }
 
 
 	// useful basic objects
-	static reference kindness_mistake; // thrown when kind mismatches
 	static reference const null; // empty reference
+	static reference kindness_mistake; // thrown when kind mismatches
+	static reference presence_mistake; // thrown when a null reference is used
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
@@ -62,6 +71,7 @@ public:
 	static reference kind_set;
 	static reference kind_count;
 	static reference kind_index;
+	// IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
 	static reference kind_operator_equals;
 	static reference kind_operator_brackets;
 
@@ -78,6 +88,7 @@ public:
 private:
 	class part;
 	friend class std::hash<reference>;
+	char const * what() const noexcept; // unused, can move: returns possible excpetion text
 	std::shared_ptr<part> pointer() const;
 	reference(bool * token_for_making_null_reference);
 

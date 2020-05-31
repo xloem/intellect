@@ -40,14 +40,23 @@ reference::reference(bool * token_for_making_null_reference) {}
 
 reference reference::operator()(reference kind, std::initializer_list<reference> parameters)
 {
+	// this is called by operators, so when it uses operators there
+	// is possibility for stack overflow.
+
 	// use kind_get to get kind
-	reference getter = basic_get(*this, kind_get);
+	reference getter(null);
+	try {
+		getter.shared = basic_get(*this, kind_get).pointer();
+	} catch (reference) { }
 	if (getter == null) {
-		getter = basic_get;
+		getter.shared = basic_get.pointer();
 	}
 
 	// default to basic functions
-	reference method = getter(*this, kind);
+	reference method(null);
+	try {
+		method.shared = getter(*this, kind).pointer();
+	} catch (reference) { }
 	if (method == null) {
 		if (kind == kind_get) {
 			method = basic_get;
@@ -57,6 +66,10 @@ reference reference::operator()(reference kind, std::initializer_list<reference>
 			method = basic_count;
 		} else if (kind == kind_index) {
 			method = basic_index;
+		} else if (kind == kind_operator_equals) {
+			if (parameters.size() != 1) { throw kindness_mistake; }
+			shared = parameters.begin()->pointer();
+			return *this;
 		}
 	}
 
@@ -88,6 +101,7 @@ reference reference::operator()(reference kind, std::initializer_list<reference>
 
 reference reference::basic_get((std::function<reference(reference,reference)>)[](reference focus, reference key) -> reference
 {
+	if (!focus.pointer()) { throw presence_mistake; }
 	auto & map = focus.pointer()->keyed_parts;
 	auto result = map.find(key);
 	if (result == map.end()) {
@@ -99,6 +113,7 @@ reference reference::basic_get((std::function<reference(reference,reference)>)[]
 
 reference reference::basic_set((std::function<reference(reference,reference,reference)>)[](reference focus, reference key, reference value) -> reference
 {
+	if (!focus.pointer()) { throw presence_mistake; }
 	auto & map = focus.pointer()->keyed_parts;
 	auto result = map.emplace(key, value);
 	if (result.second) {
@@ -115,11 +130,13 @@ reference reference::basic_set((std::function<reference(reference,reference,refe
 
 reference reference::basic_count((std::function<reference(reference)>)[](reference focus) -> reference
 {
+	if (!focus.pointer()) { throw presence_mistake; }
 	return (any)(index_t)focus.pointer()->key_order.size();
 });
 
 reference reference::basic_index((std::function<reference(reference, reference)>)[](reference focus, reference index) -> reference
 {
+	if (!focus.pointer()) { throw presence_mistake; }
 	return focus.pointer()->key_order[(index_t)index];
 });
 
@@ -156,8 +173,9 @@ reference reference::indirect_set((std::function<reference(reference,reference,r
 });
 */
 
-reference reference::kindness_mistake(string("kindness_mistake"));
 reference const reference::null((bool *)"token_for_making_null_reference");
+reference reference::kindness_mistake(string("kindness_mistake"));
+reference reference::presence_mistake(string("kindness_mistake"));
 
 reference reference::kind_get(string("kind_get"));
 reference reference::kind_set(string("kind_set"));
@@ -198,6 +216,18 @@ bool reference::operator==(reference const & other) const
 	return other.pointer() == pointer();
 }
 
+char const * reference::what() const noexcept
+{
+	auto pointing = pointer();
+	if (!pointing) {
+		return "null reference";
+	}
+	if (pointing->data.type() != typeid(string)) {
+		return "reference not a string";
+	}
+	return std::any_cast<string>(&pointing->data)->c_str();
+}
+
 shared_ptr<reference::part> reference::pointer() const
 {
 	return is_nonweak() ? shared : weak.lock();
@@ -205,5 +235,7 @@ shared_ptr<reference::part> reference::pointer() const
 
 any & reference::data()
 {
-	return pointer()->data;
+	auto pointing = pointer();
+	if (!pointing) { throw presence_mistake; }
+	return pointing->data;
 }

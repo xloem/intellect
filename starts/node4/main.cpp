@@ -5,7 +5,11 @@
 
 using namespace std;
 
-// okay time-value
+// okay time-value, maybe maps
+
+
+
+
 //
 // basics:
 // 	wayness: how-to-update, how-to-pick
@@ -63,11 +67,11 @@ public:
 int main(int argc, char ** argv)
 {
 	reference concept, is, object, chair, wood, material;
-	reference::basic_set(chair, is, object);
-	reference::basic_set(concept, is, chair);
-	reference::basic_set(concept, material, wood);
+	chair.set(is, object);
+	concept.set(is, chair);
+	concept.set(material, wood);
 
 	((string&)wood) = "tree-body";
 
-	cout << (string)reference::basic_get(concept, material) << endl;
+	cout << (string)concept.get(material) << endl;
 }
