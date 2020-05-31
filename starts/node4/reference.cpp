@@ -20,7 +20,7 @@ private:
 	friend class reference;
 
 	unordered_map<reference, reference> kinded_parts;
-	vector<reference> kind_order;
+	vector<reference> ordered_parts;
 
 	any data;
 
@@ -43,13 +43,13 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	// this is called by operators, so when it uses operators there
 	// is possibility for stack overflow.
 
-	// use kind_get to get kind
+	// use method_kind_get to get kind
 	reference getter(null);
 	try {
-		getter.shared = basic_get(*this, kind_get).pointer();
+		getter.shared = basic_kind_get(*this, method_kind_get).pointer();
 	} catch (reference) { }
 	if (getter == null) {
-		getter.shared = basic_get.pointer();
+		getter.shared = basic_kind_get.pointer();
 	}
 
 	// default to basic functions
@@ -58,15 +58,19 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 		method.shared = getter(*this, kind).pointer();
 	} catch (reference) { }
 	if (method == null) {
-		if (kind == kind_get) {
-			method = basic_get;
-		} else if (kind == kind_set) {
-			method = basic_set;
-		} else if (kind == kind_count) {
-			method = basic_count;
-		} else if (kind == kind_index) {
-			method = basic_index;
-		} else if (kind == kind_operator_equals) {
+		if (kind == method_kind_get) {
+			method = basic_kind_get;
+		} else if (kind == method_kind_set) {
+			method = basic_kind_set;
+		} else if (kind == method_get_all_kinds) {
+			method = basic_get_all_kinds;
+		} else if (kind == method_order_count) {
+			method = basic_order_count;
+		} else if (kind == method_order_get) {
+			method = basic_order_get;
+		} else if (kind == method_order_set) {
+			method = basic_order_set;
+		} else if (kind == method_operator_equals) {
 			if (parameters.size() != 1) { throw kindness_mistake; }
 			shared = parameters.begin()->pointer();
 			return *this;
@@ -99,7 +103,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	}
 }
 
-reference reference::basic_get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
+reference reference::basic_kind_get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
 {
 	if (!focus.pointer()) { throw presence_mistake; }
 	auto & map = focus.pointer()->kinded_parts;
@@ -111,14 +115,13 @@ reference reference::basic_get((function<reference(reference,reference)>)[](refe
 	}
 });
 
-reference reference::basic_set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
+reference reference::basic_kind_set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
 {
 	if (!focus.pointer()) { throw presence_mistake; }
 	auto & map = focus.pointer()->kinded_parts;
 	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element
-		focus.pointer()->kind_order.push_back(kind);
 		return null;
 	} else {
 		// kind already present
@@ -128,16 +131,58 @@ reference reference::basic_set((function<reference(reference,reference,reference
 	}
 });
 
-reference reference::basic_count((function<reference(reference)>)[](reference focus) -> reference
+reference reference::basic_get_all_kinds((function<reference(reference)>)[](reference focus) -> reference
 {
 	if (!focus.pointer()) { throw presence_mistake; }
-	return (any)(index_t)focus.pointer()->kind_order.size();
+	auto & map = focus.pointer()->kinded_parts;
+	reference result;
+	for (auto & item : map) {
+		result.order_set(result.order_count(), item.first);
+	}
+	return result;
 });
 
-reference reference::basic_index((function<reference(reference, reference)>)[](reference focus, reference index) -> reference
+reference reference::basic_order_count((function<reference(reference)>)[](reference focus) -> reference
 {
 	if (!focus.pointer()) { throw presence_mistake; }
-	return focus.pointer()->kind_order[(index_t)index];
+	return (any)(index_t)focus.pointer()->ordered_parts.size();
+});
+
+reference reference::basic_order_get((function<reference(reference, reference)>)[](reference focus, reference index) -> reference
+{
+	if (!focus.pointer()) { throw presence_mistake; }
+	index_t index-data = (index_t)index;
+	if (index-data < 0 || index-data >= (index_t)focus.pointer()->ordered_parts.size()) {
+		throw presence_mistake;
+	}
+	return focus.pointer()->ordered_parts[index-data];
+});
+
+reference reference::basic_order_set((function<reference(reference, reference, reference)>)[](reference focus, reference index, reference value) -> reference
+{
+	if (!focus.pointer()) { throw presence_mistake; }
+	auto & ordered_parts = focus.pointer()->ordered_parts;
+	index_t index-data = (index_t)index;
+	if (value != null) {
+		if (index-data < 0 || index-data > (index_t)ordered_parts.size()) {
+			throw presence_mistake;
+		}
+		if (index-data == (index_t)ordered_parts.size()) {
+			ordered_parts.emplace_back(value);
+			return null;
+		} else {
+			reference old-item = ordered_parts[index-data];
+			ordered_parts[index-data] = value;
+			return old-item;
+		}
+	} else {
+		if (index-data < 0 || index-data >= (index_t)ordered_parts.size()) {
+			throw presence_mistake;
+		}
+		reference old-item = ordered_parts[index-data];
+		ordered_parts.erase(ordered_parts.begin() + index-data);
+		return old-item;
+	}
 });
 
 /*
@@ -175,14 +220,15 @@ reference reference::indirect_set((function<reference(reference,reference,refere
 
 reference const reference::null((bool *)"token_for_making_null_reference");
 reference reference::kindness_mistake(string("kindness_mistake"));
-reference reference::presence_mistake(string("kindness_mistake"));
+reference reference::presence_mistake(string("presence_mistake"));
 
-reference reference::kind_get(string("kind_get"));
-reference reference::kind_set(string("kind_set"));
-reference reference::kind_count(string("kind_count"));
-reference reference::kind_index(string("kind_index"));
-reference reference::kind_operator_equals(string("kind_operator_equals"));
-reference reference::kind_operator_brackets(string("kind_operator_brackets"));
+reference reference::method_kind_get(string("method_kind_get"));
+reference reference::method_kind_set(string("method_kind_set"));
+reference reference::method_order_count(string("method_order_count"));
+reference reference::method_order_get(string("method_order_get"));
+reference reference::method_order_set(string("method_order_set"));
+reference reference::method_operator_equals(string("method_operator_equals"));
+reference reference::method_operator_brackets(string("method_operator_brackets"));
 
 
 /*

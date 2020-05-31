@@ -30,34 +30,46 @@ public:
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
 	// get an immediate property; returns null if nonpresent
-	static reference basic_get/*(reference focus, reference kind)*/;
+	static reference basic_kind_get/*(reference focus, reference kind)*/;
 
 	// set an immediate property, returns old value
-	static reference basic_set/*(reference focus, reference kind, reference value)*/;
+	static reference basic_kind_set/*(reference focus, reference kind, reference value)*/;
+
+	// get all immediate property kinds, ordered
+	static reference basic_get_all_kinds/*(reference focus)*/;
 
 	// get the count of immediate properties
-	static reference basic_count/*(reference focus)*/;
+	static reference basic_order_count/*(reference focus)*/;
 
 	// get an immediate property by ordered number
-	static reference basic_index/*(reference focus, reference index)*/;
+	static reference basic_order_get/*(reference focus, reference index)*/;
+
+	// set an immediate property by ordered number, extending if needed
+	static reference basic_order_set/*(reference focus, reference index)*/;
 
 	// get an indirect property
-	reference get(reference kind) { return (*this)(kind_get, {kind}); }
+	reference kind_get(reference kind) { return (*this)(method_kind_get, {kind}); }
 	
 	// set an indirect property, returns old value
-	reference set(reference kind, reference value) { return (*this)(kind_set, {kind, value}); }
+	reference kind_set(reference kind, reference value) { return (*this)(method_kind_set, {kind, value}); }
+
+	// get all property kinds, ordered, inderectly
+	reference get_all_kinds() { return (*this)(method_get_all_kinds, {}); }
 	
 	// count properties indirectly
-	reference count() { return (*this)(kind_count, {}); }
+	reference order_count() { return (*this)(method_order_count, {}); }
 
 	// get a property by index indirectly
-	reference index(reference index) { return (*this)(kind_index, {index}); }
+	reference order_get(reference index) { return (*this)(method_order_get, {index}); }
+
+	// set a property by index indirectly
+	reference order_set(reference index, reference value) { return (*this)(method_order_set, {index, value}); }
 
 	// defaults to reseating this reference
-	reference operator=(reference other) { return (*this)(kind_operator_equals, {other}); }
+	reference operator=(reference other) { return (*this)(method_operator_equals, {other}); }
 
 	// no default; kind_operator_brackets must be set to not throw
-	reference operator[](reference index) { return (*this)(kind_operator_brackets, {index}); }
+	reference operator[](reference index) { return (*this)(method_operator_brackets, {index}); }
 
 
 	// useful basic objects
@@ -67,13 +79,15 @@ public:
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
-	static reference kind_get; // this method controls all other methods
-	static reference kind_set;
-	static reference kind_count;
-	static reference kind_index;
+	static reference method_kind_get; // this method controls all other methods by providing their values
+	static reference method_kind_set;
+	static reference method_get_all_kinds;
+	static reference method_order_count;
+	static reference method_order_get;
+	static reference method_order_set;
 	// IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
-	static reference kind_operator_equals;
-	static reference kind_operator_brackets;
+	static reference method_operator_equals;
+	static reference method_operator_brackets;
 
 	//static reference kind_method; // event handling by instrumenting operators()?
 
