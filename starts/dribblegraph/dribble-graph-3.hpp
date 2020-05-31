@@ -18,27 +18,31 @@ using namespace std;
 class part;
 class reference;
 
+// the plan is to use the framework to make a decision-making
+// structure when confused.  like time-to-brush-teeth.
+
+// we are having trouble around organizing the code.
+// 	ideas:
+// 		- operators make easy to use
+// 		- using references make easy to self-use
+// 		- using non-operators make easier to design self-use
+// 		- using non-member functions make easy to self-use?
+// 		- using virtual fucntions let chidlren override things? <- FALSE
+// 	we prefer to use keys that have functions.
+// 	so we want to minimize the functions.  the keys can do it.
+// 	oeprators are the only things to implement, and they can be changed
+// 	in derived classes. [worry .. derived classes not clear when returned]
+// things to learn:
+// 	-> virtual functions BAD idea: other references don't use same vtable.
+// 	-> named fucntions nonoptimal: we can use keyed members.
+// 	-> operators can be changed in subclasses.  implement only if used.
+
+// a general index of pointers
 class reference
 {
 public:
-
-	reference get(reference key);
-	void change(reference key, reference value);
-	// it seems like it is nice to have a reference to a property.
-	// this roughly a reference to a connection.
-		// we could add n-ary connections.
-		// we could make properties that connect to connection
-		// objects, and maintain the similarity.  that
-		// would be a structure agreement.
-		// structure agreements probably more valuable.
-		// but maps most important.
-		// maps quickly done with keys to connection objects.
-		// so connection objects have operator=
-		// 	[idea of passing off operators to destination property]
-		// and normal objects have operator[]
-
 	template <typename data_type> operator data_type &();
-
+	bool operator==(reference other);
 
 	template <typename Function>
 	reference(function<Function> callable)
@@ -46,19 +50,14 @@ public:
 	{ }
 	reference(any data = {});
 	reference(reference const & other);
+	static reference empty; // callable that returns a reference to nothing at all
 
-	// bool whether content is in this reference
-	// TODO: a new reference is the same as an empty reference atm
-	// reference exists();
-
-	void set_strong(reference strong_bool);
-	reference get_strong();
-
-
+	// for calling members
 	reference operator[](reference key);
-
 	template <typename... parameter_types>
 	reference operator()(parameter_types... parameters);
+
+	// for property-references, must treat properties as connection objects owned by this object
 
 private:
 	shared_ptr<part> pointer();

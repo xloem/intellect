@@ -24,29 +24,32 @@ public:
 	template <typename... parameter_types>
 		reference operator()(parameter_types... parameters);
 
+	// method call, uses kind_get to get kind, will default to basic functions
+	reference operator()(reference kind, std::initializer_list<reference> parameters);
+
 	// get an immediate property
-	static reference basic_get/*(reference focus, reference key)*/;
+	static reference basic_get/*(reference focus, reference kind)*/;
 
 	// set an immediate property, returns old value
-	static reference basic_set/*(reference focus, reference key, reference value)*/;
+	static reference basic_set/*(reference focus, reference kind, reference value)*/;
 
-	// get an indirect property
-	static reference indirect_get/*(reference focus, reference key)*/;
+	// get an indirect property (calls indirector if present)
+	reference get(reference kind) { return (*this)(kind_get, {*this, kind}); }
+	
+	// set an indirect property (calls indirector if present, returns old value
+	reference set(reference kind, reference value) { return (*this)(kind_get, {*this, kind, value}); }
 
-	// set an indirect property, returns old value
-	static reference indirect_set/*(reference focus, reference key, reference value)*/;
+
 
 	// useful basic objects
 	static reference kindness_mistake; // thrown when kind mismatches
 	static reference const null; // empty reference
 
-	// kinds that can be used to store alternatives to the basic functions
-	static reference indirect_getter;
-	static reference indirect_setter;
-
-	// kinds that could be used to store operators in c++
-	static reference operator_equals;
-	static reference operator_brackets;
+	// kinds that might be set to alter behavior
+	static reference kind_get; // controls all the below
+	static reference kind_set;
+	static reference kind_operator_equals;
+	static reference kind_operator_brackets;
 
 	// for property-references, must treat properties as connection objects owned by this object (connectedness) [when implementing connectedness, if typedness is being implemented, we'll want gettersetterness]
 		// ^-- nonweakness relation: users of connection objects that are nonweak may be surprised if the source object for the connection is thrown out.  some way to propagate events could be relevent.

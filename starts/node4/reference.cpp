@@ -24,7 +24,7 @@ private:
 
 	any data;
 
-	part(any data)
+	part(any &&data)
 	: data(move(data))
 	{ }
 };
@@ -37,6 +37,20 @@ reference::reference(reference const & other)
 { }
 
 reference::reference(bool * token_for_making_null_reference) {}
+
+reference reference::operator()(reference kind, std::initializer_list<reference> parameters)
+{
+	std::vector<reference> values(parameters);
+	switch (values.size()) {
+	case 0:
+		return basic_get(*this, kind)(*this);
+	case 1:
+		return basic_get(*this, kind)(*this, values[0]);
+	}
+	if (parameters.size() == 0) {
+		return basic_get(*this, kind)(*this);
+	} else
+}
 
 reference reference::basic_get((std::function<reference(reference,reference)>)[](reference focus, reference key) -> reference
 {
@@ -64,13 +78,14 @@ reference reference::basic_set((std::function<reference(reference,reference,refe
 	}
 });
 
-reference reference::indirect_get((std::function<reference(reference,reference)>)[](reference focus, reference key) -> reference
+reference reference::get((std::function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
 {
-	reference getter = basic_get(focus, indirect_getter);
+	reference getter = basic_get(focus, kind_get);
 	if (getter == null) {
 		getter = basic_get;
 	}
-	return getter(focus, indirect_getter);
+	// we'll also want to have kind_set default to basic_set?
+	return getter(focus, kind);
 });
 
 reference reference::indirect_set((std::function<reference(reference,reference,reference)>)[](reference focus, reference key, reference value) -> reference
