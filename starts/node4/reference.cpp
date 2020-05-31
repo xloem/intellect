@@ -30,7 +30,7 @@ private:
 };
 
 reference::reference(any data)
-: shared(new part(data))
+: shared(new part(move(data)))
 { }
 reference::reference(reference const & other)
 : shared(other.pointer())
@@ -40,16 +40,50 @@ reference::reference(bool * token_for_making_null_reference) {}
 
 reference reference::operator()(reference kind, std::initializer_list<reference> parameters)
 {
+	// use kind_get to get kind
+	reference getter = basic_get(*this, kind_get);
+	if (getter == null) {
+		getter = basic_get;
+	}
+
+	// default to basic functions
+	reference method = getter(*this, kind);
+	if (method == null) {
+		if (kind == kind_get) {
+			method = basic_get;
+		} else if (kind == kind_set) {
+			method = basic_set;
+		} else if (kind == kind_count) {
+			method = basic_count;
+		} else if (kind == kind_index) {
+			method = basic_index;
+		}
+	}
+
+	//
 	std::vector<reference> values(parameters);
 	switch (values.size()) {
 	case 0:
-		return basic_get(*this, kind)(*this);
+		return method(*this);
 	case 1:
-		return basic_get(*this, kind)(*this, values[0]);
+		return method(*this, values[0]);
+	case 2:
+		return method(*this, values[0], values[1]);
+	case 3:
+		return method(*this, values[0], values[1], values[2]);
+	case 4:
+		return method(*this, values[0], values[1], values[2], values[3]);
+	case 5:
+		return method(*this, values[0], values[1], values[2], values[3], values[4]);
+	case 6:
+		return method(*this, values[0], values[1], values[2], values[3], values[4], values[5]);
+	case 7:
+		return method(*this, values[0], values[1], values[2], values[3], values[4], values[5], values[6]);
+	case 8:
+		return method(*this, values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7]);
+	default:
+		throw "more than 8 method arguments, need new case line here";
 	}
-	if (parameters.size() == 0) {
-		return basic_get(*this, kind)(*this);
-	} else
 }
 
 reference reference::basic_get((std::function<reference(reference,reference)>)[](reference focus, reference key) -> reference
@@ -69,6 +103,7 @@ reference reference::basic_set((std::function<reference(reference,reference,refe
 	auto result = map.emplace(key, value);
 	if (result.second) {
 		// insertion happened: no old element
+		focus.pointer()->key_order.push_back(key);
 		return null;
 	} else {
 		// key already present
@@ -78,6 +113,17 @@ reference reference::basic_set((std::function<reference(reference,reference,refe
 	}
 });
 
+reference reference::basic_count((std::function<reference(reference)>)[](reference focus) -> reference
+{
+	return (any)(index_t)focus.pointer()->key_order.size();
+});
+
+reference reference::basic_index((std::function<reference(reference, reference)>)[](reference focus, reference index) -> reference
+{
+	return focus.pointer()->key_order[(index_t)index];
+});
+
+/*
 reference reference::get((std::function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
 {
 	reference getter = basic_get(focus, kind_get);
@@ -108,15 +154,17 @@ reference reference::indirect_set((std::function<reference(reference,reference,r
 		return old_value;
 	}
 });
+*/
 
 reference reference::kindness_mistake(string("kindness_mistake"));
 reference const reference::null((bool *)"token_for_making_null_reference");
 
-reference reference::indirect_getter(string("indirect_getter"));
-reference reference::indirect_setter(string("indirect_setter"));
-
-reference reference::operator_equals(string("operator="));
-reference reference::operator_brackets(string("operator[]"));
+reference reference::kind_get(string("kind_get"));
+reference reference::kind_set(string("kind_set"));
+reference reference::kind_count(string("kind_count"));
+reference reference::kind_index(string("kind_index"));
+reference reference::kind_operator_equals(string("kind_operator_equals"));
+reference reference::kind_operator_brackets(string("kind_operator_brackets"));
 
 
 /*

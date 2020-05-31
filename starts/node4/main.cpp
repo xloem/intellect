@@ -28,8 +28,8 @@ using namespace std;
 class connection_reference : public reference
 {
 public:
-	connection_reference
-}
+	//connection_reference
+};
 
 class indirect_reference : public reference
 {

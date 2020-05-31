@@ -5,6 +5,8 @@
 #include <memory>
 #include <functional>
 
+using index_t = long long;
+
 class reference
 {
 public:
@@ -24,7 +26,7 @@ public:
 	template <typename... parameter_types>
 		reference operator()(parameter_types... parameters);
 
-	// method call, uses kind_get to get kind, will default to basic functions
+	// method call, uses kind_get to get kind, could default to basic functions
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
 	// get an immediate property
@@ -33,12 +35,21 @@ public:
 	// set an immediate property, returns old value
 	static reference basic_set/*(reference focus, reference kind, reference value)*/;
 
-	// get an indirect property (calls indirector if present)
+	// get the count of immediate properties
+	static reference basic_count/*(reference focus)*/;
+
+	// get an immediate property by ordered number
+	static reference basic_index/*(reference focus, reference index)*/;
+
+	// get an indirect property
 	reference get(reference kind) { return (*this)(kind_get, {*this, kind}); }
 	
-	// set an indirect property (calls indirector if present, returns old value
-	reference set(reference kind, reference value) { return (*this)(kind_get, {*this, kind, value}); }
-
+	// set an indirect property, returns old value
+	reference set(reference kind, reference value) { return (*this)(kind_set, {*this, kind, value}); }
+	
+	// operators with no default behavior
+	reference operator=(reference other) { return (*this)(kind_operator_equals, {*this, other}); }
+	reference operator[](reference index) { return (*this)(kind_operator_brackets, {*this, index}); }
 
 
 	// useful basic objects
@@ -46,8 +57,11 @@ public:
 	static reference const null; // empty reference
 
 	// kinds that might be set to alter behavior
-	static reference kind_get; // controls all the below
+	// TODO: set these all on some basic object to reference for default behavior
+	static reference kind_get; // this method controls all other methods
 	static reference kind_set;
+	static reference kind_count;
+	static reference kind_index;
 	static reference kind_operator_equals;
 	static reference kind_operator_brackets;
 
