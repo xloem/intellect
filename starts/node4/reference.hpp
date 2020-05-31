@@ -30,64 +30,64 @@ public:
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
 	// get an immediate property; returns null if nonpresent
-	static reference basic-kind-get/*(reference focus, reference kind)*/;
+	static reference basic-kind-get/*(reference focus, reference kind)*/();
 
 	// set an immediate property, returns old value
-	static reference basic-kind-set/*(reference focus, reference kind, reference value)*/;
+	static reference basic-kind-set/*(reference focus, reference kind, reference value)*/();
 
 	// get all immediate property kinds, ordered
-	static reference basic-get-all-kinds/*(reference focus)*/;
+	static reference basic-get-all-kinds/*(reference focus)*/();
 
 	// get the count of immediate properties
-	static reference basic-order-count/*(reference focus)*/;
+	static reference basic-order-count/*(reference focus)*/();
 
 	// get an immediate property by ordered number
-	static reference basic-order-get/*(reference focus, reference index)*/;
+	static reference basic-order-get/*(reference focus, reference index)*/();
 
 	// set an immediate property by ordered number, extending if needed
-	static reference basic-order-set/*(reference focus, reference index)*/;
+	static reference basic-order-set/*(reference focus, reference index)*/();
 
 	// get an indirect property
-	reference kind-get(reference kind) { return (*this)(method-kind-get, {kind}); }
+	reference kind-get(reference kind) { return (*this)(method-kind-get(), {kind}); }
 	
 	// set an indirect property, returns old value
-	reference kind-set(reference kind, reference value) { return (*this)(method-kind-set, {kind, value}); }
+	reference kind-set(reference kind, reference value) { return (*this)(method-kind-set(), {kind, value}); }
 
 	// get all property kinds, ordered, inderectly
-	reference get-all-kinds() { return (*this)(method-get-all-kinds, {}); }
+	reference get-all-kinds() { return (*this)(method-get-all-kinds(), {}); }
 	
 	// count properties indirectly
-	reference order-count() { return (*this)(method-order-count, {}); }
+	reference order-count() { return (*this)(method-order-count(), {}); }
 
 	// get a property by index indirectly
-	reference order-get(reference index) { return (*this)(method-order-get, {index}); }
+	reference order-get(reference index) { return (*this)(method-order-get(), {index}); }
 
 	// set a property by index indirectly
-	reference order-set(reference index, reference value) { return (*this)(method-order-set, {index, value}); }
+	reference order-set(reference index, reference value) { return (*this)(method-order-set(), {index, value}); }
 
 	// defaults to reseating this reference
-	reference operator=(reference other) { return (*this)(method-operator-equals, {other}); }
+	reference operator=(reference other) { return (*this)(method-operator-equals(), {other}); }
 
 	// no default; kind-operator-brackets must be set to not throw
-	reference operator[](reference index) { return (*this)(method-operator-brackets, {index}); }
+	reference operator[](reference index) { return (*this)(method-operator-brackets(), {index}); }
 
 
 	// useful basic objects
-	static reference const null; // empty reference
-	static reference kindness-mistake; // thrown when kind mismatches
-	static reference presence-mistake; // thrown when a null reference is used
+	static reference const& null(); // empty reference
+	static reference& kindness-mistake(); // thrown when kind mismatches
+	static reference& presence-mistake(); // thrown when a null reference is used
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
-	static reference method-kind-get; // this method controls all other methods by providing their values
-	static reference method-kind-set;
-	static reference method-get-all-kinds;
-	static reference method-order-count;
-	static reference method-order-get;
-	static reference method-order-set;
+	static reference& method-kind-get(); // this method controls all other methods by providing their values
+	static reference& method-kind-set();
+	static reference& method-get-all-kinds();
+	static reference& method-order-count();
+	static reference& method-order-get();
+	static reference& method-order-set();
 	// IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
-	static reference method-operator-equals;
-	static reference method-operator-brackets;
+	static reference& method-operator-equals();
+	static reference& method-operator-brackets();
 
 	//static reference kind-method; // event handling by instrumenting operators()?
 
@@ -107,13 +107,15 @@ private:
 	friend class std::hash<reference>;
 	char const * what() const noexcept; // unused, can move: returns possible excpetion text
 	std::shared_ptr<part> pointer() const;
-	reference(bool * token_for_making_null_reference);
+	reference(bool ***** token_for_making_null_reference);
 
 	std::shared_ptr<part> shared;
 	std::weak_ptr<part> weak;
 
 	std::any & data();
 };
+
+#define DEFINE(type, scope, name) type & scope name() { static type name(string(#name)); return name; }
 
 // template implementations below
 
@@ -127,7 +129,7 @@ reference::operator data-type &()
 	} else if (data.type() != typeid(data-type)) {
 		// kind of data was assumed wrongly
 		// not-kind to treat as something other than self
-		throw kindness-mistake;
+		throw kindness-mistake();
 	}
 	return *std::any_cast<data-type>(&data);
 }
@@ -145,7 +147,7 @@ reference reference::operator()(parameter-types... parameters)
 		returner = &static_cast<returning-function&>(*this);
 	} catch (reference) {
 		static_cast<void-function&>(*this)(parameters...);
-		return null;
+		return null();
 	}
 	return (*returner)(parameters...);
 }

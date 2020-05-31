@@ -36,43 +36,43 @@ reference::reference(reference const & other)
 : shared(other.pointer())
 { }
 
-reference::reference(bool * token_for_making_null_reference) {}
+reference::reference(bool ***** token_for_making_null_reference) {}
 
 reference reference::operator()(reference kind, initializer_list<reference> parameters)
 {
 	// this is called by operators, so when it uses operators there
 	// is possibility for stack overflow.
-	if (kind == null) { throw presence-mistake; }
+	if (kind == null()) { throw presence-mistake(); }
 
 	// use method-kind-get to get kind
-	reference getter(null);
+	reference getter(null());
 	try {
-		getter.shared = basic-kind-get(*this, method-kind-get).pointer();
+		getter.shared = basic-kind-get()(*this, method-kind-get()).pointer();
 	} catch (reference) { }
-	if (getter == null) {
-		getter.shared = basic-kind-get.pointer();
+	if (getter == null()) {
+		getter.shared = basic-kind-get().pointer();
 	}
 
 	// default to basic functions
-	reference method(null);
+	reference method(null());
 	try {
 		method.shared = getter(*this, kind).pointer();
 	} catch (reference) { }
-	if (method == null) {
-		if (kind == method-kind-get) {
-			method = basic-kind-get;
-		} else if (kind == method-kind-set) {
-			method = basic-kind-set;
-		} else if (kind == method-get-all-kinds) {
-			method = basic-get-all-kinds;
-		} else if (kind == method-order-count) {
-			method = basic-order-count;
-		} else if (kind == method-order-get) {
-			method = basic-order-get;
-		} else if (kind == method-order-set) {
-			method = basic-order-set;
-		} else if (kind == method-operator-equals) {
-			if (parameters.size() != 1) { throw kindness-mistake; }
+	if (method == null()) {
+		if (kind == method-kind-get()) {
+			method = basic-kind-get();
+		} else if (kind == method-kind-set()) {
+			method = basic-kind-set();
+		} else if (kind == method-get-all-kinds()) {
+			method = basic-get-all-kinds();
+		} else if (kind == method-order-count()) {
+			method = basic-order-count();
+		} else if (kind == method-order-get()) {
+			method = basic-order-get();
+		} else if (kind == method-order-set()) {
+			method = basic-order-set();
+		} else if (kind == method-operator-equals()) {
+			if (parameters.size() != 1) { throw kindness-mistake(); }
 			shared = parameters.begin()->pointer();
 			return *this;
 		}
@@ -104,73 +104,73 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	}
 }
 
-reference reference::basic-kind-get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
+reference reference::basic-kind-get(){static reference basic-kind-get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
 {
-	if (!focus.pointer()) { throw presence-mistake; }
+	if (!focus.pointer()) { throw presence-mistake(); }
 	auto & map = focus.pointer()->kinded-parts;
 	auto result = map.find(kind);
 	if (result == map.end()) {
-		return null;
+		return null();
 	} else {
 		return result->second;
 	}
-});
+}); return basic-kind-get;}
 
-reference reference::basic-kind-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
+reference reference::basic-kind-set(){static reference basic-kind-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
 {
-	if (!focus.pointer()) { throw presence-mistake; }
+	if (!focus.pointer()) { throw presence-mistake(); }
 	auto & map = focus.pointer()->kinded-parts;
 	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element
-		return null;
+		return null();
 	} else {
 		// kind already present
 		reference old-value = result.first->second;
 		result.first->second = value;
 		return old-value;
 	}
-});
+}); return basic-kind-set;}
 
-reference reference::basic-get-all-kinds((function<reference(reference)>)[](reference focus) -> reference
+reference reference::basic-get-all-kinds(){static reference basic-get-all-kinds((function<reference(reference)>)[](reference focus) -> reference
 {
-	if (!focus.pointer()) { throw presence-mistake; }
+	if (!focus.pointer()) { throw presence-mistake(); }
 	auto & map = focus.pointer()->kinded-parts;
 	reference result;
 	for (auto & item : map) {
 		result.order-set(result.order-count(), item.first);
 	}
 	return result;
-});
+}); return basic-get-all-kinds;}
 
-reference reference::basic-order-count((function<reference(reference)>)[](reference focus) -> reference
+reference reference::basic-order-count(){static reference basic-order-count((function<reference(reference)>)[](reference focus) -> reference
 {
-	if (!focus.pointer()) { throw presence-mistake; }
+	if (!focus.pointer()) { throw presence-mistake(); }
 	return (any)(index_t)focus.pointer()->ordered-parts.size();
-});
+}); return basic-order-count;}
 
-reference reference::basic-order-get((function<reference(reference, reference)>)[](reference focus, reference index) -> reference
+reference reference::basic-order-get(){static reference basic-order-get((function<reference(reference, reference)>)[](reference focus, reference index) -> reference
 {
-	if (!focus.pointer()) { throw presence-mistake; }
+	if (!focus.pointer()) { throw presence-mistake(); }
 	index_t index-data = (index_t)index;
 	if (index-data < 0 || index-data >= (index_t)focus.pointer()->ordered-parts.size()) {
-		throw presence-mistake;
+		throw presence-mistake();
 	}
 	return focus.pointer()->ordered-parts[index-data];
-});
+}); return basic-order-get;}
 
-reference reference::basic-order-set((function<reference(reference, reference, reference)>)[](reference focus, reference index, reference value) -> reference
+reference reference::basic-order-set(){static reference basic-order-set((function<reference(reference, reference, reference)>)[](reference focus, reference index, reference value) -> reference
 {
-	if (!focus.pointer()) { throw presence-mistake; }
+	if (!focus.pointer()) { throw presence-mistake(); }
 	auto & ordered-parts = focus.pointer()->ordered-parts;
 	index_t index-data = (index_t)index;
-	if (value != null) {
+	if (value != null()) {
 		if (index-data < 0 || index-data > (index_t)ordered-parts.size()) {
-			throw presence-mistake;
+			throw presence-mistake();
 		}
 		if (index-data == (index_t)ordered-parts.size()) {
 			ordered-parts.emplace_back(value);
-			return null;
+			return null();
 		} else {
 			reference old-item = ordered-parts[index-data];
 			ordered-parts[index-data] = value;
@@ -178,19 +178,19 @@ reference reference::basic-order-set((function<reference(reference, reference, r
 		}
 	} else {
 		if (index-data < 0 || index-data >= (index_t)ordered-parts.size()) {
-			throw presence-mistake;
+			throw presence-mistake();
 		}
 		reference old-item = ordered-parts[index-data];
 		ordered-parts.erase(ordered-parts.begin() + index-data);
 		return old-item;
 	}
-});
+}); return basic-order-set;}
 
 /*
 reference reference::get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
 {
 	reference getter = basic-get(focus, kind-get);
-	if (getter == null) {
+	if (getter == null()) {
 		getter = basic-get;
 	}
 	// we'll also want to have kind-set default to basic-set?
@@ -200,7 +200,7 @@ reference reference::get((function<reference(reference,reference)>)[](reference 
 reference reference::indirect-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
 {
 	reference setter = basic-get(focus, indirect-setter);
-	if (setter == null) {
+	if (setter == null()) {
 		setter = basic-set;
 	}
 	return setter(focus, indirect-setter, value);
@@ -209,7 +209,7 @@ reference reference::indirect-set((function<reference(reference,reference,refere
 	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element
-		return null;
+		return null();
 	} else {
 		// kind already present
 		reference old-value = result.first->second;
@@ -219,18 +219,18 @@ reference reference::indirect-set((function<reference(reference,reference,refere
 });
 */
 
-reference const reference::null((bool *)"token_for_making_null_reference");
-reference reference::kindness-mistake(string("kindness-mistake"));
-reference reference::presence-mistake(string("presence-mistake"));
+reference const& reference::null() { static reference null((bool *****)"token_for_making_null_reference"); return null; }
+DEFINE(reference, reference::, kindness-mistake)
+DEFINE(reference, reference::, presence-mistake)
 
-reference reference::method-kind-get(string("method-kind-get"));
-reference reference::method-kind-set(string("method-kind-set"));
-reference reference::method-get-all-kinds(string("method-get-all-kinds"));
-reference reference::method-order-count(string("method-order-count"));
-reference reference::method-order-get(string("method-order-get"));
-reference reference::method-order-set(string("method-order-set"));
-reference reference::method-operator-equals(string("method-operator-equals"));
-reference reference::method-operator-brackets(string("method-operator-brackets"));
+DEFINE(reference, reference::, method-kind-get)
+DEFINE(reference, reference::, method-kind-set)
+DEFINE(reference, reference::, method-get-all-kinds)
+DEFINE(reference, reference::, method-order-count)
+DEFINE(reference, reference::, method-order-get)
+DEFINE(reference, reference::, method-order-set)
+DEFINE(reference, reference::, method-operator-equals)
+DEFINE(reference, reference::, method-operator-brackets)
 
 
 /*
@@ -289,6 +289,6 @@ shared_ptr<reference::part> reference::pointer() const
 any & reference::data()
 {
 	auto pointing = pointer();
-	if (!pointing) { throw presence-mistake; }
+	if (!pointing) { throw presence-mistake(); }
 	return pointing->data;
 }

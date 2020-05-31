@@ -98,7 +98,6 @@ extern reference-bool & bool-true;
 // 			... okay that would work.  each class would pass its method constructor to of-kind using a template parameter.
 // 			    of-kind could pvoide a function to ensure dependencies were instantiated
 // 			but you'd want reference itself to be a kind, to ensure static dependency.
-#if 0
 template <reference & kind>
 class of-kind : public reference
 {
@@ -115,7 +114,7 @@ public:
 
 	static reference-bool & check-is(reference candidate)
 	{
-		if (candidate == null) { return bool-false; }
+		if (candidate == null()) { return bool-false; }
 		return candidate.kind-get(kind) == is-of-kind ? bool-true : bool-false;
 	}
 
@@ -127,7 +126,7 @@ public:
 	static void must-be(reference member)
 	{
 		if (&check-is(member) == &bool-false) {
-			throw kindness-mistake;
+			throw kindness-mistake();
 		}
 	}
 
@@ -151,7 +150,7 @@ public:
 	{
 		if (other != bool-false && other != bool-true)
 		{
-			throw kindness-mistake;
+			throw kindness-mistake();
 		}
 	};
 
@@ -172,7 +171,7 @@ public:
 	static void must-be(reference other)
 	{
 		if (check-is(other) == bool-false) {
-			throw kindness-mistake;
+			throw kindness-mistake();
 		}
 	}
 
@@ -241,7 +240,6 @@ public:
 };
 reference map-maker::location;
 reference map-maker::map;
-#endif // map-maker seems simple enough to not be making pressure for subclasses yet
 
 // time-value.
 // we use connections that have value to them.
