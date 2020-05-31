@@ -1,0 +1,67 @@
+thing linked to helpful stuff, less-helpful stuff, and rest-of-universe
+
+drawing between two graphs, without considering wayness
+
+idea: line up equivalent nodes
+idea: form edges between all pairs of edges
+
+so every nearby-ness of apple[funny] and apple[smelly]
+	two very similar contexts will have very similar parts
+	similar weights, similar content
+		but maybe first has A,B, and second has B,C
+	we smoothly morph B to B
+	we smoothly morph A to rest-of-world
+	we smoothly morph C from rest-of-world
+	so in the morphing we will spllit A and C out of rest-of-world for both
+		updating that relates to the links from rest-of-world, maybe
+
+	to make the above, we compare the sets of all links.
+	is 1->B similar to 2->rest-of-world? answer is similarity of B to rest-of-world
+	is 1->B similar to 2->C? answer is similarity of C to B
+	is 1->B similar to 2->B?
+	1 has unknown similarity to 2?
+	B is clearly high similarity to B.
+
+	so we can form a subtraction between any two nodes.
+	it could be a lot of answers or few, but it's how to get between them.
+	it may have to traverse unlearned summaries.
+
+	remember, all things are interconnected.
+		how do our interlinks grow when we make a new thing?
+	maybe there is a reason for newness? what is it not?
+
+what we have done makes a unique context, every moment
+but this unique context is very similar to other contexts in relevent ways
+we are always lining up with similar contexts.
+
+
+considering goops that reference the nearnesses of other goops
+really we'll just be moving towards nearnesses that are more near, right?
+	there's space in between the interlinks.
+	we actually want to walk the most near interlinks.
+	[if none are near, we can try one and learn.]
+
+thinking of interpolating two nodes
+
+	maybe open a learning space between the differences?
+
+concern aroudn allocation of nodes used for interlinks
+	just allocate them all for now please
+		do we own them?  i want to morph myself and it morphs
+		the nodes used for my links.
+	i guess that can be implicit for now
+
+		uhh i'm trying to look up nodes that are the same as other
+		nodes, but i want to compare contents in doing so and they
+		are pointers ... maybe all the stuff could be placed outside
+		the pointer.
+
+
+thinking about listing words using, way, what, degree, confidence, ref, [interlinks].
+	are interlinks a way?
+
+let's think about word-degree-links being contextual.
+	if observed degree is good, yes.
+	if observed degree is bad, new-context?
+
+prioritize personal hygiene atm

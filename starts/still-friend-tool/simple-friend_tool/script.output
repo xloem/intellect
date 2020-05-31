@@ -1,0 +1,67 @@
+special-silence hello there
+ -- Heard: [silence]
+ -- How new to hear: [silence] =)
+ -- How helpful to consider: [silence] =)
+ -- Heard: 'hello'
+ -- How new to hear: 'hello' =)
+ -- How helpful to consider: 'hello' =)
+ -- Heard: 'there'
+ -- How new to hear: 'there' =)
+ -- How helpful to consider: 'there' =)
+ -- Heard: [silence]
+ -- How new to hear: [silence] =)
+ -- How helpful to consider: [silence] =)
+ -- How new to think: 'hello' =)
+ -- How helpful to consider: 'hello' =)
+ hello -- How new to think: 'there' =)
+ -- How helpful to consider: 'there' =)
+ there -- How new to think: [silence] =)
+ -- How helpful to consider: [silence] =)
+ [silence]
+
+hello there
+ -- Heard: 'hello'
+ -- Yes, 'hello' comes after 'special-silence'... 
+ -- How helpful to consider: 'hello' =)
+ -- Heard: 'there'
+ -- Yes, 'there' comes after 'hello'... 
+ -- How helpful to consider: 'there' =)
+ -- Heard: [silence]
+ -- Yes, 'special-silence' comes after 'there'... 
+ -- How helpful to consider: [silence] =)
+ -- How boring to see again: 'hello'
+ hello -- How boring to see again: 'there'
+ there -- How boring to see again: [silence]
+ [silence]
+
+special-silence special-end-of-conversation goodbye special-end-of-conversation
+ -- Heard: [silence]
+ -- OMIGOD!  'special-silence'! 
+ -- I need a way to reach out here.  I've promised to adjust my thinking and I'm not sure how.
+ -- Heard: [end-of-conversation]
+ -- OMIGOD!  'special-end-of-conversation'! 
+ -- I need a way to reach out here.  I've promised to adjust my thinking and I'm not sure how.
+ -- Heard: 'goodbye'
+ -- How new to hear: 'goodbye' =)
+ -- How helpful to consider: 'goodbye' =)
+ -- Heard: [end-of-conversation]
+ -- How new to hear: [end-of-conversation] =)
+ -- How helpful to consider: [end-of-conversation] =)
+ -- Heard: [silence]
+ -- How new to hear: [silence] =)
+ -- How helpful to consider: [silence] =)
+ -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
+ -- How boring to see again: 'hello'
+ hello -- How boring to see again: 'there'
+ there -- How boring to see again: [silence]
+ [silence]
+
+ -- Heard: [end-of-conversation]
+ -- OMIGOD!  'special-end-of-conversation'! 
+ -- I need a way to reach out here.  I've promised to adjust my thinking and I'm not sure how.
+ -- I'm a little worried.  I'm stating special-silence as following special-end-of-conversation but it could be any of special-silence x1 goodbye x1
+ -- How new to think: [silence] =)
+ -- I got special-silence after special-end-of-conversation and already expected: special-silence x1 goodbye x1
+ -- I want a way to reach out to more here.  I don't know what to do with these multiple options.
+ [silence]
+
