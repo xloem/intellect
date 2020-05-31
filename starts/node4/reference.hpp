@@ -29,7 +29,7 @@ public:
 	// method call, uses kind_get to get kind, could default to basic functions
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
-	// get an immediate property
+	// get an immediate property; returns null if nonpresent
 	static reference basic_get/*(reference focus, reference kind)*/;
 
 	// set an immediate property, returns old value
@@ -75,6 +75,8 @@ public:
 	static reference kind_operator_equals;
 	static reference kind_operator_brackets;
 
+	//static reference kind_method; // event handling by instrumenting operators()?
+
 	// for property-references, must treat properties as connection objects owned by this object (connectedness) [when implementing connectedness, if typedness is being implemented, we'll want gettersetterness]
 		// ^-- nonweakness relation: users of connection objects that are nonweak may be surprised if the source object for the connection is thrown out.  some way to propagate events could be relevent.
 	
@@ -84,6 +86,7 @@ public:
 	// but might expand subclassing (note bool and functions can still be subclasses, reference casting)
 
 	bool operator==(reference const & other) const;
+	bool operator!=(reference const & other) const;
 
 private:
 	class part;

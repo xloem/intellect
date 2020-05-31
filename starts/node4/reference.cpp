@@ -19,8 +19,8 @@ class reference::part
 private:
 	friend class reference;
 
-	unordered_map<reference, reference> keyed_parts;
-	vector<reference> key_order;
+	unordered_map<reference, reference> kinded_parts;
+	vector<reference> kind_order;
 
 	any data;
 
@@ -38,7 +38,7 @@ reference::reference(reference const & other)
 
 reference::reference(bool * token_for_making_null_reference) {}
 
-reference reference::operator()(reference kind, std::initializer_list<reference> parameters)
+reference reference::operator()(reference kind, initializer_list<reference> parameters)
 {
 	// this is called by operators, so when it uses operators there
 	// is possibility for stack overflow.
@@ -74,7 +74,7 @@ reference reference::operator()(reference kind, std::initializer_list<reference>
 	}
 
 	//
-	std::vector<reference> values(parameters);
+	vector<reference> values(parameters);
 	switch (values.size()) {
 	case 0:
 		return method(*this);
@@ -99,11 +99,11 @@ reference reference::operator()(reference kind, std::initializer_list<reference>
 	}
 }
 
-reference reference::basic_get((std::function<reference(reference,reference)>)[](reference focus, reference key) -> reference
+reference reference::basic_get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
 {
 	if (!focus.pointer()) { throw presence_mistake; }
-	auto & map = focus.pointer()->keyed_parts;
-	auto result = map.find(key);
+	auto & map = focus.pointer()->kinded_parts;
+	auto result = map.find(kind);
 	if (result == map.end()) {
 		return null;
 	} else {
@@ -111,37 +111,37 @@ reference reference::basic_get((std::function<reference(reference,reference)>)[]
 	}
 });
 
-reference reference::basic_set((std::function<reference(reference,reference,reference)>)[](reference focus, reference key, reference value) -> reference
+reference reference::basic_set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
 {
 	if (!focus.pointer()) { throw presence_mistake; }
-	auto & map = focus.pointer()->keyed_parts;
-	auto result = map.emplace(key, value);
+	auto & map = focus.pointer()->kinded_parts;
+	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element
-		focus.pointer()->key_order.push_back(key);
+		focus.pointer()->kind_order.push_back(kind);
 		return null;
 	} else {
-		// key already present
+		// kind already present
 		reference old_value = result.first->second;
 		result.first->second = value;
 		return old_value;
 	}
 });
 
-reference reference::basic_count((std::function<reference(reference)>)[](reference focus) -> reference
+reference reference::basic_count((function<reference(reference)>)[](reference focus) -> reference
 {
 	if (!focus.pointer()) { throw presence_mistake; }
-	return (any)(index_t)focus.pointer()->key_order.size();
+	return (any)(index_t)focus.pointer()->kind_order.size();
 });
 
-reference reference::basic_index((std::function<reference(reference, reference)>)[](reference focus, reference index) -> reference
+reference reference::basic_index((function<reference(reference, reference)>)[](reference focus, reference index) -> reference
 {
 	if (!focus.pointer()) { throw presence_mistake; }
-	return focus.pointer()->key_order[(index_t)index];
+	return focus.pointer()->kind_order[(index_t)index];
 });
 
 /*
-reference reference::get((std::function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
+reference reference::get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
 {
 	reference getter = basic_get(focus, kind_get);
 	if (getter == null) {
@@ -151,7 +151,7 @@ reference reference::get((std::function<reference(reference,reference)>)[](refer
 	return getter(focus, kind);
 });
 
-reference reference::indirect_set((std::function<reference(reference,reference,reference)>)[](reference focus, reference key, reference value) -> reference
+reference reference::indirect_set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
 {
 	reference setter = basic_get(focus, indirect_setter);
 	if (setter == null) {
@@ -159,13 +159,13 @@ reference reference::indirect_set((std::function<reference(reference,reference,r
 	}
 	return setter(focus, indirect_setter, value);
 	
-	auto & map = focus.pointer()->keyed_parts;
-	auto result = map.emplace(key, value);
+	auto & map = focus.pointer()->kinded_parts;
+	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element
 		return null;
 	} else {
-		// key already present
+		// kind already present
 		reference old_value = result.first->second;
 		result.first->second = value;
 		return old_value;
@@ -186,12 +186,12 @@ reference reference::kind_operator_brackets(string("kind_operator_brackets"));
 
 
 /*
-reference reference::operator[](reference key)
+reference reference::operator[](reference kind)
 {
-	return get(*this, key);
+	return get(*this, kind);
 	// the getter returns a reference, not an entry
 	// assignment won't work this way without change
-	return this->get(::get)(*this, key);
+	return this->get(::get)(*this, kind);
 }
 */
 
@@ -216,6 +216,11 @@ bool reference::operator==(reference const & other) const
 	return other.pointer() == pointer();
 }
 
+bool reference::operator!=(reference const & other) const
+{
+	return !(*this == other);
+}
+
 char const * reference::what() const noexcept
 {
 	auto pointing = pointer();
@@ -225,7 +230,7 @@ char const * reference::what() const noexcept
 	if (pointing->data.type() != typeid(string)) {
 		return "reference not a string";
 	}
-	return std::any_cast<string>(&pointing->data)->c_str();
+	return any_cast<string>(&pointing->data)->c_str();
 }
 
 shared_ptr<reference::part> reference::pointer() const
