@@ -26,7 +26,7 @@ They should be a reasonable seed to rapidly grow real learning.
         $ pip3 install keras_preprocessing --no-deps
 
 	# INSTALL BAZEL ON NON-MAINSTREAM CPU
-	$ sudo apt-get install build-essential openjdk-8-jdk python zip unzip libopenmpi-dev
+	$ sudo apt-get install build-essential openjdk-8-jdk python zip unzip
 	$ wget https://github.com/bazelbuild/bazel/releases/download/0.26.1/bazel-0.26.1-dist.zip
 	$ mkdir bazel-0.26.1
 	$ cd bazel-0.26.1
@@ -50,6 +50,10 @@ They should be a reasonable seed to rapidly grow real learning.
 	# glibc 2.30 also needs a patch:
 	# https://siasky.net/AAC7SeCUauJkKsrsNXYmT3iGsyVpzD2DP2ja7nYkzD-1MQ/tensorflow_r1.14_grpc_glibc2.30.patch
 	# https://siasky.net/AADkaUr2CEx2WvddFUKRTpf1COI1AXzvMyMOy34GxEUX6w/tensorflow_r1.15_grpc_glibc2.30.patch
+
+        $ ./configure
+	# ^-- If you want MPI support, for me on ubuntu 20 libopenmpi-dev installs into /usr/lib/x86_64-linux-gnu/openmpi
+	# ^-- but I think MPI can trigger an unresolved build error, so I'd go with the default of building without it
 
 	# the ram_utilization_factor percentage or local_ram_resources MB will reduce thrashing and oom-killing on small systems
         #$ bazel build --config=opt --config=monolithic --ram_utilization_factor=10 //tensorflow/tools/pip_package:build_pip_package
