@@ -1,0 +1,13 @@
+I lost some troubleshooting work on a lost microsd card.  By the file previous to this one now seems helpful and relevent.
+
+05:40
+	let's try to fix conceptunnote so the tests at least run.
+
+	1. concept should be deleted using notepad ownership
+	2. we copied everything in, right? so concept won't be referenced outside if it's copied in?
+			-> conceptnote makes new concept.  no copying in there.
+			-> newnotepad copies changeable concepts in, first with noteconcept({}, newnotes).replace(changeable), then adds a changeable link in imagination
+
+			-> concepts are copied in with imagineset I believe
+06:20
+	multitasking a lot ... hacked one of the runtime errors away

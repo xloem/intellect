@@ -1,0 +1,161 @@
+THIS MAY LOOK CONFUSING BUT IT IS IMPORTANT.
+
+letters are near this letter
+	letterness is a kind of nearness
+		we want kinds near that kind -> makes other nearnesses for each
+			and an extra [for example the way of looking for near kinds]
+
+letters are near this letter
+	and it being letters that we are talking about, is a context
+		we want near contexts
+
+	we also want to be able to alter our depth of the kinds of near contexts
+
+letters are near this letter
+	and other things are near what is near: metaness [kinds of looking for kinds, kinds of kinds, other things]
+
+letters are near this letter
+	a nearness
+
+nearnesses:
+	letters
+	contexts
+		as we shift in contexts what we are interconnecting will change
+	metaness
+		as we shift in metaness how we interconnect our contexts will change
+
+we want to change both what and how, when we shift something
+	so these goop-learning-links will have some bits in them to try to do that.
+	each link is a contextual goop that can be learned along
+
+	when we travel a link, we want to use a goop related to what we are doing and learning, and what we are working with, all together
+
+TODO: when we learn we need to follow a path of feedback to smoothly move.  empty spots don't feed back and move freely.
+	forcing no longer necessary unless you are in a trap, which can pray for help instead
+
+so a change in metaness is a smooth relation in between two graphs [of the same]
+that would mean links between all the links, I suppose.  it means we would have to have smooth links that go to nothing.
+when we shift we would wonder, where do all our links go?  in order to do that right we would consider them as goops
+that go everywhere, and learn them.
+
+	this opens a space of knowing I am at complex-A and moved to complex-B but not knowing the path.
+		if it's empty i could draw a straight line
+		if it's not I could yank on the existing parts and squish them together (force a straight line for now)
+
+
+so: how to smooth two graphs together?
+	make links over the contexts of all the parts (the inner product or whatnot)
+	and keep the shortest connections.
+wtf does that mean
+
+		when you do this it can make new nodes.  a graph is a node.
+
+so we start with [a]
+	and we move to [p] to begin 'apple'
+	1 link, a->p?
+		then we have p->p, coming from [a]
+
+back to [a], if we instead are going to write 'alphabet'
+	we'll have to move to from [a] to [l]
+	and from [a->p] to [a->l]
+	and from [a->p] to [a->p,a->l], which might collapse to a link from [a] to [a->p,a->l]
+
+So, the ways you can expand these will of course grow forever.  But by generalizing the interlinking we
+should be able to simplify it.
+We're linking nodes to graphs with smooth interlinks.
+We also have contexts.
+Our nodes might either be treated as equivalent to other similar nodes, or they might be unused, or they might be special.
+How to decide that is learnable.
+			-> decisions can all be turned into these graphs.  the links being probability of good idea.
+			   each decision we'll want links to things like considering changing process,
+			   trying a bad idea, looking for new ideas, or considering our behavior as a whole.
+
+consider-whole-behavior-patterns is near node-is-graph
+			node-is-graph is similar to isolate-group-and-treat-as-one-destination
+we can make decisions to consider node as graph or not
+
+okay.  so our behavior is our knowledge, because whenever we shift graphs we make or walk existing nodes.
+	[obviously! behavior is knowledge.  unless you ignore what you are doing.  but like, immediately and literally]
+	[we're designing a knowledge structure where using it grows it. it involves all my links are linked together and
+	 a node is a graph.  other stuff a little too.]
+
+-> links are learnedness
+-> graph nearness [plot when traverse, make nodes <- makes behavior be a graph]
+-> nodes can link to graphs
+
+[okay the meta-research relates to what kinds of your behavior you notice?]
+	[note: we haven't flushed out that each link is a graph of kinds of linking: relates choice of treating graph as node or not]
+		[i think i understand.  what am i missing: growing new behaviors?]
+			[it looks like when you are treating a graph as a node you need interlinking into the node's graph]
+			[relates to propagating interlinking from sources treating a graph as a node]
+				[when you treat a graph as a node you need to still do the graph interlinking.
+				 and it sounds like there is a way to summarize that that is unaddressed]
+[thinking of summarizing interlinking between node-graph and graph-graph: reason relates to what is logically held in a link]
+	[1. node-graph and graph-graph is an interlinkable space]
+		[this solves the goal.  we weren't interlinking this space.  why not?]
+	[2. what is a summary?]
+
+[coming-up-with-a-new-idea-of-how-and-where-to-interlink-nodes-and-graphs-together]
+	okay.  so _everything_ is one node, together.
+	we live in a 'meta'space where everything links to the universe to a differing degree of complexity.
+	we consider similar kinds of complexity as considerable together.
+
+We value considering a pattern that represents all of reality, because doing so can produce quick instructions for life.
+	[need observation-pattern that learns and stops if unsure.  only source of understanding
+	 can provide sureness, which includes a non-100% confidence.  confidence must hinge on space of behavior.]
+okay, now we can make life itself if we use the bracketed pattern, which sounds fine.
+	stopping to gain sureness provides for relevent interlinking.
+
+[note: behavior and learning are not yet equated.  it would be helpful to have a smooth space of acquiring new behaviors.]
+	[easy to do.  each new behavior is learning.  we start with preset behaviors providing for this.]
+
+
+		each of these motions makes a set of interlinks between the parts.
+		so [a] now links to every destination, including the graph changes, and each of those destinations interlinks.
+
+			[obviously we need nearness of graphs, but that is very similar to nearness of nodes]
+
+		[it sounds like we want to be able to isolate similar near nodes, and go to them in one group]
+		[that group is a node, of course, and would link via some kind of context to [a]]
+
+parts of links/nodes/etc
+	nearby nodes we link to
+
+
+
+
+okay so roughly that's how karl's brain works.  he solved for it to handle 'borg-combat-simulation' where you make habits to
+ make new habits in conflict. 
+
+it could use some more flushing out in how some of the graph links change the kind of graph linking going on, more than others.
+one of the things we haven't discussed is rasterizing collections of link destination kinds: like changing between letters,
+words, and goals.
+
+	[computer-forcing is near]
+		[forcing is appropriate only with completely unused material.  otherwise contextual feedback should be respected.]
+
+
+consider word completion.
+	each letter goes to another letter (or word-end [[or maybe next-word]])
+	but we want ideas for learning: so each path to a letter also goes to every other path.
+			each link is maybe e.g. a probability and we can probably learn by pulling similar probabilities like before
+			etc
+
+	but consider also, this is just an axis of letterness, roughly.
+		we could consider our axes also with these nearnesses that have nearby nearnesses
+
+	and we could try to generalize that idea of coming up with another way of nearness, and flatten it.
+		this would look like having not only our letterness as an interconnected near-graph-array or whatnot
+		but alo kinds that are near letterness
+		and kinds that are near that kind of nearness
+
+		to make it finite we wouldn't anymore fully interconnect them.  we would only keep as many as seems likely
+		to be relevent.  [we'd have to learn along that curve, and interconnect]
+
+
+
+
+
+
+
+
