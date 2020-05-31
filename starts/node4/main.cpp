@@ -74,6 +74,31 @@ extern reference-bool & bool-true;
 // maps.
 // a map is just an ordered list of ways
 
+// static-dependency template seems to provide some options.  could add contextual default methods to the idea.
+	// both of these solutions seem like some work.  how would they go together?
+		// with contextual default methods we no longer need static-dependency?
+			// there'd be like a map of objects associated with each object.  this map is kinda the global default lookup
+				// that sounds nice for other things too
+			// the key here is to provide the map with a default function or something
+
+// of-kind is a cool idea but it uses methods to perform static checks.
+// 	should delay its checks until after reference's methods have been made.
+// 		-> could register kind for construction
+// 		-> could generate reference's method handlers with functions isntead of statics
+// 		can still make static references
+// 			^-- the second option above would provide the baseline fallbacks for everything
+// 			but the order in which things are layered on top would still be deterministically random, different on different machines
+// 				ideally we would specify that we need the methods of a particular thing to exist, before calling them.
+// 				this is totally in the space of kind-of.
+// 				but all these problems go away once the main function is called.
+// 		-> we could use a contextual set of methods, instantiated in the main function or whoever produced us.
+// 		-> we could make of-kind handle this by making sure somehow that methods for a kind exist before it is used.
+// 				-> each kind would provide a function to be called to ensure initialization.  of-kind would call this
+// 				   in the proper order using static function variable dependency.
+// 			... okay that would work.  each class would pass its method constructor to of-kind using a template parameter.
+// 			    of-kind could pvoide a function to ensure dependencies were instantiated
+// 			but you'd want reference itself to be a kind, to ensure static dependency.
+#if 0
 template <reference & kind>
 class of-kind : public reference
 {
@@ -91,18 +116,18 @@ public:
 	static reference-bool & check-is(reference candidate)
 	{
 		if (candidate == null) { return bool-false; }
-		return candidate.kind_get(kind) == is-of-kind ? bool-true : bool-false;
+		return candidate.kind-get(kind) == is-of-kind ? bool-true : bool-false;
 	}
 
 	static void ensure-is(reference member)
 	{
-		member.kind_set(kind, is-of-kind);
+		member.kind-set(kind, is-of-kind);
 	}
 
 	static void must-be(reference member)
 	{
 		if (&check-is(member) == &bool-false) {
-			throw kindness_mistake;
+			throw kindness-mistake;
 		}
 	}
 
@@ -110,9 +135,12 @@ protected:
 	of-kind(any data = {})
 	: reference(data)
 	{
-		kind_set(kind, is-of-kind);
+		kind-set(kind, is-of-kind);
 	}
 };
+
+template <reference & kind>
+reference of-kind<kind>::is-of-kind;
 
 reference kind-bool;
 class reference-bool : private of-kind<kind-bool>
@@ -123,7 +151,7 @@ public:
 	{
 		if (other != bool-false && other != bool-true)
 		{
-			throw kindness_mistake;
+			throw kindness-mistake;
 		}
 	};
 
@@ -144,7 +172,7 @@ public:
 	static void must-be(reference other)
 	{
 		if (check-is(other) == bool-false) {
-			throw kindness_mistake;
+			throw kindness-mistake;
 		}
 	}
 
@@ -178,24 +206,29 @@ reference-bool reference-bool::bool-false(false, (bool*)0);
 // next: provide map-lookup as core method
 
 // let's offer methods
+
 reference kind-map-maker;
 class map-maker : public of-kind<kind-map-maker>
 {
 public:
 	static reference location;
+	static reference map;
 
-	static map make(reference start)
+	static map-maker make(reference start) // be good if start could be a map
 	{
-		map result = {};
-		map.kind-set(last-location, start);
+		map-maker result = {};
+		result.kind-set(location, start);
+		result.kind-set(map, {});
+		return result;
 	}
 
-	using of-kind<kind-map>;
+	using of-kind<kind-map-maker>::of-kind;
 
 	// todo: turn into method?
 	void add(reference way)
 	{
-		order_set(order_count(), way);
+		reference map = kind-get(map);
+		map.order-set(map.order-count(), way);
 	}
 
 
@@ -205,11 +238,10 @@ public:
 	// paired with a map is a log of where you _did_ end up.
 	// this can be offered by indexing-by-maps and preservation of relevent
 	// parts.
-private:
-	map()
-	: of-kind<kind-map>()
-	{ }
 };
+reference map-maker::location;
+reference map-maker::map;
+#endif // map-maker seems simple enough to not be making pressure for subclasses yet
 
 // time-value.
 // we use connections that have value to them.
@@ -219,7 +251,7 @@ private:
 // when we bracket we return the connection object?
 // 	when we get a property we get the destination f the connection object.
 
-// all we need is some kind_options that are option types
+// all we need is some kind-options that are option types
 // an option type has a value and a reference
 
 // concept: set-of-choices
@@ -260,13 +292,13 @@ reference _get((function<reference(reference,reference)>)[](reference focus, ref
 
 // we just need words for theese things.
 
-class connection_reference : public reference
+class connection-reference : public reference
 {
 public:
-	//connection_reference
+	//connection-reference
 };
 
-class indirect_reference : public reference
+class indirect-reference : public reference
 {
 	// say we want to make [] = work.
 	// it would help to use connection objects.
@@ -285,7 +317,7 @@ public:
 // this could be merged into the root concept: it would check for a get member.
 
 // possibility
-class type_reference : public reference
+class type-reference : public reference
 {
 public:
 	// we want to be able to set members that are inherited by types
@@ -298,11 +330,11 @@ public:
 int main(int argc, char ** argv)
 {
 	reference concept, is, object, chair, wood, material;
-	chair.set(is, object);
-	concept.set(is, chair);
-	concept.set(material, wood);
+	chair.kind-set(is, object);
+	concept.kind-set(is, chair);
+	concept.kind-set(material, wood);
 
 	((string&)wood) = "tree-body";
 
-	cout << (string)concept.get(material) << endl;
+	cout << (string)concept.kind-get(material) << endl;
 }
