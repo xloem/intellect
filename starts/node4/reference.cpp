@@ -169,6 +169,8 @@ reference reference::basic-order-get(){static reference basic-order-get((functio
 	return vector[index-data];
 }); return basic-order-get;}
 
+// this appears the same as the in-class method except it doesn't have static
+//  in front of it, and does have a classspace scope specifier.
 reference reference::basic-order-set(){static reference basic-order-set((function<reference(reference, reference, reference)>)[](reference focus, reference index, reference value) -> reference
 {
 	if (!focus.pointer()) { throw presence-mistake(); }

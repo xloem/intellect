@@ -122,6 +122,15 @@ private:
 	multi-any & raw-data();
 };
 
+// parameters take types and names
+// if we could iterate, we could make types convert to references
+
+#define __as_many_reference_types_as_arguments(...) \
+	this-uses-foreach-which-is-in-meaning-vm
+	could also preprocess it.
+#define DEFINE_INLINE_RETURNING_METHOD(name, parameter-types-and-names, body) \
+static reference name(){static reference name((function<reference>(
+
 #define DEFINE(type, scope, name) type & scope name() { static type name(string(#name)); return name; }
 
 // template implementations below

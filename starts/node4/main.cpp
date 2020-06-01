@@ -364,6 +364,68 @@ public:
 	// 	- verifying something of a type is used as that type should be used
 };
 
+// so.  we can now add a value to our links.
+// let's just do it.  we can adjust internal structure later.
+
+using degree_t = double;
+
+reference kind-degree;
+class degree : public of-kind<kind-degree>
+{
+public:
+	// TODO in real world: don't reject groups that have the attributes but not the label
+	using of-kind<kind-degree>::of-kind;
+	degree(degree_t value)
+	{
+		data-default<degree_t>() = value;
+	}
+
+	operator degree_t & ()
+	{
+		return data-default<degree_t>();
+	}
+};
+
+reference kind-time-value-choices("time-value-choices");
+class time-value-choices : public of-kind<kind-time-value-choices>;
+{
+	using data-type = std::unordered_map<reference, degree_t>;
+public:
+	using of-kind<kind-time-value-choices>::of-kind;
+
+	time-value-choices()
+	{
+		data-default<data-type>();
+	}
+
+
+	METHOD reference get-value(time-value-choice focus, reference kind)
+	{
+		return focus.time-values()[kind];
+	}
+
+	static reference get-value(){static reference get-value((function<reference(reference)>)[](time-value-choices focus, reference kind) -> degree
+	{
+		return {focus.time-values()[kind]};
+	}); return get-value;}
+	DEFINE(reference,,method-kind-get-value)
+
+	// let's set it up with methods
+
+	degree get-value(reference kind)
+	{
+		// this specifically gets the value of a kind
+		return (*this)(method-kind-get-value(), {kind}); 
+	}
+
+private:
+	std::unordered_map<reference, degree_t> & time-values()
+	{
+		return reference::data<data-type>();
+	}
+	
+};
+
 int main(int argc, char ** argv)
 {
 	reference concept, is, object, chair, wood(string("tree-body")), material;
