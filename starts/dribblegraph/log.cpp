@@ -28,7 +28,7 @@ struct connectable
 	// HM HM: it seems like each link should have a way of asking for anything at all, and if can't be handled recipient should try to reach out for more
 	static reference make(reference source, reference kind, reference destination, any data = {})
 	{
-		auto result = make_shared<connectable>(source, kind, destination, data);
+		reference result(new connectable(source, kind, destination, data));
 		result->self = result;
 		if (source) {
 			result->iterator = source->connections.emplace(kind, result);
@@ -46,7 +46,7 @@ struct connectable
 		if (data.type() != typeid(Data)) {
 			data = initial;
 		}
-		return any_cast<Data>(data);
+		return *any_cast<Data>(&data);
 	}
 
 	reference destination;
@@ -220,7 +220,7 @@ struct connectable
 		result->view = result;
 		for (auto connection : connections) {
 			if (connection_filter(connection.second)) {
-				result->connections.emplace(connection.second);
+				result->connections.emplace(connection);
 			}
 		}
 		return result;
@@ -238,7 +238,7 @@ struct connectable
 				if (!mutated_connection->source && take_empty_connections) {
 					mutated_connection->source = result;
 				}
-				result->connections.emplace(mutated_connection);
+				result->connections.emplace(mutated_connection->kind, mutated_connection);
 			}
 		}
 		return result;
@@ -827,13 +827,13 @@ struct connectable
 				left_directions_hash = hash_combine(left_directions_hash, hash(item.kind));
 			}
 			// see if map is in other
-			for (auto right_map : right) {
+			for (auto right_map : *right) {
 				hash_t right_directions_hash = 0;
 				for (auto item : right_map.list_items()) {
-					right_directions_hash = hash_combine(right_directions_hash, hash(item->kind));
+					right_directions_hash = hash_combine(right_directions_hash, hash(item.kind));
 				}
 				if (right_directions_hash == left_directions_hash && left->list_last()->destination != right->list_last()->destination) {
-					results.connect(kind_member, left_map.mutate([](reference connection){return connection.kind ? make({},connection.kind,{}) : {} )});
+					results->connect(kind_member, left_map.mutated([](reference connection){return connection->kind ? make({},connection->kind,{}) : reference{}; }));
 
 				}
 			}
@@ -886,7 +886,7 @@ private:
 	reference kind;
 
 	connectable(reference source, reference kind, reference destination, any data)
-	: destination(destination), data, source(source), kind(kind)
+	: destination(destination), data(data), source(source), kind(kind)
 	{ }
 };
 
