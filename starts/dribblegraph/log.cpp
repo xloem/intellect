@@ -890,6 +890,36 @@ private:
 	{ }
 };
 
+// something is missing regarding differencing.
+// let's run an example with getting new values.
+// say we have a set of value and run across a duplicate.
+// duplicate matches, makes similarity set.
+// then next one comes.
+// 	next one is a surprise.
+// 	we actually process history looking for differences
+// 	between the new one, and the ones where the surprise
+// 	didn't happen.
+// okay not sure code accommodates that.
+// 	i have nodeset1 and node2 that actually is different.
+// 	i want something that makes n nodes similar,
+// 	and node2 different.  an exclusion.
+// 	i could process this by passing group1 and group2
+// 	to a function, and looking for _new_ similarities
+// 	among group1, that are not in group2.
+// 	in the code we would just keep looking for similarities
+// 	among the old group, until we found one that was wrong
+// 	in the new group.  otherwise we would store the group
+// 	for further learning.
+
+void process(
+
+#include <fstream>
+int main(int argc, char **argv)
+{
+	ifstream log("log.txt");
+
+}
+
 // okay made a cool all purpose link class.
 // it can easily hold a set of neighbor links.
 // i would like to expand it to keep track of its depth,
