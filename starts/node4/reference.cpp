@@ -19,19 +19,28 @@ class reference::part
 private:
 	friend class reference;
 
-	unordered_map<reference, reference> kinded-parts;
-	vector<reference> ordered-parts;
+	using kinded = unordered_map<reference, reference>;
+	using ordered = vector<reference>;
 
-	any data;
-
-	part(any &&data)
-	: data(move(data))
-	{ }
+	multi-any data;
 };
 
 reference::reference(any data)
-: shared(new part(move(data)))
-{ }
+: shared(new part())
+{
+	raw-data().set(move(data));
+}
+reference::reference(initializer_list<any> datas)
+: shared(new part())
+{
+	for (auto & data : datas) {
+		auto old = raw-data().set(move(data));
+		if (old.type() != typeid(void)) {
+			// two of the same type passed
+			throw kindness-mistake();
+		}
+	}
+}
 reference::reference(reference const & other)
 : shared(other.pointer())
 { }
@@ -107,7 +116,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 reference reference::basic-kind-get(){static reference basic-kind-get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
 {
 	if (!focus.pointer()) { throw presence-mistake(); }
-	auto & map = focus.pointer()->kinded-parts;
+	auto & map = focus.pointer()->data.get<part::kinded>();
 	auto result = map.find(kind);
 	if (result == map.end()) {
 		return null();
@@ -119,7 +128,7 @@ reference reference::basic-kind-get(){static reference basic-kind-get((function<
 reference reference::basic-kind-set(){static reference basic-kind-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
 {
 	if (!focus.pointer()) { throw presence-mistake(); }
-	auto & map = focus.pointer()->kinded-parts;
+	auto & map = focus.pointer()->data.get<part::kinded>();
 	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element
@@ -135,7 +144,7 @@ reference reference::basic-kind-set(){static reference basic-kind-set((function<
 reference reference::basic-get-all-kinds(){static reference basic-get-all-kinds((function<reference(reference)>)[](reference focus) -> reference
 {
 	if (!focus.pointer()) { throw presence-mistake(); }
-	auto & map = focus.pointer()->kinded-parts;
+	auto & map = focus.pointer()->data.get<part::kinded>();
 	reference result;
 	for (auto & item : map) {
 		result.order-set(result.order-count(), item.first);
@@ -146,24 +155,25 @@ reference reference::basic-get-all-kinds(){static reference basic-get-all-kinds(
 reference reference::basic-order-count(){static reference basic-order-count((function<reference(reference)>)[](reference focus) -> reference
 {
 	if (!focus.pointer()) { throw presence-mistake(); }
-	return (any)(index_t)focus.pointer()->ordered-parts.size();
+	return (any)(index_t)focus.pointer()->data.get<part::ordered>().size();
 }); return basic-order-count;}
 
 reference reference::basic-order-get(){static reference basic-order-get((function<reference(reference, reference)>)[](reference focus, reference index) -> reference
 {
 	if (!focus.pointer()) { throw presence-mistake(); }
-	index_t index-data = (index_t)index;
-	if (index-data < 0 || index-data >= (index_t)focus.pointer()->ordered-parts.size()) {
+	index_t index-data = index.data<index_t>();
+	auto & vector = focus.pointer()->data.get<part::ordered>();
+	if (index-data < 0 || index-data >= (index_t)vector.size()) {
 		throw presence-mistake();
 	}
-	return focus.pointer()->ordered-parts[index-data];
+	return vector[index-data];
 }); return basic-order-get;}
 
 reference reference::basic-order-set(){static reference basic-order-set((function<reference(reference, reference, reference)>)[](reference focus, reference index, reference value) -> reference
 {
 	if (!focus.pointer()) { throw presence-mistake(); }
-	auto & ordered-parts = focus.pointer()->ordered-parts;
-	index_t index-data = (index_t)index;
+	auto & ordered-parts = focus.pointer()->data.get<part::ordered>();
+	index_t index-data = index.data<index_t>();
 	if (value != null()) {
 		if (index-data < 0 || index-data > (index_t)ordered-parts.size()) {
 			throw presence-mistake();
@@ -205,7 +215,7 @@ reference reference::indirect-set((function<reference(reference,reference,refere
 	}
 	return setter(focus, indirect-setter, value);
 	
-	auto & map = focus.pointer()->kinded-parts;
+	auto & map = focus.pointer()->data.get<part::kinded>();
 	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element
@@ -275,10 +285,11 @@ char const * reference::what() const noexcept
 	if (!pointing) {
 		return "null reference";
 	}
-	if (pointing->data.type() != typeid(string)) {
+	auto string-pointer = pointing->data.pointer<string>();
+	if (string-pointer == nullptr) {
 		return "reference not a string";
 	}
-	return any_cast<string>(&pointing->data)->c_str();
+	return string-pointer->c_str();
 }
 
 shared_ptr<reference::part> reference::pointer() const
@@ -286,7 +297,7 @@ shared_ptr<reference::part> reference::pointer() const
 	return is-nonweak() ? shared : weak.lock();
 }
 
-any & reference::data()
+multi-any & reference::raw-data()
 {
 	auto pointing = pointer();
 	if (!pointing) { throw presence-mistake(); }

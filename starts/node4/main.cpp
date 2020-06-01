@@ -141,7 +141,7 @@ protected:
 template <reference & kind>
 reference of-kind<kind>::is-of-kind;
 
-reference kind-bool;
+reference kind-bool(string("kind-bool"));
 class reference-bool : private of-kind<kind-bool>
 {
 public:
@@ -203,6 +203,45 @@ reference-bool reference-bool::bool-false(false, (bool*)0);
 // and it's totally reasonable to treat every ordered list as a map, already.
 
 // next: provide map-lookup as core method
+
+// okay, map-lookup has issue: ordered items can't look up by kind
+// if the kind is a number O_O
+// 	i guess you could provide a special attribute on the map entry
+// 	to clear up whether it was a kind or a number
+// 		if it was a kind that would change all the kinds
+// 		or we could use entry objects
+// 	it sounds like if it is a kind, it's obviously the kind
+// 	otherwise you could interpret it as a number
+// 	it kinda sounds like kind-get could do order lookup that
+// 	way too.
+// this makes a lookup that tries multiple things.
+// seems it would be good to register those as ways-to-try, somehow, just
+// an idea unmentioned.
+// 	well ways-to-try sounds important .. but could easily be
+// 	done later ...
+// 		here: it would an order of ways.
+// 		just like a map.
+// 	okay, so we can call a method with a map.
+// 		[and if our links were valued we could make time-value decisions
+// 		 with a map]
+// 	so the order that these improvements are laid upon each other has meaning
+// 		we'd want the method implementation to let us set order
+// [atm we are neither consciously planning nor implementing.
+//  propose either implement or nap.]
+//  	[thinking of consciously considering order of adding-stuff being
+//  	 flexible.  seems just a little bit to wayness would be needed.]
+//  	 	[flexibility requested was what?]
+//  	 		[time-value decisions with map ..
+//  	 		] [trust-us: is better to nap or implement.]
+//  	 		=S ...................................
+//
+
+// okay, so options for handling maps that can map graphs with maps in them
+// 	we could have a method for handling the map set
+// 	the default one assumes integer steps are ordered, others
+// 	are kinds
+//
+// 		this method is roughly kind-get
 
 // let's offer methods
 
@@ -327,12 +366,10 @@ public:
 
 int main(int argc, char ** argv)
 {
-	reference concept, is, object, chair, wood, material;
+	reference concept, is, object, chair, wood(string("tree-body")), material;
 	chair.kind-set(is, object);
 	concept.kind-set(is, chair);
 	concept.kind-set(material, wood);
 
-	((string&)wood) = "tree-body";
-
-	cout << (string)concept.kind-get(material) << endl;
+	cout << (string)concept.kind-get(material).data<string>() << endl;
 }

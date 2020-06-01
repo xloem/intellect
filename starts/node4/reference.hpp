@@ -1,9 +1,8 @@
 #pragma once
 
-#include <experimental/any>
-	namespace std { using experimental::any; using experimental::any_cast; }
 #include <memory>
 #include <functional>
+#include "multi-any.hpp"
 
 using index_t = long long;
 
@@ -12,6 +11,7 @@ class reference
 public:
 	// construction
 	reference(std::any data = {});
+	reference(std::initializer_list<std::any> datas);
 	reference(reference const & other);
 
 	// in case a weak reference is needed
@@ -19,10 +19,17 @@ public:
 	void set-nonweak(bool nonweak);
 
 	// data access
-	template <typename data-type>
-		operator data-type &();
+	
+	// general: consider also a c-style approach where no exceptions
+	// are thrown.  could simplify meaning-order.
 
-	// function call if data is std::function
+	template <typename data-type>
+		data-type & data-default(data-type default-data = {});
+	template <typename data-type>
+		data-type & data();
+
+
+	// function call if data has the std::function
 	template <typename... parameter-types>
 		reference operator()(parameter-types... parameters);
 
@@ -53,7 +60,7 @@ public:
 	// set an indirect property, returns old value
 	reference kind-set(reference kind, reference value) { return (*this)(method-kind-set(), {kind, value}); }
 
-	// get all property kinds, ordered, inderectly
+	// get all property kinds, ordered, indirectly
 	reference get-all-kinds() { return (*this)(method-get-all-kinds(), {}); }
 	
 	// count properties indirectly
@@ -112,7 +119,7 @@ private:
 	std::shared_ptr<part> shared;
 	std::weak_ptr<part> weak;
 
-	std::any & data();
+	multi-any & raw-data();
 };
 
 #define DEFINE(type, scope, name) type & scope name() { static type name(string(#name)); return name; }
@@ -120,18 +127,19 @@ private:
 // template implementations below
 
 template <typename data-type>
-reference::operator data-type &()
+data-type & reference::data-default(data-type default-data)
 {
-	auto & data = this->data();
+	return this->raw-data().get<data-type>(default-data);
+}
 
-	if (data.type() == typeid(void)) {
-		data = data-type();
-	} else if (data.type() != typeid(data-type)) {
-		// kind of data was assumed wrongly
-		// not-kind to treat as something other than self
+template <typename data-type>
+data-type & reference::data()
+{
+	data-type * pointer = this->raw-data().pointer<data-type>();
+	if (pointer == nullptr) {
 		throw kindness-mistake();
 	}
-	return *std::any_cast<data-type>(&data);
+	return *pointer;
 }
 
 // TODO: with orderedness, we can now use a reference as an arguments object
@@ -144,9 +152,9 @@ reference reference::operator()(parameter-types... parameters)
 	using void-function = std::function<void(parameter-types...)>;
 	returning-function *returner;
 	try {
-		returner = &static_cast<returning-function&>(*this);
+		returner = &data<returning-function>();
 	} catch (reference) {
-		static_cast<void-function&>(*this)(parameters...);
+		data<void-function>()(parameters...);
 		return null();
 	}
 	return (*returner)(parameters...);
