@@ -52,7 +52,7 @@ struct connectable
 	reference destination;
 	any data;
 
-	static reference source_reality;
+	static reference source_reality; // maybe this was for where non-connection connections could connect from
 	static reference kind_unique_information;
 	static reference kind_paired_information_first;
 	static reference kind_paired_information_second;
@@ -561,7 +561,7 @@ struct connectable
 	template <typename Type>
 	static inline reference group_type()
 	{
-		static reference group_type_reference = make(group_unique_data, typeid(Type));
+		static reference group_type_reference = make(group_unique_data, &typeid(Type));
 		return group_type_reference;
 	}
 	template <typename Type>
@@ -911,13 +911,110 @@ private:
 // 	in the new group.  otherwise we would store the group
 // 	for further learning.
 
-void process(
-
 #include <fstream>
+#include <sstream>
+class frontend
+{
+public:
+	frontend(string inputfilename, string outputfile)
+	: self(connectable::make({},{},{},string("self"))),
+	  inputfilename(inputfilename),
+	  outputfile(outputfile),
+	  matches(true)
+	{
+		ifstream inputfile(inputfilename);
+	
+		processinput(inputfile);
+		processinput(cin);
+	}
+	
+	void processinput(istream & input)
+	{
+		string line;
+		while (getline(input, line)) {
+			string output = processline(line);
+			if (matches) {
+				string outputline;
+				getline(outputfile, outputline);
+				if (outputline != line) {
+					matches = false;
+				}
+			}
+			if (!matches) {
+				cout << line << endl;
+				outputfile << line << endl;
+				cout << "\t" << output << endl;
+				outputfile << output << endl;
+			}
+		}
+	}
+
+	static reference group_event;
+	static reference kind_memory;
+	static reference kind_word;
+	static reference kind_speaker;
+	static reference speaker_me;
+	static reference speaker_you;
+	static reference kind_flow;
+	static reference flow_stop;
+	static reference flow_start;
+	static reference flow_ongoing;
+
+	reference last_event;
+
+	string processline(string line)
+	{
+		// GUTS ARE HERE
+		istringstream stream(line);
+		string word_string;
+		reference first_new_event;
+		while (stream >> word_string) {
+			// REMEMBER WORD
+			auto word = connectable::from(word_string);
+			auto event = connectable::make(group_event);
+			event->connect(kind_word, word);
+			event->connect(kind_speaker, speaker_you);
+
+			if (last_event) {
+				last_event->connect(connectable::kind_next, event);
+				event->connect(connectable::kind_previous, last_event);
+			}
+
+			if (!first_new_event) {
+				first_new_event = event;
+				(*event)[kind_flow] = flow_start;
+			} else {
+				(*event)[kind_flow] = flow_ongoing;
+			}
+
+			last_event = event;
+		}
+		(*last_event)[kind_flow] = flow_stop;
+
+		// THINK ABOUT KNOWLEDGE
+		// we'll want to go through all the words just
+		// said and compare their surroundings in memory
+		// with what has happened in the past, making
+		// a complete enough set of similarities to
+		// distinguish all contextual differences
+		// between uses of words.
+
+		string output;
+
+		// MAKE WORDS IN RESPONSE
+		
+		return output;
+	}
+
+	reference self;
+	string inputfilename, outputfilename;
+	fstream outputfile;
+	bool matches;
+};
+
 int main(int argc, char **argv)
 {
-	ifstream log("log.txt");
-
+	frontend("input.txt", "output.txt");
 }
 
 // okay made a cool all purpose link class.
