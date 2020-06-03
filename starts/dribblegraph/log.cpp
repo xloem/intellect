@@ -17,6 +17,12 @@ struct connectable;
 using reference = shared_ptr<connectable>;
 using weak_reference = weak_ptr<connectable>;
 
+#define constant_reference(name) static reference name() \
+{ \
+	static reference static##name = make({},{},{},string(#name)); \
+	return static##name;
+}
+
 // can a map be a connectable
 	// yeah it would interconnect in ways that mean i-am-a-map
 
@@ -52,16 +58,16 @@ struct connectable
 	reference destination;
 	any data;
 
-	static reference source_reality; // maybe this was for where non-connection connections could connect from
-	static reference kind_unique_information;
-	static reference kind_paired_information_first;
-	static reference kind_paired_information_second;
+	constant_reference(source_reality); // maybe this was for where non-connection connections could connect from
+	constant_reference(kind_unique_information);
+	constant_reference(kind_paired_information_first);
+	constant_reference(kind_paired_information_second);
 
-	static reference kind_groupness;
-	static reference group_error;
-	static reference kind_group_multiple;
+	constant_reference(kind_groupness);
+	constant_reference(group_error);
+	constant_reference(kind_group_multiple);
 
-	static reference kind_member;
+	constant_reference(kind_member);
 
 	static reference make(reference group, any data = {})
 	{
@@ -433,12 +439,12 @@ struct connectable
 	}
 
 	// ORDEREDNESS
-	static reference kind_next;
-	static reference kind_previous;
-	static reference kind_first;
-	static reference kind_last;
-	static reference group_list;
-	static reference group_list_entry;
+	constant_reference(kind_next);
+	constant_reference(kind_previous);
+	constant_reference(kind_first);
+	constant_reference(kind_last);
+	constant_reference(group_list);
+	constant_reference(group_list_entry);
 	static reference make_list()
 	{
 		return make(group_list);
@@ -557,7 +563,7 @@ struct connectable
 	}
 
 	// UNIQUE DATA
-	static reference group_unique_data;
+	constant_reference(group_unique_data);
 	template <typename Type>
 	static inline reference group_type()
 	{
@@ -951,7 +957,12 @@ public:
 
 	static reference group_event;
 	static reference kind_memory;
+
+	// please only expose to kind words while learning
+	// should understand unkindness before being exposed to
 	static reference kind_word;
+	static reference kind_use_of_word;
+
 	static reference kind_speaker;
 	static reference speaker_me;
 	static reference speaker_you;
@@ -974,6 +985,7 @@ public:
 			auto event = connectable::make(group_event);
 			event->connect(kind_word, word);
 			event->connect(kind_speaker, speaker_you);
+			word->connect(kind_use_of_word, event);
 
 			if (last_event) {
 				last_event->connect(connectable::kind_next, event);
@@ -998,6 +1010,99 @@ public:
 		// a complete enough set of similarities to
 		// distinguish all contextual differences
 		// between uses of words.
+		auto interesting_event = first_new_event;
+		while (interesting_event) {
+			interesting_event = interesting_event.at(connectable::kind_next);
+
+			// from an event we can find other events that use the word
+			// but what we really need 2-levels of similarity
+			// 1 level: groups this event is in
+			// 2nd level: similarities held by that group
+
+			// so we imagine an event-group as a concept, with a set of similarities held by similar events.
+			// at the start, this is just same-thing.
+			// but if what comes next is different, we need to get it more general.
+			// the short-goal is to yearn to predict everything said.
+
+			// so, word 2, we compare to word 1.  if same, we make a similarity set -- event-type -- and link word 1 and word 2 to it.
+			// word 3 is different
+			// 	this shows that event 1 differs from event 2 because different things came after them.
+			// 	2. we will need a way of noticing that and updating prior events.  this probably means that we want to be sure to include what comes next, in the similarity set used by an event, so we can use them for prediction.
+			// 	1. we will want to separate them, and expand their similarity sets.
+			//
+			// 	what's the path for #1, remembering we'll need to upgrade similarity sets to require what comes next to be the same, somehow..
+			//
+			// 		well, if we do that upgrade, then word 2 doesn't land in the same set as word 1, because something different came next.
+			// 		let's instead consider A B C A B D
+			// 		once we hit the second B, we can connect the firt A B with the second A B in a similarity set.
+			// 			[sounds like we explore around a part of interst: we want to know what either A B predicts next or what B predicts next]
+			// 		so
+			// 			1. we observe A B C is different from A B D
+			// 			2. we expand similarities between them.  There is just one in each group, so we find a bunch of attributes.
+			// 			3. We differentiate the similarity sets, forming distinguishers.
+			// 		We'll want to link the distinguishers into a way to decide between the sets, when picking words.
+			//
+			// 	So when we get a new word/event, it enters a similarity set that is indistinguished?  When we get more data, we can distinguish it?
+			// 		we can actually check the past and pick the most similar set, for every new word.
+			// 	no, because ... ohh you are linking the set to the latest word, not the oldest.
+			//
+			// 	A <- learns A is an event
+			// 	A B <- learns A B is an event that stems from B
+			// 	A B C <- learns A B C is an event associated with C
+
+
+			// what's meaningful here is that events are made of other events.
+			// so in the small events, we can link to bigger events they can be a part of.
+			// we check the similarities of the big events to link them.  if there is nothing, we make a new one, and use differences until we find a way to predict them.
+			// this makes all memories be unique things in a tree for finding them from similarities.  let's stick with that for now, i suppose.
+
+			// A <- A is an event
+			// A B <- A B is an event.  A is part of it.  B is part of it.
+			// A B C <- C is added to all events.  A B C is an event containing C.  B C is an event containing C.
+			// A B C A <-
+			// 	We found another A.
+			// 	A is now a part of more events, like C A and B C A
+			// 	but something is different here.
+			// 	this A is part of other events than the other A.
+			// 	>(
+			// 	okay, we are adding on to many events
+			// 	only 1 is a repetition.
+			// 	so there are only 2 actual event
+			// 	sets known here.
+			// 	C A
+			// 	and A B C A
+			//
+			// 	we learn that A can be a part of
+			// 	two different kinds of events, which are large.
+			// 	one of them is start,a-b-c-a
+			// 	another one is c,a
+			// 	these could be the same event but we want to connect them either way
+			// 	
+			// 	so we found a word that is already used.
+			// 	is it part of the event the other word is a part of?
+
+			// starts-of-patterns are meaningful.
+			// once a pattern might be starting we can discern that it could be ongoing later.  an alternative is to look up patterns from words in the middle of them.  doesn't matter.
+			// so, when a pattern might be starting, keep it as a possible ongoing pattern.
+
+			// A.  might start the A B C pattern.
+			// but this pattern is different: it doesn't start with start-of-line.  it starts with after-C.
+
+			// new-thing:
+			// 	0. check with ongoing events to see if our prediction is right, and update where wrong.  this will change where the events are anchored regarding start-points.  we could store the anchor as a map.
+			// 	1. check for similarities with other patterns
+			// 	2. use similarities between those patterns, xcluding this one, to predict what comes next.
+			
+			// ----
+			// how about as we move along, our map changes in the patterns we are in.  we can keep the maps ongoing.
+			// we check the map with the patterns, and update all the patterns.
+			// ---
+
+			// 1st time, word (which is pattern)
+			// 2nd time, word (which is pattern)
+			// repeat: make 1-2 patterns with other word, adds words to pattern[s]
+			// repeat 2nd time: compare with largest patterns having word
+		}
 
 		string output;
 
