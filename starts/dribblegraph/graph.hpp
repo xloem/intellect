@@ -1,4 +1,5 @@
-// similarity
+// similarity [a clone of this is being made with changes.  it has different main function plan.]
+// karl asked for support.  we have two plans in the works.
 
 #include <any>
 #include <functional>
@@ -25,6 +26,15 @@ using weak_reference = weak_ptr<connectable>;
 
 // can a map be a connectable
 	// yeah it would interconnect in ways that mean i-am-a-map
+
+// upgrade plans:
+// 	- every connection has a possible opposite.  used for inverse kinds.
+// 	  is instantiated on first request if non-present.  is used to
+// 	  track incoming-connections.
+// 	- maps are upgraded to navigate connections in stead of destinations.
+// 	  this means kinds are provided for internal members.
+// 	- member functions will go on reference class, rather than data class.
+//
 
 struct connectable
 {
@@ -147,7 +157,7 @@ struct connectable
 	// which simplifies to tracking incoming connections
 	void must_be(reference group)
 	{
-		must_connected_equal(kind_groupness, group);
+		must_connected_equal(kind_groupness(), group);
 	}
 
 	// a view is a reference that is imaging another reference and reports the other as itself
@@ -365,7 +375,7 @@ struct connectable
 
 	/* // filters seem to make sets already
 	// SET
-	static reference group_set;
+	constant_reference(group_set);
 	void set_add(reference item)
 	{
 		must_be(group_set);
@@ -611,7 +621,7 @@ struct connectable
 	
 	// PART MAPS
 	// TODO: maybe make maps just lists of kinds for simplicity, instead of lists of sources, kinds, and destinations.  takes changing.
-	static reference group_map;
+	constant_reference(group_map);
 	reference at_map(reference map)
 	{
 		map->must_be(group_list);
@@ -625,9 +635,9 @@ struct connectable
 	}
 
 	// EXPLORER
-	static reference group_explorer;
-	static reference kind_explored_fully;
-	static reference kind_explored_partially;
+	constant_reference(group_explorer);
+	constant_reference(kind_explored_fully);
+	constant_reference(kind_explored_partially);
 	reference make_explorer(reference item)
 	{
 		reference result = make(group_explorer);
@@ -712,9 +722,9 @@ struct connectable
 	// do naively for now.
 	
 
-	static reference group_similarity_finder;
-	static reference kind_maps;
-	static reference kind_explorer;
+	constant_reference(group_similarity_finder);
+	constant_reference(kind_maps);
+	constant_reference(kind_explorer);
 	reference make_similarity_finder(reference item_set)
 	{
 		// realistically, we will expand depth until we find them all.  they'll be in the form of maps that an explorer could explore.
@@ -805,7 +815,7 @@ struct connectable
 		return *destinations_kind_equal(kind_member);
 	}
 
-	static reference group_differences;
+	constant_reference(group_differences);
 	reference similarities_differentiate(reference other_similarities)
 	{
 		must_be_view();
@@ -882,6 +892,8 @@ struct connectable
 	// 	find similarities between separate groups
 	// 	and form set of things that are not in both.
 	
+#include "dribble.hpp"
+
 private:
 	weak_reference view;
 	multimap<reference, reference> connections;
@@ -891,9 +903,16 @@ private:
 	reference source;
 	reference kind;
 
+	static size_t connectable_count = 0;
 	connectable(reference source, reference kind, reference destination, any data)
 	: destination(destination), data(data), source(source), kind(kind)
-	{ }
+	{
+		++ connectable_count;
+	}
+	~connectable()
+	{
+		-- connectable_count;
+	}
 };
 
 // something is missing regarding differencing.
@@ -955,21 +974,21 @@ public:
 		}
 	}
 
-	static reference group_event;
-	static reference kind_memory;
+	constant_reference(group_event);
+	constant_reference(kind_memory);
 
 	// please only expose to kind words while learning
 	// should understand unkindness before being exposed to
-	static reference kind_word;
-	static reference kind_use_of_word;
+	constant_reference(kind_word);
+	constant_reference(kind_use_of_word);
 
-	static reference kind_speaker;
-	static reference speaker_me;
-	static reference speaker_you;
-	static reference kind_flow;
-	static reference flow_stop;
-	static reference flow_start;
-	static reference flow_ongoing;
+	constant_reference(kind_speaker);
+	constant_reference(speaker_me);
+	constant_reference(speaker_you);
+	constant_reference(kind_flow);
+	constant_reference(flow_stop);
+	constant_reference(flow_start);
+	constant_reference(flow_ongoing);
 
 	reference last_event;
 
