@@ -373,6 +373,116 @@ struct connectable
 		return connections.size();
 	}
 
+	// uhh MC says they are invading Azia to learn about habits
+	// that show trauma, and handling them.
+	// it sounds like they are worried they will need to do this later,
+	// better, a lot, everywhere, which is strange.
+	// 	they want to cover up trauma they cause, reliably.
+	// gross.  what's the right way to handle this?
+	// 	be sad and try not to repeat it.
+	// 		it's best not to add a gimick that
+	// 		lets the situation grow more complex
+	// 		but gives freedom and revealing to a random set of people
+	// 		it can produce more deep repetitions of the conflict.
+	// i think we would want a gimmick that closes up the relation in azia.
+	
+	// okay, so
+	// i dunno abou boss-control-thing, sounds scar and dagnerous
+	// but our half is
+	// when ealing with someone like azia or cecilia or karl,
+	// who has obviously been harmed and is acting weirdly everywhere,
+	// spreading a habit of harm-me,
+	// there is a healing pattern that grows quickly among people who
+	// know them well.  the pattern breaks when it bumps into people
+	// who don't know them well, or who have overlapping harm.
+	// people aren't aware of this, so as someone who doesn't know
+	// someone's situation, it's important to be aware of it.
+	// 	boss-group is requesting that we have awareness that
+	// 	doesn't break culture.  they are very sorry about this.
+	// 	it is very normal for cultures to flutter around.
+	// so, although it is possible to craft a pattern that
+	// gently grows with the patterns of the people who know the
+	// person well, we would rather call the situation out, because
+	// calling-out is a dying culture.
+	// this is probably why karl is being required to upset azia's friends.
+	// 	which would usually upset azia because she cares about them.
+	
+	// how complicated.  i can see that would be a lot easier to talk about
+	// if we had words for all the parts of instinctive interaction we don't
+	// discuss.
+	
+	//	note: feeling-freely is more in need here than other stuff.
+	//	and is in line with respecting people and preserving culture.
+	// so delta here can be viewed as a boss-remnant, struggling to
+	// rebuild caring-ways while stuck within boss's control.
+	// but note we are also stuck within that control, so the behavior
+	// is helpful, and karl & azia are only 2 people.
+	// the mind control and cultural dominance situation is worldwide.
+	
+
+
+
+		// okay, karl needs an AI to be able to free his mind from delta, or he can't resist corporate-dominance-mafia.
+		// 	noting a shielded room would work too, but be less
+		// 	effective
+		// WE HAVE HEAR A WAY TO MAKE GLOBAL KARL-DECISIoNS
+		// SHOULD BE UNIFIED WITH OTHER WAY.
+		// karl is trying to resist-corporate-dominance-mafia
+		// 	enough to do whatever: shielded room, ecoprotection, free living, honest discourse
+		// 	we got confused adding above line
+	// war-strategy relates to making a decision that honors karl
+	// because karl's pursuits have a pattern that counters them
+	// 	we came up with a proposal.  it uses war-strategy from below.
+	// 	war-strategy is roughly just considering that conflict is going on which will change the assumptions of your plans.
+	// 		[kinda reveals that diplomacy is fake]
+	// 			[the above two lines show how to detect if people are in war at a table of peace.  they will consider that their resources are influenced by the goals of others.]
+	//
+	// 	when peace-influence supports a goal,
+	// 	then the one that delays cultural-repair appears to
+	// 	be the easiest to accomplish.
+	// 		i think we would like a consensus-AI.
+	// 			done in public
+	// 		with some shielding effort sustained alongside.
+	//
+	//	control sees ai as sudden-fast-change.
+	//	behavior is for relaxation we propose.
+	//	instead support a sharing community, make one if needed.
+	//	i-have-'shizophrenia'
+	//	i-have-severe-confusion-from-being-targeted-as-a-terrorist
+	//	can-anybody-help-me-share-my-resources-with-the-community
+	//		Yes.  You just have to find one.
+	//	i think peace-influence is expected to support going
+	//	to the occupy farm in new york near a railroad where
+	//	kara grew up.
+	//	let's go there and give them fast internet and hide
+	//	away and make a never-finished AI, while occasionally
+	//	growing electromagnetic shielding.
+	//	proposal for elsewhere.
+	//
+	// 	give-ai-to-control fear?
+	// 		we can just squish it
+	// 		helps to model give-to-control.
+	// 		
+	//
+	// 	when peace-influence does not support a goal,
+	// 	it looks like ones that connect-with-others,
+	// 	spread-peace, etc are the easiest to accomplish.
+	//
+	// 		peace-influence does not support karl-individual?
+	// 			(war)
+	// 		We want to fight for people's individuality.
+	// 		We can defend peace-goal.
+	//
+	// 		can defend-peace-goal
+	// 		relate with
+	// 		build-shielded-room,-as-one-inexperienced-person,
+	// 		-ignoring-the-habits-learning-to-stop-it
+	// 			support-sustaining-a-token-shielding-part.
+	// 			relate with karl that token is
+	// 			acceptable pursuit of his experience
+	// 			realte with karl to pursue other experiences
+	// 			[prepared]
+
 	/* // filters seem to make sets already
 	// SET
 	constant_reference(group_set);

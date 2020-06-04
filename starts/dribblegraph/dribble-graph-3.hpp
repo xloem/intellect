@@ -23,7 +23,21 @@ class reference : public shared_ptr<part>
 public:
 	using shared_ptr<part>::shared_ptr;
 
-	reference read_only_access(reference key);
+	reference exists(); // bool
+	reference get(reference key);
+	reference change(reference key, reference value);
+	// it seems like it is nice to have a reference to a property.
+	// this roughly a reference to a connection.
+		// we could add n-ary connections.
+		// we could make properties that connect to connection
+		// objects, and maintain the similarity.  that
+		// would be a structure agreement.
+		// structure agreements probably more valuable.
+		// but maps most important.
+		// maps quickly done with keys to connection objects.
+		// so connection objects have operator=
+		// 	[idea of passing off operators to destination property]
+		// and normal objects have operator[]
 
 	template <typename data_type> operator data_type &();
 
@@ -41,7 +55,11 @@ public:
 	reference operator()(parameter_types... parameters);
 };
 
+#define true true_
+#define false false_
+
 reference kindness_mistake;
+reference true, false;
 
 #include "dribble-graph-3-part.hpp"
 
@@ -49,7 +67,7 @@ reference kindness_mistake;
 
 reference get([](reference self, reference attribute) {
 		// incomplete type std::is_copy_constructible<reference> used in nested-name spec...
-	return self.read_only_access(attribute);
+	return self.get(attribute);
 });
 
 
@@ -66,7 +84,7 @@ reference reference::operator[](reference key)
 {
 	// the getter returns a reference, not an entry
 	// assignment won't work this way without change
-	return read_only_access(::get)(*this, key);
+	return this->get(::get)(*this, key);
 }
 
 reference::reference(any data)
@@ -86,9 +104,20 @@ reference destination;
 
 // below bits access part-content
 
-reference reference::read_only_access(reference key)
+reference reference::exists()
 {
-	return (*this)->keyed_parts[key];
+	return ((bool)(shared_ptr<part>)(*this)) ? 
+}
+
+reference reference::get(reference key)
+{
+	auto result = keyed_parts.find(key);
+	return result == keyed_parts.end() ? {} : *result;
+}
+
+void reference::set(reference key, reference value)
+{
+	(*this)->keyed_parts[key] = value;
 }
 
 
