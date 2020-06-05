@@ -1,7 +1,8 @@
-CC=${CXX}
+LINK.o=${CXX}
 CXXFLAGS=-std=c++17 -ggdb
-CFLAGS=${CXXFLAGS}
 CPPFLAGS=-I.
+LDFLAGS=-Lsource
+LDLIBS=-llibrary
 PREFIX=/usr/local
 
 run_test: test/test
