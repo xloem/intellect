@@ -18,14 +18,12 @@ using namespace std;
 class part;
 class reference;
 
-class reference : public shared_ptr<part>
+class reference
 {
 public:
-	using shared_ptr<part>::shared_ptr;
 
-	reference exists(); // bool
 	reference get(reference key);
-	reference change(reference key, reference value);
+	void change(reference key, reference value);
 	// it seems like it is nice to have a reference to a property.
 	// this roughly a reference to a connection.
 		// we could add n-ary connections.
@@ -47,12 +45,26 @@ public:
 	: reference(any(callable))
 	{ }
 	reference(any data = {});
+	reference(reference const & other);
+
+	// bool whether content is in this reference
+	// TODO: a new reference is the same as an empty reference atm
+	// reference exists();
+
+	void set_strong(reference strong_bool);
+	reference get_strong();
 
 
 	reference operator[](reference key);
 
 	template <typename... parameter_types>
 	reference operator()(parameter_types... parameters);
+
+private:
+	shared_ptr<part> pointer();
+
+	shared_ptr<part> shared;
+	weak_ptr<part> weak;
 };
 
 #define true true_
@@ -88,8 +100,30 @@ reference reference::operator[](reference key)
 }
 
 reference::reference(any data)
-: shared_ptr<part>(new part(data))
+: shared(new part(data)) // can't make a weak new allocation
 { }
+reference::reference(reference const & other)
+: shared(other.pointer())
+{ }
+
+shared_ptr<part> reference::pointer()
+{
+	// we return a shared_ptr to make sure the same shared_ptr
+	// information is used for every reference to the data
+	return shared ? shared : weak.lock();
+}
+
+void reference::set_strong(reference bool_strong)
+{
+	if (bool_strong == true) {
+		shared = pointer();
+	} else if (bool_strong == false) {
+		weak = pointer();
+		shared.reset();
+	} else {
+		throw kindness_mistake;
+	}
+}
 
 reference source;
 reference kind;
@@ -102,12 +136,16 @@ reference destination;
 //	generalization of connections involves n-arity and n-oppositeness
 //	be great if connection-access could be generalizable
 
+
 // below bits access part-content
 
+/*
+ * TODO: we don't provide a way to make empty references yet
 reference reference::exists()
 {
-	return ((bool)(shared_ptr<part>)(*this)) ? 
+	return ((bool)(shared_ptr<part>)(*this));
 }
+*/
 
 reference reference::get(reference key)
 {
