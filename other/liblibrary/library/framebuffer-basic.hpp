@@ -2,11 +2,11 @@
 
 #include <cstdint>
 
-class framebuffer
+class framebuffer_basic
 {
 public:
-	framebuffer(char const * name);
-	~framebuffer();
+	framebuffer_basic(char const * name);
+	~framebuffer_basic();
 
 	using pixel_type = uint8_t[4];
 	
@@ -24,6 +24,6 @@ public:
 	//void write_raw(int offset, pixel_type const * data, int length);
 	//void read_raw(int offset, pixel_type * data, int length);
 
-private:
+protected:
 	void * storage;
 };

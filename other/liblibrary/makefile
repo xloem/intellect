@@ -1,17 +1,22 @@
 LINK.o=${CXX}
-CXXFLAGS=-std=c++17 -ggdb
+CXXFLAGS=-std=c++17 -ggdb -Wall -Werror -O3
 CPPFLAGS=-I.
-LDFLAGS=-Lsource
-LDLIBS=-llibrary
+LDLIBS=-Lsource -llibrary
 PREFIX=/usr/local
 
-run_test: test/test
-	test/test
+all: test/test-run
+
+clean:
+	-rm */*.a */*.o
+
+%-run: source/liblibrary.a %
+	./$*
+
+scratch/demo: scratch/demo.o source/liblibrary.a
+test/test: test/test.o source/liblibrary.a
 
 source/liblibrary.a: source/quick.o source/framebuffer.o
 	ar cr "$@" $^
-
-test/test: test/test.o source/liblibrary.a
 
 install: run_test source/liblibrary.a library/*.hpp
 	mkdir -p ${PREFIX}/lib
