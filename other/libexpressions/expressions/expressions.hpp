@@ -20,7 +20,7 @@ class operable
 public:
 	virtual size_t size() = 0;
 	virtual std::vector<std::type_info const *> types() = 0;
-	virtual void solve(std::vector<T> & arguments, size_t index) = 0;
+	virtual std::vector<T> & solve(std::vector<T> & arguments, size_t index) = 0;
 
 	struct index_out_of_range : public std::exception { };
 	struct indeterminate : public std::exception { };
@@ -38,21 +38,22 @@ public:
 	{ }
 	size_t size() override { return 3; }
 	std::vector<std::type_info const *> types() override { return {{&typeid(A), &typeid(B), &typeid(C)}}; }
-	void solve(std::vector<std::any> & arguments, size_t index) override
+	std::vector<std::any> & solve(std::vector<std::any> & arguments, size_t index) override
 	{
 		switch(index) {
 		case 0:
 			*std::any_cast<A>(&arguments[0]) = forward_a_given_b_c(*std::any_cast<B>(&arguments[1]), *std::any_cast<C>(&arguments[2]));
 			break;
 		case 1:
-			*std::any_cast<B>(&arguments[1]) = forward_a_given_b_c(*std::any_cast<C>(&arguments[2]), *std::any_cast<A>(&arguments[0]));
+			*std::any_cast<B>(&arguments[1]) = reverse_b_given_c_a(*std::any_cast<C>(&arguments[2]), *std::any_cast<A>(&arguments[0]));
 			break;
 		case 2:
-			*std::any_cast<C>(&arguments[2]) = forward_a_given_b_c(*std::any_cast<A>(&arguments[0]), *std::any_cast<B>(&arguments[1]));
+			*std::any_cast<C>(&arguments[2]) = reverse_c_given_a_b(*std::any_cast<A>(&arguments[0]), *std::any_cast<B>(&arguments[1]));
 			break;
 		default:
 			throw operable::index_out_of_range();
 		}
+		return arguments;
 	}
 	func_a forward_a_given_b_c;
        	func_b reverse_b_given_c_a;
@@ -70,18 +71,19 @@ public:
 	{ }
 	size_t size() override { return 2; }
 	std::vector<std::type_info const *> types() override { return {{&typeid(A), &typeid(B)}}; }
-	void solve(std::vector<std::any> & arguments, size_t index) override
+	std::vector<std::any> & solve(std::vector<std::any> & arguments, size_t index) override
 	{
 		switch(index) {
 		case 0:
 			*std::any_cast<A>(&arguments[0]) = forward_a_given_b(*std::any_cast<B>(&arguments[1]));
 			break;
 		case 1:
-			*std::any_cast<B>(&arguments[1]) = forward_a_given_b(*std::any_cast<A>(&arguments[0]));
+			*std::any_cast<B>(&arguments[1]) = reverse_b_given_a(*std::any_cast<A>(&arguments[0]));
 			break;
 		default:
 			throw operable::index_out_of_range();
 		}
+		return arguments;
 	}
 	func_a forward_a_given_b;
 	func_b reverse_b_given_a;
@@ -167,3 +169,82 @@ public:
 		//return T(
 	}
 };
+
+// optional simple cmp implementation for any
+#ifndef NO_ANY_CMP
+int cmp(std::any const & left, std::any const & right)
+{
+	if (left.type() != right.type()) { return left.type().before(right.type()) ? -1 : 1; }
+	#define type_case(type_name) \
+		else if (left.type() == typeid(type_name)) { \
+			return *std::any_cast<type_name>(&right) - *std::any_cast<type_name>(&left); \
+		}
+	type_case(bool)
+	type_case(char)
+	type_case(short)
+	type_case(int)
+	type_case(long)
+	type_case(long long)
+	type_case(unsigned char)
+	type_case(unsigned short)
+	type_case(unsigned int)
+	type_case(unsigned long)
+	type_case(unsigned long long)
+	type_case(float)
+	type_case(double)
+	type_case(long double)
+	else {
+		throw "unimplemented";
+	}
+	#undef __type_case
+}
+#endif
+
+// cmp can be used to quickly implement comparators for a type
+template <typename A, typename B>
+bool operator==(A const & left, B const & right)
+{ return cmp(left, right) == 0; }
+template <typename A, typename B>
+bool operator<=(A const & left, B const & right)
+{ return cmp(left, right) <= 0; }
+template <typename A, typename B>
+bool operator>=(A const & left, B const & right)
+{ return cmp(left, right) >= 0; }
+template <typename A, typename B>
+bool operator<(A const & left, B const & right)
+{ return cmp(left, right) < 0; }
+template <typename A, typename B>
+bool operator>(A const & left, B const & right)
+{ return cmp(left, right) > 0; }
+
+// cmp for vectors
+template <typename T>
+int cmp(std::vector<T> const & left, std::vector<T> const & right)
+{
+	if (left.size() != right.size()) { return false; }
+	for (size_t i = 0; i < left.size(); ++ i)
+	{
+		if (i >= right.size()) { return 1; }
+		int result = cmp(left[i], right[i]);
+		if (result != 0) { return result; }
+	}
+	if (left.size() < right.size()) { return -1; }
+	return 0;
+}
+
+// cmp-based comparators for vectors
+template <typename T>
+bool operator==(std::vector<T> const & left, std::vector<T> const & right)
+{ return cmp(left, right) == 0; }
+template <typename T>
+bool operator<=(std::vector<T> const & left, std::vector<T> const & right)
+{ return cmp(left, right) <= 0; }
+template <typename T>
+bool operator>=(std::vector<T> const & left, std::vector<T> const & right)
+{ return cmp(left, right) >= 0; }
+template <typename T>
+bool operator<(std::vector<T> const & left, std::vector<T> const & right)
+{ return cmp(left, right) < 0; }
+template <typename T>
+bool operator>(std::vector<T> const & left, std::vector<T> const & right)
+{ return cmp(left, right) > 0; }
