@@ -1,0 +1,18 @@
+
+Armadillo provides vectorization and syntax sugar for matrix operations in C++.
+
+using namespace arma;
+
+CASTING
+conv_to<Mat<type>>::from(Mat<othertype>); // specify Mat, Col, or Row specifically to work around missing implementations of fixed types
+
+SWIZZLING, LAMBDAS
+	for_each // return value discarded, but can mutate argument
+	transform // argument replaced with return value
+	each_col
+	each_row
+	each_slice
+		either take a reference with a lambda to each thing, can mutate it,
+		or return a special object that applies math to every copy of the given thing.
+
+Armadillo structures are indexed tightest-block-first.  So mapped display without dimension-swizzling comes across as (color, y, x) as (row, col, slice)[UNSURE]

@@ -6,13 +6,41 @@
 using namespace arma;
 using namespace std;
 
-class backed_by_screen
+class backed_by_screen : private framebuffer_armadillo, public mat
 {
 public:
 	backed_by_screen()
-	: fb0("fb0"),
-	  _center(conv_to<Col<sword>>::from(fb0.dimensions())/2)
+	: framebuffer_armadillo("fb0"),
+	  mat(height(), width()),
+	  _center(conv_to<Col<sword>>::from(dimensions())/2)
 	{
+	}
+
+	void blit()
+	{
+		// this is incredibly concise.  it took us like 30 minutes to
+		// learn to do the below line, which converts a grayscale
+		// floating-point array into our directly-mirrored system framebuffer
+
+		// okay each_slice will take visual-rows.
+		// gotta somehow map those with the other visual-rows, columns.
+		// i guess a list of column indices would do it ...
+		pixel_type color;
+		uvec2 where;
+		for (where[1] = 0; where[1] < (uword)height(); ++ where[1]) {
+			for (where[0] = 0; where[0] < (uword)width(); ++ where[0]) {
+				color.fill(mat::at(where[1],where[0]) * 255);
+				pixel(where) = color;
+			}
+		}
+		//framebuffer_armadillo::each_slice().each_row() = (*this) * 255;
+		
+		// uhh we are on fence around not-invest-more-to-learn-armadillo
+		// and not-use-armadillo-at-all.  second option does not have
+		// full plan.
+		// 	maybe for this situation an alternative to armadillo?
+		// 	we could try eigen later, maybe.
+		// 	or we could only use the base class.
 	}
 
 	void write(ivec2 where, double value)
@@ -20,7 +48,7 @@ public:
 		framebuffer_armadillo::pixel_type to_write;
 		to_write[0] = to_write[1] = to_write[2] = value * 255;
 		where += _center;
-		fb0.pixel(where).fill(value * 255);// = to_write;
+		pixel(where).fill(value * 255);// = to_write;
 		//fb0.buffer(0, where.column, where.row) = to_write[0];
 		//fb0.buffer(1, where.column, where.row) = to_write[1];
 		//fb0.buffer(2, where.column, where.row) = to_write[2];
@@ -32,14 +60,13 @@ public:
 	double read(ivec2 where)
 	{
 		where += _center;
-		return fb0.pixel(where)[0] / 255.0;
+		return pixel(where)[0] / 255.0;
 		//return fb0.pixel(where.column, where.row)[0] / 255.0;
 	}
 
 	ivec2 const & center() { return _center; }
 
 private:
-	framebuffer_armadillo fb0;
 	ivec2 _center;
 };
 
@@ -55,10 +82,12 @@ void paint_influence(backed_by_screen & plane, uvec2 where, double radius, doubl
 	for (spot[1] = -radius; spot[1] <= radius; ++ spot[1]) {
 		sword half_width = sqrt(radius * radius - spot[1] * spot[1]);
 		for (spot[0] = -half_width; spot[0] <= half_width; ++ spot[0]) {
-			ivec2 spot_where = spot + where;
-			plane.write(spot_where, strength * dropoff(sqrt(dot(spot,spot))/radius));
+			ivec2 spot_where = spot + where + plane.center();
+			((mat&)(plane))(spot_where[1], spot_where[0]) = strength * dropoff(sqrt(dot(spot,spot))/radius);
+			//plane.write(spot_where, strength * dropoff(sqrt(dot(spot,spot))/radius));
 		}
 	}
+	plane.blit();
 }
 
 int main()
