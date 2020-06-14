@@ -18,24 +18,46 @@ template <typename T>
 class operable
 {
 public:
+	// this appears too specific.  the root class shouldn't know how
+	// the operators are processed, should it?
+	
 	virtual size_t size() = 0;
-	virtual std::vector<std::type_info const *> types() = 0;
+	virtual char const * name() = 0;
 	virtual std::vector<T> & solve(std::vector<T> & arguments, size_t index) = 0;
 
 	struct index_out_of_range : public std::exception { };
-	struct indeterminate : public std::exception { };
+	struct nonsimple_result : public std::exception { };
+	// to enumerate these without known values we would need a graph of interrelation
+	struct bounded_result : public nonsimple_result
+	{
+		T bound;
+		bool bound_included;
+		bool above_included;
+		bool below_included;
+		bounded_result(T bound, bool bound_included, bool above_included, bool below_included)
+		: bound(bound), bound_included(bound_included), above_included(above_included), below_included(below_included) { }
+	};
+	struct nonsimple_bitwise_result : public nonsimple_result
+	{ };
+};
+
+class operable_any : public operable<std::any>
+{
+public:
+	virtual std::vector<std::type_info const *> types() = 0;
 };
 
 template <typename A, typename B = A, typename C = B>
-class operable_any_3 : public operable<std::any>
+class operable_any_3 : public operable_any
 {
 public:
 	using func_a = std::function<A(B, C)>;
 	using func_b = std::function<B(C, A)>;
 	using func_c = std::function<C(A, B)>;
-	operable_any_3(func_a forward_a_given_b_c, func_b reverse_b_given_c_a, func_c reverse_c_given_a_b)
-	: forward_a_given_b_c(forward_a_given_b_c), reverse_b_given_c_a(reverse_b_given_c_a), reverse_c_given_a_b(reverse_c_given_a_b)
+	operable_any_3(char const * name, func_a forward_a_given_b_c, func_b reverse_b_given_c_a, func_c reverse_c_given_a_b)
+	: _name(name), forward_a_given_b_c(forward_a_given_b_c), reverse_b_given_c_a(reverse_b_given_c_a), reverse_c_given_a_b(reverse_c_given_a_b)
 	{ }
+	char const * name() override { return _name; }
 	size_t size() override { return 3; }
 	std::vector<std::type_info const *> types() override { return {{&typeid(A), &typeid(B), &typeid(C)}}; }
 	std::vector<std::any> & solve(std::vector<std::any> & arguments, size_t index) override
@@ -55,20 +77,22 @@ public:
 		}
 		return arguments;
 	}
+	char const * _name;
 	func_a forward_a_given_b_c;
        	func_b reverse_b_given_c_a;
        	func_c reverse_c_given_a_b;
 };
 
 template <typename A, typename B = A>
-class operable_any_2 : public operable<std::any>
+class operable_any_2 : public operable_any
 {
 public:
 	using func_a = std::function<A(B)>;
 	using func_b = std::function<B(A)>;
 	operable_any_2(char const * name, func_a forward_a_given_b, func_b reverse_b_a)
-	: forward_a_given_b(forward_a_given_b), reverse_b_given_a(reverse_b_given_a)
+	: _name(name), forward_a_given_b(forward_a_given_b), reverse_b_given_a(reverse_b_given_a)
 	{ }
+	char const * name() override { return _name; }
 	size_t size() override { return 2; }
 	std::vector<std::type_info const *> types() override { return {{&typeid(A), &typeid(B)}}; }
 	std::vector<std::any> & solve(std::vector<std::any> & arguments, size_t index) override
@@ -85,6 +109,7 @@ public:
 		}
 		return arguments;
 	}
+	char const * _name;
 	func_a forward_a_given_b;
 	func_b reverse_b_given_a;
 };
@@ -94,6 +119,9 @@ namespace operators
 #define __f3(functor) \
 	template <typename T> \
 	std::function<T(T const &, T const &)> func_##functor = std::functor<T>{};
+#define __f2(functor) \
+	template <typename T> \
+	std::function<T(T const &)> func_##functor = std::functor<T>{};
 #define __f3_reverse(functor) \
 	template <typename T> \
 	std::function<T(T const &, T const &)> func_##functor##_reverse = [](T const &a, T const& b) -> T { return func_##functor<T>(b, a); };
@@ -101,7 +129,7 @@ namespace operators
 	template <typename T> \
 	std::function<bool(T const &, T const &)> func_##functor = std::functor<T>{};
 
-	__f3(plus) __f3(minus) __f3(negate)
+	__f3(plus) __f3(minus) __f2(negate)
 	__f3_reverse(minus)
 	__f3(multiplies) __f3(divides)
 	__f3_reverse(divides)
@@ -126,37 +154,145 @@ namespace operators
 	// 		these sets are defined by expressions,
 	// 		and nested use of them could get complicated
 
-	__f3(logical_and) __f3(logical_or) __f3(logical_not)
+	__f3(logical_and) __f3(logical_or) __f2(logical_not)
 
-	__f3(bit_and) __f3(bit_or) __f3(bit_xor) __f3(bit_not)
+	__f3(bit_and) __f3(bit_or) __f3(bit_xor) __f2(bit_not)
 
 #undef __f3
 #undef __b3
 	// a = b + c
 	template <typename T>
-	operable_any_3<T> plus_any(func_plus<T>, func_minus_reverse<T>, func_minus<T>);
+	operable_any_3<T> plus_any("+", func_plus<T>, func_minus_reverse<T>, func_minus<T>);
 	// a = b - c
 	template <typename T>
-	operable_any_3<T> minus_any(func_minus<T>, func_plus<T>, func_minus_reverse<T>);
+	operable_any_3<T> minus_any("-", func_minus<T>, func_plus<T>, func_minus_reverse<T>);
 	// a = -b
 	template <typename T>
-	operable_any_2<T> negate_any(func_negate<T>, func_negate<T>);
+	operable_any_2<T> negate_any("-", func_negate<T>, func_negate<T>);
 	// a = b * c
 	template <typename T>
-	operable_any_3<T> multiplies_any(func_multiplies<T>, func_divides_reverse<T>, func_divides<T>);
+	operable_any_3<T> multiplies_any("*", func_multiplies<T>, func_divides_reverse<T>, func_divides<T>);
 	// a = b / c
 	template <typename T>
-	operable_any_3<T> divides_any(func_divides<T>, func_multiplies<T>, func_divides_reverse<T>);
+	operable_any_3<T> divides_any("/", func_divides<T>, func_multiplies<T>, func_divides_reverse<T>);
 	// a = b == c
 	template <typename T>
-	operable_any_3<bool, T> equal_to_any(func_equal_to<T>, [](T const &c, bool const & a) -> T {
+	operable_any_3<bool, T> equal_to_any("==", func_equal_to<T>, [](T const &c, bool const & a) -> T {
 		if (a) { return c; }
-		else { throw operable<std::any>::indeterminate(); }
+		else { throw operable<std::any>::bounded_result(c, false, true, true); }
 	}, [](bool const & a, T const & b) -> T {
 		if (a) { return b; }
-		else { throw operable<std::any>::indeterminate(); }
+		else { throw operable<std::any>::bounded_result(b, false, true, true); }
 	});
+	// a = b != c
+	template <typename T>
+	operable_any_3<bool, T> not_equal_to_any("!=", func_not_equal_to<T>, [](T const &c, bool const & a) -> T {
+		if (!a) { return c; }
+		else { throw operable<std::any>::bounded_result(c, false, true, true); }
+	}, [](bool const & a, T const & b) -> T {
+		if (!a) { return b; }
+		else { throw operable<std::any>::bounded_result(b, false, true, true); }
+	});
+	// a = b > c
+	template <typename T>
+	operable_any_3<bool, T> greater_any(">", func_greater<T>, [](T const &c, bool const & a) -> T {
+		throw operable<std::any>::bounded_result(c, !a, a, !a);
+	}, [](bool const & a, T const & b) -> T {
+		throw operable<std::any>::bounded_result(b, !a, !a, a);
+	});
+	// a = b < c
+	template <typename T>
+	operable_any_3<bool, T> less_any("<", func_less<T>, [](T const &c, bool const & a) -> T {
+		throw operable<std::any>::bounded_result(c, !a, !a, a);
+	}, [](bool const & a, T const & b) -> T {
+		throw operable<std::any>::bounded_result(b, !a, a, !a);
+	});
+	// a = b >= c
+	template <typename T>
+	operable_any_3<bool, T> greater_any(">", func_greater<T>, [](T const &c, bool const & a) -> T {
+		throw operable<std::any>::bounded_result(c, a, a, !a);
+	}, [](bool const & a, T const & b) -> T {
+		throw operable<std::any>::bounded_result(b, a, !a, a);
+	});
+	// a = b <= c
+	template <typename T>
+	operable_any_3<bool, T> less_any("<=", func_less<T>, [](T const &c, bool const & a) -> T {
+		throw operable<std::any>::bounded_result(c, a, !a, a);
+	}, [](bool const & a, T const & b) -> T {
+		throw operable<std::any>::bounded_result(b, a, a, !a);
+	});
+	// a = b && c
+	// 0   0    0
+	// 0   0    1
+	// 0   1    0
+	// 1   1    1
+	operable_any_3<bool> logical_and_any("&&", func_logical_and<bool>, [](bool const &c, bool const & a) -> bool {
+		if (c) { return a; }
+		throw operable<std::any>::bounded_result(a, true, true, true);
+	}, [](bool const & a, bool const & b) -> bool {
+		if (b) { return a; }
+		throw operable<std::any>::bounded_result(a, true, true, true);
+	});
+	// a = b || c
+	// 0   0    0
+	// 1   0    1
+	// 1   1    0
+	// 1   1    1
+	operable_any_3<bool> logical_or_any("||", func_logical_or<bool>, [](bool const &c, bool const & a) -> bool {
+		if (!c) { return a; }
+		throw operable<std::any>::bounded_result(a, true, true, true);
+	}, [](bool const & a, bool const & b) -> bool {
+		if (!b) { return a; }
+		throw operable<std::any>::bounded_result(a, true, true, true);
+	});
+	// a = !b
+	// 0   1
+	// 1   0
+	operable_any_2<bool> logical_not_any("!", func_logical_not<bool>, func_logical_not<bool>);
+	// a = b & c
+	// 0   0   0
+	// 0   0   1
+	// 0   1   0
+	// 1   1   1
+	template <typename T>
+	operable_any_3<T> bit_and_any("&", func_bit_and<T>, [](T & c, T & a) -> T {
+		if (c) { return a; }
+		throw operable<std::any>::nonsimple_bitwise_result();
+	}, [](bool const & a, T const & b) -> T {
+		if (b) { return a; }
+		throw operable<std::any>::nonsimple_bitwise_result();
+	});
+	// a = b | c
+	// 0   0   0
+	// 1   0   1
+	// 1   1   0
+	// 1   1   1
+	template <typename T>
+	operable_any_3<T> bit_or_any("|", func_bit_or<T>, [](T & c, T & a) -> T {
+		if (!c) { return a; }
+		throw operable<std::any>::nonsimple_bitwise_result();
+	}, [](bool const & a, T const & b) -> T {
+		if (!b) { return a; }
+		throw operable<std::any>::nonsimple_bitwise_result();
+	});
+	// a = b ^ c
+	// 0   0   0
+	// 1   0   1
+	// 1   1   0
+	// 0   1   1
+	template <typename T>
+	operable_any_3<T> bit_xor_any("^", func_bit_xor<T>, func_bit_xor<T>, func_bit_xor<T>);
+	// a = ~b
+	// 0   1
+	// 1   0
+	template <typename T>
+	operable_any_2<T> bit_not_any("~", func_bit_not<T>, func_bit_not<T>);
 };
+
+// so, we might want to implement operators in such a way that we can quickly add functionality.
+// we could say make a base class or soemthing, that provides all the operators such that they use some operable-derived class or somesuch
+// 	we have a way to get operables that are kinda automatic.
+// 	so, somehow use derived instead
 
 // for implementing more of this, we'll need a way to pass everything to a particular set of operator classes / handlers / whatever
 // some way to proxy or somesuch.  make a group of operators that wrap others.
