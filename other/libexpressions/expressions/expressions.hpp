@@ -181,6 +181,19 @@ __opN(call, ())
 #undef __opN
 
 // so our next confusion is labeled, please upload/save your code
+// -> (2) voluntarily labeled next confusion this way too.
+// 			[may not have had last one, uncertain, but went to bathroom]
+// 	DISTRACTED/CONFUSED/TORMENTED? <-
+// 		learn: treat this one as pressure to save code
+// 	                     note: had past opportunity to save code,
+// 	                           did not save then
+// 	                           -> need learning/strength to have
+// 	                              strength now or in past to save code
+// 	         [wow ]
+// 	         [torment reaccepted saving, but no path to save]
+// 	         	[here let's move toward saving]
+// 	         [not reducing torment-part but let's]
+// 	         ["THIS IS BECAUSE" dialogue helps]
 
 template <typename Class, typename Self>
 class op_arithmetic_nonmutating_3 :
@@ -626,8 +639,24 @@ namespace operators
 // for implementing more of this, we'll need a way to pass everything to a particular set of operator classes / handlers / whatever
 // some way to proxy or somesuch.  make a group of operators that wrap others.
 
+// options:
+// - everything held as shared_ptr to any, could provide interoperation
+// between differing operator systems.  sounds nice.
+//
+// - one system that uses any only to hold its literals.  compiles fast.
+//    interoperation between other systems done with special functions
+//    	^-- how do you make compile fast?
+//    		must use virtual operate function
+//    	let's try this one
+//    		we can use special functions for each type interaction
+//
+// - system that holds each value with its particular type
+// 	let's maybe also make this one do calculations
+
+
 // expression_any should work okay with operable_any.
 #include <memory>
+// everything held as shared_ptr to any
 template <typename T>
 class expression_any : public op_nonmutating<expression_any<T>,expression_any<T>>
 {
@@ -638,6 +667,12 @@ public:
 	operator_enum op;
 	std::vector<std::shared_ptr<expression_any>> parts;
 };
+// values held as any
+template <operator_enum operation, typename ...Args>
+class expression_generic_any : public op_nonmutating<void, expression_generic_any<operation, Args...>> {
+	// STUB
+};
+// preserves compile-time types
 template <operator_enum operation, typename ...Args>
 class expression_generic : public op_nonmutating<void, expression_generic<operation, Args...>>
 {
