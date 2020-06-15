@@ -1,10 +1,19 @@
 #include "expressions.hpp"
 #include <cassert>
-#include <iostream>
-using namespace std;
+//#include <library/assert.hpp>
+#include <library/string.hpp>
+#include <library/heapvector.hpp>
+//#include <vector>
+//using namespace std;
+using namespace library;
 
 int main()
 {
+	// slow to compile on arm64
+	
+	stdout::line("Hello, world!");
+
+	/*
 	expression_generic<literal, int const> int1 = 1;
 	expression_generic<literal, int const> int2 = 2;
 	cout << typeid(int1 + int2).name() << endl;
@@ -30,4 +39,5 @@ int main()
 	assert(operators::equal_to_any<int>.solve(arguments, 2)[2] == verify[1]);
 
 	cerr << "Success" << endl;
+	*/
 }

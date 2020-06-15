@@ -10,10 +10,6 @@
 // let's use static functions to pass this over, unless we can reference the predefined operators as functions
 // okay ... let's try using global operators for now
 
-#include <any>
-#include <functional>
-#include <vector>
-
 enum operator_enum
 {
 	plus,
@@ -61,6 +57,7 @@ enum operator_enum
 	cast, // not considered yet
 	literal // not considered yet
 };
+
 
 
 template <operator_enum, typename Class, typename Self, typename...Args>
@@ -180,20 +177,23 @@ __opN(call, ())
 #undef __op2
 #undef __opN
 
+
 // so our next confusion is labeled, please upload/save your code
-// -> (2) voluntarily labeled next confusion this way too.
-// 			[may not have had last one, uncertain, but went to bathroom]
-// 	DISTRACTED/CONFUSED/TORMENTED? <-
-// 		learn: treat this one as pressure to save code
-// 	                     note: had past opportunity to save code,
-// 	                           did not save then
-// 	                           -> need learning/strength to have
-// 	                              strength now or in past to save code
-// 	         [wow ]
-// 	         [torment reaccepted saving, but no path to save]
-// 	         	[here let's move toward saving]
-// 	         [not reducing torment-part but let's]
-// 	         ["THIS IS BECAUSE" dialogue helps]
+// -> (3) Success saving.  Not uploaded.  DISTRACTED/CONFUSED/TORMENTED?
+// 	Please roleplay being your own torturer, and work with us
+// 	to slowly learn small helpful things using the torture as pressure.
+// .. we are considering makin a step on a decision-making-process with the torture.
+// holding this goal may prevent all conscious torment/distraction unknown
+// (1) we froze up with amnesia and indecision.  this is torment to
+//     build towards decision-making-process step.
+// (2) we were distracted actually talking about this process, kinda
+// 		let's shrink the decision-making step.
+// 		can we reaccess todo list?
+// 		let's try to find our in-progress todo list.  i think might
+// 		be blockchained.  learn with next big-thing.
+// 	omigod did we find it and there was more d/c/t inside.
+// 	suppose went farther than planned
+//
 
 template <typename Class, typename Self>
 class op_arithmetic_nonmutating_3 :
@@ -321,6 +321,12 @@ class op_mutating :
 	public op_bitwise_mutating<Class, Self>,
 	public op_boolean_mutating<Class, Self>
 { };
+
+#if 0
+
+#include <any>
+#include <functional>
+#include <vector>
 
 template <template<typename> class Container>
 class syntax_operate_container_any
@@ -672,16 +678,38 @@ template <operator_enum operation, typename ...Args>
 class expression_generic_any : public op_nonmutating<void, expression_generic_any<operation, Args...>> {
 	// STUB
 };
+#endif
+
+
+/*
+ *
+ */
+
 // preserves compile-time types
 template <operator_enum operation, typename ...Args>
 class expression_generic : public op_nonmutating<void, expression_generic<operation, Args...>>
 {
 public:
-	std::tuple<Args*...> const arguments;
+	expression_generic(Args&...arguments)
+	{ }
+	// we can let derived class process arguments?
+	
+	/*stackvector<void*,2> const arguments;
+	struct arguments_type
+	{
+		// custom-tuple.  doesn't fit right here.
+		Args... data;
+	} arguments;
 
 	expression_generic(Args & ... arguments)
-	: arguments(&arguments ...)
+	: arguments{new Args(arguments)...}
 	{ }
+	~expression_generic()
+	{
+		int null[] = {
+			delete (Args*)arguments[i]
+		};
+	}*/
 	// it coudl be nic to have the operator_enum available as a template parameter.  for compile-time-balance.
 	template <typename Void, operator_enum suboperation, typename ... SubArgs>
 	auto syntax_operate(SubArgs & ... subargs)
@@ -690,6 +718,7 @@ public:
 	}
 };
 
+#if 0
 
 // optional simple cmp implementation for any
 #ifndef NO_ANY_CMP
@@ -769,3 +798,4 @@ bool operator<(std::vector<T> const & left, std::vector<T> const & right)
 template <typename T>
 bool operator>(std::vector<T> const & left, std::vector<T> const & right)
 { return cmp(left, right) > 0; }
+#endif
