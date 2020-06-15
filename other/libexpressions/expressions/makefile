@@ -7,3 +7,4 @@ all: test-run
 	./$*
 
 test: test.o
+test.o: *.hpp

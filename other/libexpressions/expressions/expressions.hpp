@@ -74,11 +74,31 @@ class op<operator_enum::name, Return, Self, Args...> \
 		Self & self = *(Self*)this; \
 		return self.template syntax_operate<Return>(name, args...); \
 	} \
+}; \
+template <typename Return, typename Self> \
+class op<operator_enum::name, Return, Self> \
+{ \
+	template <typename... Args> \
+	Return operator symbol (Args & ... args) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<Return>(name, args...); \
+	} \
 };
 #define __op3(name, symbol) \
 template <typename Return, typename Self, typename Right> \
 class op<operator_enum::name, Return, Self, Right> \
 { \
+	Return operator symbol (Right & right) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<Return>(name, right); \
+	} \
+}; \
+template <typename Return, typename Self> \
+class op<operator_enum::name, Return, Self> \
+{ \
+	template <typename Right> \
 	Return operator symbol (Right & right) \
 	{ \
 		Self & self = *(Self*)this; \
@@ -156,22 +176,22 @@ __opN(call, ())
 
 // so our next confusion is labeled, please upload/save your code
 
-template <typename Return, typename Self, typename Right>
+template <typename Return, typename Self>
 class op_arithmetic_nonmutating_3 :
-	public op<plus, Return, Self, Right>,
-	public op<minus, Return, Self, Right>,
-	public op<multiplies, Return, Self, Right>,
-	public op<divides, Return, Self, Right>,
-	public op<modulus, Return, Self, Right>
+	public op<plus, Return, Self>,
+	public op<minus, Return, Self>,
+	public op<multiplies, Return, Self>,
+	public op<divides, Return, Self>,
+	public op<modulus, Return, Self>
 { };
-template <typename Return, typename Self, typename Right>
+template <typename Return, typename Self>
 class op_arithmetic_mutating_3 :
-	public op<assign, Return, Self, Right>,
-	public op<assign_plus, Return, Self, Right>,
-	public op<assign_minus, Return, Self, Right>,
-	public op<assign_multiplies, Return, Self, Right>,
-	public op<assign_divides, Return, Self, Right>,
-	public op<assign_modulus, Return, Self, Right>
+	public op<assign, Return, Self>,
+	public op<assign_plus, Return, Self>,
+	public op<assign_minus, Return, Self>,
+	public op<assign_multiplies, Return, Self>,
+	public op<assign_divides, Return, Self>,
+	public op<assign_modulus, Return, Self>
 { };
 template <typename Return, typename Self>
 class op_arithmetic_nonmutating_2 :
@@ -184,21 +204,21 @@ class op_arithmetic_mutating_2 :
 	public op<postincrement, Return, Self>,
 	public op<postdecrement, Return, Self>
 { };
-template <typename Return, typename Self, typename Right>
+template <typename Return, typename Self>
 class op_bitwise_nonmutating_3 :
-	public op<bit_xor, Return, Self, Right>,
-	public op<bit_and, Return, Self, Right>,
-	public op<bit_or, Return, Self, Right>,
-	public op<shift_left, Return, Self, Right>,
-	public op<shift_right, Return, Self, Right>
+	public op<bit_xor, Return, Self>,
+	public op<bit_and, Return, Self>,
+	public op<bit_or, Return, Self>,
+	public op<shift_left, Return, Self>,
+	public op<shift_right, Return, Self>
 { };
-template <typename Return, typename Self, typename Right>
+template <typename Return, typename Self>
 class op_bitwise_mutating_3 :
-	public op<assign_bit_xor, Return, Self, Right>,
-	public op<assign_bit_and, Return, Self, Right>,
-	public op<assign_bit_or, Return, Self, Right>,
-	public op<assign_shift_left, Return, Self, Right>,
-	public op<assign_shift_right, Return, Self, Right>
+	public op<assign_bit_xor, Return, Self>,
+	public op<assign_bit_and, Return, Self>,
+	public op<assign_bit_or, Return, Self>,
+	public op<assign_shift_left, Return, Self>,
+	public op<assign_shift_right, Return, Self>
 { };
 template <typename Return, typename Self>
 class op_bitwise_nonmutating_2 :
@@ -207,12 +227,12 @@ class op_bitwise_nonmutating_2 :
 template <typename Return, typename Self>
 class op_bitwise_mutating_2 
 { };
-template <typename Return, typename Self, typename Right>
+template <typename Return, typename Self>
 class op_boolean_nonmutating_3 :
-	public op<logical_and, Return, Self, Right>,
-	public op<logical_or, Return, Self, Right>
+	public op<logical_and, Return, Self>,
+	public op<logical_or, Return, Self>
 { };
-template <typename Return, typename Self, typename Right>
+template <typename Return, typename Self>
 class op_boolean_mutating_3 { };
 template <typename Return, typename Self>
 class op_boolean_nonmutating_2 :
@@ -220,54 +240,54 @@ class op_boolean_nonmutating_2 :
 { };
 template <typename Return, typename Self>
 class op_boolean_mutating_2 { };
-template <typename Return, typename Self, typename Right>
+template <typename Return, typename Self>
 class op_relation_same :
-	public op<equal_to, Return, Self, Right>,
-	public op<not_equal_to, Return, Self, Right>
+	public op<equal_to, Return, Self>,
+	public op<not_equal_to, Return, Self>
 { };
-template <typename Return, typename Self, typename Right>
+template <typename Return, typename Self>
 class op_relation_order :
-	public op<less, Return, Self, Right>,
-	public op<greater, Return, Self, Right>,
-	public op<less_equal, Return, Self, Right>,
-	public op<greater_equal, Return, Self, Right>
+	public op<less, Return, Self>,
+	public op<greater, Return, Self>,
+	public op<less_equal, Return, Self>,
+	public op<greater_equal, Return, Self>
 { };
 
 template <typename Self>
 class op_arithmetic_nonmutating :
-	public op_arithmetic_nonmutating_3<Self, Self, Self>,
+	public op_arithmetic_nonmutating_3<Self, Self>,
 	public op_arithmetic_nonmutating_2<Self, Self>
 { };
 template <typename Return, typename Self>
 class op_arithmetic_mutating :
-	public op_arithmetic_mutating_3<Return, Self, Self>,
+	public op_arithmetic_mutating_3<Return, Self>,
 	public op_arithmetic_mutating_2<Return, Self>
 { };
 template <typename Self>
 class op_bitwise_nonmutating :
-	public op_bitwise_nonmutating_3<Self, Self, Self>,
+	public op_bitwise_nonmutating_3<Self, Self>,
 	public op_bitwise_nonmutating_2<Self, Self>
 { };
 template <typename Return, typename Self>
 class op_bitwise_mutating :
-	public op_bitwise_mutating_3<Return, Self, Self>,
+	public op_bitwise_mutating_3<Return, Self>,
 	public op_bitwise_mutating_2<Return, Self>
 { };
 template <typename Self>
 class op_boolean_nonmutating :
-	public op_boolean_nonmutating_3<Self, Self, Self>,
+	public op_boolean_nonmutating_3<Self, Self>,
 	public op_boolean_nonmutating_2<Self, Self>
 { };
 template <typename Return, typename Self>
 class op_boolean_mutating :
-	public op_boolean_mutating_3<Return, Self, Self>,
+	public op_boolean_mutating_3<Return, Self>,
 	public op_boolean_mutating_2<Return, Self>
 { };
 
 template <typename Return, typename Self>
 class op_relation :
-	public op_relation_same<Return, Self, Self>,
-	public op_relation_order<Return, Self, Self>
+	public op_relation_same<Return, Self>,
+	public op_relation_order<Return, Self>
 { };
 
 template <typename Self>
@@ -283,26 +303,29 @@ class op_mutating :
 	public op_boolean_mutating<Return, Self>
 { };
 
-// we could also provide templated operators, to possibly allow
-// any types at all to be combined.
-
 template <template<typename> class Container>
 class syntax_operate_container_any
 {
-	virtual void operate(Container<std::any> & arguments)
-	{
-	}
+protected:
+	virtual void operate(operator_enum op, Container<std::any> & arguments) = 0;
+public:
 	template <typename Return, typename... Args>
 	Return syntax_operator(operator_enum op, Args... args)
 	{
 		Container<std::any> arguments;
-		// minimal to combine into 1 generic function:
-		// 	-> variadic return type
-		// so, any pointers would make sense
-		// we could also rewrite the contents of a vector
-		// then
+		arguments.emplace_back({});
+		typename decltype(arguments)::iterator spots[] = {
+			arguments.emplace_back(args)...
+		};
+		operate(op, arguments);
+		return std::any_cast<Return>(arguments.front());
 	}
 };
+
+// one option is compile-time type matching with operator implementations
+// 	part of this is implemented, may be unneeded
+// another option is run-time only
+//	and we use the compile-time fragments to implement
 
 template <typename T>
 class operable
