@@ -1,80 +1,128 @@
-#ifndef TYPE
-#error "Please define TYPE to the heapvector type to define."
-#endif
+#include <vector>
 
 #include <library/heapvector.hpp>
-#include <vector>
 
 namespace library {
 #define container std::vector
-#define vec (*(container<TYPE>*)storage)
+#define vec (*(container<element_type>*)storage)
 
-heapvector<TYPE>::heapvector(std::initializer_list<TYPE> items)
-: storage(new container<TYPE>(items))
+template <typename element_type>
+heapvector<element_type>::heapvector(std::initializer_list<element_type> const & items)
+: storage(new container<element_type>(items))
 { }
 
-heapvector<TYPE>::~heapvector()
+template <typename element_type>
+heapvector<element_type>::~heapvector()
 {
 	delete &vec;
 }
 
-heapvector<TYPE>::heapvector()
-: heapvector({})
+template <typename element_type>
+heapvector<element_type>::heapvector()
+: heapvector(std::initializer_list<element_type>{})
 { }
 
-heapvector<TYPE>::heapvector(size_t size)
+template <typename element_type>
+heapvector<element_type>::heapvector(size_t size)
 : heapvector()
 {
 	vec.reserve(size);
 	vec.resize(size);
 }
 
-heapvector<TYPE>::heapvector(heapvector const & other)
+template <typename element_type>
+heapvector<element_type>::heapvector(heapvector const & other)
 : heapvector()
 {
-	vec = *(container<TYPE>*)other.storage;
+	*this = other;
 }
 
-heapvector<TYPE>::heapvector(heapvector && other)
+template <typename element_type>
+heapvector<element_type>::heapvector(heapvector && other)
 : heapvector()
 {
-	vec = std::move(*(container<TYPE>*)other.storage);
+	*this = std::forward(other);
 }
 
-TYPE & heapvector<TYPE>::operator[](size_t index)
+template <typename element_type>
+heapvector<element_type> & heapvector<element_type>::operator=(heapvector const & other)
+{
+	vec = *(container<element_type>*)other.storage;
+	return *this;
+}
+template <typename element_type>
+heapvector<element_type> & heapvector<element_type>::operator=(heapvector && other)
+{
+	vec = std::move(*(container<element_type>*)other.storage);
+	return *this;
+}
+
+template <typename element_type>
+element_type & heapvector<element_type>::operator[](size_t index)
 {
 	return vec[index];
 }
 
-void heapvector<TYPE>::push_back(TYPE const & value)
+template <typename element_type>
+element_type const & heapvector<element_type>::operator[](size_t index) const
+{
+	return vec[index];
+}
+
+template <typename element_type>
+void heapvector<element_type>::push_back(element_type const & value)
 {
 	vec.push_back(value);
 }
 
-void heapvector<TYPE>::push_back(TYPE && value)
+template <typename element_type>
+void heapvector<element_type>::push_back(element_type && value)
 {
 	vec.push_back(std::move(value));
 }
 
-size_t heapvector<TYPE>::size()
+template <typename element_type>
+size_t heapvector<element_type>::size() const
 {
 	return vec.size();
 }
 
-TYPE * heapvector<TYPE>::data()
+template <typename element_type>
+element_type * heapvector<element_type>::data()
 {
 	return vec.data();
 }
 
-TYPE * heapvector<TYPE>::begin()
+template <typename element_type>
+element_type * heapvector<element_type>::begin()
 {
 	return vec.data();
 }
 
-TYPE * heapvector<TYPE>::end()
+template <typename element_type>
+element_type * heapvector<element_type>::end()
 {
 	return vec.data() + vec.size();
 }
 
+template <typename element_type>
+element_type const * heapvector<element_type>::data() const
+{
+	return vec.data();
+}
+
+template <typename element_type>
+element_type const * heapvector<element_type>::begin() const
+{
+	return vec.data();
+}
+
+template <typename element_type>
+element_type const * heapvector<element_type>::end() const
+{
+	return vec.data() + vec.size();
+}
+
+#undef container
 #undef vec
 } // namespace library

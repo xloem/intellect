@@ -1,96 +1,149 @@
-#ifndef TYPE
-#error "Please define TYPE to the stackvector type to define."
-#endif
-#ifndef RESERVED
-#error "Please define RESERVED to the stackvector size to define."
-#endif
+#include <array>
 
 #include <library/stackvector.hpp>
 
-#include <array>
 
-
-using namespace std;
 
 namespace library {
+#define container_namespace std::
 #define container array
-#define vec (*(container<TYPE,RESERVED>*)storage)
+#define vec (*(container_namespace container<element_type,reserved>*)&storage)
 
-static_assert(sizeof(stackvector<TYPE,RESERVED>::storage) == sizeof(container<TYPE,RESERVED>));
-
-stackvector<TYPE,RESERVED>::stackvector()
-: size(0)
+template<typename element_type, size_t reserved>
+stackvector<element_type, reserved>::stackvector()
 {
-	new(&storage) container<TYPE,RESERVED>();
+	new(&storage) container_namespace container<element_type,reserved>();
+	resize(0);
 }
 
-stackvector<TYPE,RESERVED>::~stackvector()
+template<typename element_type, size_t reserved>
+stackvector<element_type,reserved>::~stackvector()
 {
-	storage.~container<TYPE,RESERED>();
-	size = 0;
+	vec.~container();
+	resize(0);
 }
 
-stackvector<TYPE,RESERVED>::stackvector(std::initializer_list<TYPE> items)
+template<typename element_type, size_t reserved>
+stackvector<element_type,reserved>::stackvector(std::initializer_list<element_type> const & items)
 : stackvector()
 {
-	for (TYPE & item : items) {
+	for (element_type & item : items) {
 		push_back(item);
 	}
 }
 
-stackvector<TYPE,RESERVED>::stackvector(size_t size)
+template<typename element_type, size_t reserved>
+stackvector<element_type,reserved>::stackvector(size_t size)
 : stackvector()
 {
-	vec.reserve(size);
-	vec.resize(size);
+	resize(size);
 }
 
-stackvector<TYPE,RESERVED>::stackvector(stackvector const & other)
+template<typename element_type, size_t reserved>
+stackvector<element_type,reserved>::stackvector(stackvector const & other)
 : stackvector()
 {
-	vec = *(container<TYPE,RESERVED>*)other.storage;
+	*this = other;
 }
 
-stackvector<TYPE,RESERVED>::stackvector(stackvector && other)
+template<typename element_type, size_t reserved>
+stackvector<element_type,reserved>::stackvector(stackvector && other)
 : stackvector()
 {
-	vec = std::move(*(container<TYPE,RESERVED>*)other.data);
+	*this = std::forward(other);
 }
 
-TYPE & stackvector<TYPE,RESERVED>::operator[](size_t index)
+template<typename element_type, size_t reserved>
+stackvector<element_type,reserved> & stackvector<element_type,reserved>::operator=(stackvector const & other)
+{
+	vec = *(container_namespace container<element_type,reserved>*)other.storage;
+	resize(other.size());
+	return *this;
+}
+
+template<typename element_type, size_t reserved>
+stackvector<element_type,reserved> & stackvector<element_type,reserved>::operator=(stackvector && other)
+{
+	vec = std::move(*(container_namespace container<element_type,reserved>*)other.storage);
+	resize(other.size); other.resize(0);
+	return *this;
+}
+
+template<typename element_type, size_t reserved>
+element_type & stackvector<element_type,reserved>::operator[](size_t index)
 {
 	return vec[index];
 }
 
-void stackvector<TYPE,RESERVED>::push_back(TYPE const & value)
+template<typename element_type, size_t reserved>
+element_type const & stackvector<element_type,reserved>::operator[](size_t index) const
 {
-	vec.push_back(value);
+	return vec[index];
 }
 
-void stackvector<TYPE,RESERVED>::push_back(TYPE && value)
+template<typename element_type, size_t reserved>
+void stackvector<element_type,reserved>::push_back(element_type const & value)
 {
-	vec.push_back(std::move(value));
+	vec[size()] = value;
+	resize(size()+1);
 }
 
-size_t stackvector<TYPE,RESERVED>::size()
+template<typename element_type, size_t reserved>
+void stackvector<element_type,reserved>::push_back(element_type && value)
 {
-	return vec.size();
+	vec[size()] = std::move(value);
+	resize(size()+1);
 }
 
-TYPE * stackvector<TYPE,RESERVED>::data()
+template<typename element_type, size_t reserved>
+size_t stackvector<element_type,reserved>::size() const
+{
+	return _size;
+}
+
+template<typename element_type, size_t reserved>
+void stackvector<element_type,reserved>::resize(size_t size)
+{
+	_size = size;
+}
+
+template<typename element_type, size_t reserved>
+element_type * stackvector<element_type,reserved>::data()
 {
 	return vec.data();
 }
 
-TYPE * stackvector<TYPE,RESERVED>::begin()
+template<typename element_type, size_t reserved>
+element_type * stackvector<element_type,reserved>::begin()
 {
 	return vec.data();
 }
 
-TYPE * stackvector<TYPE,RESERVED>::end()
+template<typename element_type, size_t reserved>
+element_type * stackvector<element_type,reserved>::end()
 {
-	return vec.data() + vec.size();
+	return vec.data() + size();
 }
 
+template<typename element_type, size_t reserved>
+element_type const * stackvector<element_type,reserved>::data() const
+{
+	return vec.data();
+}
+
+template<typename element_type, size_t reserved>
+element_type const * stackvector<element_type,reserved>::begin() const
+{
+	return vec.data();
+}
+
+template<typename element_type, size_t reserved>
+element_type const * stackvector<element_type,reserved>::end() const
+{
+	return vec.data() + size();
+}
+
+#undef container_namespace
+#undef container
 #undef vec
 } // namespace library
