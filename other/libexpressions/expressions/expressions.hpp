@@ -63,66 +63,72 @@ enum operator_enum
 };
 
 
-template <operator_enum, typename Return, typename Self, typename...Args>
+template <operator_enum, typename Class, typename Self, typename...Args>
 class op;
 #define __opN(name, symbol) \
-template <typename Return, typename Self, typename... Args> \
-class op<operator_enum::name, Return, Self, Args...> \
+template <typename Class, typename Self, typename... Args> \
+class op<operator_enum::name, Class, Self, Args...> \
 { \
-	Return operator symbol (Args & ... args) \
+public: \
+	auto operator symbol (Args & ... args) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Return>(name, args...); \
+		return self.template syntax_operate<Class, operator_enum::name>(args...); \
 	} \
 }; \
-template <typename Return, typename Self> \
-class op<operator_enum::name, Return, Self> \
+template <typename Class, typename Self> \
+class op<operator_enum::name, Class, Self> \
 { \
+public: \
 	template <typename... Args> \
-	Return operator symbol (Args & ... args) \
+	auto operator symbol (Args & ... args) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Return>(name, args...); \
+		return self.template syntax_operate<Class, operator_enum::name>(args...); \
 	} \
 };
 #define __op3(name, symbol) \
-template <typename Return, typename Self, typename Right> \
-class op<operator_enum::name, Return, Self, Right> \
+template <typename Class, typename Self, typename Right> \
+class op<operator_enum::name, Class, Self, Right> \
 { \
-	Return operator symbol (Right & right) \
+public: \
+	auto operator symbol (Right & right) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Return>(name, right); \
+		return self.template syntax_operate<Class, operator_enum::name>(right); \
 	} \
 }; \
-template <typename Return, typename Self> \
-class op<operator_enum::name, Return, Self> \
+template <typename Class, typename Self> \
+class op<operator_enum::name, Class, Self> \
 { \
+public: \
 	template <typename Right> \
-	Return operator symbol (Right & right) \
+	auto operator symbol (Right & right) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Return>(name, right); \
+		return self.template syntax_operate<Class, operator_enum::name>(right); \
 	} \
 };
 #define __op2(name, symbol) \
-template <typename Return, typename Self> \
-class op<operator_enum::name, Return, Self> \
+template <typename Class, typename Self> \
+class op<operator_enum::name, Class, Self> \
 { \
-	Return operator symbol () \
+public: \
+	auto operator symbol () \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Return>(name); \
+		return self.template syntax_operate<Class, operator_enum::name>(); \
 	} \
 };
 #define __op2int(name, symbol) \
-template <typename Return, typename Self> \
-class op<operator_enum::name, Return, Self> \
+template <typename Class, typename Self> \
+class op<operator_enum::name, Class, Self> \
 { \
-	Return operator symbol (int) \
+public: \
+	auto operator symbol (int) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Return>(name); \
+		return self.template syntax_operate<Class, operator_enum::name>(); \
 	} \
 };
 
@@ -176,131 +182,131 @@ __opN(call, ())
 
 // so our next confusion is labeled, please upload/save your code
 
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_arithmetic_nonmutating_3 :
-	public op<plus, Return, Self>,
-	public op<minus, Return, Self>,
-	public op<multiplies, Return, Self>,
-	public op<divides, Return, Self>,
-	public op<modulus, Return, Self>
+	public op<plus, Class, Self>,
+	public op<minus, Class, Self>,
+	public op<multiplies, Class, Self>,
+	public op<divides, Class, Self>,
+	public op<modulus, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_arithmetic_mutating_3 :
-	public op<assign, Return, Self>,
-	public op<assign_plus, Return, Self>,
-	public op<assign_minus, Return, Self>,
-	public op<assign_multiplies, Return, Self>,
-	public op<assign_divides, Return, Self>,
-	public op<assign_modulus, Return, Self>
+	public op<assign, Class, Self>,
+	public op<assign_plus, Class, Self>,
+	public op<assign_minus, Class, Self>,
+	public op<assign_multiplies, Class, Self>,
+	public op<assign_divides, Class, Self>,
+	public op<assign_modulus, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_arithmetic_nonmutating_2 :
-	public op<negate, Return, Self>
+	public op<negate, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_arithmetic_mutating_2 :
-	public op<preincrement, Return, Self>,
-	public op<predecrement, Return, Self>,
-	public op<postincrement, Return, Self>,
-	public op<postdecrement, Return, Self>
+	public op<preincrement, Class, Self>,
+	public op<predecrement, Class, Self>,
+	public op<postincrement, Class, Self>,
+	public op<postdecrement, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_bitwise_nonmutating_3 :
-	public op<bit_xor, Return, Self>,
-	public op<bit_and, Return, Self>,
-	public op<bit_or, Return, Self>,
-	public op<shift_left, Return, Self>,
-	public op<shift_right, Return, Self>
+	public op<bit_xor, Class, Self>,
+	public op<bit_and, Class, Self>,
+	public op<bit_or, Class, Self>,
+	public op<shift_left, Class, Self>,
+	public op<shift_right, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_bitwise_mutating_3 :
-	public op<assign_bit_xor, Return, Self>,
-	public op<assign_bit_and, Return, Self>,
-	public op<assign_bit_or, Return, Self>,
-	public op<assign_shift_left, Return, Self>,
-	public op<assign_shift_right, Return, Self>
+	public op<assign_bit_xor, Class, Self>,
+	public op<assign_bit_and, Class, Self>,
+	public op<assign_bit_or, Class, Self>,
+	public op<assign_shift_left, Class, Self>,
+	public op<assign_shift_right, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_bitwise_nonmutating_2 :
-	public op<bit_not, Return, Self>
+	public op<bit_not, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_bitwise_mutating_2 
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_boolean_nonmutating_3 :
-	public op<logical_and, Return, Self>,
-	public op<logical_or, Return, Self>
+	public op<logical_and, Class, Self>,
+	public op<logical_or, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_boolean_mutating_3 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_boolean_nonmutating_2 :
-	public op<logical_not, Return, Self>
+	public op<logical_not, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_boolean_mutating_2 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_relation_same :
-	public op<equal_to, Return, Self>,
-	public op<not_equal_to, Return, Self>
+	public op<equal_to, Class, Self>,
+	public op<not_equal_to, Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_relation_order :
-	public op<less, Return, Self>,
-	public op<greater, Return, Self>,
-	public op<less_equal, Return, Self>,
-	public op<greater_equal, Return, Self>
+	public op<less, Class, Self>,
+	public op<greater, Class, Self>,
+	public op<less_equal, Class, Self>,
+	public op<greater_equal, Class, Self>
 { };
 
-template <typename Self>
+template <typename Class, typename Self>
 class op_arithmetic_nonmutating :
-	public op_arithmetic_nonmutating_3<Self, Self>,
-	public op_arithmetic_nonmutating_2<Self, Self>
+	public op_arithmetic_nonmutating_3<Class, Self>,
+	public op_arithmetic_nonmutating_2<Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_arithmetic_mutating :
-	public op_arithmetic_mutating_3<Return, Self>,
-	public op_arithmetic_mutating_2<Return, Self>
+	public op_arithmetic_mutating_3<Class, Self>,
+	public op_arithmetic_mutating_2<Class, Self>
 { };
-template <typename Self>
+template <typename Class, typename Self>
 class op_bitwise_nonmutating :
-	public op_bitwise_nonmutating_3<Self, Self>,
-	public op_bitwise_nonmutating_2<Self, Self>
+	public op_bitwise_nonmutating_3<Class, Self>,
+	public op_bitwise_nonmutating_2<Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_bitwise_mutating :
-	public op_bitwise_mutating_3<Return, Self>,
-	public op_bitwise_mutating_2<Return, Self>
+	public op_bitwise_mutating_3<Class, Self>,
+	public op_bitwise_mutating_2<Class, Self>
 { };
-template <typename Self>
+template <typename Class, typename Self>
 class op_boolean_nonmutating :
-	public op_boolean_nonmutating_3<Self, Self>,
-	public op_boolean_nonmutating_2<Self, Self>
+	public op_boolean_nonmutating_3<Class, Self>,
+	public op_boolean_nonmutating_2<Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_boolean_mutating :
-	public op_boolean_mutating_3<Return, Self>,
-	public op_boolean_mutating_2<Return, Self>
+	public op_boolean_mutating_3<Class, Self>,
+	public op_boolean_mutating_2<Class, Self>
 { };
 
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_relation :
-	public op_relation_same<Return, Self>,
-	public op_relation_order<Return, Self>
+	public op_relation_same<Class, Self>,
+	public op_relation_order<Class, Self>
 { };
 
-template <typename Self>
+template <typename Class, typename Self>
 class op_nonmutating :
-	public op_arithmetic_nonmutating<Self>,
-	public op_bitwise_nonmutating<Self>,
-	public op_boolean_nonmutating<Self>
+	public op_arithmetic_nonmutating<Class, Self>,
+	public op_bitwise_nonmutating<Class, Self>,
+	public op_boolean_nonmutating<Class, Self>
 { };
-template <typename Return, typename Self>
+template <typename Class, typename Self>
 class op_mutating :
-	public op_arithmetic_mutating<Return, Self>,
-	public op_bitwise_mutating<Return, Self>,
-	public op_boolean_mutating<Return, Self>
+	public op_arithmetic_mutating<Class, Self>,
+	public op_bitwise_mutating<Class, Self>,
+	public op_boolean_mutating<Class, Self>
 { };
 
 template <template<typename> class Container>
@@ -309,8 +315,8 @@ class syntax_operate_container_any
 protected:
 	virtual void operate(operator_enum op, Container<std::any> & arguments) = 0;
 public:
-	template <typename Return, typename... Args>
-	Return syntax_operator(operator_enum op, Args... args)
+	template <typename Class, operator_enum op, typename... Args>
+	Class syntax_operator(Args... args)
 	{
 		Container<std::any> arguments;
 		arguments.emplace_back({});
@@ -318,9 +324,14 @@ public:
 			arguments.emplace_back(args)...
 		};
 		operate(op, arguments);
-		return std::any_cast<Return>(arguments.front());
+		return std::any_cast<Class>(arguments.front());
 	}
 };
+// how would we do compile-time types
+	// i'm imagining an expression type that is generated by
+	// its operator types.  doesn't seem hard.
+	// ohhhh huh! except we no longer pass the return type
+	// as a template parameter unless it can be auto
 
 // one option is compile-time type matching with operator implementations
 // 	part of this is implemented, may be unneeded
@@ -615,18 +626,35 @@ namespace operators
 // for implementing more of this, we'll need a way to pass everything to a particular set of operator classes / handlers / whatever
 // some way to proxy or somesuch.  make a group of operators that wrap others.
 
-// expression should work okay with operable_any.
+// expression_any should work okay with operable_any.
 #include <memory>
 template <typename T>
-class expression : public op_nonmutating<expression<T>>
+class expression_any : public op_nonmutating<expression_any<T>,expression_any<T>>
 {
 public:
 	// takes as normal, but passes to operate function how?
-	expression<T> operator+(expression<T> const & other) {
+	expression_any<T> operator+(expression_any<T> const & other) {
 	}
 	operator_enum op;
-	std::vector<std::shared_ptr<expression>> parts;
+	std::vector<std::shared_ptr<expression_any>> parts;
 };
+template <operator_enum operation, typename ...Args>
+class expression_generic : public op_nonmutating<void, expression_generic<operation, Args...>>
+{
+public:
+	std::tuple<Args*...> const arguments;
+
+	expression_generic(Args & ... arguments)
+	: arguments(&arguments ...)
+	{ }
+	// it coudl be nic to have the operator_enum available as a template parameter.  for compile-time-balance.
+	template <typename Void, operator_enum suboperation, typename ... SubArgs>
+	auto syntax_operate(SubArgs & ... subargs)
+	{
+		return expression_generic<suboperation, expression_generic<operation, Args...>,SubArgs...>(*this, subargs ...);
+	}
+};
+
 
 // optional simple cmp implementation for any
 #ifndef NO_ANY_CMP

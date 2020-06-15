@@ -5,6 +5,10 @@ using namespace std;
 
 int main()
 {
+	expression_generic<literal, int const> int1 = 1;
+	expression_generic<literal, int const> int2 = 2;
+	cout << typeid(int1 + int2).name() << endl;
+
 	vector<any> arguments, verify;
 	arguments.emplace_back(1);
 	arguments.emplace_back(2);
