@@ -1,3 +1,4 @@
+CXX=test/measure g++
 LINK.o=${CXX}
 CXXFLAGS=-std=c++17 -ggdb -Wall -Werror -O3
 CPPFLAGS=-I.
@@ -12,11 +13,16 @@ clean:
 %-run: source/liblibrary.a %
 	./$*
 
+source/liblibrary.a: source/string.o source/quick.o source/framebuffer.o source/assert.o
+	ar cr "$@" $^
+
 scratch/demo: scratch/demo.o source/liblibrary.a
 test/test: test/test.o source/liblibrary.a
 
-source/liblibrary.a: source/quick.o source/framebuffer.o
-	ar cr "$@" $^
+%.E: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $^ -o $@
+%.o: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -c -o $@ 2>&1| head -n 40
 
 install: run_test source/liblibrary.a library/*.hpp
 	mkdir -p ${PREFIX}/lib

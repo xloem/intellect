@@ -8,16 +8,16 @@ namespace std {
 
 namespace library {
 
-template <typename T>
-class heapvector
+template <typename T, size_t _reserved>
+class stackvector
 {
 public:
-	heapvector();
-	heapvector(size_t size);
-	heapvector(heapvector const & other);
-	heapvector(heapvector && other);
-	heapvector(std::initializer_list<T> const & items);
-	~heapvector();
+	stackvector();
+	stackvector(size_t size);
+	stackvector(stackvector const & other);
+	stackvector(stackvector && other);
+	stackvector(std::initializer_list<T> const & items);
+	~stackvector();
 
 	T & operator[](size_t index);
 	void push_back(T const & value);
@@ -29,7 +29,8 @@ public:
 	T * begin();
 	T * end();
 private:
-	void * storage;
+	T storage[_reserved];
+	size_t _size;
 };
 
 

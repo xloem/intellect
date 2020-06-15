@@ -7,11 +7,16 @@
 
 namespace library {
 #define container std::vector
-#define vec (*(contanier<TYPE>*)storage)
+#define vec (*(container<TYPE>*)storage)
 
 heapvector<TYPE>::heapvector(std::initializer_list<TYPE> items)
 : storage(new container<TYPE>(items))
 { }
+
+heapvector<TYPE>::~heapvector()
+{
+	delete &vec;
+}
 
 heapvector<TYPE>::heapvector()
 : heapvector({})
@@ -27,13 +32,13 @@ heapvector<TYPE>::heapvector(size_t size)
 heapvector<TYPE>::heapvector(heapvector const & other)
 : heapvector()
 {
-	vec = *(container<TYPE>*)other.data;
+	vec = *(container<TYPE>*)other.storage;
 }
 
 heapvector<TYPE>::heapvector(heapvector && other)
 : heapvector()
 {
-	vec = std::move(*(container<TYPE>*)other.data);
+	vec = std::move(*(container<TYPE>*)other.storage);
 }
 
 TYPE & heapvector<TYPE>::operator[](size_t index)
