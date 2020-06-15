@@ -263,12 +263,46 @@ class op_boolean_mutating :
 	public op_boolean_mutating_3<Return, Self, Self>,
 	public op_boolean_mutating_2<Return, Self>
 { };
+
 template <typename Return, typename Self>
 class op_relation :
 	public op_relation_same<Return, Self, Self>,
 	public op_relation_order<Return, Self, Self>
 { };
 
+template <typename Self>
+class op_nonmutating :
+	public op_arithmetic_nonmutating<Self>,
+	public op_bitwise_nonmutating<Self>,
+	public op_boolean_nonmutating<Self>
+{ };
+template <typename Return, typename Self>
+class op_mutating :
+	public op_arithmetic_mutating<Return, Self>,
+	public op_bitwise_mutating<Return, Self>,
+	public op_boolean_mutating<Return, Self>
+{ };
+
+// we could also provide templated operators, to possibly allow
+// any types at all to be combined.
+
+template <template<typename> class Container>
+class syntax_operate_container_any
+{
+	virtual void operate(Container<std::any> & arguments)
+	{
+	}
+	template <typename Return, typename... Args>
+	Return syntax_operator(operator_enum op, Args... args)
+	{
+		Container<std::any> arguments;
+		// minimal to combine into 1 generic function:
+		// 	-> variadic return type
+		// so, any pointers would make sense
+		// we could also rewrite the contents of a vector
+		// then
+	}
+};
 
 template <typename T>
 class operable
@@ -554,19 +588,14 @@ namespace operators
 	operable_any_2<T> bit_not_any("~", func_bit_not<T>, func_bit_not<T>);
 };
 
-// We can maybe add functionality to operators quickly by making
-// a class that has operators, and deriving other things from it.
-// It would need to use the operable class, I suppose? and call a handler?
-// likely some way to simplify.
-
 
 // for implementing more of this, we'll need a way to pass everything to a particular set of operator classes / handlers / whatever
 // some way to proxy or somesuch.  make a group of operators that wrap others.
 
-// exprssion should work okay with operable_any.
+// expression should work okay with operable_any.
 #include <memory>
 template <typename T>
-class expression
+class expression : public op_nonmutating<expression<T>>
 {
 public:
 	// takes as normal, but passes to operate function how?
