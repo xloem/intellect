@@ -2,10 +2,12 @@
 #include <cassert>
 //#include <library/assert.hpp>
 #include <library/string.hpp>
-#include <library/heapvector.hpp>
+//#include <library/heapvector.hpp>
 //#include <vector>
 //using namespace std;
 using namespace library;
+
+#include <typeinfo>
 
 int main()
 {
@@ -14,10 +16,16 @@ int main()
 	stdout::line("Hello, world!");
 
 	/*
-	expression_generic<literal, int const> int1 = 1;
-	expression_generic<literal, int const> int2 = 2;
-	cout << typeid(int1 + int2).name() << endl;
+	// to do this all we need is the templates with operators
+	// not the implementations of their fucntions that use the enums
+	expression_templated<literal, int const> int1 = 1;
+	expression_templated<literal, int const> int2 = 2;
+	auto sum = int1 + int2;
+	*/
+	//stdout::line(sum);
+	//stdout::line(typeid(sum).name());
 
+	/*
 	vector<any> arguments, verify;
 	arguments.emplace_back(1);
 	arguments.emplace_back(2);

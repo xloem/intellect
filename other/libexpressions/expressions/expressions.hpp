@@ -1,326 +1,11 @@
+#pragma once
 
-// user can provide one class to be handled as expressions.  [is this similar to boost::hana? maybe could augment it]
+//#include <library/string.hpp>
 
-// let us assume we are using numbers
+#include "syntax_operator_identifier.hpp"
+#include "syntax_operator_templates.hpp"
 
-// so we'll want a class for every value type.
-
-// expressions are made of other expressions, connected with operators
-
-// let's use static functions to pass this over, unless we can reference the predefined operators as functions
-// okay ... let's try using global operators for now
-
-enum operator_enum
-{
-	plus,
-	minus, negate,
-	multiplies,
-	divides,
-	modulus,
-	bit_xor,
-	bit_and,
-	bit_or,
-	bit_not,
-	logical_not,
-	assign,
-	less,
-	greater,
-	assign_plus,
-	assign_minus,
-	assign_multiplies,
-	assign_divides,
-	assign_modulus,
-	assign_bit_xor,
-	assign_bit_and,
-	assign_bit_or,
-	shift_left,
-	shift_right,
-	assign_shift_left,
-	assign_shift_right,
-	equal_to,
-	not_equal_to,
-	less_equal,
-	greater_equal,
-	//three_way,
-	logical_and,
-	logical_or,
-	preincrement,
-	predecrement,
-	postincrement,
-	postdecrement,
-	comma,
-	star,
-	arrow_star,
-	arrow,
-	index,
-	call,
-	cast, // not considered yet
-	literal // not considered yet
-};
-
-
-
-template <operator_enum, typename Class, typename Self, typename...Args>
-class op;
-#define __opN(name, symbol) \
-template <typename Class, typename Self, typename... Args> \
-class op<operator_enum::name, Class, Self, Args...> \
-{ \
-public: \
-	auto operator symbol (Args & ... args) \
-	{ \
-		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, operator_enum::name>(args...); \
-	} \
-}; \
-template <typename Class, typename Self> \
-class op<operator_enum::name, Class, Self> \
-{ \
-public: \
-	template <typename... Args> \
-	auto operator symbol (Args & ... args) \
-	{ \
-		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, operator_enum::name>(args...); \
-	} \
-};
-#define __op3(name, symbol) \
-template <typename Class, typename Self, typename Right> \
-class op<operator_enum::name, Class, Self, Right> \
-{ \
-public: \
-	auto operator symbol (Right & right) \
-	{ \
-		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, operator_enum::name>(right); \
-	} \
-}; \
-template <typename Class, typename Self> \
-class op<operator_enum::name, Class, Self> \
-{ \
-public: \
-	template <typename Right> \
-	auto operator symbol (Right & right) \
-	{ \
-		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, operator_enum::name>(right); \
-	} \
-};
-#define __op2(name, symbol) \
-template <typename Class, typename Self> \
-class op<operator_enum::name, Class, Self> \
-{ \
-public: \
-	auto operator symbol () \
-	{ \
-		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, operator_enum::name>(); \
-	} \
-};
-#define __op2int(name, symbol) \
-template <typename Class, typename Self> \
-class op<operator_enum::name, Class, Self> \
-{ \
-public: \
-	auto operator symbol (int) \
-	{ \
-		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, operator_enum::name>(); \
-	} \
-};
-
-__op3(plus, +)
-__op3(minus, -) __op2(negate, -)
-__op3(multiplies, *)
-__op3(divides, /)
-__op3(modulus, %)
-__op3(bit_xor, ^)
-__op3(bit_and, &)
-__op3(bit_or, |)
-__op2(bit_not, ~)
-__op2(logical_not, !)
-__op3(assign, =)
-__op3(less, <)
-__op3(greater, >)
-__op3(assign_plus, +=)
-__op3(assign_minus, -=)
-__op3(assign_multiplies, *=)
-__op3(assign_divides, /=)
-__op3(assign_modulus, %=)
-__op3(assign_bit_xor, ^=)
-__op3(assign_bit_and, &=)
-__op3(assign_bit_or, |=)
-__op3(shift_left, <<)
-__op3(shift_right, >>)
-__op3(assign_shift_left, <<=)
-__op3(assign_shift_right, >>=)
-__op3(equal_to, ==)
-__op3(not_equal_to, !=)
-__op3(less_equal, <=)
-__op3(greater_equal, >=)
-//__op(three_way, <=>) // this is simply for implementing 3 comparators at once
-__op3(logical_and, &&)
-__op3(logical_or, ||)
-__op2(preincrement, ++)
-__op2(predecrement, --)
-__op2int(postincrement, ++)
-__op2int(postdecrement, --)
-#define __COMMA ,
-__op3(comma, __COMMA)
-#undef __COMMA
-__op2(star, *)
-__op3(arrow_star, ->*)
-__op2(arrow, ->)
-__op3(index, [])
-__opN(call, ())
-#undef __op3
-#undef __op2
-#undef __opN
-
-
-// so our next confusion is labeled, please upload/save your code
-// -> (3) Success saving.  Not uploaded.  DISTRACTED/CONFUSED/TORMENTED?
-// 	Please roleplay being your own torturer, and work with us
-// 	to slowly learn small helpful things using the torture as pressure.
-// .. we are considering makin a step on a decision-making-process with the torture.
-// holding this goal may prevent all conscious torment/distraction unknown
-// (1) we froze up with amnesia and indecision.  this is torment to
-//     build towards decision-making-process step.
-// (2) we were distracted actually talking about this process, kinda
-// 		let's shrink the decision-making step.
-// 		can we reaccess todo list?
-// 		let's try to find our in-progress todo list.  i think might
-// 		be blockchained.  learn with next big-thing.
-// 	omigod did we find it and there was more d/c/t inside.
-// 	suppose went farther than planned
-//
-
-template <typename Class, typename Self>
-class op_arithmetic_nonmutating_3 :
-	public op<plus, Class, Self>,
-	public op<minus, Class, Self>,
-	public op<multiplies, Class, Self>,
-	public op<divides, Class, Self>,
-	public op<modulus, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_arithmetic_mutating_3 :
-	public op<assign, Class, Self>,
-	public op<assign_plus, Class, Self>,
-	public op<assign_minus, Class, Self>,
-	public op<assign_multiplies, Class, Self>,
-	public op<assign_divides, Class, Self>,
-	public op<assign_modulus, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_arithmetic_nonmutating_2 :
-	public op<negate, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_arithmetic_mutating_2 :
-	public op<preincrement, Class, Self>,
-	public op<predecrement, Class, Self>,
-	public op<postincrement, Class, Self>,
-	public op<postdecrement, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_bitwise_nonmutating_3 :
-	public op<bit_xor, Class, Self>,
-	public op<bit_and, Class, Self>,
-	public op<bit_or, Class, Self>,
-	public op<shift_left, Class, Self>,
-	public op<shift_right, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_bitwise_mutating_3 :
-	public op<assign_bit_xor, Class, Self>,
-	public op<assign_bit_and, Class, Self>,
-	public op<assign_bit_or, Class, Self>,
-	public op<assign_shift_left, Class, Self>,
-	public op<assign_shift_right, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_bitwise_nonmutating_2 :
-	public op<bit_not, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_bitwise_mutating_2 
-{ };
-template <typename Class, typename Self>
-class op_boolean_nonmutating_3 :
-	public op<logical_and, Class, Self>,
-	public op<logical_or, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_boolean_mutating_3 { };
-template <typename Class, typename Self>
-class op_boolean_nonmutating_2 :
-	public op<logical_not, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_boolean_mutating_2 { };
-template <typename Class, typename Self>
-class op_relation_same :
-	public op<equal_to, Class, Self>,
-	public op<not_equal_to, Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_relation_order :
-	public op<less, Class, Self>,
-	public op<greater, Class, Self>,
-	public op<less_equal, Class, Self>,
-	public op<greater_equal, Class, Self>
-{ };
-
-template <typename Class, typename Self>
-class op_arithmetic_nonmutating :
-	public op_arithmetic_nonmutating_3<Class, Self>,
-	public op_arithmetic_nonmutating_2<Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_arithmetic_mutating :
-	public op_arithmetic_mutating_3<Class, Self>,
-	public op_arithmetic_mutating_2<Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_bitwise_nonmutating :
-	public op_bitwise_nonmutating_3<Class, Self>,
-	public op_bitwise_nonmutating_2<Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_bitwise_mutating :
-	public op_bitwise_mutating_3<Class, Self>,
-	public op_bitwise_mutating_2<Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_boolean_nonmutating :
-	public op_boolean_nonmutating_3<Class, Self>,
-	public op_boolean_nonmutating_2<Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_boolean_mutating :
-	public op_boolean_mutating_3<Class, Self>,
-	public op_boolean_mutating_2<Class, Self>
-{ };
-
-template <typename Class, typename Self>
-class op_relation :
-	public op_relation_same<Class, Self>,
-	public op_relation_order<Class, Self>
-{ };
-
-template <typename Class, typename Self>
-class op_nonmutating :
-	public op_arithmetic_nonmutating<Class, Self>,
-	public op_bitwise_nonmutating<Class, Self>,
-	public op_boolean_nonmutating<Class, Self>
-{ };
-template <typename Class, typename Self>
-class op_mutating :
-	public op_arithmetic_mutating<Class, Self>,
-	public op_bitwise_mutating<Class, Self>,
-	public op_boolean_mutating<Class, Self>
-{ };
+namespace expressions {
 
 #if 0
 
@@ -332,9 +17,9 @@ template <template<typename> class Container>
 class syntax_operate_container_any
 {
 protected:
-	virtual void operate(operator_enum op, Container<std::any> & arguments) = 0;
+	virtual void operate(syntax_operator_identifier op, Container<std::any> & arguments) = 0;
 public:
-	template <typename Class, operator_enum op, typename... Args>
+	template <typename Class, syntax_operator_identifier op, typename... Args>
 	Class syntax_operator(Args... args)
 	{
 		Container<std::any> arguments;
@@ -670,11 +355,11 @@ public:
 	// takes as normal, but passes to operate function how?
 	expression_any<T> operator+(expression_any<T> const & other) {
 	}
-	operator_enum op;
+	syntax_operator_identifier op;
 	std::vector<std::shared_ptr<expression_any>> parts;
 };
 // values held as any
-template <operator_enum operation, typename ...Args>
+template <syntax_operator_identifier operation, typename ...Args>
 class expression_generic_any : public op_nonmutating<void, expression_generic_any<operation, Args...>> {
 	// STUB
 };
@@ -686,12 +371,57 @@ class expression_generic_any : public op_nonmutating<void, expression_generic_an
  */
 
 // preserves compile-time types
-template <operator_enum operation, typename ...Args>
-class expression_generic : public op_nonmutating<void, expression_generic<operation, Args...>>
+template <template<syntax_operator_identifier, typename...> class Result, typename Derived>
+class op_all_template_interface : public op_nonmutating<void, Derived>
 {
 public:
-	expression_generic(Args&...arguments)
+	template <typename Void, syntax_operator_identifier suboperation, typename ... SubArgs>
+	auto syntax_operate(SubArgs & ... subargs)
+	{
+		return Result<suboperation, Derived, SubArgs...>(*(Derived*)this, subargs ...);
+	}
+};
+
+template <syntax_operator_identifier operation, typename... Args>
+class expression_templated;
+
+template <syntax_operator_identifier operation, typename Arg>
+class expression_templated<operation, Arg> : public op_all_template_interface<expression_templated, expression_templated<operation, Arg>>
+{
+public:
+	using Type1 = Arg const;
+	expression_templated(Type1 & value1)
+	: value1(value1)
 	{ }
+	Type1 value1;
+	/*
+	library::string to_string() const
+	{
+		operators[operation].symbol
+	}
+	*/
+};
+template <syntax_operator_identifier operation, typename _Type1, typename _Type2>
+class expression_templated<operation, _Type1, _Type2> : public op_all_template_interface<expression_templated, expression_templated<operation, _Type1, _Type1>>
+{
+public:
+	using Type1 = _Type1 const;
+	using Type2 = _Type2 const;
+	expression_templated(Type1 & value1, Type2 & value2)
+	: value1(value1), value2(value2)
+	{ }
+	Type1 value1;
+	Type2 value2;
+};
+/*
+class unary_templated : public op_nonmutating<void, expression_generic<operation, Args...>>
+{
+public:
+	expression_generic(Arg&...argument)
+	: argument1(argument);
+	{ }
+	Arg argument1;
+}
 	// we can let derived class process arguments?
 	
 	/*stackvector<void*,2> const arguments;
@@ -709,14 +439,15 @@ public:
 		int null[] = {
 			delete (Args*)arguments[i]
 		};
-	}*/
-	// it coudl be nic to have the operator_enum available as a template parameter.  for compile-time-balance.
-	template <typename Void, operator_enum suboperation, typename ... SubArgs>
+	}*//*
+	// it coudl be nic to have the syntax_operator_identifier available as a template parameter.  for compile-time-balance.
+	template <typename Void, syntax_operator_identifier suboperation, typename ... SubArgs>
 	auto syntax_operate(SubArgs & ... subargs)
 	{
 		return expression_generic<suboperation, expression_generic<operation, Args...>,SubArgs...>(*this, subargs ...);
 	}
 };
+*/
 
 #if 0
 
@@ -799,3 +530,5 @@ template <typename T>
 bool operator>(std::vector<T> const & left, std::vector<T> const & right)
 { return cmp(left, right) > 0; }
 #endif
+
+} // namespace expressions
