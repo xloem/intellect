@@ -1,7 +1,8 @@
 #include <library/string.hpp>
 
-#include <string>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 namespace library {
 
@@ -51,8 +52,12 @@ string::string(double real)
 { }
 
 string::string(void* pointer)
-: string(std::to_string(pointer))
-{ }
+: string()
+{
+	std::stringstream stream;
+	stream << pointer;
+	std() = stream.str();
+}
 
 string string::operator+(string const & other)
 {
