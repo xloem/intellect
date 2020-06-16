@@ -12,8 +12,8 @@ namespace std {
 #if _GLIBCXX_USE_CXX11_ABI
 	} // namespace __cxx11
 	using namespace __cxx11;
-	using string = basic_string<char, char_traits<char>, allocator<char>>;
 #endif
+	using string = basic_string<char, char_traits<char>, allocator<char>>;
 }
 
 namespace library {
@@ -27,14 +27,29 @@ public:
 	string(string const & source) : string(source.std()) {}
 	~string();
 
-	// input
-	static string in_word();
-	static string in_line();
-	// output, optionally with linebreak
-	void err();
-	void out();
-	void errl();
-	void outl();
+	// should provide a virtual function interface for compilation speed
+	template <template<typename> class Container>
+	string(Container<string> const & source, string join = "")
+	: string()
+	{
+		bool continuing = false;
+		for (auto & item : source) {
+			if (continuing) {
+				(*this) += join;
+			} else {
+				continuing = true;
+			}
+			(*this) += item;
+		}
+	}
+
+	explicit string(bool);
+	string(long long);
+	string(double);
+	string(void*);
+
+	template <typename T> string(T const & object)
+	: string(object.to_string()) { }
 
 	string operator+(string const & other);
 	string & operator+=(string const & other);

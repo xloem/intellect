@@ -13,6 +13,18 @@ string::string(char const * source)
 : storage(new std::string(source))
 { }
 
+/*
+template <template<typename> class Container>
+string::string<Container>(Container<string> const & source)
+: string()
+{
+	for (auto & item : source)
+	{
+		(*this) += item;
+	}
+}
+*/
+
 string::string(std::string && source)
 : storage(new std::string(std::move(source)))
 { }
@@ -25,6 +37,22 @@ string::~string()
 {
 	delete storage;
 }
+
+string::string(bool flag)
+: string(flag ? "true" : "false")
+{ }
+
+string::string(long long integer)
+: string(std::to_string(integer))
+{ }
+
+string::string(double real)
+: string(std::to_string(real))
+{ }
+
+string::string(void* pointer)
+: string(std::to_string(pointer))
+{ }
 
 string string::operator+(string const & other)
 {
