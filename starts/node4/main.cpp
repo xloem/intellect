@@ -386,7 +386,6 @@ public:
 	}
 };
 
-/*
 reference kind-time-value-choices("time-value-choices");
 class time-value-choices : public of-kind<kind-time-value-choices>
 {
@@ -401,10 +400,10 @@ public:
 
 	// concepts associated with classes are stored as static functions
 	// that return a reference.
-	METHOD reference get-value(time-value-choices focus, reference kind)
+	METHOD reference get-value(reference kind)
 	{
 		// note: focus is the method-equivalent 'this'
-		return focus.time-values()[kind];
+		return self.time-values()[kind];
 	}
 
 	// for implementing classes we have options:
@@ -432,7 +431,7 @@ private:
 		return reference::data<data-type>();
 	}
 	
-}; */
+};// */
 
 int main(int argc, char ** argv)
 {

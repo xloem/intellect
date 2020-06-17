@@ -16,17 +16,17 @@ cat "$1" |
 # btw a quick way to make scripting is to have a list of maps between calls and a variables object, and check the variables object to see if the next-call is changed
 
 # class name tracking
-sed 's/^\(\t*\)class \([^{ \t]*\)/#define ___CLASSNAME_\1 \2\n&/' |
-sed 's/^\(\t*\)struct \([^{ \t]*\)/#define ___CLASSNAME_\1 \2\n&/' |
+sed 's/^\(\t*\)class \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n&/' |
+sed 's/^\(\t*\)struct \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n&/' |
 sed 's/^\(\t*\)};\s*$/&\n#undef ___CLASSNAME_\1/' |
 # method declarations
 sed 's/\sMETHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*;\s*$/static reference \2();/' |
 # one line in-header method definitions
-sed '/^\s\s*METHOD.*)\s*{.*}\s*$/ { s/^\s\s*METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{\(.*\)}\s*$/static reference \2(){\/\*``METHOD``\*\/static reference storage({string("\2"),(function<reference\/\*``\1``\*\/( \3)>)\n[]( \3) -> reference\/\*``\1``\*\/> { using __return-type = \1; \4 }}); return storage;}/; s/\sreturn /return (reference)(__return-type)/; }' |
+sed '/^\t*METHOD.*)\s*{.*}\s*$/ { s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{\(.*\)}\s*$/\1static reference \2(){\/\*``METHOD``\*\/static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference\/\*````\*\/, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/> { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self; \5 }}); return storage;}/; s/\sreturn /return (reference)(__return-type)/; }' |
 # multi-line in-header method definitions
-sed '/^\s\s*METHOD/,/^\s\{0,1\}}/ { /^\s*METHOD.*)\s*$/N; s/METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{/\/\*``METHOD``\*\/static reference \2(){static reference storage({string("\2"),(function<reference\/\*``\1``\*\/( \3)>)\n[]( \3) -> reference\/\*``\1``\*\/ { using __return-type = \1;/; s/return /return (reference)(__return-type)/; s/^\s}/&}); return storage;}/ }' |
+sed '/\tMETHOD/,/^\t}/ { /^\t*METHOD.*)\s*$/N; s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{/\/\*``METHOD``\*\/\1static reference \3(){static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/ { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^\s}/&}); return storage;}/ }' |
 # out-of-header method definitions
-sed '/^METHOD/,/^}/ { /^\s*METHOD.*)\s*$/N; s/METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*/\/\*``METHOD``\*\/reference \2(){static reference storage({string("\2"),(function<reference\/\*``\1``\*\/( \3)>)\n[]( \3) -> reference\/\*``\1``\*\/ { using __return-type = \1;/; s/return /return (reference)(__return-type)/; s/^}/&}}); return storage;}/ }' |
+sed '/^METHOD/,/^}/ { /^METHOD.*)\s*$/N; s/METHOD\s\s*\(\S*\)\s\s*\(\S*\)::\([^\t :(]*\)\s*(\([^)]*\))\s*/\/\*``METHOD``\*\/reference \2::\3(){static reference storage({string("\3"),(function<reference\/\*``\1``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\1``\*\/ { using __return-type = \1; \2 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^}/&}}); return storage;}/ }' |
 # mutation of subtypes to references in methods
 	# this is intended to convert the type-name pairs into just 'reference'.  that means the type and name are both dropped.
 	#           v--- \1, preceding text                           v-- \2, type   v-\3, name v-\4, end-symbol   v--- type and name changed to reference/*````*/

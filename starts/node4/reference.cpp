@@ -113,23 +113,24 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	}
 }
 
-reference reference::basic-kind-get(){static reference basic-kind-get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
+//reference reference::basic-kind-get(){static reference basic-kind-get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
+METHOD reference reference::basic-kind-get(reference kind)
 {
-	if (!focus.pointer()) { throw presence-mistake(); }
-	auto & map = focus.pointer()->data.get<part::kinded>();
+	if (!self.pointer()) { throw presence-mistake(); }
+	auto & map = self.pointer()->data.get<part::kinded>();
 	auto result = map.find(kind);
 	if (result == map.end()) {
 		return null();
 	} else {
 		return result->second;
 	}
-}); return basic-kind-get;}
+}//); return basic-kind-get;}
 
 //reference reference::basic-kind-set(){static reference basic-kind-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
-METHOD reference reference::basic-kind-set(reference focus, reference kind, reference value)
+METHOD reference reference::basic-kind-set(reference kind, reference value)
 {
-	if (!focus.pointer()) { throw presence-mistake(); }
-	auto & map = focus.pointer()->data.get<part::kinded>();
+	if (!self.pointer()) { throw presence-mistake(); }
+	auto & map = self.pointer()->data.get<part::kinded>();
 	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element

@@ -86,7 +86,7 @@ public:
 	static reference basic-kind-get/*(reference focus, reference kind)*/();
 
 	// set an immediate property, returns old value
-	METHOD reference basic-kind-set(reference focus, reference kind, reference value);
+	METHOD reference basic-kind-set(reference kind, reference value);
 	//static reference basic-kind-set/*(reference focus, reference kind, reference value)*/();
 
 	// get all immediate property kinds, ordered
