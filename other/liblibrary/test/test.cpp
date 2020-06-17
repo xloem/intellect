@@ -23,7 +23,7 @@ int main()
 		uword row_distance = row - center_height;
 		uword half_width = sqrt(radius * radius - row_distance * row_distance);
 		for (uword column = center_width - half_width; column <= center_width + half_width; ++ column) {
-			fb0.pixel({column, row})[1] = 128;
+			fb0.pixel(uvec2{column, row})[1] = 128;
 			// fb0(1, column, row) = 128;
 			/*fb0.pixel(column, row)[1] = 128;
 			if (fb0.pixel(column, row)[1] != 128) {

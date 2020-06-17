@@ -18,6 +18,9 @@ namespace std {
 
 namespace library {
 
+template <typename element_type> class heapvector;
+template <typename element_type, size_t reserved> class stackvector;
+
 class string
 {
 public:
@@ -44,21 +47,38 @@ public:
 	}
 
 	explicit string(bool);
-	string(long long);
-	string(double);
-	string(void*);
+	string(char); string(unsigned char);
+	string(short); string(unsigned short);
+	string(int); string(unsigned int);
+	string(long); string(unsigned long);
+	string(long long); string(unsigned long long);
+	string(float); string(double); string(long double);
+	string(void *);
+	template <typename T>
+	string(T * pointer) : string((void*)pointer) { }
 
-	template <typename T> string(T const & object)
-	: string(object.to_string()) { }
+	struct stringable
+	{
+		virtual string to_string() const = 0;
+	};
+	string(const stringable &);
 
-	string operator+(string const & other);
 	string & operator+=(string const & other);
 	string & operator=(string const & other);
 	char & operator [](size_t index);
-	size_t size();
+	size_t size() const;
 	char * data();
+	char * begin();
+	char * end();
 
-	char const * c_str();
+	struct range {
+		size_t begin;
+		size_t end;
+	};
+	// first range of each result is whole match; rest are subexpressions
+	heapvector<stackvector<range, 10>> regular_expression(string expression) const;
+
+	char const * c_str() const;
 
 	string(std::string && source);
 	string(std::string const & source);
@@ -70,6 +90,15 @@ public:
 private:
 	std::string * storage;
 };
+
+string operator+(string const & left, string const & right);
+string operator,(string const & left, string const & right); // synonym for +
+bool operator==(string const & left, string const & right);
+bool operator!=(string const & left, string const & right);
+bool operator<(string const & left, string const & right);
+bool operator<=(string const & left, string const & right);
+bool operator>(string const & left, string const & right);
+bool operator>=(string const & left, string const & right);
 
 namespace stdin {
 	string word();

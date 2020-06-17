@@ -1,8 +1,9 @@
-#include <library/string.hpp>
-
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
+
+#include <library/string.hpp>
 
 namespace library {
 
@@ -43,11 +44,62 @@ string::string(bool flag)
 : string(flag ? "true" : "false")
 { }
 
+string::string(char character)
+: string(" ")
+{
+	(*this)[0] = character;
+}
+
+string::string(unsigned char byte)
+: string()
+{
+	std::stringstream stream;
+	stream << std::hex << std::setfill('0') << std::setw(sizeof(byte) * 2);
+	stream << (int)byte;
+	std() = stream.str();
+}
+
+string::string(short integer)
+: string(std::to_string(integer))
+{ }
+
+string::string(unsigned short integer)
+: string(std::to_string(integer))
+{ }
+
+string::string(int integer)
+: string(std::to_string(integer))
+{ }
+
+string::string(unsigned int integer)
+: string(std::to_string(integer))
+{ }
+
+string::string(long integer)
+: string(std::to_string(integer))
+{ }
+
+string::string(unsigned long integer)
+: string(std::to_string(integer))
+{ }
+
 string::string(long long integer)
 : string(std::to_string(integer))
 { }
 
+string::string(unsigned long long integer)
+: string(std::to_string(integer))
+{ }
+
+string::string(float real)
+: string(std::to_string(real))
+{ }
+
 string::string(double real)
+: string(std::to_string(real))
+{ }
+
+string::string(long double real)
 : string(std::to_string(real))
 { }
 
@@ -59,10 +111,29 @@ string::string(void* pointer)
 	std() = stream.str();
 }
 
-string string::operator+(string const & other)
-{
-	return {std() + other.std()};
-}
+// 	ideas: -> let's plan for the time rather than using an alarm
+// 		-> let's visit the todo list on a schedule, too.
+// 		-> let's move toothbrushing _separate_ from them,
+// 		   to grow fluid-learning a little
+
+	// active memory dump for task changing:
+	// 1. debug liblibrary so teststring works.
+	//    verify teststring compiles in .1 to .2 seconds (>.5 is needs-understanding)
+	// 2. implement regular expression parser in strings, very simple.
+	//
+	// [3. switch node4/preprocess.bash to use liblibrary's parser
+	//     and node4's partially-preprocessed-methods
+	//     		[note: we could lose ability to bootstrap,
+	//     		 or errors cuold be hard to hunt down from bootstrappers.
+	//     		 do not use parser when implementing parsser. still use
+	//     		 node4. [no this breaks it]]
+	//     [our active task has solvable recursive logic EXCITEMENT!
+	//      first eye lubricant.]
+	//
+
+string::string(string::stringable const & object)
+: string(object.to_string())
+{ }
 
 string & string::operator+=(string const & other)
 {
@@ -81,12 +152,27 @@ char & string::operator[](size_t index)
 	return (*storage)[index];
 }
 
-size_t string::size()
+size_t string::size() const
 {
 	return storage->size();
 }
 
 char * string::data()
+{
+	return storage->data();
+}
+
+char * string::begin()
+{
+	return storage->data();
+}
+
+char * string::end()
+{
+	return storage->data() + size();
+}
+
+char const * string::c_str() const
 {
 	return storage->data();
 }
@@ -104,6 +190,46 @@ std::string const & string::std() const
 std::string && string::move()
 {
 	return std::move(*storage);
+}
+
+string operator+(string const & left, string const & right)
+{
+	return {left.std() + right.std()};
+}
+
+string operator,(string const & left, string const & right)
+{
+	return left + right;
+}
+
+bool operator==(string const & left, string const & right)
+{
+	return left.std() == right.std();
+}
+
+bool operator!=(string const & left, string const & right)
+{
+	return left.std() != right.std();
+}
+
+bool operator<(string const & left, string const & right)
+{
+	return left.std() < right.std();
+}
+
+bool operator<=(string const & left, string const & right)
+{
+	return left.std() <= right.std();
+}
+
+bool operator>(string const & left, string const & right)
+{
+	return left.std() > right.std();
+}
+
+bool operator>=(string const & left, string const & right)
+{
+	return left.std() >= right.std();
 }
 
 namespace stdin {

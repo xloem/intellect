@@ -10,7 +10,7 @@ SHELL=bash
 all: test
 depend: .depend
 
-test: test/testvectors-run test/test-run
+test: test/teststring-run test/testvectors-run test/test-run
 
 clean:
 	-rm .depend */*.a */*.o
@@ -23,6 +23,7 @@ source/liblibrary.a: source/string.o source/quick.o source/framebuffer.o source/
 
 scratch/demo: scratch/demo.o source/liblibrary.a
 
+test/teststring: test/teststring.o source/liblibrary.a
 test/testvectors: test/testvectors.o source/liblibrary.a
 test/test: test/test.o source/liblibrary.a
 

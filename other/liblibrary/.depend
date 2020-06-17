@@ -1,1 +1,2 @@
-quick.o: source/quick.cpp library/quick.hpp
+framebuffer.o: source/framebuffer.cpp library/framebuffer-armadillo.hpp \
+ library/framebuffer-basic.hpp library/quick.hpp
