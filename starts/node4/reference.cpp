@@ -6,13 +6,10 @@
 
 using namespace std;
 
-
-namespace std { template <> struct hash<reference> {
-	size_t operator()(const reference & to-hash) const
-	{
-		return hash<shared_ptr<reference::part>>()(to-hash.pointer());
-	}
-}; }
+size_t std::hash<reference>::operator()(const reference & to-hash) const
+{
+	return hash<shared_ptr<reference::part>>()(to-hash.pointer());
+}
 
 class reference::part
 {
@@ -56,6 +53,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	// use method-kind-get to get kind
 	reference getter(null());
 	try {
+		// direct .shared access used to avoid operator= method usage in the method-call handler
 		getter.shared = basic-kind-get()(*this, method-kind-get()).pointer();
 	} catch (reference) { }
 	if (getter == null()) {
@@ -68,6 +66,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 		method.shared = getter(*this, kind).pointer();
 	} catch (reference) { }
 	if (method == null()) {
+		// here default methods are built in for things the getter doesn't handle
 		if (kind == method-kind-get()) {
 			method = basic-kind-get();
 		} else if (kind == method-kind-set()) {
@@ -81,6 +80,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 		} else if (kind == method-order-set()) {
 			method = basic-order-set();
 		} else if (kind == method-operator-equals()) {
+			// default implementation can't be done with a method call because references are passed to methods by copy for now
 			if (parameters.size() != 1) { throw kindness-mistake(); }
 			shared = parameters.begin()->pointer();
 			return *this;

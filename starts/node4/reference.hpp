@@ -35,7 +35,7 @@ public:
 	template <typename... parameter-types>
 		reference operator()(parameter-types... parameters);
 
-	// method call, uses kind-get to get kind, could default to basic functions
+	// METHOD call, uses kind-get to get kind, could default to basic functions
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
 	// get an immediate property; returns null if nonpresent

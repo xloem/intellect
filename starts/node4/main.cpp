@@ -386,6 +386,7 @@ public:
 	}
 };
 
+/*
 reference kind-time-value-choices("time-value-choices");
 class time-value-choices : public of-kind<kind-time-value-choices>
 {
@@ -400,19 +401,21 @@ public:
 
 	// concepts associated with classes are stored as static functions
 	// that return a reference.
-	// METHOD concepts are callable.
-	// 	i propose that methods check to see if they are overwritten,
-	// 	and if not return the default implementation.  is this compatible?
 	METHOD reference get-value(time-value-choices focus, reference kind)
 	{
 		// note: focus is the method-equivalent 'this'
 		return focus.time-values()[kind];
 	}
 
-	/*static reference get-value(){static reference get-value((function<reference(reference)>)[](time-value-choices focus, reference kind) -> degree
-	{
-		return {focus.time-values()[kind]};
-	}); return get-value;}*/
+	// for implementing classes we have options:
+	// 	- we could use a model object
+	// 	- we could place defaults on the types and names
+	// it seems it would be a kind-of thing.
+
+	//static reference get-value(){static reference get-value((function<reference(reference)>)[](time-value-choices focus, reference kind) -> degree
+	//{
+	//	return {focus.time-values()[kind]};
+	//}); return get-value;}
 	DEFINE(reference,,method-kind-get-value)
 
 	// let's set it up with methods
@@ -429,7 +432,7 @@ private:
 		return reference::data<data-type>();
 	}
 	
-};
+}; */
 
 int main(int argc, char ** argv)
 {
