@@ -6,6 +6,8 @@
 
 using index_t = long long;
 
+class reference;
+
 class reference
 {
 public:
@@ -125,9 +127,6 @@ private:
 // parameters take types and names
 // if we could iterate, we could make types convert to references
 
-#define __as_many_reference_types_as_arguments(...) \
-	this-uses-foreach-which-is-in-meaning-vm
-	could also preprocess it.
 #define DEFINE_INLINE_RETURNING_METHOD(name, parameter-types-and-names, body) \
 static reference name(){static reference name((function<reference>(
 
@@ -167,4 +166,13 @@ reference reference::operator()(parameter-types... parameters)
 		return null();
 	}
 	return (*returner)(parameters...);
+}
+
+// hash implementation for containers
+namespace std {
+	template <>
+	struct hash<reference>
+	{
+		size_t operator()(const reference & to-hash) const;
+	};
 }

@@ -387,7 +387,7 @@ public:
 };
 
 reference kind-time-value-choices("time-value-choices");
-class time-value-choices : public of-kind<kind-time-value-choices>;
+class time-value-choices : public of-kind<kind-time-value-choices>
 {
 	using data-type = std::unordered_map<reference, degree_t>;
 public:
@@ -398,16 +398,21 @@ public:
 		data-default<data-type>();
 	}
 
-
-	METHOD reference get-value(time-value-choice focus, reference kind)
+	// concepts associated with classes are stored as static functions
+	// that return a reference.
+	// METHOD concepts are callable.
+	// 	i propose that methods check to see if they are overwritten,
+	// 	and if not return the default implementation.  is this compatible?
+	METHOD reference get-value(time-value-choices focus, reference kind)
 	{
+		// note: focus is the method-equivalent 'this'
 		return focus.time-values()[kind];
 	}
 
-	static reference get-value(){static reference get-value((function<reference(reference)>)[](time-value-choices focus, reference kind) -> degree
+	/*static reference get-value(){static reference get-value((function<reference(reference)>)[](time-value-choices focus, reference kind) -> degree
 	{
 		return {focus.time-values()[kind]};
-	}); return get-value;}
+	}); return get-value;}*/
 	DEFINE(reference,,method-kind-get-value)
 
 	// let's set it up with methods
@@ -419,7 +424,7 @@ public:
 	}
 
 private:
-	std::unordered_map<reference, degree_t> & time-values()
+	data-type & time-values()
 	{
 		return reference::data<data-type>();
 	}
