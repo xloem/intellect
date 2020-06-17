@@ -47,13 +47,13 @@ reference::reference(bool ***** token_for_making_null_reference) {}
 reference reference::operator()(reference kind, initializer_list<reference> parameters)
 {
 	// this is called by operators, so when it uses operators there
-	// is possibility for stack overflow.
+	// is possibility for stack overflow.  so it assigns with .shared .
+	
 	if (kind == null()) { throw presence-mistake(); }
 
 	// use method-kind-get to get kind
 	reference getter(null());
 	try {
-		// direct .shared access used to avoid operator= method usage in the method-call handler
 		getter.shared = basic-kind-get()(*this, method-kind-get()).pointer();
 	} catch (reference) { }
 	if (getter == null()) {
@@ -66,7 +66,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 		method.shared = getter(*this, kind).pointer();
 	} catch (reference) { }
 	if (method == null()) {
-		// here default methods are built in for things the getter doesn't handle
+		//method = kind; // <- this will simplify things, and may be a comparable hack to the below
 		if (kind == method-kind-get()) {
 			method = basic-kind-get();
 		} else if (kind == method-kind-set()) {
@@ -125,7 +125,8 @@ reference reference::basic-kind-get(){static reference basic-kind-get((function<
 	}
 }); return basic-kind-get;}
 
-reference reference::basic-kind-set(){static reference basic-kind-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
+//reference reference::basic-kind-set(){static reference basic-kind-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
+METHOD reference reference::basic-kind-set(reference focus, reference kind, reference value)
 {
 	if (!focus.pointer()) { throw presence-mistake(); }
 	auto & map = focus.pointer()->data.get<part::kinded>();
@@ -139,7 +140,8 @@ reference reference::basic-kind-set(){static reference basic-kind-set((function<
 		result.first->second = value;
 		return old-value;
 	}
-}); return basic-kind-set;}
+}
+//}); return basic-kind-set;}
 
 reference reference::basic-get-all-kinds(){static reference basic-get-all-kinds((function<reference(reference)>)[](reference focus) -> reference
 {

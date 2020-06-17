@@ -39,10 +39,12 @@ public:
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
 	// get an immediate property; returns null if nonpresent
+	//METHOD reference basic-kind-get(reference focus, reference kind);
 	static reference basic-kind-get/*(reference focus, reference kind)*/();
 
 	// set an immediate property, returns old value
-	static reference basic-kind-set/*(reference focus, reference kind, reference value)*/();
+	METHOD reference basic-kind-set(reference focus, reference kind, reference value);
+	//static reference basic-kind-set/*(reference focus, reference kind, reference value)*/();
 
 	// get all immediate property kinds, ordered
 	static reference basic-get-all-kinds/*(reference focus)*/();
