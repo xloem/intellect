@@ -23,11 +23,11 @@ int main()
 	error(from_true != "true", "bool string not 'true'");
 	error(from_false != "false", "bool string not 'false'");
 
-	string from_integer(314159265);
-	error(from_integer != "314159265", "integer string not '3141592265'");
+	string from_integer(3141593);
+	error(from_integer != "3141593", "integer string not '3141593'");
 
-	string from_real(3.14159265);
-	error(from_real != "3.14159265", "real string '" + from_real + "' instead of 3.14159265");
+	string from_real(3.141593);
+	error(from_real != "3.141593", "real string '" + from_real + "' instead of 3.141593");
 
 	string from_pointer((void*)0xaaaa480);
 	error(from_pointer != "0xaaaa480", "pointer string not '0xaaaa480'");
@@ -41,7 +41,7 @@ int main()
 	hello_world += "world";
 	error(hello_world != "hello, world", "operator+= not 'hello, world'");
 
-	for (size_t i = 0; i < 12; ++ i) {
+	for (unsigned long i = 0; i < 12; ++ i) {
 		error(hello_world[i] != "hello, world"[i], "operator[] incorrect");
 	}
 

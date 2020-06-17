@@ -147,12 +147,12 @@ string & string::operator=(string const & other)
 	return *this;
 }
 
-char & string::operator[](size_t index)
+char & string::operator[](unsigned long index)
 {
 	return (*storage)[index];
 }
 
-size_t string::size() const
+unsigned long string::size() const
 {
 	return storage->size();
 }

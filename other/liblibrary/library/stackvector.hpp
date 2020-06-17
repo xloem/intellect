@@ -1,21 +1,19 @@
 #pragma once
 
-#include <cstddef>
-
 namespace std {
 	template <class T> class initializer_list;
 }
 
 namespace library {
 
-template <typename T, size_t _reserved>
+template <typename T, unsigned long _reserved>
 class stackvector
 {
 public:
 	using element_type = T;
 
 	stackvector();
-	stackvector(size_t size);
+	stackvector(unsigned long size);
 	stackvector(stackvector const & other);
 	stackvector(stackvector && other);
 	stackvector(std::initializer_list<element_type> const & items);
@@ -23,13 +21,13 @@ public:
 
 	stackvector & operator=(stackvector const & other);
 	stackvector & operator=(stackvector && other);
-	element_type & operator[](size_t index);
-	element_type const & operator[](size_t index) const;
+	element_type & operator[](unsigned long index);
+	element_type const & operator[](unsigned long index) const;
 	void push_back(element_type const & value);
 	void push_back(element_type && value);
 
-	size_t size() const;
-	void resize(size_t new_size);
+	unsigned long size() const;
+	void resize(unsigned long new_size);
 
 	element_type * data();
 	element_type * begin();
@@ -40,7 +38,7 @@ public:
 	element_type const * end() const;
 private:
 	element_type storage[_reserved];
-	size_t _size;
+	unsigned long _size;
 };
 
 

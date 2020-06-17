@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstddef>
-
 namespace std {
 	template <class T> class initializer_list;
 }
@@ -15,7 +13,7 @@ public:
 	using element_type = T;
 
 	heapvector();
-	heapvector(size_t size);
+	heapvector(unsigned long size);
 	heapvector(heapvector const & other);
 	heapvector(heapvector && other);
 	heapvector(std::initializer_list<element_type> const & items);
@@ -23,12 +21,12 @@ public:
 
 	heapvector & operator=(heapvector const & other);
 	heapvector & operator=(heapvector && other);
-	element_type & operator[](size_t index);
-	element_type const & operator[](size_t index) const;
+	element_type & operator[](unsigned long index);
+	element_type const & operator[](unsigned long index) const;
 	void push_back(element_type const & value);
 	void push_back(element_type && value);
 
-	size_t size() const;
+	unsigned long size() const;
 
 	element_type * data();
 	element_type * begin();

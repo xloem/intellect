@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstddef>
+#include <ciso646> // empty in c++ plus sets up glibcxx define
 
 namespace std {
 	template <class C> struct char_traits;
 	template <class C> class allocator;
 #if _GLIBCXX_USE_CXX11_ABI
-	namespace __cxx11 {
+	inline namespace __cxx11 {
 #endif
 	template <class C, class T, class A> class basic_string;
 #if _GLIBCXX_USE_CXX11_ABI
@@ -19,7 +19,7 @@ namespace std {
 namespace library {
 
 template <typename element_type> class heapvector;
-template <typename element_type, size_t reserved> class stackvector;
+template <typename element_type, unsigned long reserved> class stackvector;
 
 class string
 {
@@ -46,7 +46,7 @@ public:
 		}
 	}
 
-	explicit string(bool);
+	string(bool);
 	string(char); string(unsigned char);
 	string(short); string(unsigned short);
 	string(int); string(unsigned int);
@@ -65,15 +65,16 @@ public:
 
 	string & operator+=(string const & other);
 	string & operator=(string const & other);
-	char & operator [](size_t index);
-	size_t size() const;
+	char & operator [](unsigned long index);
+	unsigned long size() const;
+
 	char * data();
 	char * begin();
 	char * end();
 
 	struct range {
-		size_t begin;
-		size_t end;
+		unsigned long begin;
+		unsigned long end;
 	};
 	// first range of each result is whole match; rest are subexpressions
 	heapvector<stackvector<range, 10>> regular_expression(string expression) const;

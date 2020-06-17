@@ -23,7 +23,7 @@ heapvector<element_type>::heapvector()
 { }
 
 template <typename element_type>
-heapvector<element_type>::heapvector(size_t size)
+heapvector<element_type>::heapvector(unsigned long size)
 : heapvector()
 {
 	vec.reserve(size);
@@ -58,13 +58,13 @@ heapvector<element_type> & heapvector<element_type>::operator=(heapvector && oth
 }
 
 template <typename element_type>
-element_type & heapvector<element_type>::operator[](size_t index)
+element_type & heapvector<element_type>::operator[](unsigned long index)
 {
 	return vec[index];
 }
 
 template <typename element_type>
-element_type const & heapvector<element_type>::operator[](size_t index) const
+element_type const & heapvector<element_type>::operator[](unsigned long index) const
 {
 	return vec[index];
 }
@@ -82,7 +82,7 @@ void heapvector<element_type>::push_back(element_type && value)
 }
 
 template <typename element_type>
-size_t heapvector<element_type>::size() const
+unsigned long heapvector<element_type>::size() const
 {
 	return vec.size();
 }
