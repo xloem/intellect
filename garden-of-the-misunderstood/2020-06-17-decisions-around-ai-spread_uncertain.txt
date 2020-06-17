@@ -1,0 +1,26 @@
+PLEASE SAVE
+around AI dev: contains at the bottom a proposed view that aids with transparency-loner conflicts, but leaves out the concern of mind-control.
+
+on time spent on time-saving investment
+	how much?
+
+considering growth.
+		if the time-saving investment lasts forever, as much time as possible should be spent on it.
+		no time-saving investment lasts forever, though.
+	
+		you wuold estimate how much time you'd save per-unit-time from the investment
+		and multiply by how long it is likely to last
+		and compare.
+
+liblibrary internals are compiling in 2-4 seconds
+liblibrary external compiles in .247 seconds; up from .140
+	check and see if the difference is incidental <- how was this decision made?
+						possible drop is almost double, and checking it takes little time.  _working_ it could take a long time.
+
+[it sounds like you need to fully understand the nature of life to make an AI using optimized, generaized constructs from the start ... otherwise you
+	 head down an alley you didn't fully understand and spnd a long time resolving it.]
+		[we suspect there are shortcuts]
+	[it looks like you foudn a way of optimziing identifying that and resopnding to it, and are struggling to use that way at all, because
+	 you don't have the nature-of-life parts needed to apply it.]
+		[we can't tell if that is true, or if we are midn-controlle to make it hard.  if the above two lines are true they significantly
+		 aid in planning safe-release or group-work, which is at least much faster, and more communal.]
