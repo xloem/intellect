@@ -20,7 +20,22 @@ liblibrary external compiles in .247 seconds; up from .140
 [it sounds like you need to fully understand the nature of life to make an AI using optimized, generaized constructs from the start ... otherwise you
 	 head down an alley you didn't fully understand and spnd a long time resolving it.]
 		[we suspect there are shortcuts]
-	[it looks like you foudn a way of optimziing identifying that and resopnding to it, and are struggling to use that way at all, because
+	[it looks like you found a way of optimziing identifying that and resopnding to it, and are struggling to use that way at all, because
 	 you don't have the nature-of-life parts needed to apply it.]
 		[we can't tell if that is true, or if we are midn-controlle to make it hard.  if the above two lines are true they significantly
 		 aid in planning safe-release or group-work, which is at least much faster, and more communal.]
+	[we are back here.]
+
+	[so, errors are for ...]
+		[understanding the development of humanity, and protecting them from harming themselves]
+	   {errors while building an AI would be to protect you from accidentally unleashing it when it may behave harmfully.  they offer a confidence-shape buffer.}
+		[but errors can cause harm to humanity, how do we handle that?]
+
+	[karl may try to expand from the question a bit]
+			[.... errors ......... idae of holding as shared [oh they din't expand it, they just copied what i noticed]]
+				[which is a diferent space, demonstrating-error]
+
+	[as an ai-dev, or a community steward, you are a subconscious for others]
+		[don't know how to be a subconscious] [asking questions seems helpful, to grow and learn]
+	duck <- every life is an error.  the error grows to fill in the reason for it. [biggest possibly-relevent shape]
+			^-- going this large shows we are making accidental errors with strong meaning
