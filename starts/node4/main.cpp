@@ -152,7 +152,7 @@ public:
 		{
 			throw kindness-mistake();
 		}
-	};
+	}
 
 	reference-bool(bool value)
 	: of-kind(value ? bool-true : bool-false)
