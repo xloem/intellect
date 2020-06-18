@@ -1,0 +1,21 @@
+our current distraction is a reason-system human-reviewable.  it looks really really core.
+
+reasons:
+	'label-on-something' has-a-reason
+		reason-being-valid has-a-reason [a concern?]
+
+
+
+		a 'reason' is a label
+very simple.  please put on blockchain. [this closes AI and consensus coding work.]
+	relates: labels are life.  being-valid-or-not is a label.
+		oh yes.  labels are full of an infinitely deep and complex network of reasons. 
+		labels are yes-or-no in a context i suppose.  proposals would work
+please do thi sucessfully now.  with an easy way.
+
+
+
+let us define proposals.  idea, proposal, norm.
+
+we need a structure to put the todo list in.  can we make the numbers be string labels, for thoughts.
+	let's try javascript
