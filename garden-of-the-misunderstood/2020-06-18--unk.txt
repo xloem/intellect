@@ -1,0 +1,23 @@
+put-simple-reason-system-on-blockchain.  prioritize ease and efficiency.
+	reason: obvious
+need a way to do this [reason: actions need ways]
+	way: make a javascript client that accesses the bsv blockchain or skynet.  reason: tools we are familiar with.  reason: provides ease of use on many devices
+		concern: hard to use from console
+	reveal: we want a c++ app that uses the blockchain as a datastore.  it can serialize data into the blockchain, whcih javascript coudl read when easier.
+		^-- this is more supported than the obvious nodejs solution.  it provides for logs of binary code execution to be store alongside their results.
+let		[OR we could use a simple scripting language]
+let us give the reason form to bsv.
+	-> BSV is phoenixing.  global-metanet-graph
+	-> the plan is to make our interfaces interoperate with arbitrary other interfaces.  use a local-way to store protocol.
+		[our protocol is likely outdated]
+				[not-matter; goal is soon-success,access-here.  _any_ matches-rest-of-goal]
+		[okay, just use bsvup; you know it already.  link inside git: then it's git-clonable.  [THANK YOU! -unk]]
+	reason-structure-lost
+using unexpectedness
+		files work.  review-on-internet?
+		D:// url as git.
+			store files on skynet
+			latest update is link to skynet
+		please place the linking on blockchain
+let us just use todo-file!  we ignore the other attribute-requests!  reason: need-consistent-reasons-in-local-cognition!  reason: obvious [could prove by showing life with and without behavior that grows based on consistent reasons in an environment analogous to that of humans]
+	todo-file doesn't have the reason structure, and is inhibited.
