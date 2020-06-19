@@ -3,6 +3,10 @@
 # hey this isn't complicated, can you convert to in-system yet?
 # [can python get in-system? might be nonrelevent unknown]
 
+# this is getting complicated.  we often spend investment-time.
+# using feature-addition to propose learning-around simplifying/integrating
+# (1) please learn around simplify/integrate parsing instead of adding features
+
 # NOTE: method-parsing is hard to maintain because it was made as a quick
 #       set of sed calls.  it might be simplest to compare the content of a
 #	.*pp file to a .*xx file to see the implementation.
@@ -48,27 +52,12 @@ sed 's/^\(\t*\)class \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n&/' |
 sed 's/^\(\t*\)struct \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n&/' |
 sed 's/^\(\t*\)};\s*$/&\n#undef ___CLASSNAME_\1/' |
 # method declarations
-# [X] static method object
-# [X] prefix method object with basic-
-# [X] static method- kind object
-# [X] member function
 sed 's/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*;\s*$/\1DECLARE basic-\3;\n\1DECLARE method-\3;\n\1\2 \3(\4);/' |
 # one line in-header method definitions
-# [X] static method object
-# [X] prefix method object with basic-
-# [X] static method- kind object
-# [X] member function
 sed '/^\t*METHOD.*)\s*{.*}\s*$/ { s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{\(.*\)}\s*$/\1DEFINE method-\3;\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1static reference \& basic-\3(){\/\*``METHOD``\*\/static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference\/\*````\*\/, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/> { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self; \5 }}); return storage;}/; s/\sreturn /return (reference)(__return-type)/; }' |
 # multi-line in-header method definitions
-# [X] static method object
-# [X] prefix method object with basic-
-# [X] static method- kind object
-# [X] member function
 sed '/\tMETHOD/,/^\t}/ { /^\t*METHOD.*)\s*$/N; s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{/\/\*``METHOD``\*\/\1DEFINE method-\3;\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1static reference \& basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/ { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^\s}/&}); return storage;}/ }' |
 # out-of-header method definitions
-# [X] static method object
-# [X] static kind object
-# [X] member function
 sed '/^METHOD/,/^}/ { /^METHOD.*)\s*$/N; s/METHOD\s\s*\(\S*\)\s\s*\(\S*\)::\([^\t :(]*\)\s*(\([^)]*\))\s*/\/\*``METHOD``\*\/DEFINE \2::method-\3;\n\1 \2::\3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\nreference \& \2::basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\1``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\1``\*\/ { using __return-type = \1; \2 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^}/&}}); return storage;}/ }' |
 # mutation of subtypes to references in methods
 	# this is intended to convert the type-name pairs into just 'reference'.  that means the type and name are both dropped.
@@ -77,7 +66,9 @@ sed ':loop s/\(\*``METHOD``\*.*function<reference\/\*``[^\*]*``\*\/([^)]* \)\(\S
 	#        v- \1, preceding text v- \2, type v- \3, name then \4 end-symbol
 sed ':loop s/^\(\[\]([^)]* \)\(\S*[^\/,)]\) \([^ ,)]*\)\([,)][^{]*{\)/\1reference\/\*````\*\/ __uncasted_\3\4 \2 \3 = __uncasted_\3;/g;t loop' |
 # removal of types from member function handoff
-sed ':loop s/\(\/\*````typeremove````\*\/{[^}*]* \)\(\S[^\/,}]*\)\( [^ ,}]*\)\([,}]\)/\1 \3\4/;t loop' |
+sed ':loop s/\(\/\*````typeremove````\*\/{[^}*]* \)\([^ ,}][^ \/,}]*\)\( [^ ,}]*\)\([,}]\)/\1 \3\4/;t loop' |
+# removal of trailing commas for single-argument methods
+sed 's/, )/)/g' |
 # preservation of void returns
 sed 's/reference\/\*``\s*void\s*``\*\//void/g' |
 # removal of marking comments, in case already in a comment
@@ -93,8 +84,8 @@ sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^(:; \t]*\)\s*;\s*$/static \1 \& \2() { sta
 sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^(:; \t]*\)(\([^)]*\))\s*;\s*$/static \1 \& \2() { static \1 storage(\3); return storage; }/' |
 # out-of-header scoped definitions
 sed 's/^\t*DEFINE\s\s*\([^; \t]*\)::\([^(:; \t]*\)\s*;\s*$/reference \& \1::\2() { static reference storage({string("\2")}); return storage; }/' |
-sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^; \t]*\)::\([^(:; \t]*\)\s*;\s*$/static \1 \& \2::\3() { static \1 storage; return storage; }/' |
-sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^; \t]*\)::\([^(:; \t]*\)(\([^)]*\))\s*;\s*$/static \1 \& \2::\3() { static \1 storage(\4); return storage; }/' |
+sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^; \t]*\)::\([^(:; \t]*\)\s*;\s*$/\1 \& \2::\3() { static \1 storage; return storage; }/' |
+sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^; \t]*\)::\([^(:; \t]*\)(\([^)]*\))\s*;\s*$/\1 \& \2::\3() { static \1 storage(\4); return storage; }/' |
 # hyphens
 sed ':loop s/\([a-zA-Z]\)-\([a-zA-Z]\)/\1__\2/g;t loop' |
 sed ':loop s/^\([^"]*"[^"]*"\)*\([^"]*"[^"]*\)__\([^"]*"\)/\1\2-\3/;t loop' |

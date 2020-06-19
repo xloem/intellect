@@ -68,52 +68,39 @@ public:
 	// METHOD call, uses kind-get to get kind, could default to basic functions
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
-	// get an immediate property; returns null if nonpresent
-	
+	// methods are indirect.  for direct access, use basic-*()(self, property)
+	// each `METHOD return_type name` makes 3 functions:
+	// 	static reference method-name(); // returns the kind used to change the method
+	// 	static reference basic-name(); // the default implementation
+	// 	reference name(); // a member functiont that looks up and calls it
+
+	// get a kinded property; returns null if nonpresent
+	// this method controls all other methods by providing their default values, and can be changed
 	METHOD reference kind-get(reference kind);
 
-	//static reference basic-kind-get/*(reference focus, reference kind)*/();
-
-	// set an immediate property, returns old value
-	
+	// set a kinded property, returns old value
 	METHOD reference kind-set(reference kind, reference value);
 
-	//static reference basic-kind-set/*(reference focus, reference kind, reference value)*/();
+	// get all kinded property kinds, ordered
+	METHOD reference get-all-kinds();
 
-	// get all immediate property kinds, ordered
-	static reference basic-get-all-kinds/*(reference focus)*/();
+	// get the count of ordered properties
+	METHOD reference order-count();
 
-	// get the count of immediate properties
-	static reference basic-order-count/*(reference focus)*/();
+	// get an ordered property by index.  index is expected to have index_t data
+	METHOD reference order-get(reference index);
 
-	// get an immediate property by ordered number
-	static reference basic-order-get/*(reference focus, reference index)*/();
+	// set an ordered property by index_t number [setting at index=count extendss]
+	METHOD reference order-set(reference index, reference value);
 
-	// set an immediate property by ordered number, extending if needed
-	static reference basic-order-set/*(reference focus, reference index)*/();
-
-	// get an indirect property
-	//reference kind-get(reference kind) { return (*this)(method-kind-get(), {kind}); }
-	
-	// set an indirect property, returns old value
-	//reference kind-set(reference kind, reference value) { return (*this)(method-kind-set(), {kind, value}); }
-
-	// get all property kinds, ordered, indirectly
-	reference get-all-kinds() { return (*this)(method-get-all-kinds(), {}); }
-	
-	// count properties indirectly
-	reference order-count() { return (*this)(method-order-count(), {}); }
-
-	// get a property by index indirectly
-	reference order-get(reference index) { return (*this)(method-order-get(), {index}); }
-
-	// set a property by index indirectly [setting at index=count extends]
-	reference order-set(reference index, reference value) { return (*this)(method-order-set(), {index, value}); }
+	// Warning: IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
 
 	// defaults to reseating this reference
+	METHOD reference operator-equals(reference other);
 	reference operator=(reference other) { return (*this)(method-operator-equals(), {other}); }
 
-	// no default; kind-operator-brackets must be set to not throw
+	// no default; method-operator-brackets property must be set to not throw
+	METHOD reference operator-brackets(reference index);
 	reference operator[](reference index) { return (*this)(method-operator-brackets(), {index}); }
 
 
@@ -124,15 +111,6 @@ public:
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
-	//static reference& method-kind-get(); // this method controls all other methods by providing their values
-	//static reference& method-kind-set();
-	static reference& method-get-all-kinds();
-	static reference& method-order-count();
-	static reference& method-order-get();
-	static reference& method-order-set();
-	// IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
-	static reference& method-operator-equals();
-	static reference& method-operator-brackets();
 
 	//static reference kind-method; // event handling by instrumenting operators()?
 

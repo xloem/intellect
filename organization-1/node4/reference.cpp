@@ -113,8 +113,6 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	}
 }
 
-//reference reference::basic-kind-get(){static reference basic-kind-get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
-
 METHOD reference reference::kind-get(reference kind)
 {
 	if (!self.pointer()) { throw presence-mistake(); }
@@ -126,10 +124,6 @@ METHOD reference reference::kind-get(reference kind)
 		return result->second;
 	}
 }
-
-//); return basic-kind-get;}
-
-//reference reference::basic-kind-set(){static reference basic-kind-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
 
 METHOD reference reference::kind-set(reference kind, reference value)
 {
@@ -147,42 +141,38 @@ METHOD reference reference::kind-set(reference kind, reference value)
 	}
 }
 
-//}); return basic-kind-set;}
-
-reference reference::basic-get-all-kinds(){static reference basic-get-all-kinds((function<reference(reference)>)[](reference focus) -> reference
+METHOD reference reference::get-all-kinds()
 {
-	if (!focus.pointer()) { throw presence-mistake(); }
-	auto & map = focus.pointer()->data.get<part::kinded>();
+	if (!self.pointer()) { throw presence-mistake(); }
+	auto & map = self.pointer()->data.get<part::kinded>();
 	reference result;
 	for (auto & item : map) {
 		result.order-set(result.order-count(), item.first);
 	}
 	return result;
-}); return basic-get-all-kinds;}
+}
 
-reference reference::basic-order-count(){static reference basic-order-count((function<reference(reference)>)[](reference focus) -> reference
+METHOD reference reference::order-count()
 {
-	if (!focus.pointer()) { throw presence-mistake(); }
-	return (any)(index_t)focus.pointer()->data.get<part::ordered>().size();
-}); return basic-order-count;}
+	if (!self.pointer()) { throw presence-mistake(); }
+	return (any)(index_t)self.pointer()->data.get<part::ordered>().size();
+}
 
-reference reference::basic-order-get(){static reference basic-order-get((function<reference(reference, reference)>)[](reference focus, reference index) -> reference
+METHOD reference reference::order-get(reference index)
 {
-	if (!focus.pointer()) { throw presence-mistake(); }
+	if (!self.pointer()) { throw presence-mistake(); }
 	index_t index-data = index.data<index_t>();
-	auto & vector = focus.pointer()->data.get<part::ordered>();
+	auto & vector = self.pointer()->data.get<part::ordered>();
 	if (index-data < 0 || index-data >= (index_t)vector.size()) {
 		throw presence-mistake();
 	}
 	return vector[index-data];
-}); return basic-order-get;}
+}
 
-// this appears the same as the in-class method except it doesn't have static
-//  in front of it, and does have a classspace scope specifier.
-reference reference::basic-order-set(){static reference basic-order-set((function<reference(reference, reference, reference)>)[](reference focus, reference index, reference value) -> reference
+METHOD reference reference::order-set(reference index, reference value)
 {
-	if (!focus.pointer()) { throw presence-mistake(); }
-	auto & ordered-parts = focus.pointer()->data.get<part::ordered>();
+	if (!self.pointer()) { throw presence-mistake(); }
+	auto & ordered-parts = self.pointer()->data.get<part::ordered>();
 	index_t index-data = index.data<index_t>();
 	if (value != null()) {
 		if (index-data < 0 || index-data > (index_t)ordered-parts.size()) {
@@ -204,7 +194,7 @@ reference reference::basic-order-set(){static reference basic-order-set((functio
 		ordered-parts.erase(ordered-parts.begin() + index-data);
 		return old-item;
 	}
-}); return basic-order-set;}
+}
 
 /*
 reference reference::get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
@@ -240,17 +230,11 @@ reference reference::indirect-set((function<reference(reference,reference,refere
 */
 
 reference const& reference::null() { static reference null((bool *****)"token_for_making_null_reference"); return null; }
-DEFINE(reference, reference::, kindness-mistake)
-DEFINE(reference, reference::, presence-mistake)
+DEFINE reference reference::kindness-mistake;
+DEFINE reference reference::presence-mistake;
 
-//DEFINE(reference, reference::, method-kind-get)
-//DEFINE(reference, reference::, method-kind-set)
-DEFINE(reference, reference::, method-get-all-kinds)
-DEFINE(reference, reference::, method-order-count)
-DEFINE(reference, reference::, method-order-get)
-DEFINE(reference, reference::, method-order-set)
-DEFINE(reference, reference::, method-operator-equals)
-DEFINE(reference, reference::, method-operator-brackets)
+DEFINE reference reference::method-operator-equals;
+DEFINE reference reference::method-operator-brackets;
 
 
 /*
