@@ -8,9 +8,18 @@ using index_t = long long;
 
 class reference;
 
+// structure idea? we'd like _both_ one-directional and two-directional references,
+//                 one-directional would use wayness to get two-directional,
+//                 and need to be known about.
+//                 could just do two-directional i suppose.
+//          -> solved by inverse link wayness.
+//          	could you implement that with the other stuff?
+//          	busy atm
+
 /*
  * reference: a general class that can hold other data
  *
+ * UPDATE BELOW as methods progress
  * METHOD: preprocess.bash processes METHOD lines
  * 	they are turned into a member function that accesses the method-methodname attribute and calls it.
  *	method-methodname is made into a static function that returns a reference for the method
@@ -23,33 +32,11 @@ class reference;
  *          identify the method generally, separately.
  */
 
-	// it's a little graphwise confusing that
-	// the kind has the default as its data.
-	// it could confuse a user as to what data is relevent
-	//
-	// if they are separate:
-	// 	- two static objects works
-	// 	- finding-default
-	// 		the old plan was to have a mixin that supports hierarchical
-	// 		classes, change the getter to check the class defaults
-	// 	okay, let's assume we have class defaults.  METHOD could
-	// 	possibly call something about the class to handle that.
-	// 	how do we access them?
-	// 		the getter will need a way to find the defaults.
-	// 		it can use the of-kind reference.
-	// 		so, the method definition needs a way to add things
-	// 		to the of-kind reference.
-	// 		it can use the focus-type to do this!
-	//
-	// okay, focus-type in-header.  we can fix this by adding a #define
-	// to class definitions, specifying their type.  then we can reference
-	// the #define within the method definition.
-	//
-	// so then we'll have
-	// METHOD return-type method-name(type1 value1, type2 value2)
-	// {
-	// 	/* this = &self; self = focus;
-	// }
+	// -> METHOD can statically call a class method to register itself if needed
+	// -> of-kind will alter kind-get to return registered methods
+	// -> make a method kind static object, prefixed with method-
+	// -> make the method static object be prefixed with basic-
+	// -> make a member function that acts as the method
 
 class reference
 {
@@ -82,11 +69,15 @@ public:
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
 	// get an immediate property; returns null if nonpresent
-	//METHOD reference basic-kind-get(reference focus, reference kind);
-	static reference basic-kind-get/*(reference focus, reference kind)*/();
+	
+	METHOD reference kind-get(reference kind);
+
+	//static reference basic-kind-get/*(reference focus, reference kind)*/();
 
 	// set an immediate property, returns old value
-	METHOD reference basic-kind-set(reference kind, reference value);
+	
+	METHOD reference kind-set(reference kind, reference value);
+
 	//static reference basic-kind-set/*(reference focus, reference kind, reference value)*/();
 
 	// get all immediate property kinds, ordered
@@ -102,10 +93,10 @@ public:
 	static reference basic-order-set/*(reference focus, reference index)*/();
 
 	// get an indirect property
-	reference kind-get(reference kind) { return (*this)(method-kind-get(), {kind}); }
+	//reference kind-get(reference kind) { return (*this)(method-kind-get(), {kind}); }
 	
 	// set an indirect property, returns old value
-	reference kind-set(reference kind, reference value) { return (*this)(method-kind-set(), {kind, value}); }
+	//reference kind-set(reference kind, reference value) { return (*this)(method-kind-set(), {kind, value}); }
 
 	// get all property kinds, ordered, indirectly
 	reference get-all-kinds() { return (*this)(method-get-all-kinds(), {}); }
@@ -116,7 +107,7 @@ public:
 	// get a property by index indirectly
 	reference order-get(reference index) { return (*this)(method-order-get(), {index}); }
 
-	// set a property by index indirectly
+	// set a property by index indirectly [setting at index=count extends]
 	reference order-set(reference index, reference value) { return (*this)(method-order-set(), {index, value}); }
 
 	// defaults to reseating this reference
@@ -133,8 +124,8 @@ public:
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
-	static reference& method-kind-get(); // this method controls all other methods by providing their values
-	static reference& method-kind-set();
+	//static reference& method-kind-get(); // this method controls all other methods by providing their values
+	//static reference& method-kind-set();
 	static reference& method-get-all-kinds();
 	static reference& method-order-count();
 	static reference& method-order-get();

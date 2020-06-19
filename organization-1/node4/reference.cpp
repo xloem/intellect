@@ -114,7 +114,8 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 }
 
 //reference reference::basic-kind-get(){static reference basic-kind-get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
-METHOD reference reference::basic-kind-get(reference kind)
+
+METHOD reference reference::kind-get(reference kind)
 {
 	if (!self.pointer()) { throw presence-mistake(); }
 	auto & map = self.pointer()->data.get<part::kinded>();
@@ -124,10 +125,13 @@ METHOD reference reference::basic-kind-get(reference kind)
 	} else {
 		return result->second;
 	}
-}//); return basic-kind-get;}
+}
+
+//); return basic-kind-get;}
 
 //reference reference::basic-kind-set(){static reference basic-kind-set((function<reference(reference,reference,reference)>)[](reference focus, reference kind, reference value) -> reference
-METHOD reference reference::basic-kind-set(reference kind, reference value)
+
+METHOD reference reference::kind-set(reference kind, reference value)
 {
 	if (!self.pointer()) { throw presence-mistake(); }
 	auto & map = self.pointer()->data.get<part::kinded>();
@@ -142,6 +146,7 @@ METHOD reference reference::basic-kind-set(reference kind, reference value)
 		return old-value;
 	}
 }
+
 //}); return basic-kind-set;}
 
 reference reference::basic-get-all-kinds(){static reference basic-get-all-kinds((function<reference(reference)>)[](reference focus) -> reference
@@ -238,8 +243,8 @@ reference const& reference::null() { static reference null((bool *****)"token_fo
 DEFINE(reference, reference::, kindness-mistake)
 DEFINE(reference, reference::, presence-mistake)
 
-DEFINE(reference, reference::, method-kind-get)
-DEFINE(reference, reference::, method-kind-set)
+//DEFINE(reference, reference::, method-kind-get)
+//DEFINE(reference, reference::, method-kind-set)
 DEFINE(reference, reference::, method-get-all-kinds)
 DEFINE(reference, reference::, method-order-count)
 DEFINE(reference, reference::, method-order-get)

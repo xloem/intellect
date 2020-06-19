@@ -402,7 +402,7 @@ public:
 	// that return a reference.
 	METHOD reference get-value(reference kind)
 	{
-		// note: focus is the method-equivalent 'this'
+		// note: focus is the method-equivalent 'this' [renamed self]
 		return self.time-values()[kind];
 	}
 
@@ -415,15 +415,16 @@ public:
 	//{
 	//	return {focus.time-values()[kind]};
 	//}); return get-value;}
-	DEFINE(reference,,method-kind-get-value)
+
+	//DEFINE(reference,,method-kind-get-value)
 
 	// let's set it up with methods
 
-	degree get-value(reference kind)
-	{
-		// this specifically gets the value of a kind
-		return (*this)(method-kind-get-value(), {kind}); 
-	}
+	//degree get-value(reference kind)
+	//{
+	//	// this specifically gets the value of a kind
+	//	return (*this)(method-kind-get-value(), {kind}); 
+	//}
 
 private:
 	data-type & time-values()
