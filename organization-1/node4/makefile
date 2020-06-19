@@ -6,8 +6,7 @@ test: main
 main: main.o reference.o
 
 clean:
-	-rm main
-	-rm *.o *.*xx
+	-rm main *.o *.*xx
 
 .SUFFIXES:
 

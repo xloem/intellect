@@ -68,8 +68,8 @@ using namespace std;
 // and bools are a kind with only two members
 
 class reference-bool;
-extern reference-bool & bool-false;
-extern reference-bool & bool-true;
+DECLARE reference-bool bool-false;
+DECLARE reference-bool bool-true;
 
 // maps.
 // a map is just an ordered list of ways
@@ -98,11 +98,11 @@ extern reference-bool & bool-true;
 // 			... okay that would work.  each class would pass its method constructor to of-kind using a template parameter.
 // 			    of-kind could pvoide a function to ensure dependencies were instantiated
 // 			but you'd want reference itself to be a kind, to ensure static dependency.
-template <reference & kind>
+template <reference(* kind)()>
 class of-kind : public reference
 {
 public:
-	static reference is-of-kind;
+	DECLARE reference is-of-kind;
 
 	of-kind(reference const & other)
 	: reference(other)
@@ -114,18 +114,18 @@ public:
 
 	static reference-bool & check-is(reference candidate)
 	{
-		if (candidate == null()) { return bool-false; }
-		return candidate.kind-get(kind) == is-of-kind ? bool-true : bool-false;
+		if (candidate == null()) { return bool-false(); }
+		return candidate.kind-get(kind()) == is-of-kind() ? bool-true() : bool-false();
 	}
 
 	static void ensure-is(reference member)
 	{
-		member.kind-set(kind, is-of-kind);
+		member.kind-set(kind(), is-of-kind());
 	}
 
 	static void must-be(reference member)
 	{
-		if (&check-is(member) == &bool-false) {
+		if (&check-is(member) == &bool-false()) {
 			throw kindness-mistake();
 		}
 	}
@@ -134,14 +134,15 @@ protected:
 	of-kind(any data = {})
 	: reference(data)
 	{
-		kind-set(kind, is-of-kind);
+		kind-set(kind(), is-of-kind);
 	}
 };
 
-template <reference & kind>
-reference of-kind<kind>::is-of-kind;
+template <reference(* kind)()>
+DEFINE reference of-kind<kind>::is-of-kind;
 
-reference kind-bool(string("kind-bool"));
+
+DEFINE reference kind-bool; // where does constexpr come from ??
 class reference-bool : private of-kind<kind-bool>
 {
 public:
@@ -179,18 +180,18 @@ private:
 	reference-bool(bool value, bool* token_for_instance_construction)
 	: of-kind(value)
 	{ }
-	static reference-bool bool-true;
-	static reference-bool bool-false;
+	DECLARE reference-bool bool-true;
+	DECLARE reference-bool bool-false;
 };
 
 
-reference kind-connection-objects;
+DEFINE reference kind-connection-objects;
 class connection-objects : public of-kind<kind-connection-objects>
 {
 };
 
-reference-bool reference-bool::bool-true(true, (bool*)0);
-reference-bool reference-bool::bool-false(false, (bool*)0);
+DEFINE reference-bool reference-bool::bool-true(true, (bool*)0);
+DEFINE reference-bool reference-bool::bool-false(false, (bool*)0);
 
 // map would be a good candidate for being used before declared.
 // it would be great to be able to index any reference with a map.
@@ -245,12 +246,12 @@ reference-bool reference-bool::bool-false(false, (bool*)0);
 
 // let's offer methods
 
-reference kind-map-maker;
+DEFINE reference kind-map-maker;
 class map-maker : public of-kind<kind-map-maker>
 {
 public:
-	static reference location;
-	static reference map;
+	DECLARE reference location;
+	DECLARE reference map;
 
 	static map-maker make(reference start) // be good if start could be a map
 	{
@@ -277,8 +278,8 @@ public:
 	// this can be offered by indexing-by-maps and preservation of relevent
 	// parts.
 };
-reference map-maker::location;
-reference map-maker::map;
+DEFINE reference map-maker::location;
+DEFINE reference map-maker::map;
 
 // time-value.
 // we use connections that have value to them.
@@ -369,7 +370,7 @@ public:
 
 using degree_t = double;
 
-reference kind-degree;
+DEFINE reference kind-degree;
 class degree : public of-kind<kind-degree>
 {
 public:
@@ -386,7 +387,7 @@ public:
 	}
 };
 
-reference kind-time-value-choices("time-value-choices");
+DEFINE reference kind-time-value-choices("time-value-choices");
 class time-value-choices : public of-kind<kind-time-value-choices>
 {
 	using data-type = std::unordered_map<reference, degree_t>;

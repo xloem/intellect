@@ -1,24 +1,23 @@
 CXX=test/measure g++
+#CXX=g++
 LINK.o=${CXX}
-CXXFLAGS=-std=c++17 -ggdb -Wall -Werror -O0
+CXXFLAGS=-time -std=c++17 -ggdb -Wall -Werror -O0
 CPPFLAGS=-I.
 LDLIBS=-Lsource -llibrary
 PREFIX=/usr/local
 
 SHELL=bash
 
-all: test
-depend: .depend
+all: tests
+tests: test/teststring-run test/testvectors-run test/test-run
 
-test: test/teststring-run test/testvectors-run test/test-run
-
-clean:
-	-rm .depend */*.a */*.o
+clean: depend
+	-rm */*.a */*.o
 
 %-run: source/liblibrary.a %
 	./$*
 
-source/liblibrary.a: source/string.o source/quick.o source/framebuffer.o source/assert.o
+source/liblibrary.a: source/string.o source/quick.o source/framebuffer.o source/assert.o source/regular_expression.o
 	ar cr "$@" $^
 
 scratch/demo: scratch/demo.o source/liblibrary.a
@@ -27,9 +26,8 @@ test/teststring: test/teststring.o source/liblibrary.a
 test/testvectors: test/testvectors.o source/liblibrary.a
 test/test: test/test.o source/liblibrary.a
 
-.depend: $(wildcard */*.cpp)
-	-rm -rf .depend
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM $^ -MF ./.depend
+depend:
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM $(wildcard */*.cpp) > .depend
 include .depend
 
 %.E: %.cpp

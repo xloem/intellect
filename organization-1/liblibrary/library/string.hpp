@@ -18,8 +18,7 @@ namespace std {
 
 namespace library {
 
-template <typename element_type> class heapvector;
-template <typename element_type, unsigned long reserved> class stackvector;
+template <typename> struct range;
 
 class string
 {
@@ -46,6 +45,7 @@ public:
 		}
 	}
 
+	// these are parsing-related.  make string a subclass of heapvector, if needed, but might make more sense to make converters.
 	string(bool);
 	string(char); string(unsigned char);
 	string(short); string(unsigned short);
@@ -68,16 +68,14 @@ public:
 	char & operator [](unsigned long index);
 	unsigned long size() const;
 
-	char * data();
-	char * begin();
-	char * end();
+	library::range<char *> range();
+	library::range<char const *> range() const;
 
-	struct range {
-		unsigned long begin;
-		unsigned long end;
-	};
-	// first range of each result is whole match; rest are subexpressions
-	heapvector<stackvector<range, 10>> regular_expression(string expression) const;
+	char * data(); char const * data() const;
+	char * begin(); char const * begin() const;
+	char * end(); char const * end() const;
+
+	void replace(library::range<char *>, string const & with);
 
 	char const * c_str() const;
 

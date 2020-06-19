@@ -31,6 +31,16 @@ heapvector<element_type>::heapvector(unsigned long size)
 }
 
 template <typename element_type>
+heapvector<element_type>::heapvector(unsigned long size, element_type const * data)
+: heapvector(size)
+{
+	for (unsigned long i = 0; i < size; ++ i)
+	{
+		(*this)[i] = data[i];
+	}
+}
+
+template <typename element_type>
 heapvector<element_type>::heapvector(heapvector const & other)
 : heapvector()
 {
@@ -85,6 +95,24 @@ template <typename element_type>
 unsigned long heapvector<element_type>::size() const
 {
 	return vec.size();
+}
+
+template <typename element_type>
+unsigned long heapvector<element_type>::reserved() const
+{
+	return vec.capacity();
+}
+
+template <typename element_type>
+element_type & heapvector<element_type>::front()
+{
+	return *begin();
+}
+
+template <typename element_type>
+element_type & heapvector<element_type>::back()
+{
+	return vec[size() - 1];
 }
 
 template <typename element_type>

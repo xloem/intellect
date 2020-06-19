@@ -12,10 +12,12 @@
 #	.*pp file to a .*xx file to see the implementation.
 
 echo > "$2"
+echo "#define ___STATIC_" >> "$2"
+echo "#define ___EXTERN_ extern" >> "$2"
 #	comment out this first line to have the compiler show the preprocessor
 #	output lines in its errors
-#echo "# 1 \"$1\"" > "$2"
-cat "$1" |
+#echo "# 1 \"$1\"" >> "$2"
+
 # we can also not use methods for a bit, or try to quickly write a decision-explorer.
 # btw a quick way to make scripting is to have a list of maps between calls and a variables object, and check the variables object to see if the next-call is changed
 
@@ -47,55 +49,68 @@ cat "$1" |
 		## it would be the simplest change to use regular expressions.
 
 
+		# ==========> the ; ; } are a removed line number.
+		#             running into line number issues of unknown nature.
+
 # class name tracking
-sed 's/^\(\t*\)class \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n&/' |
-sed 's/^\(\t*\)struct \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n&/' |
-sed 's/^\(\t*\)};\s*$/&\n#undef ___CLASSNAME_\1/' |
-# method declarations
-sed 's/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*;\s*$/\1DECLARE basic-\3;\n\1DECLARE method-\3;\n\1\2 \3(\4);/' |
-# one line in-header method definitions
-sed '/^\t*METHOD.*)\s*{.*}\s*$/ { s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{\(.*\)}\s*$/\1DEFINE method-\3;\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1static reference \& basic-\3(){\/\*``METHOD``\*\/static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference\/\*````\*\/, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/> { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self; \5 }}); return storage;}/; s/\sreturn /return (reference)(__return-type)/; }' |
-# multi-line in-header method definitions
-sed '/\tMETHOD/,/^\t}/ { /^\t*METHOD.*)\s*$/N; s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{/\/\*``METHOD``\*\/\1DEFINE method-\3;\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1static reference \& basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/ { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^\s}/&}); return storage;}/ }' |
-# out-of-header method definitions
-sed '/^METHOD/,/^}/ { /^METHOD.*)\s*$/N; s/METHOD\s\s*\(\S*\)\s\s*\(\S*\)::\([^\t :(]*\)\s*(\([^)]*\))\s*/\/\*``METHOD``\*\/DEFINE \2::method-\3;\n\1 \2::\3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\nreference \& \2::basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\1``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\1``\*\/ { using __return-type = \1; \2 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^}/&}}); return storage;}/ }' |
-# mutation of subtypes to references in methods
+sed -f - "$1" >> "$2" <<-"END"
+	b skiplinenumber
+	:linenumber
+	#=
+	:skiplinenumber
+	s/^\(\)class \([^{ \t;]*\)[^;]*$/#undef ___STATIC_\n#undef ___EXTERN_\n#define ___CLASSNAME_\1 \2\n#define ___STATIC_ static\n#define ___EXTERN_ static\n&/;t linenumber
+	s/^\(\)struct \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n#define ___STATIC_ static\n#define ___EXTERN_ static\n&/;t linenumber
+	s/^\(\)};\s*$/&\n#undef ___CLASSNAME_\1\n#undef ___STATIC_\n#define ___STATIC_\n#undef ___EXTERN_\n#define ___EXTERN_ extern/;t linenumber
+	s/^\(\t\t*\)class \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n&/;t linenumber
+	s/^\(\t\t*\)struct \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n&/;t linenumber
+	s/^\(\t\t*\)};\s*$/&\n#undef ___CLASSNAME_\1/;t linenumber
+	# method declarations
+	s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*;\s*$/\1DECLARE basic-\3;\n\1DECLARE method-\3;\n\1\2 \3(\4);/;t linenumber
+	# one line in-header method definitions
+	/^\t*METHOD.*)\s*{.*}\s*$/ { s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{\(.*\)}\s*$/\1DEFINE method-\3;\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1static reference \& basic-\3(){\/\*``METHOD``\*\/static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference\/\*````\*\/, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/> { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self; \5 }}); return storage;}/; s/\sreturn /return (reference)(__return-type)/; ; }
+	# multi-line in-header method definitions
+	/\tMETHOD/,/^\t}/ { /^\t*METHOD.*)\s*$/N; s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{/\/\*``METHOD``\*\/\1DEFINE method-\3;\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1static reference \& basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/ { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^\s}/&}); return storage;}/; ; }
+	# out-of-header method definitions
+	/^METHOD/,/^}/ { /^METHOD.*)\s*$/N; s/METHOD\s\s*\(\S*\)\s\s*\(\S*\)::\([^\t :(]*\)\s*(\([^)]*\))\s*/\/\*``METHOD``\*\/DEFINE \2::method-\3;\n\1 \2::\3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\nreference \& \2::basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\1``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\1``\*\/ { using __return-type = \1; \2 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^}/&}}); return storage;}/; ; }
+	# mutation of subtypes to references in methods
 	# this is intended to convert the type-name pairs into just 'reference'.  that means the type and name are both dropped.
 	#           v--- \1, preceding text                           v-- \2, type   v-\3, name v-\4, end-symbol   v--- type and name changed to reference/*````*/
-sed ':loop s/\(\*``METHOD``\*.*function<reference\/\*``[^\*]*``\*\/([^)]* \)\(\S*[^\/,)]\)\( [^ ,)]*\)\([,)]\)/\1reference\/\*````\*\/\4/g;t loop' |
-	#        v- \1, preceding text v- \2, type v- \3, name then \4 end-symbol
-sed ':loop s/^\(\[\]([^)]* \)\(\S*[^\/,)]\) \([^ ,)]*\)\([,)][^{]*{\)/\1reference\/\*````\*\/ __uncasted_\3\4 \2 \3 = __uncasted_\3;/g;t loop' |
-# removal of types from member function handoff
-sed ':loop s/\(\/\*````typeremove````\*\/{[^}*]* \)\([^ ,}][^ \/,}]*\)\( [^ ,}]*\)\([,}]\)/\1 \3\4/;t loop' |
-# removal of trailing commas for single-argument methods
-sed 's/, )/)/g' |
-# preservation of void returns
-sed 's/reference\/\*``\s*void\s*``\*\//void/g' |
-# removal of marking comments, in case already in a comment
-sed 's/\/\*``[^\/]*``\*\///g' |
-# convert nested class indentation to differing names
-sed ':loop s/\(___CLASSNAME_*\)\t/\1_/;t loop' |
-# declarations
-sed 's/^\t*DECLARE\s\s*\([^(; \t]*\)\s*;\s*$/static reference \& \1();/' |
-sed 's/^\t*DECLARE\s\s*\(\S*\)\s\s*\([^(; \t]*\)\s*;\s*$/static \1 \& \2();/' |
-# in-header unscoped definitions
-sed 's/^\t*DEFINE\s\s*\([^(:; \t]*\)\s*;\s*$/static reference \& \1() { static reference storage({string("\1")}); return storage; }/' |
-sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^(:; \t]*\)\s*;\s*$/static \1 \& \2() { static \1 storage; return storage; }/' |
-sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^(:; \t]*\)(\([^)]*\))\s*;\s*$/static \1 \& \2() { static \1 storage(\3); return storage; }/' |
-# out-of-header scoped definitions
-sed 's/^\t*DEFINE\s\s*\([^; \t]*\)::\([^(:; \t]*\)\s*;\s*$/reference \& \1::\2() { static reference storage({string("\2")}); return storage; }/' |
-sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^; \t]*\)::\([^(:; \t]*\)\s*;\s*$/\1 \& \2::\3() { static \1 storage; return storage; }/' |
-sed 's/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^; \t]*\)::\([^(:; \t]*\)(\([^)]*\))\s*;\s*$/\1 \& \2::\3() { static \1 storage(\4); return storage; }/' |
-# hyphens
-sed ':loop s/\([a-zA-Z]\)-\([a-zA-Z]\)/\1__\2/g;t loop' |
-sed ':loop s/^\([^"]*"[^"]*"\)*\([^"]*"[^"]*\)__\([^"]*"\)/\1\2-\3/;t loop' |
-# brackets becoming parentheses
-#sed 's/\([^[]\)\[\([^[]\)/\1(\2/g' |
-#sed 's/\([^]]\)\]\([^]]\)/\1)\2/g' |
-#sed 's/\[\[/\[/g' | sed 's/\]\]/\]/g' |
-# header file name changing
-sed 's/^\(#include ".*\)hpp"/\1hxx"/' |
-cat >> "$2"
+	:loop s/\(\*``METHOD``\*.*function<reference\/\*``[^\*]*``\*\/([^)]* \)\(\S*[^\/,)]\)\( [^ ,)]*\)\([,)]\)/\1reference\/\*````\*\/\4/g;t loop
+	#        v- \1, preceding text v- \2, type v- \3, name then \4 end-symbol \
+	:loop s/^\(\[\]([^)]* \)\(\S*[^\/,)]\) \([^ ,)]*\)\([,)][^{]*{\)/\1reference\/\*````\*\/ __uncasted_\3\4 \2 \3 = __uncasted_\3;/g;t loop
+END
+sed -i -f "-" "$2" <<-"END"
+	# declarations
+	s/^\t*DECLARE\s\s*\([^(; \t]*\)\s*;\s*$/___EXTERN_ reference \& \1();/
+	s/^\t*DECLARE\s\s*\(\S*\)\s\s*\([^(; \t]*\)\s*;\s*$/___EXTERN_ \1 \& \2();/
+	# definitions
+	s/^\t*DEFINE\s\s*\([^(; \t]*\)\s*;\s*$/___STATIC_ reference \& \1() { static reference storage({string("\1")}); return storage; }/
+	s/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^(; \t]*\)\s*;\s*$/___STATIC_ \1 \& \2() { static \1 storage; return storage; }/
+	s/^\t*DEFINE\s\s*\(\S*\)\s\s*\([^(; \t]*\)(\([^)]*\))\s*;\s*$/___STATIC_ \1 \& \2() { static \1 storage(\3); return storage; }/
+END
+sed -i -f "-" "$2" <<-"END"
+	# removal of types from member function handoff
+	:loop s/\(\/\*````typeremove````\*\/{[^}*]* \)\([^ ,}][^ \/,}]*\)\( [^ ,}]*\)\([,}]\)/\1 \3\4/;t loop
+	# removal of trailing commas for single-argument methods
+	s/, )/)/g
+	# preservation of void returns
+	s/reference\/\*``\s*void\s*``\*\//void/g
+	# removal of marking comments, in case already in a comment
+	s/\/\*``[^\/]*``\*\///g
+	# convert nested class indentation to differing names
+	:loop s/\(___CLASSNAME_*\)\t/\1_/;t loop
+	# hyphens
+	:loop s/\([a-zA-Z]\)-\([a-zA-Z]\)/\1__\2/g;t loop
+	:loop s/^\([^"]*"[^"]*"\)*\([^"]*"[^"]*\)__\([^"]*"\)/\1\2-\3/;t loop
+	# header file name changing
+	s/^\(#include ".*\)hpp"/\1hxx"/
+	# brackets becoming parentheses
+	#s/\([^[]\)\[\([^[]\)/\1(\2/g
+	#s/\([^]]\)\]\([^]]\)/\1)\2/g
+	#s/\[\[/\[/g' | sed 's/\]\]/\]/g
+END
+# line number expansion
+sed -i -e 's/^\([0-9][0-9]*\)$/\# & "'"$1"'"/' "$2"
 
 # we still have this starting goal.
 # here we are in active task, it seems like other task may have died.

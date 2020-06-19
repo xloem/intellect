@@ -14,6 +14,7 @@ public:
 
 	stackvector();
 	stackvector(unsigned long size);
+	stackvector(unsigned long size, element_type const * data);
 	stackvector(stackvector const & other);
 	stackvector(stackvector && other);
 	stackvector(std::initializer_list<element_type> const & items);
@@ -27,7 +28,11 @@ public:
 	void push_back(element_type && value);
 
 	unsigned long size() const;
+	unsigned long reserved() const;
 	void resize(unsigned long new_size);
+
+	element_type & front();
+	element_type & back();
 
 	element_type * data();
 	element_type * begin();

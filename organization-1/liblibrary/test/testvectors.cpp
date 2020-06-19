@@ -32,26 +32,26 @@ void error(bool worry, string what)
 }
 
 template <typename vector>
-void testvector(size_t size)
+void testvector(unsigned long size)
 {
 	using elem = typename vector::element_type;
 	std::vector<elem> base(size);
 	vector test1(size);
 	error(test1.size() != size, "vector not iniitalized to size");
-	for (size_t i = 0; i < size; ++ i) {
+	for (unsigned long i = 0; i < size; ++ i) {
 		test1[i] = base[i] = random_value<elem>();
 	}
-	for (size_t i = 0; i < size; ++ i) {
+	for (unsigned long i = 0; i < size; ++ i) {
 		error(test1[i] != base[i], "vector values not preserved");
 	}
 	vector test2;
 	error(test2.size() != 0, "vector not initialized empty");
-	for (size_t i = 0; i < size; ++ i) {
+	for (unsigned long i = 0; i < size; ++ i) {
 		test2.push_back(base[i]);
 		test1 = test2;
 		error(test2.size() != i + 1, "vector not grown to size");
 		error(test1.size() != i + 1, "vector not copied to size");
-		for (size_t j = 0; j <= i; ++ j) {
+		for (unsigned long j = 0; j <= i; ++ j) {
 			error(test2[j] != base[j], "vector values not preserved");
 			error(test1[j] != base[j], "vector values not preserved");
 		}
