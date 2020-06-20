@@ -24,6 +24,7 @@ class string
 {
 public:
 	string();
+	string(char * source);
 	string(char const * source);
 	string(string && source) : string(source.move()) {}
 	string(string const & source) : string(source.std()) {}

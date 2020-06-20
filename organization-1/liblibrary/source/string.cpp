@@ -15,6 +15,10 @@ string::string(char const * source)
 : storage(new std::string(source))
 { }
 
+string::string(char * source)
+: storage(new std::string(source))
+{ }
+
 /*
 template <template<typename> class Container>
 string::string<Container>(Container<string> const & source)

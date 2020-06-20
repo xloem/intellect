@@ -18,6 +18,10 @@ int main()
 	error(from_cstring.size() != 12, "cstring has incorrect size");
 	error(from_cstring != "hello, world", "cstring comparse false to content");
 
+	string from_mutable_cstring((char*)"hello, world");
+	error(from_cstring.size() != 12, "mutable cstring has incorrect size");
+	error(from_cstring != "hello, world", "mutable cstring comparse false to content");
+
 	string from_true((bool)true);
 	string from_false((bool)false);
 	error(from_true != "true", "bool string not 'true'");
