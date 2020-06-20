@@ -19,7 +19,7 @@ install: $(patsubst %.hpp,%.hxx, $(wildcard *.hpp)) $(PREPROCESS) libnode4.a
 uninstall:
 	-rm -rf ${PREFIX}/lib/libnode4.a ${PREFIX}/include/node4 ${PREFIX}/bin/node4-preprocess
 
-libnode4.a: reference.o
+libnode4.a: reference.o easy.o
 	ar cr "$@" $^
 
 test: main

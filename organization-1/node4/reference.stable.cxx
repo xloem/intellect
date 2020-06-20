@@ -145,7 +145,7 @@ void reference::recognise_method(reference method_kind, reference basic_implemen
 
 ___STATIC_ reference & reference::method_kind_get() { static reference storage({string("reference::method-kind-get")}); static int registration_barrier = ((recognise_method(storage, basic_kind_get(), "reference", "kind-get")),0); (void)registration_barrier; return storage; }
 reference reference::kind_get(reference kind) { return (*this)(method_kind_get(), {   kind}); }
-reference & reference::basic_kind_get(){static reference storage({string("kind-get"),(function<reference(reference, reference kind)>)
+reference & reference::basic_kind_get(){static reference storage({string("kind-get"),(std::function<reference(reference, reference kind)>)
 [](reference __uncasted_self, reference kind) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 //# 130 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -169,7 +169,7 @@ reference & reference::basic_kind_get(){static reference storage({string("kind-g
 
 ___STATIC_ reference & reference::method_kind_set() { static reference storage({string("reference::method-kind-set")}); static int registration_barrier = ((recognise_method(storage, basic_kind_set(), "reference", "kind-set")),0); (void)registration_barrier; return storage; }
 reference reference::kind_set(reference kind, reference value) { return (*this)(method_kind_set(), {   kind,   value}); }
-reference & reference::basic_kind_set(){static reference storage({string("kind-set"),(function<reference(reference, reference kind, reference value)>)
+reference & reference::basic_kind_set(){static reference storage({string("kind-set"),(std::function<reference(reference, reference kind, reference value)>)
 [](reference __uncasted_self, reference kind, reference value) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 //# 142 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -201,7 +201,7 @@ reference & reference::basic_kind_set(){static reference storage({string("kind-s
 
 ___STATIC_ reference & reference::method_get_all_kinds() { static reference storage({string("reference::method-get-all-kinds")}); static int registration_barrier = ((recognise_method(storage, basic_get_all_kinds(), "reference", "get-all-kinds")),0); (void)registration_barrier; return storage; }
 reference reference::get_all_kinds() { return (*this)(method_get_all_kinds(), { }); }
-reference & reference::basic_get_all_kinds(){static reference storage({string("get-all-kinds"),(function<reference(reference)>)
+reference & reference::basic_get_all_kinds(){static reference storage({string("get-all-kinds"),(std::function<reference(reference)>)
 [](reference __uncasted_self) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 //# 158 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -223,7 +223,7 @@ reference & reference::basic_get_all_kinds(){static reference storage({string("g
 
 ___STATIC_ reference & reference::method_order_count() { static reference storage({string("reference::method-order-count")}); static int registration_barrier = ((recognise_method(storage, basic_order_count(), "reference", "order-count")),0); (void)registration_barrier; return storage; }
 reference reference::order_count() { return (*this)(method_order_count(), { }); }
-reference & reference::basic_order_count(){static reference storage({string("order-count"),(function<reference(reference)>)
+reference & reference::basic_order_count(){static reference storage({string("order-count"),(std::function<reference(reference)>)
 [](reference __uncasted_self) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 //# 169 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -235,7 +235,7 @@ reference & reference::basic_order_count(){static reference storage({string("ord
 
 ___STATIC_ reference & reference::method_order_get() { static reference storage({string("reference::method-order-get")}); static int registration_barrier = ((recognise_method(storage, basic_order_get(), "reference", "order-get")),0); (void)registration_barrier; return storage; }
 reference reference::order_get(reference index) { return (*this)(method_order_get(), {   index}); }
-reference & reference::basic_order_get(){static reference storage({string("order-get"),(function<reference(reference, reference index)>)
+reference & reference::basic_order_get(){static reference storage({string("order-get"),(std::function<reference(reference, reference index)>)
 [](reference __uncasted_self, reference index) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 //# 175 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -257,7 +257,7 @@ reference & reference::basic_order_get(){static reference storage({string("order
 
 ___STATIC_ reference & reference::method_order_set() { static reference storage({string("reference::method-order-set")}); static int registration_barrier = ((recognise_method(storage, basic_order_set(), "reference", "order-set")),0); (void)registration_barrier; return storage; }
 reference reference::order_set(reference index, reference value) { return (*this)(method_order_set(), {   index,   value}); }
-reference & reference::basic_order_set(){static reference storage({string("order-set"),(function<reference(reference, reference index, reference value)>)
+reference & reference::basic_order_set(){static reference storage({string("order-set"),(std::function<reference(reference, reference index, reference value)>)
 [](reference __uncasted_self, reference index, reference value) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 //# 186 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -348,7 +348,7 @@ ___STATIC_ reference & reference::presence_mistake() { static reference storage;
 
 ___STATIC_ reference & reference::method_operator_equals() { static reference storage({string("reference::method-operator-equals")}); static int registration_barrier = ((recognise_method(storage, basic_operator_equals(), "reference", "operator-equals")),0); (void)registration_barrier; return storage; }
 reference reference::operator_equals(reference other) { return (*this)(method_operator_equals(), {   other}); }
-reference & reference::basic_operator_equals(){static reference storage({string("operator-equals"),(function<reference(reference, reference other)>)
+reference & reference::basic_operator_equals(){static reference storage({string("operator-equals"),(std::function<reference(reference, reference other)>)
 [](reference __uncasted_self, reference other) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 //# 250 "reference.cpp"
 	throw presence_mistake;
@@ -359,7 +359,7 @@ reference & reference::basic_operator_equals(){static reference storage({string(
 //# 253 "reference.cpp"
 ___STATIC_ reference & reference::method_operator_brackets() { static reference storage({string("reference::method-operator-brackets")}); static int registration_barrier = ((recognise_method(storage, basic_operator_brackets(), "reference", "operator-brackets")),0); (void)registration_barrier; return storage; }
 reference reference::operator_brackets(reference other) { return (*this)(method_operator_brackets(), {   other}); }
-reference & reference::basic_operator_brackets(){static reference storage({string("operator-brackets"),(function<reference(reference, reference other)>)
+reference & reference::basic_operator_brackets(){static reference storage({string("operator-brackets"),(std::function<reference(reference, reference other)>)
 [](reference __uncasted_self, reference other) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 //# 255 "reference.cpp"
 	throw presence_mistake;
@@ -372,7 +372,7 @@ reference & reference::basic_operator_brackets(){static reference storage({strin
 /*
 ___STATIC_ reference & reference::method_destruct() { static reference storage({string("reference::method-destruct")}); static int registration_barrier = ((recognise_method(storage, basic_destruct(), "reference", "destruct")),0); (void)registration_barrier; return storage; }
 void reference::destruct() {  (*this)(method_destruct(), { }); }
-reference & reference::basic_destruct(){static reference storage({string("destruct"),(function<void(reference)>)
+reference & reference::basic_destruct(){static reference storage({string("destruct"),(std::function<void(reference)>)
 [](reference __uncasted_self) -> void {  reference self = __uncasted_self;{
 //# 262 "reference.cpp"
 }}}); return storage;}
