@@ -66,7 +66,13 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 		method.shared = getter(*this, kind).pointer();
 	} catch (reference) { }
 	if (method == null()) {
-		//method = kind; // <- this will simplify things, and may be a comparable hack to the below
+		try {
+			method.shared = getter(registered-methods(), kind).pointer();
+		} catch (reference) { }
+	}
+	if (method == null()) {
+		//method = kind; // <- this would simplify things, and may be a comparable hack to the below
+		/*
 		if (kind == method-kind-get()) {
 			method = basic-kind-get();
 		} else if (kind == method-kind-set()) {
@@ -79,7 +85,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 			method = basic-order-get();
 		} else if (kind == method-order-set()) {
 			method = basic-order-set();
-		} else if (kind == method-operator-equals()) {
+		} else*/ if (kind == method-operator-equals()) {
 			// default implementation can't be done with a method call because references are passed to methods by copy for now
 			if (parameters.size() != 1) { throw kindness-mistake(); }
 			shared = parameters.begin()->pointer();
@@ -111,6 +117,12 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	default:
 		throw "more than 8 method arguments, need new case line here";
 	}
+}
+
+DEFINE reference reference::registered-methods;
+void reference::register-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname)
+{
+	basic-kind-set()(registered-methods(), method-kind, basic-implementation);
 }
 
 METHOD reference reference::kind-get(reference kind)
@@ -255,7 +267,7 @@ bool reference::is-nonweak() const
 void reference::set-nonweak(bool nonweak)
 {
 	if (nonweak) {
-		shared == pointer();
+		shared = pointer();
 		weak.reset();
 	} else {
 		weak = pointer();

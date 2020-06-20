@@ -49,30 +49,32 @@ public:
 	// in case a weak reference is needed
 	bool is-nonweak() const;
 	void set-nonweak(bool nonweak);
-
-	// data access
 	
 	// general: consider also a c-style approach where no exceptions
 	// are thrown.  could simplify meaning-order.
 
+	// data access
 	template <typename data-type>
 		data-type & data-default(data-type default-data = {});
 	template <typename data-type>
 		data-type & data();
 
-
-	// function call if data has the std::function
+	// function call if data has a matching std::function
 	template <typename... parameter-types>
 		reference operator()(parameter-types... parameters);
 
 	// METHOD call, uses kind-get to get kind, could default to basic functions
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
-	// methods are indirect.  for direct access, use basic-*()(self, property)
+	// METHOD calls register-method for every defined method.  derived classes may change it.  they will need to make sure kind-get(method-kind) returns something appropriate.  things passed to this default function are added as kinds to registered-methods.
+	DECLARE reference registered-methods;
+	static void register-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname);
+
+	// methods are indirect.  for direct access, use basic-*()(self, ...)
 	// each `METHOD return_type name` makes 3 functions:
 	// 	static reference method-name(); // returns the kind used to change the method
 	// 	static reference basic-name(); // the default implementation
-	// 	reference name(); // a member functiont that looks up and calls it
+	// 	return_type name(...); // a member function that looks up the method and calls it
 
 	// get a kinded property; returns null if nonpresent
 	// this method controls all other methods by providing their default values, and can be changed
@@ -138,13 +140,11 @@ private:
 	multi-any & raw-data();
 };
 
+
 // parameters take types and names
 // if we could iterate, we could make types convert to references
-
-#define DEFINE_INLINE_RETURNING_METHOD(name, parameter-types-and-names, body) \
-static reference name(){static reference name((function<reference>(
-
-#define DEFINE(type, scope, name) type & scope name() { static type name(string(#name)); return name; }
+// ^-- above is left over from plans for macro implementation of methods
+//     we could still convert types to references when methodss are parsed.
 
 // template implementations below
 

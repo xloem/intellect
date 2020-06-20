@@ -1,3 +1,8 @@
 *.o
 main
 *.*xx
+!reference.hxx
+!reference.cxx
+!preprocess.hxx
+!preprocess.cxx
+!multi-any.hxx

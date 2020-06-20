@@ -98,7 +98,7 @@ DECLARE reference-bool bool-true;
 // 			... okay that would work.  each class would pass its method constructor to of-kind using a template parameter.
 // 			    of-kind could pvoide a function to ensure dependencies were instantiated
 // 			but you'd want reference itself to be a kind, to ensure static dependency.
-template <reference(* kind)()>
+template <reference&(* kind)()>
 class of-kind : public reference
 {
 public:
@@ -109,8 +109,6 @@ public:
 	{
 		must-be(*this);
 	}
-
-	constexpr operator reference&() { return *this; }
 
 	static reference-bool & check-is(reference candidate)
 	{
@@ -134,44 +132,44 @@ protected:
 	of-kind(any data = {})
 	: reference(data)
 	{
-		kind-set(kind(), is-of-kind);
+		kind-set(kind(), is-of-kind());
 	}
 };
 
-template <reference(* kind)()>
+template <reference&(* kind)()>
 DEFINE reference of-kind<kind>::is-of-kind;
 
 
-DEFINE reference kind-bool; // where does constexpr come from ??
+DEFINE reference kind-bool; // where does constexpr come from ?? [line numbering was shifted]
 class reference-bool : private of-kind<kind-bool>
 {
 public:
 	reference-bool(reference other)
 	: of-kind(other)
 	{
-		if (other != bool-false && other != bool-true)
+		if (other != bool-false() && other != bool-true())
 		{
 			throw kindness-mistake();
 		}
 	}
 
 	reference-bool(bool value)
-	: of-kind(value ? bool-true : bool-false)
+	: of-kind(value ? bool-true() : bool-false())
 	{ }
 
 	operator bool()
 	{
-		return (*this) == bool-true;
+		return (*this) == bool-true();
 	}
 
 	static reference-bool & check-is(reference other)
 	{
-		return (other == bool-true || other == bool-false) ? bool-true : bool-false;
+		return (other == bool-true() || other == bool-false()) ? bool-true() : bool-false();
 	}
 
 	static void must-be(reference other)
 	{
-		if (check-is(other) == bool-false) {
+		if (check-is(other) == bool-false()) {
 			throw kindness-mistake();
 		}
 	}
@@ -256,8 +254,8 @@ public:
 	static map-maker make(reference start) // be good if start could be a map
 	{
 		map-maker result = {};
-		result.kind-set(location, start);
-		result.kind-set(map, {});
+		result.kind-set(location(), start);
+		result.kind-set(map(), {});
 		return result;
 	}
 
@@ -266,7 +264,7 @@ public:
 	// todo: turn into method?
 	void add(reference way)
 	{
-		reference map = kind-get(map);
+		reference map = kind-get(map-maker::map());
 		map.order-set(map.order-count(), way);
 	}
 

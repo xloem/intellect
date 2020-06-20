@@ -1,4 +1,8 @@
-#include "reference.hpp"
+
+#define ___STATIC_
+#define ___EXTERN_ extern
+//# 1 "preprocess.cpp"
+#include "reference.hxx"
 
 //#include <pcrecpp.h>
 #include <library/string.hpp>
