@@ -1,16 +1,16 @@
 LINK.o=g++
 CXXFLAGS=-std=c++17 -ggdb
-CPPFLAGS=-I../liblibrary
+CPPFLAGS=-I../liblibrary -I.
 LDLIBS=-L../liblibrary/source -llibrary
 CXX=./measure g++
 
-all: expressions/test-run
+all: test/test-run
 clean:
 	-rm */*.o */test
 
 %-run: %
 	./$*
 
-expressions/test: expressions/test.o
+test/test: test/test.o
 
-expressions/test.o: expressions/*.hpp
+test/test.o: expressions/*.hpp

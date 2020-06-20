@@ -11,6 +11,12 @@ SHELL=bash
 all: tests
 tests: test/teststring-run test/testvectors-run test/test-run
 
+install: source/liblibrary.a
+	cp source/liblibrary.a $(PREFIX)/lib/
+	cp -r library $(PREFIX)/include/
+uninstall:
+	-rm -rf $(PREFIX)/lib/liblibrary.a $(PREFIX)/include/library
+
 clean: depend
 	-rm */*.a */*.o
 
