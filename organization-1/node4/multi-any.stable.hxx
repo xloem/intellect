@@ -1,6 +1,7 @@
 
 #define ___STATIC_
 #define ___EXTERN_ extern
+//# 1 "multi-any.hpp"
 #pragma once
 
 #include <experimental/any>
