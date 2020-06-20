@@ -111,8 +111,9 @@ sed -i -f "-" "$2" <<-"END"
 	s/\(___CLASSNAME_*\)\t/\1_/;t loop
 	s/\(___CLASSNAMESTR_*\)\t/\1_/;t loop
 	# hyphens
-	:redehyphenate s/\([a-zA-Z]\)-\([a-zA-Z]\)/\1__\2/g;t redehyphenate
-	:undostringdehyphenation s/^\(\([^"]*"[^"]*"\)*\)\([^"]*"[^"]*\)__\([^"]*"\)/\1\3-\4/;t undostringdehyphenation
+	:redehyphenate s/\([a-zA-Z]\)-\([a-zA-Z]\)/\1_``_\2/g;t redehyphenate
+	:undostringdehyphenation s/^\(\([^"]*"[^"]*"\)*\)\([^"]*"[^"]*\)_``_\([^"]*"\)/\1\3-\4/;t undostringdehyphenation
+	:reredehyphenate s/\([a-zA-Z]\)_``_\([a-zA-Z]\)/\1_\2/g;t reredehyphenate
 	# header file name changing
 	s/^\(#include ".*\)hpp"/\1hxx"/
 	# brackets becoming parentheses

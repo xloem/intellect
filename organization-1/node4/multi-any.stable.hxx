@@ -8,22 +8,23 @@
 	namespace std { using experimental::any; using experimental::any_cast; }
 #include <typeinfo>
 #include <unordered_map>
+#include <vector>
 
 
 #undef ___STATIC_
 #undef ___EXTERN_
-#define ___CLASSNAME_ multi__any
+#define ___CLASSNAME_ multi_any
 #define ___CLASSNAMESTR_ "multi-any"
 #define ___STATIC_ static
 #define ___EXTERN_ static
-class multi__any
-//# 10 "multi-any.hpp"
+class multi_any
+//# 11 "multi-any.hpp"
 {
 public:
 	template <typename T>
-	T & get(T default__value = {})
+	T & get(T default_value = {})
 	{
-		auto result = data.emplace(&typeid(T), default__value);
+		auto result = data.emplace(&typeid(T), default_value);
 		return *std::any_cast<T>(&result.first->second);
 	}
 
@@ -80,15 +81,15 @@ public:
 #define ___CLASSNAME__ hash_type_info_pointer
 #define ___CLASSNAMESTR__ "hash_type_info_pointer"
 	struct hash_type_info_pointer {
-//# 70 "multi-any.hpp"
-		size_t operator()(std::type_info const * const & to__hash) const
+//# 71 "multi-any.hpp"
+		size_t operator()(std::type_info const * const & to_hash) const
 		{
-			return to__hash->hash_code();
+			return to_hash->hash_code();
 		}
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
-//# 75 "multi-any.hpp"
+//# 76 "multi-any.hpp"
 
 	std::unordered_map<std::type_info const *, std::any> data;
 };
