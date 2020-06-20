@@ -65,18 +65,18 @@ sed -f - "$1" >> "$2" <<-"END"
 	# class name tracking
 	s/^\(\)class \([^{ \t;]*\)[^;]*$/#undef ___STATIC_\n#undef ___EXTERN_\n#define ___CLASSNAME_\1 \2\n#define ___CLASSNAMESTR_\1 "\2"\n#define ___STATIC_ static\n#define ___EXTERN_ static\n&/;t linenumber
 	s/^\(\)struct \([^{ \t;]*\)[^;]*$/#undef ___STATIC_\n#undef ___EXTERN_\n#define ___CLASSNAME_\1 \2\n#define ___CLASSNAMESTR_\1 "\2"\n#define ___STATIC_ static\n#define ___EXTERN_ static\n&/;t linenumber
-	s/^\(\)};\s*$/&\n#undef ___CLASSNAME_\1\n#undef ___CLASSNAMESTR_\1\n#undef ___STATIC_\n#define ___STATIC_\n#undef ___EXTERN_\n#define ___EXTERN_ extern/;t linenumber
+	s/^\(\)};/&\n#undef ___CLASSNAME_\1\n#undef ___CLASSNAMESTR_\1\n#undef ___STATIC_\n#define ___STATIC_\n#undef ___EXTERN_\n#define ___EXTERN_ extern/;t linenumber
 	s/^\(\t\t*\)class \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n#define ___CLASSNAMESTR_\1 "\2"\n&/;t linenumber
 	s/^\(\t\t*\)struct \([^{ \t;]*\)[^;]*$/#define ___CLASSNAME_\1 \2\n#define ___CLASSNAMESTR_\1 "\2"\n&/;t linenumber
-	s/^\(\t\t*\)};\s*$/&\n#undef ___CLASSNAME_\1\n#undef ___CLASSNAMESTR_\1/;t linenumber
+	s/^\(\t\t*\)};/&\n#undef ___CLASSNAME_\1\n#undef ___CLASSNAMESTR_\1/;t linenumber
 	# method declarations
-	s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*;\s*$/\1DECLARE basic-\3;\n\1DECLARE method-\3;\n\1\2 \3(\4);/;t linenumber
+	s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*;/\1DECLARE basic-\3;\n\1DECLARE method-\3;\n\1\2 \3(\4);/;t linenumber
 	# one line in-header method definitions
-	/^\t*METHOD.*)\s*{.*}\s*$/ { s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{\(.*\)}\s*$/\1DEFINE-REGISTER method-\3 register-method(storage, basic-\3(), ___CLASSNAMESTR\1, "\3");\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1static reference \& basic-\3(){\/\*``METHOD``\*\/static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference\/\*````\*\/, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/> { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self; \5 }}); return storage;}/; s/\sreturn /return (reference)(__return-type)/; b linenumber; }
+	/^\t*METHOD.*)\s*{.*}/ { s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{\(.*\)}/\1DEFINE-REGISTER method-\3 recognise-method(storage, basic-\3(), ___CLASSNAMESTR\1, "\3");\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1static reference \& basic-\3(){\/\*``METHOD``\*\/static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference\/\*````\*\/, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/ { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self; \5 }}); ret\/\*````\*\/urn storage;}/; s/\sreturn /return (reference)(__return-type)/; b linenumber; }
 	# multi-line in-header method definitions
-	/\tMETHOD/,/^\t}/ { /^\t*METHOD.*)\s*$/N; s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{/\1DEFINE-REGISTER method-\3 register-method(storage, basic-\3(), ___CLASSNAMESTR\1, "\3");\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1\/\*``METHOD``\*\/static reference \& basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/ { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^\s}/&}); return storage;}/; b linenumber; }
+	/^\tMETHOD/,/^\t}/ { /^\t*METHOD.*)\s*$/N; s/^\(\t*\)METHOD\s\s*\(\S*\)\s\s*\([^(]*\)\s*(\([^)]*\))\s*{/\1DEFINE-REGISTER method-\3 recognise-method(storage, basic-\3(), ___CLASSNAMESTR\1, "\3");\n\1\2 \3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\1\/\*``METHOD``\*\/static reference \& basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\2``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\2``\*\/ { using __return-type = \2; ___CLASSNAME\1 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^\s}/&}); return storage;}/; b linenumber; }
 	# out-of-header method definitions
-	/^METHOD/,/^}/ { /^METHOD.*)\s*$/N; s/METHOD\s\s*\(\S*\)\s\s*\(\S*\)::\([^\t :(]*\)\s*(\([^)]*\))\s*/DEFINE-REGISTER \2::method-\3 register-method(storage, basic-\3(), "\2", "\3");\n\1 \2::\3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\/\*``METHOD``\*\/reference \& \2::basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\1``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\1``\*\/ { using __return-type = \1; \2 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^}/&}}); return storage;}/; b linenumber; }
+	/^METHOD/,/^}/ { /^METHOD.*)\s*$/N; s/METHOD\s\s*\(\S*\)\s\s*\(\S*\)::\([^\t :(]*\)\s*(\([^)]*\))\s*/DEFINE-REGISTER \2::method-\3 recognise-method(storage, basic-\3(), "\2", "\3");\n\1 \2::\3(\4) { ret\/\*````\*\/urn (\*this)(method-\3(), \/\*````typeremove````\*\/{ \4}); }\n\/\*``METHOD``\*\/reference \& \2::basic-\3(){static reference storage({string("\3"),(function<reference\/\*``\1``\*\/(reference, \4)>)\n[](reference __uncasted_self, \4) -> reference\/\*``\1``\*\/ { using __return-type = \1; \2 self = __uncasted_self;/; s/return /return (reference)(__return-type)/; s/^}/&}}); return storage;}/; b linenumber; }
 	# mutation of subtypes to references in methods
 	# this is intended to convert the type-name pairs into just 'reference'.  that means the type and name are both dropped.
 	#           v--- \1, preceding text                           v-- \2, type   v-\3, name v-\4, end-symbol   v--- type and name changed to reference/*````*/
@@ -102,6 +102,9 @@ sed -i -f "-" "$2" <<-"END"
 	s/, )/)/g
 	# preservation of void returns
 	s/reference\/\*``\s*void\s*``\*\//void/g
+	# removal of void return types inside void functions
+	s/using __return-type = void;//
+	s/\(void\s.*{ \)ret\/\*````\*\/urn/\1/
 	# removal of marking comments, in case already in a comment
 	s/\/\*``[^\/]*``\*\///g
 	# convert nested class indentation to differing names

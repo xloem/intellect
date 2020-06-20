@@ -74,12 +74,14 @@ public:
 	template <typename... parameter__types>
 		reference operator()(parameter__types... parameters);
 
+___STATIC_ reference & reference__class() { static reference storage; return storage; }
+
 	// METHOD call, uses kind__get to get kind, could default to basic functions
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
-	// METHOD calls register__method for every defined method.  derived classes may change it.  they will need to make sure kind__get(method__kind) returns something appropriate.  things passed to this default function are added as kinds to registered__methods.
-___EXTERN_ reference & registered__methods();
-	static void register__method(reference method__kind, reference basic__implementation, char const * classname, char const * methodname);
+	// METHOD calls recognise__method for every defined method.  derived classes may change it.  they will need to make sure kind__get(method__kind) returns something appropriate.  things passed to this default function are added as kinds to registered__methods.
+___EXTERN_ reference & recognised__methods();
+	static void recognise__method(reference method__kind, reference basic__implementation, char const * classname, char const * methodname);
 
 	// methods are indirect.  for direct access, use basic-*()(self, ...)
 	// each `METHOD return_type name` makes 3 functions:
@@ -92,37 +94,37 @@ ___EXTERN_ reference & registered__methods();
 ___EXTERN_ reference & basic__kind__get();
 ___EXTERN_ reference & method__kind__get();
 	reference kind__get(reference kind);
-//# 82 "reference.hpp"
+//# 84 "reference.hpp"
 
 	// set a kinded property, returns old value
 ___EXTERN_ reference & basic__kind__set();
 ___EXTERN_ reference & method__kind__set();
 	reference kind__set(reference kind, reference value);
-//# 85 "reference.hpp"
+//# 87 "reference.hpp"
 
 	// get all kinded property kinds, ordered
 ___EXTERN_ reference & basic__get__all__kinds();
 ___EXTERN_ reference & method__get__all__kinds();
 	reference get__all__kinds();
-//# 88 "reference.hpp"
+//# 90 "reference.hpp"
 
 	// get the count of ordered properties
 ___EXTERN_ reference & basic__order__count();
 ___EXTERN_ reference & method__order__count();
 	reference order__count();
-//# 91 "reference.hpp"
+//# 93 "reference.hpp"
 
 	// get an ordered property by index.  index is expected to have index_t data
 ___EXTERN_ reference & basic__order__get();
 ___EXTERN_ reference & method__order__get();
 	reference order__get(reference index);
-//# 94 "reference.hpp"
+//# 96 "reference.hpp"
 
 	// set an ordered property by index_t number [setting at index=count extendss]
 ___EXTERN_ reference & basic__order__set();
 ___EXTERN_ reference & method__order__set();
 	reference order__set(reference index, reference value);
-//# 97 "reference.hpp"
+//# 99 "reference.hpp"
 
 	// Warning: IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
 
@@ -130,15 +132,19 @@ ___EXTERN_ reference & method__order__set();
 ___EXTERN_ reference & basic__operator__equals();
 ___EXTERN_ reference & method__operator__equals();
 	reference operator__equals(reference other);
-//# 102 "reference.hpp"
-	reference operator=(reference other) { return (*this)(method__operator__equals(), {other}); }
+//# 104 "reference.hpp"
+	reference operator=(reference other) { return operator__equals(other); }
 
 	// no default; method__operator__brackets property must be set to not throw
 ___EXTERN_ reference & basic__operator__brackets();
 ___EXTERN_ reference & method__operator__brackets();
 	reference operator__brackets(reference index);
-//# 106 "reference.hpp"
-	reference operator[](reference index) { return (*this)(method__operator__brackets(), {index}); }
+//# 108 "reference.hpp"
+	reference operator[](reference index) { return operator__brackets(index); }
+
+	// called on destruction: dangerous as inheritance is not managed yet
+	//METHOD void destruct();
+	//~reference();
 
 
 	// useful basic objects
@@ -180,7 +186,7 @@ private:
 #define ___STATIC_
 #undef ___EXTERN_
 #define ___EXTERN_ extern
-//# 142 "reference.hpp"
+//# 148 "reference.hpp"
 
 
 // parameters take types and names
@@ -230,11 +236,11 @@ namespace std {
 #define ___CLASSNAME__ hash<reference>
 #define ___CLASSNAMESTR__ "hash<reference>"
 	struct hash<reference>
-//# 189 "reference.hpp"
+//# 195 "reference.hpp"
 	{
 		size_t operator()(const reference & to__hash) const;
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
-//# 192 "reference.hpp"
+//# 198 "reference.hpp"
 }

@@ -22,14 +22,14 @@ clean:
 
 %: %.o
 	${LINK.o} ${CXXFLAGS} $^ ${LDLIBS} -o $@
-%.o: %.cxx
-	${CXX} ${CXXFLAGS} ${CPPFLAGS} -c $^ -o $@
+%.o: %.cxx $(patsubst %.hpp,%.hxx, $(wildcard *.hpp))
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} -c $< -o $@
 
 %.stable.cxx: %.cxx $(PREPROCESS) test
 	sed -e 's/^\(#include .*\)\.cxx"/\1.stable.cxx"/' $< > $@
 %.stable.hxx: %.hxx $(PREPROCESS) test
 	sed -e 's/^\(#include .*\)\.hxx"/\1.stable.hxx"/' $< > $@
-%.cxx: %.cpp $(PREPROCESS) preprocess.bash
+%.cxx: %.cpp preprocess.bash #$(patsubst %.hpp,%.hxx, $(wildcard *.hpp))
 	./$(PREPROCESS) $< $@
-%.hxx: %.hpp $(PREPROCESS) preprocess.bash
+%.hxx: %.hpp preprocess.bash
 	./$(PREPROCESS) $< $@

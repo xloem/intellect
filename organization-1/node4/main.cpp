@@ -98,6 +98,14 @@ DECLARE reference-bool bool-true;
 // 			... okay that would work.  each class would pass its method constructor to of-kind using a template parameter.
 // 			    of-kind could pvoide a function to ensure dependencies were instantiated
 // 			but you'd want reference itself to be a kind, to ensure static dependency.
+
+DECLARE reference old-implementation;
+DECLARE reference current-implementation;
+
+DECLARE reference is-of-kind;
+DECLARE reference recognition-mistake;
+
+// of-kind is a general reference subclass
 template <reference&(* kind)()>
 class of-kind : public reference
 {
@@ -108,6 +116,34 @@ public:
 	: reference(other)
 	{
 		must-be(*this);
+	}
+
+	METHOD void construct() { } // can be called for construction: note inheritance unimplemented
+
+	// for ininheritance we might eventually use a way of method-calling
+	// this could be called from a call-operator reimplementation
+	static void recognise-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname)
+	{
+		// TODO: we could make a little method-object that gets linked
+		// it can show the old method from kind-get(method-kind) and the new method.
+		// that would be more powerful if we made link objects: could link from the link
+		if (kind().kind-get(method-kind) != null()) {
+			throw presence-mistake;
+		}
+		kind().kind-set(method-kind, basic-implementation);
+	}
+
+	METHOD reference kind-get(reference property-kind)
+	{
+		// really what we want is, when placing a method, to provide a way to get the old method.
+
+		// first check using reference::basic-kind-get
+		reference result = reference::basic-kind-get()(self, property-kind);
+		// if it is empty, then use our kind() object and get that
+		if (result == null()) {
+			result = kind().kind-get(property-kind);
+		}
+		return result;
 	}
 
 	static reference-bool & check-is(reference candidate)
@@ -133,11 +169,41 @@ protected:
 	: reference(data)
 	{
 		kind-set(kind(), is-of-kind());
+		kind-set(method-kind-get(), basic-kind-get());
+		construct();
 	}
 };
-
+DEFINE reference recognition-mistake;
 template <reference&(* kind)()>
 DEFINE reference of-kind<kind>::is-of-kind;
+
+
+// class object seems to help.
+
+class links-as-references : public reference
+{
+public:
+//	METHOD(
+};
+
+// thinking of A) making quick definitions that are of kinds, when there
+// are a lot of kinds.
+// using an-object = of-kind<object>;
+//
+// DEFINE of-kind<object> fruit;
+// using a-fruit = of-kind<fruit>
+// AN object fruit
+// A fruit apple
+// DEFINE object fruit <- would be nice if object were of-kind<object>
+//
+// DEFINE object-group-kind
+// DEFINE of-kind<object-group-kind> fruit
+//
+// DEFINE of-kind<fruit> apple;
+// DEFINE of-kind<apple> red-apple;
+// using fruit = of-kind<object>;
+// using apple = of-kind<fruit>;
+// DEFINE apple red-apple;
 
 
 DEFINE reference kind-bool; // where does constexpr come from ?? [line numbering was shifted]
@@ -190,6 +256,8 @@ class connection-objects : public of-kind<kind-connection-objects>
 
 DEFINE reference-bool reference-bool::bool-true(true, (bool*)0);
 DEFINE reference-bool reference-bool::bool-false(false, (bool*)0);
+DEFINE reference-bool bool-true(true);
+DEFINE reference-bool bool-false(false);
 
 // map would be a good candidate for being used before declared.
 // it would be great to be able to index any reference with a map.

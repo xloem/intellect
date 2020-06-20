@@ -67,7 +67,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	} catch (reference) { }
 	if (method == null()) {
 		try {
-			method.shared = getter(registered-methods(), kind).pointer();
+			method.shared = getter(recognised-methods(), kind).pointer();
 		} catch (reference) { }
 	}
 	if (method == null()) {
@@ -119,10 +119,10 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	}
 }
 
-DEFINE reference reference::registered-methods;
-void reference::register-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname)
+DEFINE reference reference::recognised-methods;
+void reference::recognise-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname)
 {
-	basic-kind-set()(registered-methods(), method-kind, basic-implementation);
+	basic-kind-set()(recognised-methods(), method-kind, basic-implementation);
 }
 
 METHOD reference reference::kind-get(reference kind)
@@ -245,8 +245,28 @@ reference const& reference::null() { static reference null((bool *****)"token_fo
 DEFINE reference reference::kindness-mistake;
 DEFINE reference reference::presence-mistake;
 
-DEFINE reference reference::method-operator-equals;
-DEFINE reference reference::method-operator-brackets;
+METHOD reference reference::operator-equals(reference other)
+{
+	throw presence-mistake;
+	return {};
+}
+METHOD reference reference::operator-brackets(reference other)
+{
+	throw presence-mistake;
+	return {};
+}
+
+/*
+METHOD void reference::destruct()
+{
+}
+reference::~reference()
+{
+	if (is-nonweak() && shared.use_count() == 1) {
+		destruct();
+	}
+}
+*/
 
 
 /*

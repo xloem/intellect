@@ -63,12 +63,14 @@ public:
 	template <typename... parameter-types>
 		reference operator()(parameter-types... parameters);
 
+	DEFINE reference reference-class;
+
 	// METHOD call, uses kind-get to get kind, could default to basic functions
 	reference operator()(reference kind, std::initializer_list<reference> parameters);
 
-	// METHOD calls register-method for every defined method.  derived classes may change it.  they will need to make sure kind-get(method-kind) returns something appropriate.  things passed to this default function are added as kinds to registered-methods.
-	DECLARE reference registered-methods;
-	static void register-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname);
+	// METHOD calls recognise-method for every defined method.  derived classes may change it.  they will need to make sure kind-get(method-kind) returns something appropriate.  things passed to this default function are added as kinds to registered-methods.
+	DECLARE reference recognised-methods;
+	static void recognise-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname);
 
 	// methods are indirect.  for direct access, use basic-*()(self, ...)
 	// each `METHOD return_type name` makes 3 functions:
@@ -99,11 +101,15 @@ public:
 
 	// defaults to reseating this reference
 	METHOD reference operator-equals(reference other);
-	reference operator=(reference other) { return (*this)(method-operator-equals(), {other}); }
+	reference operator=(reference other) { return operator-equals(other); }
 
 	// no default; method-operator-brackets property must be set to not throw
 	METHOD reference operator-brackets(reference index);
-	reference operator[](reference index) { return (*this)(method-operator-brackets(), {index}); }
+	reference operator[](reference index) { return operator-brackets(index); }
+
+	// called on destruction: dangerous as inheritance is not managed yet
+	//METHOD void destruct();
+	//~reference();
 
 
 	// useful basic objects
