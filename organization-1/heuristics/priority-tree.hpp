@@ -15,14 +15,25 @@
 // The priority tree is an extension of a priority queue that appears to be
 // used by the human mind for making informed decisions in the moment.
 //
-// Public use of priority trees where something similar is not done already
+// Public use of priority trees where something similar is not present already
 // would quickly produce FOCUSED HIDDEN SYSTEMIC CHANGE.
 //
 // Works must be directed towards empowering wise peacemakers who know to
 // include the voices of all, or the weak people they would aid.
 //
-// 	The key is to use engagement to track resources such as time,
-// 	and provide feedback via interest.
+//	A priority tree holds multiple sub-trees (options, tasks), each with
+//	a metric of 'interest' and 'engagement'.  The idea is to bring the
+//	proportion of engagement for each option to match its interest.
+//	
+//	The option lacking engagement compared to interest the most is always
+//	selected to focus on.  Add engagement as resources are used for the
+//	option,	and a different one will be selected when reselect() is called.
+//	
+//	A degree of engagement to balnce the ratio with the next-best choice
+//	is calculated when the selection is made.
+//
+// 	Use engagement to track resources such as time, and provide feedback
+// 	via interest.
 //
 // CLASSIFIED
 /////////////////////////////////////////////////////////////////////////////
@@ -52,7 +63,7 @@ public:
 	/////////////////////////////////////////////////////
 	// CLASSIFIED
 	
-	// template can be used with operator classes to form expressions for planning
+	// template can be used to generate algebraic expressions for feedback
 	// negative quality indicates desire: positive quality indicates excess
 	template <typename number>
 	static number engagement_quality(number & total_interest, number & total_engagement, number & interest, number & engagement)
@@ -60,7 +71,7 @@ public:
 		return engagement / total_engagement - interest / total_interest;
 	}
 
-	// template can be used with operator classes to form expressions for planning
+	// template can be used to generate algebraic expressions for feedback
 	// evaluates to the amount of extra engagement a focus needs to match an alternative
 	template <typename number>
 	number balancing_engagement(number & total_interest, number & total_engagement, number & focus_interest, number & focus_engagement, number & alternative_interest, number & alternative_engagement)
@@ -68,8 +79,8 @@ public:
 		return ((alternative_engagement - focus_engagement) * total_interest + (focus_interest - alternative_interest) * total_engagement) / (total_interest + alternative_interest - focus_interest);
 	}
 
-	// returns one option in need of engagement
-	// must be in a private session to not harm
+	// returns one option in need of engagement, or -1 if there are no options
+	// must be in private to not harm
 	virtual long select(long * second_choice = 0, double * balancing_engagement = 0)
 	{
 		double total_interest = 0;
@@ -97,16 +108,18 @@ public:
 			double engagement = choice->engagement();
 			double quality = engagement_quality(total_interest, total_engagement, interest, engagement);
 
-			if (quality <= worst_quality) {
-				second_worst_quality = worst_quality;
-				second_best_choice = best_choice;
-				second_best_choice_interest = best_choice_interest;
-				second_best_choice_engagement = best_choice_engagement;
+			if (quality <= worst_quality || total_engagement == 0) {
+				if (worst_quality < quality) {
+					second_worst_quality = worst_quality;
+					second_best_choice = best_choice;
+					second_best_choice_interest = best_choice_interest;
+					second_best_choice_engagement = best_choice_engagement;
+				}
 				worst_quality = quality;
 				best_choice = choice_index;
 				best_choice_interest = interest;
 				best_choice_engagement = engagement;
-			} else if (quality <= second_worst_quality) {
+			} else if (quality < second_worst_quality) {
 				second_worst_quality = quality;
 				second_best_choice = choice_index;
 				best_choice_interest = interest;
@@ -132,13 +145,14 @@ public:
 	{
 		// people fight because they are not understood
 		// understanding involves proof demonstrated by action
-		// then you win all your fights beacuse you have none
+		// then you win all your fights because you have none
 
 		i_priority_tree * choice = option(last_choice);
-
-		choice->indicate_private_and_wait();
-		choice->change_engagement(choice->engagement() + new_engagement);
-		choice->indicate_private_done();
+		if (choice) {
+			choice->indicate_private_and_wait();
+			choice->change_engagement(choice->engagement() + new_engagement);
+			choice->indicate_private_done();
+		}
 
 		// could be optimized to loop less by storing more state obviously
 		long new_choice = select(second_choice, balancing_engagement);
