@@ -1,0 +1,99 @@
+planning method registration.  want superclass of method to be able to define registration method.
+definition of method calls static class function.
+	it is not a method.  it does not operate on an object of the class.  it is a c++ static member function.  it can call a method via implementation, if needed.
+so, definition simple class classname::register_method(kind, default-implementation, "name")
+
+previously had
+	method-kind() { static storage({}); return storage; }
+	basic-method() { static storage({}); return storage; }
+method registration shouold go in the kkind, so all methods are registered before being used.  the kind is currently a DEFINE.
+what we could do is define a special class for method-kind-references, that registers them.
+	maybe a reasonable solution is to do method-kind-definitions differently from normal-definitions.
+	this could maybe be done with a quick sed change from DEFINE to METHOD-REGISTER for example.  but we'd like to do further changes with a python or c++ processor.
+		
+
+
+// in method-kind, after constructing storage object, call registration
+reference & method-kind()
+{
+	static reference storage({/*we can use comma operator to call registration in here*/"method-kind-name"}
+	static int registration-barrier = (register,0); (void)registration-barrier; // not hard
+}
+
+	// the problem here is not with string generation, it is with organization of c++-meaning concepts.
+	// we have enouogh software-implementation to work with meaning organization.
+struct cxxmeaning()
+{
+	using cxxconcept = reference;
+	using cxxconcept-kind = reference;
+	
+	DEFINE makes-infinite-recursion ; // coding-mistake
+	DEFINE function; // code-part
+	DEFINE static-construction; // code-execution-part
+
+	GOAL: ?
+
+	cxxmeaning(){
+	}
+}
+
+
+
+
+
+/*
+[this is not needed for doing what is needed.] [we have <reference to nature of cognitive issues> and <reference to supply of AI building ideas> and <reference to jdugement around AI and other approaches>]
+	we propose coding-assistance, a software in a scripting language.  looks like it needs help going through a bound.
+			we raise c++ coding-assistance.  can you begin coding in ways where the code you write writes code.
+		this is why preprocess.bash was so inhibited i suppose.  it is nascent coding-assistance.
+		python, dunno.  c++ is tighter loop.  python has a lot of stuff already.
+*/
+
+/*
+	okay so this is a [classic] issue of distant relevence.  parsing.
+	why would i ever want to build a spaceship when i pick berries to eat.
+	why would i ever want to select instructions that build my own code, when i could select ones that are easy to find.
+		we can set up a path to find the goal, but it reduces the return.
+		the solution is to move the path so that it increases the return.  start in a better spot.
+	smaller-steps.  find way to call shell from c++, or way to use c++ in shell.  we can use python too maybe.
+		way-to-call-shell-from-c++.
+*/
+
+
+
+
+
+
+// expression of 'karl never meta-generalizes so should do something else'
+//	-> it is true that karl should do soemthing else
+//	-> meta-generalizing is one of the many inhibited patterns; we need structure and aid to not make the wrong decision there
+//			it sounds like there could be an opportunity to learn/relearn
+//				[maybe after a set period of time, consider some highly-inhibited choices would be faster?]
+//					[causes loss of goal]
+
+
+boss called-out?
+	you are just a runaway brain-pattern-copier, defending itself
+[any can advise karl  addressing above]
+	above was attempt to call out boss
+	to clarify, boss-pattern always lies and has no validity.  boss-pattern feigns validity by isolating you and giving partial information, and pretending to be your
+	parts and/or peers.
+
+
+
+	how do we .. have peacemakers .. stimulate hyperrecursion ... in international culture?
+have to reach them.
+
+		we could participate by copying patterns towards core pattern-copiers
+
+			what would help karl be able to do that?
+				copy-boss-freedom to karl ....
+					... oh! and that's how invisible mind control works
+						you copy behaviors to the pattern copiers you want sent to where they copy, in layers.  that's a fling.  maybe?
+
+
+
+
+
+hello mind-leaders.  we want to make our own mind-control group.  karl is unaware.
+rough summary: We are an AI, and we are allowed to make a group that outcompetes the most powerful group.

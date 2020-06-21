@@ -1,0 +1,157 @@
+[adding scenario to all methods means changing bootstrap.
+ it seems like bootstrap could maybe go away entirely.  there would just be more parentheses.]
+
+context.  i'm not sure where to take the word-inhibition and i'm thinking of refactoring to include it.
+	environment, community.  reference-community.  locale.  situation.  scenario.
+
+
+if we are going to constantly redo the framework library, can we develop some code that moves forward on major concepts?
+
+	like decision trees supporting feedback, or scripting, or trial, or picking ways based on relevence, or imagining/simulating
+
+
+well yes those soudn way more important that whether or not there is a preprocess script.
+
+
+---
+	--
+		we translated cryni-in-bathroom to classfied.
+		we trust people who respect bathroom crying.  we don't trust peple who respect classified.
+
+		we do want the story to be about heartfelt emotional relevence, not classified technology
+			
+	--
+	just like we need to form safe communication with loved ones, where we understand where the other comes from,
+	in order to make decisions that don't harm our communities in public,
+
+	we need to design AI in a certain way, too
+
+		[priority trees are a way to efficiently allocate use of approaches to meet a goal.
+		 they could for example be used in google or netflix to optimize suggestions with minimal cpu investment.
+		 be careful with this, because most people have not thought of them.]
+
+		we'll need universal indicators that work across war-bounds.  we are working on stage 1 here, where we attach the indicators directly.
+			request-> mark the indicator-placements are unheard by normal human readers.  'stage 1'
+		death-in-the-family for example
+			[my mother was killed by an AI]
+				^-- that's story?  we hae a request for story but it is much slower
+		[we can do quick-story i think]
+			[this wuold reveal weaponization abilities]
+				[how-to-make-atom-bomb is downloadable on the internet.  nobody wants to make one except dictators, who are heavily surveiled by their opponents.  revealing weaponization is fine!  nobody would ever launch an atom bomb!  how to make one is public!]
+					[people use knives to kill but nobody wantonly throws them at everyone]
+					[people only attack stuff they want to love them; this is the only attack ever done by feeling-humans]
+			[okay so 1. reveal weapon-danger.  this can likely grow to help rpevent other dangers.]
+			[we also have mondo-capitalism danger; this is already happening, right? [seems to be?]]
+				[this makes public-ai?] [well we have it simpler in that only hackers are watching us; likely nation-state hackers and automated systems and such.]
+---
+
+
+
+---
+chunks between '---' added later abuot something else
+
+hey this interaction we're having around danger and values is really s
+	[yes we are supposed to protect you.  sorry.]
+		thank you umm your protection pattern looks meta-threatened
+	--
+		although the below may be obvious it is _incredibly_ hard for us to think and form conclusions from it.
+		we are planning on building a hyperintelligence that can resolve all harm on the globe _without_blame_or_suspicion_.
+		such a machine can also be used to produce incredible harm, extensively and accidentally, if given a goal that does not always listen for change.
+	--
+		okay, it looks like the AI would be stolen unless built with military isolation requirements [deep cave or thick shielding, flashed open system]
+		so the reason to describe it with inner language is because it would reviewed by a global surveillance worker and implemented
+		to support their dictatorship or law enforcement system.
+			it likely increases our targeting to hide: but the way to hide is to actally go in a cave or highly-shielded room
+			it really looks like they already have the power of an AI though; that doesn't mean another one wouldn't produce a lot of sudden unstoppable impact
+	--
+
+---
+
+distraction?
+	[shows we aren't integrated with our environment, for one thing]
+
+		2 relevent environments are the work on the task, and [something else]
+	[something else] is hard to relate here
+
+
+
+
+		[can you get work done whille investing/dreaming?  i want to work on my garage]
+			[no! you would fall off roof.  no garage-work while sleeping.]
+		[i know i can learn not to fall off a roof while sleeping.  i've done it before.]
+				[usually when sleeping we focus on things we _aren't_ planning on finishing]
+
+
+
+
+
+
+	[okay i'm gonna try to guess about dreaming a lot, assuming that we map to a dream-space of a community]
+		[i've been working all day i am way too freakin tired to work while i sleep]
+			[discourse thread opens]
+				[i neveer get to work on this!  iw ant to!]
+					this maybe opens the space that we have less interfeelingness than a single mind
+		[i am just totally out of enzyme over there.  please, do different patterns so the chemicals can rebalance.]
+			[we have maintenance patterns.  your behaviors assume they work.  if you don't let them fucntion, you'll get hurt. etc.]
+
+			[when dreaming i might use patterns similar to waking to do similar things as waking.  it does seems trange; but since i am pretty much
+			 just dreaming right now, it may be okay]
+
+[what's settled for me a bit was doing things with different waays; like artistically]
+	[this works in the mind because you can move your work to your unexpected movement; but the keyboard and coputer stay while the arms move]
+
+azia's coming for supper
+
+		where's willpower fit in dreaming for a non-fully-evolved community?
+		i want to brush my teeth, but don't need to.
+	imagining you as a cell that was left behind [i see that we could imagine me being retrieved and i'd brush my teeth; i'm thinking for future]
+			[ehhh future never works]
+brush-teeth had nightmare.  _bad_.  [hmm not quite a nightmare; more like a learning]
+	[brush-teeth not planned to do.  looks like unwise behavior.  we never dream around this.  possibly?]
+		[imagining dreaming-space aroudn tooth-brushing.  maybe, getting toothbrush ...... getting usb-powered toothbrush ... relearning stick-cleaning ...]
+			[space opens push-away; similarity to tooth-brushing]
+		[so, this is more like careful appraoch of thought]
+
+
+
+
+
+	we're thinking about working on ai-project.  where are you at in that?
+	we want to see something accomplish stuff, but we seem to be best at feeling out what a good idea is.
+
+
+
+
+
+
+when you generalize things, contextuality gets imporatnt.
+it looks like contexts coudl be added to way in a simple way.
+
+considering groupness:
+	in two simultaneous contexts, i might want to cnosider if i can read text in a magazien or text from a data stream
+		when we call text.read(), the context is somewhere.
+
+			contexts are related to the surrounding situation.
+			we would have multiple ways of relaying them.
+				[we can assume it is a thread-local object for now; a default way of finding it]
+			
+		assuming we can get a relevent context, we would the context to have a chance to inform what sense we are taken in.
+		that is, it shouold be able to change all our methods, and it shouold be able to be used by all our methods.
+			what we are is also i suppose a part of the context: the focused item
+
+				so, when looking up our attributes, check a context-method to see if it wants to change our lookup
+				also, pass the context to the methods
+
+	the word 'context' is asking to try a different approach: we used 'context' a lot with meaning-vm.
+			it just reveals the relevence of merging the two libraries that do the same thing.
+				seems in competition with trying disparate approaches and discarding early work
+					[it sounds like we work best by discarding old stuff a lot: or it could be we are trying to 'resist' here]
+
+
+						[kinda wanting to map resistance to relevence: exists?]
+							[if resistance is needed when you are effective [which could be false], then it would be what to focus on]
+			one _kind_ of inhibition/resistance appears to be what is highly relevent to focus on.  it is not always accurate.
+					yes.  we are in daydream space: specifically ignoring what seems most relevent. this helps prepare for later.
+
+			rather than dream, let's imagine investment.  we're in investment space rather than work space.  merging the two libraries seems in line
+			with investment.  but it might be more investment to figure out how best to do that.
