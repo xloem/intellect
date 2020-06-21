@@ -485,10 +485,41 @@ int main()
 	// 	 each one has state.  re-entering a node picks its parts and
 	// 	 resumes them.]
 
-	reference map_ordered_step = data::make([](reference variables, reference from)->reference
+	reference variables_steps = data::make([](reference variables, reference from)->
 	{
+		// variables_step needs repeated calling to finish something,
+		// but operates by calling its steps only once.
+		// to fix this it would need a way to check when to interrupt.
+		// it also gets bigger.
+		// it might be more modular to do the repetition elsewhere,
+		// like here.
+		// it would also make sense for it to return the next step,
+		// and chain itself <- but ni so much subprocess without a reason
+		// i wouldn't right now
+		
+		// STUB as an idea for doing all steps from a variables clump.
+		// each step could be another variables clump.
+		// 'from' is an ordered list of variables, or whatever:
+		// it connects to outer thing, and is passed in outer steps.
+
+		// so say we do some, and get interrupted.
+		// when interrupted, we don't want outer step advanced
+	}});
+
+	// current status: runs one step in a 'function' and advances step
+	// 	step could subcall
+	reference variables_step = data::make([](reference variables, reference from)->reference
+	{
+		// can this do whole thing? _if_ it can, by being repetaedly called
+		// (it looks like it could pretty easily if it doesn't)
+		// _then_ it won't want to advance the step until the step completes.
+		// the step could return something special to indicate completion.
+		// 	we could return "in-progress"_r or "incomplete"_r when
+		// 	incomplete.
 		reference & variable_step = variables.keyed()["step"_r];
 		reference step;
+		// TODO: unify access to next step so other processes can
+		//       easily inspect 1 way
 		if (!variable_step) {
 			step = variables->keyed()["steps"_r];
 		} else if (variable_step->has_index()) {
@@ -500,32 +531,29 @@ int main()
 		reference operation = step.keyed()["operation"_r];
 		reference input = step.keyed()["input"_r];
 		reference output = step.keyed()["output"_r];
-
-		// here we advance to next step before calling.
-		// it might be nicer if we figured a call could last forever
-		// maybe it has not completed; needs to spend more time
-		// acting on state
-		//	^-- difference betwen process and map?
-
+		reference check_outer = step.keyed()["check-outer"_r];
+			// would like to pass variables to check-outer
+			// 	check-outer has both variables and outer-process
+			// 	but it sounds easier to give it outer-prces.  we have variables
+			// 	call() it with variables
 
 		// let's imagine we're inside a priority tree, doing a
 		// subprocess. [aren't priority trees so cool? they switch
 		// tasks and keep state.  we can even make them out of nodes.]
 		// 	if our outer process wanted to switch, it has variables
 		// 	to store our state. [answer is in this subtopic]
-		//
 
-		// reselect()?
-		// 	yes please at least check back in
-		// noting: we are about to providing timed resumability
-		// to a self-referencable scripting language, which i have not
-		// done before.
-
+		reference last_step = variable_step;
 		if (variable_step && variable_step->has_index()) {
 			++ variable_step->index();
 		} else {
 			variable_step = step.keyed()["next"_r];
 		}
+		// it would make sense to advance the step of our process
+		// when we are done.  whoops ... we meant he process outside
+		// our ouer process.
+		
+		// REMEMBER FIX SYSTEM: TYPO IN SUDOERS PREVENTS USE
 
 		// what if we are following a map and bing, time is up.
 		// map too confusing: come back later.
@@ -536,8 +564,17 @@ int main()
 		// 	 	we really value how our resources are allocated,
 		// 	 	so we stop and check as we use them.
 
-		output->call(variables)->dereference<reference>()
-			= operation->call(input->call(variables));
+		reference result;
+		while ("incomplete"_r == (result = operation->call(input->call(variables)))) {
+			reference status = check_outer->call(variables);
+0			if (status) {
+				return result;
+			}
+		}
+
+		// if we are done, can we advance the step of our outer process
+		// 	uhh haven't fully done call wrapping
+		// 	
 
 		return variables;
 	});
