@@ -515,6 +515,12 @@ int main()
 		// 	to store our state. [answer is in this subtopic]
 		//
 
+		// reselect()?
+		// 	yes please at least check back in
+		// noting: we are about to providing timed resumability
+		// to a self-referencable scripting language, which i have not
+		// done before.
+
 		if (variable_step && variable_step->has_index()) {
 			++ variable_step->index();
 		} else {
