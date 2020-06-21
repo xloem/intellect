@@ -27,20 +27,20 @@ class i_priority_tree
 public:
 	// wait for a private session for working with things that would destroy
 	// stuff if something changed mid-work [could-be-crying-in-bathroom]
-	virtual unsigned long indicate_private_and_wait();
-	virtual void indicate_private_done(unsigned long);
-
-	// use together in a private session
-	virtual double interest() = 0;
-	virtual void change_interest(double new_interest) = 0;
-
-	// use together in a private session
-	virtual double engagement() = 0;
-	virtual double add_engagement(double additional_engagement) = 0;
+	virtual void indicate_private_and_wait();
+	virtual void indicate_private_done();
 
 	virtual i_priority_tree * parent() = 0;
 
-	// use together in a private session
+	// will be used together in a private session
+	virtual double interest() = 0;
+	virtual void change_interest(double new_interest) = 0;
+
+	// will be used together in a private session
+	virtual double engagement() = 0;
+	virtual double change_engagement(double new_engagement) = 0;
+
+	// will be used together in a private session
 	virtual long option_count() = 0;
 	virtual i_priority_tree * option(long index) = 0;
 
@@ -53,7 +53,7 @@ public:
 		double total_interest = 0;
 		double total_engagement = 0;
 		unsigned long options = option_count();
-		for (unsigned long choice_index = 0; choice_index < options; ++ choice_index)
+		for (long choice_index = 0; choice_index < options; ++ choice_index)
 		{
 			i_priority_tree * choice = option(choice);
 			total_interest += choice->interest();
@@ -62,7 +62,7 @@ public:
 
 		long best_choice = -1;
 		double worst_quality = 0;
-		for (unsigned long choice_index = 0; choice_index < options; ++ choice_index)
+		for (long choice_index = 0; choice_index < options; ++ choice_index)
 		{
 			i_priority_tree * choice = option(choice);
 			double engagement_ratio = choice->engagement() / total_egagement;
@@ -77,6 +77,26 @@ public:
 		}
 		return best_choice;
 	}
+
+	// use within a private session
+	// adds engagemnt to an option, and returns the option that is newly best
+	// opens a private sesion with the option passed
+	virtual long reselect(long last_choice, double new_engagement)
+	{
+		// people fight because they are not understood
+		// understanding involves proof demonstrated by action
+		// then you win all your fights beacuse you have none
+
+		i_priority_tree * choice = option(last_choice);
+
+		choice->indicate_private_and_wait();
+		choice->change_engagement(choice->engagement() + new_engagement);
+		choice->indicate_private_done();
+
+		// can be optimized to loop less by storing more state obviously
+		long new_choice = select();
+	}
+
 	// CLASSIFIED
 	/////////////////////////////////////////////////////
 };
