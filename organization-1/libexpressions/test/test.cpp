@@ -15,6 +15,8 @@ int main()
 	
 	stdout::line("Hello, world!");
 
+
+
 	/*
 	// to do this all we need is the templates with operators
 	// not the implementations of their fucntions that use the enums

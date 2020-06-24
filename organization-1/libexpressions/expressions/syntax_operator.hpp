@@ -1,26 +1,16 @@
 #pragma once
 
-//namespace library { class string; }
-#include <library/string.hpp>
-
-#include "syntax_operator_identifier.hpp"
-
 namespace expressions {
 
+// Syntactical operator details
 struct syntax_operator
 {
-	enum fixing {
-		prefix,
-		infix,
-		postfix,
-		subscript
-	};
-	syntax_operator_identifier identifier;
-	fixing type;
-	library::string symbol;
-	library::string name;
+	enum syntax_operator_identifier identifier;
+	enum syntax_operator_fixing type;
+	char const * symbol;
+	char const * name;
 };
 
-extern syntax_operator const operators[syntax_operators_count];
+extern syntax_operator const * operators; // one for each identifier
 
 } // namespace expressions

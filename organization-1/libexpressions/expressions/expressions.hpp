@@ -352,11 +352,11 @@ template <typename T>
 class expression_any : public op_nonmutating<expression_any<T>,expression_any<T>>
 {
 public:
-	// takes as normal, but passes to operate function how?
-	expression_any<T> operator+(expression_any<T> const & other) {
-	}
 	syntax_operator_identifier op;
 	std::vector<std::shared_ptr<expression_any>> parts;
+
+	template <typename Class, syntax_operator_identifier>
+	syntax_operator
 };
 // values held as any
 template <syntax_operator_identifier operation, typename ...Args>

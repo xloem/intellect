@@ -2,6 +2,7 @@
 
 namespace expressions {
 
+// Identifies operators
 enum syntax_operator_identifier
 {
 	plus,

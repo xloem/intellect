@@ -4,8 +4,20 @@
 
 namespace expressions {
 
-template <syntax_operator_identifier, typename Class, typename Self, typename...Args>
+// class Self::syntax_operator<> for each operator
+// the Class typename can be used to produce different groups of operators
+// that call different syntax_operator functions.
+/*
+template <typename Self, syntax_operator_identifier, typename...Args>
+class syntax_operator_by_identifier;
+template <typename typename Class, syntax_operator_identifier, typename Self, typename...Args>
+class syntax_operator_by_class;
+*/
+template <typename syntax_operator_identifier, typename Class, typename Self, typename...Args>
 class op;
+// farther down are templates that use this to implement clusters of operators as a unit
+// 	okay.  if you are using Class then you don't need to use identifier
+
 #define __opN(name, symbol) \
 template <typename Class, typename Self, typename... Args> \
 class op<syntax_operator_identifier::name, Class, Self, Args...> \
