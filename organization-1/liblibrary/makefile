@@ -11,19 +11,14 @@ SHELL=bash
 all: tests
 tests: test/teststring-run test/testvectors-run test/test-run
 
-install: source/liblibrary.a
-	cp source/liblibrary.a $(PREFIX)/lib/
-	cp -r library $(PREFIX)/include/
-uninstall:
-	-rm -rf $(PREFIX)/lib/liblibrary.a $(PREFIX)/include/library
-
 clean: depend
 	-rm */*.a */*.o
 
 %-run: source/liblibrary.a %
 	./$*
 
-source/liblibrary.a: source/string.o source/quick.o source/framebuffer.o source/assert.o source/regular_expression.o
+# source/framebuffer.o
+source/liblibrary.a: source/string.o source/quick.o source/assert.o source/regular_expression.o
 	ar cr "$@" $^
 
 scratch/demo: scratch/demo.o source/liblibrary.a
@@ -41,7 +36,7 @@ include .depend
 %.o: %.cpp 
 	set -o pipefail; $(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -c -o $@ 2>&1| head -n 40
 
-install: run_test source/liblibrary.a library/*.hpp
+install: source/liblibrary.a library/*.hpp
 	mkdir -p ${PREFIX}/lib
 	cp source/liblibrary.a ${PREFIX}/lib
 	mkdir -p ${PREFIX}/include/library

@@ -45,6 +45,9 @@ int main()
 	hello_world += "world";
 	error(hello_world != "hello, world", "operator+= not 'hello, world'");
 
+	hello_world = string({"hello", "world"}, string(", "));
+	error(hello_world != "hello, world", "joining failed");
+
 	for (unsigned long i = 0; i < 12; ++ i) {
 		error(hello_world[i] != "hello, world"[i], "operator[] incorrect");
 	}

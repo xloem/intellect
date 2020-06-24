@@ -2,11 +2,14 @@
 
 namespace expressions {
 
+enum syntax_operator_identifier : unsigned char;
+enum syntax_operator_fixing : unsigned char;
+
 // Syntactical operator details
 struct syntax_operator
 {
-	enum syntax_operator_identifier identifier;
-	enum syntax_operator_fixing type;
+	syntax_operator_identifier identifier;
+	syntax_operator_fixing type;
 	char const * symbol;
 	char const * name;
 };

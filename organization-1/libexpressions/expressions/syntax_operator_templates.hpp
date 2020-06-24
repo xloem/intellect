@@ -7,81 +7,245 @@ namespace expressions {
 // class Self::syntax_operator<> for each operator
 // the Class typename can be used to produce different groups of operators
 // that call different syntax_operator functions.
-/*
 template <typename Self, syntax_operator_identifier, typename...Args>
-class syntax_operator_by_identifier;
-template <typename typename Class, syntax_operator_identifier, typename Self, typename...Args>
-class syntax_operator_by_class;
-*/
-template <typename syntax_operator_identifier, typename Class, typename Self, typename...Args>
-class op;
+class syntax_operator_identifier_template; // identifier is in handler template
+
+template <typename Self, auto group, syntax_operator_identifier, typename...Args>
+class syntax_operator_group_template; // group is in handler template
+
+template <typename Self, syntax_operator_identifier, typename...Args>
+class syntax_operator; 
+
+template <typename Self, syntax_operator_identifier>
+class syntax_operator_identifier_template;
+
+template <typename Self, auto group, syntax_operator_identifier>
+class syntax_operator_group_template;
+
+template <typename Self, syntax_operator_identifier>
+class syntax_operator;
+
 // farther down are templates that use this to implement clusters of operators as a unit
 // 	okay.  if you are using Class then you don't need to use identifier
 
 #define __opN(name, symbol) \
-template <typename Class, typename Self, typename... Args> \
-class op<syntax_operator_identifier::name, Class, Self, Args...> \
+template <typename Self, typename... Args> \
+class syntax_operator_identifier_template<Self, syntax_operator_identifier::name, Args...> \
 { \
 public: \
 	auto operator symbol (Args & ... args) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, syntax_operator_identifier::name>(args...); \
+		return self.template syntax_operate<syntax_operator_identifier::name>(args...); \
 	} \
 }; \
-template <typename Class, typename Self> \
-class op<syntax_operator_identifier::name, Class, Self> \
+template <typename Self, auto group, typename... Args> \
+class syntax_operator_group_template<Self, group, syntax_operator_identifier::name, Args...> \
+{ \
+public: \
+	auto operator symbol (Args & ... args) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<group>(syntax_operator_identifier::name, args...); \
+	} \
+}; \
+template <typename Self, typename... Args> \
+class syntax_operator<Self, syntax_operator_identifier::name, Args...> \
+{ \
+public: \
+	auto operator symbol (Args & ... args) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.syntax_operate(syntax_operator_identifier::name, args...); \
+	} \
+}; \
+template <typename Self> \
+class syntax_operator_identifier_template_inferred<Self, syntax_operator_identifier::name> \
 { \
 public: \
 	template <typename... Args> \
 	auto operator symbol (Args & ... args) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, syntax_operator_identifier::name>(args...); \
+		return self.template syntax_operate<syntax_operator_identifier::name>(args...); \
 	} \
-};
+}; \
+template <typename Self, auto group> \
+class syntax_operator_group_template_inferred<Self, group, syntax_operator_identifier::name> \
+{ \
+public: \
+	template <typename... Args> \
+	auto operator symbol (Args & ... args) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<group>(syntax_operator_identifier::name, args...); \
+	} \
+}; \
+template <typename Self> \
+class syntax_operator_inferred<Self, syntax_operator_identifier::name> \
+{ \
+public: \
+	template <typename... Args> \
+	auto operator symbol (Args & ... args) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.syntax_operate(syntax_operator_identifier::name, args...); \
+	} \
+}; \
 #define __op3(name, symbol) \
-template <typename Class, typename Self, typename Right> \
-class op<syntax_operator_identifier::name, Class, Self, Right> \
+template <typename Self, typename Right> \
+class syntax_operator_identifier_template<Self, syntax_operator_identifier::name, Right> \
 { \
 public: \
 	auto operator symbol (Right & right) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, syntax_operator_identifier::name>(right); \
+		return self.template syntax_operate<syntax_operator_identifier::name>(right); \
 	} \
 }; \
-template <typename Class, typename Self> \
-class op<syntax_operator_identifier::name, Class, Self> \
+template <typename Self, auto group, typename Right> \
+class syntax_operator_group_template<Self, group, syntax_operator_identifier::name, Right> \
+{ \
+public: \
+	auto operator symbol (Right & right) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<group>(syntax_operator_identifier::name, right); \
+	} \
+}; \
+template <typename Self, typename Right> \
+class syntax_operator<Self, syntax_operator_identifier::name, Right> \
+{ \
+public: \
+	auto operator symbol (Right & right) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.syntax_operate(syntax_operator_identifier::name, right); \
+	} \
+}; \
+template <typename Self> \
+class syntax_operator_identifier_template_inferred<Self, syntax_operator_identifier::name> \
 { \
 public: \
 	template <typename Right> \
 	auto operator symbol (Right & right) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, syntax_operator_identifier::name>(right); \
+		return self.template syntax_operate<syntax_operator_identifier::name>(right); \
+	} \
+}; \
+template <typename Self, auto group> \
+class syntax_operator_group_template_inferred<Self, group, syntax_operator_identifier::name> \
+{ \
+public: \
+	template <typename Right> \
+	auto operator symbol (Right & right) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<group>(syntax_operator_identifier::name, right); \
+	} \
+}; \
+template <typename Self> \
+class syntax_operator_inferred<Self, syntax_operator_identifier::name> \
+{ \
+public: \
+	template <typename Right> \
+	auto operator symbol (Right & right) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.syntax_operate(syntax_operator_identifier::name, right); \
 	} \
 };
 #define __op2(name, symbol) \
-template <typename Class, typename Self> \
-class op<syntax_operator_identifier::name, Class, Self> \
+template <typename Self> \
+class syntax_operator_identifier_template<Self, syntax_operator_identifier::name> \
 { \
 public: \
 	auto operator symbol () \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, syntax_operator_identifier::name>(); \
+		return self.template syntax_operate<syntax_operator_identifier::name>(); \
+	} \
+}; \
+template <typename Self, auto group> \
+class syntax_operator_group_template<Self, group, syntax_operator_group_template::name> \
+{ \
+public: \
+	auto operator symbol () \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<group>(syntax_operator_identifier::name>(); \
+	} \
+}; \
+template <typename Self> \
+class syntax_operator<Self, syntax_operator_identifier::name> \
+{ \
+public: \
+	auto operator symbol () \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.syntax_operate(syntax_operator_identifier::name); \
+	} \
+}; \
+template <typename Self> \
+class syntax_operator_identifier_template_inferred<Self, syntax_operator_identifier::name> \
+{ \
+public: \
+	auto operator symbol () \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<syntax_operator_identifier::name>(); \
+	} \
+}; \
+template <typename Self, auto group> \
+class syntax_operator_group_template_inferred<Self, group, syntax_operator_group_template::name> \
+{ \
+public: \
+	auto operator symbol () \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<group>(syntax_operator_identifier::name>(); \
+	} \
+}; \
+template <typename Self> \
+class syntax_operator_inferred<Self, syntax_operator_identifier::name> \
+{ \
+public: \
+	auto operator symbol () \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.syntax_operate(syntax_operator_identifier::name); \
 	} \
 };
 #define __op2int(name, symbol) \
-template <typename Class, typename Self> \
-class op<syntax_operator_identifier::name, Class, Self> \
+template <typename Self> \
+class syntax_operator_identifier_template<Self, syntax_operator_identifier::name> \
 { \
 public: \
 	auto operator symbol (int) \
 	{ \
 		Self & self = *(Self*)this; \
-		return self.template syntax_operate<Class, syntax_operator_identifier::name>(); \
+		return self.template syntax_operate<syntax_operator_identifier::name>(); \
+	} \
+}; \
+template <typename Self, auto group> \
+class syntax_operator_group_template<Self, group, syntax_operator_identifier::name> \
+{ \
+public: \
+	auto operator symbol (int) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.template syntax_operate<group>(syntax_operator_identifier::name); \
+	} \
+}; \
+template <typename Self> \
+class syntax_operator<Self, syntax_operator_identifier::name> \
+{ \
+public: \
+	auto operator symbol (int) \
+	{ \
+		Self & self = *(Self*)this; \
+		return self.syntax_operate(syntax_operator_identifier::name); \
 	} \
 };
 
@@ -131,6 +295,7 @@ __op3(index, [])
 __opN(call, ())
 #undef __op3
 #undef __op2
+#undef __op2int
 #undef __opN
 
 

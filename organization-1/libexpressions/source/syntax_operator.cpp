@@ -1,4 +1,4 @@
-#include <expressinos/syntax_operator.hpp>
+#include <expressions/syntax_operator.hpp>
 #include <expressions/syntax_operator_identifier.hpp>
 #include <expressions/syntax_operator_fixing.hpp>
 
@@ -50,12 +50,11 @@ syntax_operator const operators_storage[syntax_operators_count] =
 	{star, prefix, "*", "star"},
 	{arrow_star, postfix, "->*", "arrow_star"},
 	{arrow, postfix, "->", "arrow"},
-	{index, bracketing, "[]", "index"},
-	{call, bracketing, "()", "call"},
+	{index, postsurroundfix, "[]", "index"},
+	{call, postsurroundfix, "()", "call"},
 	{three_way, infix, "<=>", "three_way"},
 	{cast, prefix, "(cast)", "cast"},
 	{literal, postfix, "<literal>", "literal"},
-	{syntax_operators_count, ~0, "", "syntax_operators_count"},
 };
 
 }

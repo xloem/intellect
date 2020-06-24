@@ -16,9 +16,12 @@ namespace std {
 	using string = basic_string<char, char_traits<char>, allocator<char>>;
 }
 
+#include <initializer_list>
+
 namespace library {
 
 template <typename> struct range;
+
 
 class string
 {
@@ -29,22 +32,6 @@ public:
 	string(string && source) : string(source.move()) {}
 	string(string const & source) : string(source.std()) {}
 	~string();
-
-	// should provide a virtual function interface for compilation speed
-	template <template<typename> class Container>
-	string(Container<string> const & source, string join = "")
-	: string()
-	{
-		bool continuing = false;
-		for (auto & item : source) {
-			if (continuing) {
-				(*this) += join;
-			} else {
-				continuing = true;
-			}
-			(*this) += item;
-		}
-	}
 
 	// these are parsing-related.  make string a subclass of heapvector, if needed, but might make more sense to make converters.
 	string(bool);
@@ -58,10 +45,42 @@ public:
 	template <typename T>
 	string(T * pointer) : string((void*)pointer) { }
 
+	// if we had some kind of virtual iterator this could be taken
+	// out of header file
+	template <template <typename> typename Container, typename element_type>
+	string(Container<element_type> const & source, string join/*no default*/)
+	: string()
+	{
+		bool continuing = false;
+		for (auto const & item : source) {
+			if (continuing) {
+				(*this) += join;
+			} else {
+				continuing = true;
+			}
+			(*this) += string(item);
+		}
+	}
+	template <typename element_type>
+	string(std::initializer_list<element_type> const & source, string join/*no default*/)
+	: string()
+	{
+		bool continuing = false;
+		for (auto const & item : source) {
+			if (continuing) {
+				(*this) += join;
+			} else {
+				continuing = true;
+			}
+			(*this) += string(item);
+		}
+	}
+
 	struct stringable
 	{
 		virtual string to_string() const = 0;
 	};
+
 	string(const stringable &);
 
 	string & operator+=(string const & other);
@@ -75,6 +94,8 @@ public:
 	char * data(); char const * data() const;
 	char * begin(); char const * begin() const;
 	char * end(); char const * end() const;
+
+	string to_string();
 
 	void replace(library::range<char *>, string const & with);
 

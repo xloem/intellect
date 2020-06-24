@@ -1,13 +1,39 @@
-#include <expressions/expressions.hpp>
 #include <cassert>
+#include <initializer_list>
 //#include <library/assert.hpp>
 #include <library/string.hpp>
 //#include <library/heapvector.hpp>
 //#include <vector>
+//#include <expressions/expressions.hpp>
+#include <expressions/syntax_operator.hpp>
+#include <expressions/syntax_operator_virtual_unified_by_value.implementation.cpp>
 //using namespace std;
 using namespace library;
+using namespace expressions;
 
 #include <typeinfo>
+
+class operator_printer : public syntax_operator_virtual_unified_by_value<operator_printer>
+{
+public:
+	template <typename T>
+	operator_printer(T value)
+	: text(value) { }
+
+	operator string const & () const
+	{
+		return text;
+	}
+protected:
+
+	operator_printer syntax_operate(syntax_operator_identifier identifier, std::initializer_list<operator_printer> parameters) override
+	{
+		return string(operators[identifier].name) + "(" + text + ", " + string(parameters, string(", ")) + ")";
+	}
+
+private:
+	string text;
+};
 
 int main()
 {
@@ -15,6 +41,11 @@ int main()
 	
 	stdout::line("Hello, world!");
 
+	operator_printer one = 1;
+	operator_printer two = 2;
+	operator_printer three = 3;
+
+	stdout::line( (one("a","number") + two/"sedge") * 3 );
 
 
 	/*

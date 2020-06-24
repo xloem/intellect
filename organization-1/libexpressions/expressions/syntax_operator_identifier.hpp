@@ -3,7 +3,7 @@
 namespace expressions {
 
 // Identifies operators
-enum syntax_operator_identifier
+enum syntax_operator_identifier : unsigned char
 {
 	plus,
 	minus, negate,
