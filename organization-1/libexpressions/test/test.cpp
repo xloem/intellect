@@ -11,6 +11,8 @@
 using namespace library;
 using namespace expressions;
 
+#include <any>
+#include <memory>
 #include <typeinfo>
 
 class operator_printer : public syntax_operator_virtual_unified_by_value<operator_printer>
@@ -34,6 +36,49 @@ protected:
 private:
 	string text;
 };
+
+class expression_part : public string::stringable
+{
+public:
+	virtual string to_string() = 0;
+};
+
+class literal : public expression_part
+{
+public:
+	template <typename T>
+	literal(T value)
+	: data(value), text(value) { }
+
+	virtual string to_string()
+	{
+		return text;
+	}
+
+	std::any data;
+	string text;
+};
+
+
+
+class operator_tracker : public syntax_operator_virtual_unified_by_value<operator_printer>
+{
+public:
+	/*template <typename T>
+	operator_tracker(T value)
+	: data(value), text(value) { }*/
+
+	/*
+	operator string const & () const
+	{
+		return text;
+	}
+	*/
+private:
+	syntax_operator & op;
+	std::shared_ptr<expression_part> parts;
+};
+
 
 int main()
 {
