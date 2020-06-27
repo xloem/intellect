@@ -82,7 +82,7 @@ public:
 	// this method controls all other methods by providing their default values, and can be changed
 	METHOD reference kind-get(reference kind);
 
-	// set a kinded property, returns old value
+	// set a kinded property, returns old value; pass null to unset
 	METHOD reference kind-set(reference kind, reference value);
 
 	// get all kinded property kinds, ordered

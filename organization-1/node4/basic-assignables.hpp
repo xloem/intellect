@@ -1,8 +1,6 @@
 #include "reference.hpp"
 
-// We are hoping Karl will do something else.
-// 	[but what?]
-// 		[considered cleaning-truck: someone didn't agree]
+// link objects could replace this with a lot more functionality.
 
 class kinded-assignable
 {

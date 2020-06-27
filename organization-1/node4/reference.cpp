@@ -16,8 +16,11 @@ class reference::part
 private:
 	friend class reference;
 
+	// for multiple, place a reference that has ordered content
 	using kinded = unordered_map<reference, reference>;
 	using ordered = vector<reference>;
+
+	// we could just use ordered as sets.  a smidge slow to query for membership, optimize-later.
 
 	multi-any data;
 };
@@ -141,6 +144,18 @@ METHOD reference reference::kind-set(reference kind, reference value)
 {
 	if (!self.pointer()) { throw presence-mistake(); }
 	auto & map = self.pointer()->data.get<part::kinded>();
+	if (value == null()) {
+		auto spot = map.find(kind);
+		if (spot == map.end()) {
+			// already unfilled
+			return null();
+		} else {
+			// remove value and return it
+			auto result = spot.second;
+			map.erase(spot);
+			return result;
+		}
+	}
 	auto result = map.emplace(kind, value);
 	if (result.second) {
 		// insertion happened: no old element

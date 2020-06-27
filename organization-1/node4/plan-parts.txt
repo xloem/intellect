@@ -1,0 +1,17 @@
+MAPS: delayed, organizing
+
+SELF PROCESS: no-plan-yet
+	with maps we can likely make a very simple vm by including next-instruction
+	in local-variables
+
+PARSING: ...
+
+WAYNESS CONTEXTUALITY: can be implemented by checking context using reference::kind-get
+
+SETS: using kind types, ignoring values.  more direct solution could be integrated straight into reference.  member functions for this non-present.
+
+ASSERTION-NOT-LINKED-TO-OBJECT: no-plan-yet
+	but may be possible using shadow/mirror objects if not implemented,
+	which sound simple to use and a little confusing to implement
+		we may want to plan for shadow/mirror objects more:
+		design for them could change structure
