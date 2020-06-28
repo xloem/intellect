@@ -1,0 +1,11 @@
+stay on task.  everything we do should be to tune the program and our behavior to spport each other.
+	-> no investments that don't have feedback
+	-> maybe let the system write to a side-by-side vim session.  vim reads keystrokes from stdin.
+		[no way to review buffer?  running code is hard?]  [can write file and read it, i suppose]
+			[maybe we can work in small files that we consider the content of.]
+
+	[intent is to form a graph of words and pick among them based on your input, trying to run them to see if they work.]
+
+
+	[inhibition]
+	note: this pattern is optimized for speed of software development.

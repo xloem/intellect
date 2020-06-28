@@ -1,0 +1,13 @@
+	we will try to get the gcc source, to build locally and review issue.  [is it possible the preprocessor is mismangling something?]
+
+CODE NOT RUN.
+
+FIX.  MAKE RUN.
+
+WORKED LONG TIME.
+
+	ERROR SAYS: UNSURE HOW TO CONVERT long unsigned int AMONG OPTIONS:
+		OPTION 1: not convertible to long unsigned int (r-value reference to class) <- should not be listed in output
+		OPTION 2: not convertible to long unsigned int (l-value reference to class) <- should not be listed in output
+		OPTION 3: not convertible to long unsigned int (long unsigned int, and then extra second required argument) <- this is likely candidate problem
+		OPTION 4: long unsigned int exactly
