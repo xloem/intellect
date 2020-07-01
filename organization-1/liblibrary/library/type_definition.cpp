@@ -1,9 +1,8 @@
 #include <library/type.hpp>
 
+#include <new>
 #include <typeinfo>
 #include <type_traits>
-
-inline void * operator new(unsigned long, void * pointer) { return pointer; }
 
 namespace library {
 

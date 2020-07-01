@@ -1,3 +1,7 @@
+#include <library/stackvector.hpp>
+
+#include <library/stackvector_definition.cpp>
+
 #include "evaluation_list.implementation.cpp"
 
 class evaluation_list_implement : public evaluation_list
@@ -8,16 +12,16 @@ public:
 	virtual unsigned long output_count() override { return outputs.size(); }
 	virtual unsigned long operation_count() override { return operations.size(); }
 
-	virtual void * get_input(unsigned long index) override { return inputs[index].offset; }
-	virtual void * get_output(unsigned long index) override { return outputs[index].offset; }
-	virtual void set_input(unsigned long index, void * address, void * base) override { inputs[index].offset = address - base; }
-	virtual void set_output(unsigned long index, void * address, void * base) override { outputs[index].offset = address - base; }
+	virtual void * get_input(unsigned long which, void * pointer_base) override { return (unsigned long)inputs[which].offset + (unsigned char *)pointer_base; }
+	virtual void * get_output(unsigned long which, void * pointer_base) override { return (unsigned long)outputs[which].offset + (unsigned char *)pointer_base; }
+	virtual void set_input(unsigned long index, void * address, void * pointer_base) override { inputs[index].offset = (unsigned char *)address - (unsigned char *)pointer_base; }
+	virtual void set_output(unsigned long index, void * address, void * pointer_base) override { outputs[index].offset = (unsigned char *)address - (unsigned char *)pointer_base; }
 	virtual operation * get_operation(unsigned long index) override { return operations[index].operation; }
 	virtual void set_operation(unsigned long index, ::operation * operation)
 	{
 		operations[index].operation = operation;
-		operations[index].input_indices.resize(operation.input_count());
-		operations[index].output_indices.resize(operation.output_count());
+		operations[index].input_indices.resize(operation->input_count());
+		operations[index].output_indices.resize(operation->output_count());
 	}
 
 	virtual library::type_info const & input_type(unsigned long index) override { return *inputs[index].type; }
@@ -48,13 +52,13 @@ public:
 	{
 		auto & op = operations[operation];
 		op.input_indices[input] = value;
-		op.operation->set_input(input, get_value(get_operation_input_value(operation, input))->value(), this);
+		op.operation->set_input(input, get_value(get_operation_input(operation, input))->value(), this);
 	}
 	virtual void set_operation_output(unsigned long operation, unsigned long output, unsigned long value) override
 	{
 		auto & op = operations[operation];
 		op.output_indices[output] = value;
-		op.operation->set_output(output, get_value(get_operation_output_value(operation, output))->value(), this);
+		op.operation->set_output(output, get_value(get_operation_output(operation, output))->value(), this);
 	}
 
 	virtual void more_inputs(unsigned long how_many, library::type_info const & type) override
@@ -88,22 +92,23 @@ public:
 	}
 	
 private:
-	class mapped_operation {
-		operation* operation;
-		library::stack_vector<unsigned long, 4> input_indices;
-		library::stack_vector<unsigned long, 1> output_indices;
+	struct mapped_operation {
+		::operation* operation;
+		library::stackvector<unsigned long, 4> input_indices;
+		library::stackvector<unsigned long, 1> output_indices;
 	};
-	class mapped_external {
+	struct mapped_external {
 		unsigned long offset;
 		library::type_info * type;
-		simple_typed_storage storage;
+		simple_typed_storage<> storage;
 	};
-	library::stack_vector<mapped_operation, 32> operations;
-	library::stack_vector<mapped_external, 4> inputs;
-	library::stack_vector<mapped_external, 1> outputs;
-	library::stack_vector<simple_typed_storage, 32> storage;
+	library::stackvector<mapped_operation, 32> operations;
+	library::stackvector<mapped_external, 4> inputs;
+	library::stackvector<mapped_external, 1> outputs;
+	library::stackvector<simple_typed_storage<>, 32> storage;
 };
 
 int main()
 {
+	evaluation_list_implement elist;
 }

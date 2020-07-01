@@ -1,22 +1,36 @@
+#include <utility> // for std::index_sequence
+
 #include <library/type_definition.cpp>
 #include "evaluation_list.hpp"
 
 template <typename Type>
-Type & typed_pointer::get<Type>()
+Type & typed_pointer::get()
 {
+	if (type() != library::type<Type>()) {
+		throw type_error();
+	}
 	return *(Type*)value();
 }
 
 template <typename Type>
 simple_typed_pointer::simple_typed_pointer(Type * pointer)
 : pointer_(pointer),
-  type_(&library::type<Type>())
+  type_(library::type<Type>())
 { }
 
 simple_typed_pointer::simple_typed_pointer(library::type_info const & type, void * pointer)
 : pointer_(pointer),
-  type_(&type)
+  type_(type)
 { }
+
+simple_typed_pointer simple_typed_pointer::operator=(typed_pointer const & other)
+{
+	if (type_ != other.type()) {
+		throw type_error();
+	}
+	type_.assign(pointer_, other.value());
+	return *this;
+}
 
 template <unsigned long bytes>
 simple_typed_storage<bytes>::simple_typed_storage()
@@ -27,11 +41,22 @@ template <unsigned long bytes>
 simple_typed_storage<bytes>::simple_typed_storage(library::type_info const & type)
 : _type(&type)
 {
-	static_assert(bytes >= sizeof(void*));
+	static_assert(bytes >= sizeof(unsigned char*));
 	if (_type->size > bytes) {
-		*(void**)&this->data = new unsigned char[_type->size];
+		*(unsigned char**)&this->data = new unsigned char[_type->size];
 	}
 	_type->construct_default(value());
+}
+
+template <unsigned long bytes>
+simple_typed_storage<bytes>::simple_typed_storage(typed_value const & data)
+: _type(&data.type())
+{
+	static_assert(bytes >= sizeof(unsigned char*));
+	if (_type->size > bytes) {
+		*(unsigned char**)&this->data = new unsigned char[_type->size];
+	}
+	_type->construct_copy(value(), data.value());
 }
 
 template <unsigned long bytes>
@@ -40,20 +65,10 @@ simple_typed_storage<bytes>::simple_typed_storage(Type const & data)
 : _type(&library::type<Type>())
 {
 	if constexpr (sizeof(Type) > bytes) {
-		static_assert(bytes >= sizeof(void*));
-		*(void**)&this->data = new unsigned char[sizeof(Type)];
+		static_assert(bytes >= sizeof(unsigned char*));
+		*(unsigned char**)&this->data = new unsigned char[sizeof(Type)];
 	}
 	_type->construct_copy(value(), &data);
-}
-template <unsigned long bytes>
-simple_typed_storage<bytes>::simple_typed_storage<typed_value>(typed_value const & data)
-: _type(&data.type())
-{
-	static_assert(bytes >= sizeof(void*));
-	if (_type->size > bytes) {
-		*(void**)&this->data = new unsigned char[_type->size];
-	}
-	_type->construct_copy(value(), data.value());
 }
 
 template <unsigned long bytes>
@@ -61,9 +76,9 @@ void simple_typed_storage<bytes>::clear()
 {
 	_type->destroy(value());
 	if (_type->size > bytes) {
-		delete *(void**)(&this->data)
+		delete *(unsigned char**)(&this->data);
 	}
-	_type = library::type<void>();
+	_type = &library::type<void>();
 }
 
 template <unsigned long bytes>
@@ -73,9 +88,9 @@ simple_typed_storage<bytes>::~simple_typed_storage()
 }
 
 template <unsigned long bytes>
-void library::type_info const & simple_typed_storage<bytes>::type()
+library::type_info const & simple_typed_storage<bytes>::type() const
 {
-	return _type;
+	return *_type;
 }
 
 template <unsigned long bytes>
@@ -83,6 +98,16 @@ void * simple_typed_storage<bytes>::value()
 {
 	if (_type->size > bytes) {
 		return *(void**)&data;
+	} else {
+		return data;
+	}
+}
+
+template <unsigned long bytes>
+void const * simple_typed_storage<bytes>::value() const
+{
+	if (_type->size > bytes) {
+		return *(void const*const*)&data;
 	} else {
 		return data;
 	}
@@ -106,9 +131,9 @@ typed_value & simple_typed_storage<bytes>::operator=(typed_pointer const & other
 
 template <unsigned long bytes>
 template <typename Type>
-simple_typed_storage & simple_typed_storage<bytes>::operator=(Type const & other)
+simple_typed_storage<bytes> & simple_typed_storage<bytes>::operator=(Type const & other)
 {
-	if (*_type != library::Type<Type>()) {
+	if (*_type != library::type<Type>()) {
 		clear();
 		_type = &library::type<Type>();
 		if (_type->size > bytes) {
@@ -116,7 +141,7 @@ simple_typed_storage & simple_typed_storage<bytes>::operator=(Type const & other
 		}
 		_type->construct_copy(value(), &data);
 	} else {
-		_type_>assign(value(), other.value());
+		_type->assign(value(), other.value());
 	}
 	return *this;
 }
@@ -124,17 +149,17 @@ simple_typed_storage & simple_typed_storage<bytes>::operator=(Type const & other
 template <typename Return, typename ... Parameters>
 struct std_function_operation<Return, Parameters...>::detail
 {
-	using Primary = std_function_operation<Return, Parameters...>
+	using Primary = std_function_operation<Return, Parameters...>;
 
-	template <typename Parameter, typename... Parameters>
+	template <typename Parameter, typename... Rest>
 	static library::type_info const & indexed_type(unsigned long index)
 	{
-		if constexpr (index > sizeof...(Parameters)) {
-			return library::type<void>();
-		} else if (index == 0) {
+		if (0 == index) {
 			return library::type<Parameter>();
+		} else if constexpr (0 == sizeof...(Rest)) {
+			return library::type<void>();
 		} else {
-			return indexed_type<Parameters...>(index - 1);
+			return indexed_type<Rest...>(index - 1);
 		}
 	}
 
@@ -146,12 +171,12 @@ struct std_function_operation<Return, Parameters...>::detail
 };
 
 template <typename Return, typename... Parameters>
-std_function_operation::std_function_operation(std::function<Return(Parameters...)> function)
+std_function_operation<Return, Parameters...>::std_function_operation(std::function<Return(Parameters...)> function)
 : function(function)
 { }
 
 template <typename Return, typename... Parameters>
-void library::type_info const & std_function_operation<Return, Parameters...>::type()
+library::type_info const & std_function_operation<Return, Parameters...>::type()
 {
 	return library::type<std_function_operation<Return,Parameters...>>();
 }
@@ -170,33 +195,33 @@ unsigned long std_function_operation<Return, Parameters...>::output_count()
 
 
 template <typename Return, typename... Parameters>
-void * std_function_operation<Return, Parameters...>::get_input(unsigned long whic)
+void * std_function_operation<Return, Parameters...>::get_input(unsigned long which, void * pointer_base)
 {
-	return parameters[which];
+	return (unsigned long)parameters[which] + pointer_base;
 	//return *tuple_address_of(parameters, index);
 }
 
 template <typename Return, typename... Parameters>
-void * std_function_operation<Return, Parameters...>::get_output(unsigned long which)
+void * std_function_operation<Return, Parameters...>::get_output(unsigned long which, void * pointer_base)
 {
-	return result;
+	return (unsigned long)result + pointer_base;
 }
 
 template <typename Return, typename... Parameters>
-void std_function_operation<Return, Parameters...>::set_input(unsigned long whic, void * address, void * base)
+void std_function_operation<Return, Parameters...>::set_input(unsigned long which, void * address, void * pointer_base)
 {
-	parameters[which] = address - base;
+	parameters[which] = (unsigned char *)address - (unsigned char *)pointer_base;
 	//return *tuple_address_of(parameters, index);
 }
 
 template <typename Return, typename... Parameters>
-void std_function_operation<Return, Parameters...>::set_output(unsigned long which, void * address, void * base)
+void std_function_operation<Return, Parameters...>::set_output(unsigned long which, void * address, void * pointer_base)
 {
-	result = address - base;
+	result = (unsigned char *)address - (unsigned char *)pointer_base;
 }
 
 template <typename Return, typename... Parameters>
-void library::type_info const & std_function_operation<Return, Parameters...>::input_type(unsigned long index)
+library::type_info const & std_function_operation<Return, Parameters...>::input_type(unsigned long index)
 {
 	if constexpr (sizeof...(Parameters) == 0) {
 		return library::type<void>();
@@ -206,7 +231,7 @@ void library::type_info const & std_function_operation<Return, Parameters...>::i
 }
 
 template <typename Return, typename... Parameters>
-void library::type_info const & std_function_operation<Return, Parameters...>::output_type(unsigned long index)
+library::type_info const & std_function_operation<Return, Parameters...>::output_type(unsigned long index)
 {
 	return library::type<Return>();
 }
@@ -214,15 +239,15 @@ void library::type_info const & std_function_operation<Return, Parameters...>::o
 template <typename Return, typename... Parameters>
 void std_function_operation<Return, Parameters...>::call(void * pointer_base)
 {
-	detail::call(std::index_sequence_for<Parameters...>, *this, pointer_base);
+	detail::call(std::index_sequence_for<Parameters...>(), *this, pointer_base);
 }
 
 
 
 /// old stuff
 
-template <unsigned long index, typename... Types>
-using indexed_type_t = typename indexed_type<index, Types...>::type;
+//template <unsigned long index, typename... Types>
+//using indexed_type_t = typename indexed_type<index, Types...>::type;
 
 /*
 template <typename Parameter, typename... Parameters>
