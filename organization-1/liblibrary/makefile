@@ -9,7 +9,7 @@ PREFIX=/usr/local
 SHELL=bash
 
 all: tests
-tests: test/teststring-run test/testvectors-run test/test-run
+tests: test/testtype-run test/teststring-run test/testvectors-run test/test-run
 
 clean: depend
 	-rm */*.a */*.o
@@ -17,12 +17,13 @@ clean: depend
 %-run: source/liblibrary.a %
 	./$*
 
-# source/framebuffer.o
-source/liblibrary.a: source/string.o source/quick.o source/assert.o source/regular_expression.o
+# source/framebuffer.o source/regular_expression.o
+source/liblibrary.a: source/string.o source/quick.o source/assert.o
 	ar cr "$@" $^
 
 scratch/demo: scratch/demo.o source/liblibrary.a
 
+test/testtype: test/testtype.o source/liblibrary.a
 test/teststring: test/teststring.o source/liblibrary.a
 test/testvectors: test/testvectors.o source/liblibrary.a
 test/test: test/test.o source/liblibrary.a
