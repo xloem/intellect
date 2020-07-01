@@ -33,7 +33,7 @@ $(PREPROCESS): preprocess.stable.cxx reference.stable.cxx reference.stable.hxx m
 clean:
 	-rm main *.o *.*xx
 
-.PRECIOUS: multi-any.stable.hxx reference.stable.cxx reference.stable.cxx preprocess.stable.hxx preprocess.stable.cxx
+.PRECIOUS: multi-any.stable.hxx reference.stable.hxx reference.stable.cxx preprocess.stable.hxx preprocess.stable.cxx
 .SUFFIXES:
 
 %: %.o
@@ -42,7 +42,7 @@ clean:
 	${CXX} ${CXXFLAGS} ${CPPFLAGS} -c $< -o $@
 
 %.stable.cxx: %.cxx $(PREPROCESS) test
-	sed -e 's/^\(#include .*\)\.cxx"/\1.stable.cxx"/' $< > $@
+	sed -e 's/^\(#include .*\)\.\([ch]xx\)"/\1.stable.\2"/' $< > $@
 %.stable.hxx: %.hxx $(PREPROCESS) test
 	sed -e 's/^\(#include .*\)\.hxx"/\1.stable.hxx"/' $< > $@
 %.cxx: %.cpp preprocess.bash #$(patsubst %.hpp,%.hxx, $(wildcard *.hpp))

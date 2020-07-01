@@ -2,7 +2,7 @@
 #define ___STATIC_
 #define ___EXTERN_ extern
 //# 1 "preprocess.cpp"
-#include "reference.hxx"
+#include "reference.stable.hxx"
 
 //#include <pcrecpp.h>
 #include <library/string.hpp>
