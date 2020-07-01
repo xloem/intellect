@@ -146,10 +146,11 @@ simple_typed_storage<bytes> & simple_typed_storage<bytes>::operator=(Type const 
 	return *this;
 }
 
-template <typename Return, typename ... Parameters>
-struct std_function_operation<Return, Parameters...>::detail
+#include <type_traits>
+template <typename Result, typename ... Parameters>
+struct std_function_operation<Result, Parameters...>::detail
 {
-	using Primary = std_function_operation<Return, Parameters...>;
+	using Primary = std_function_operation<Result, Parameters...>;
 
 	template <typename Parameter, typename... Rest>
 	static library::type_info const & indexed_type(unsigned long index)
@@ -164,64 +165,68 @@ struct std_function_operation<Return, Parameters...>::detail
 	}
 
 	template <unsigned long... indices>
-	static void call(std::index_sequence<indices...>, Primary & primary, unsigned char * pointer_base)
+	static void call(std::index_sequence<indices...>, Primary & primary, void * pointer_base)
 	{
-		*(Return*)(pointer_base + (unsigned long)primary.result) = primary.function(*(Parameters*)(pointer_base + (unsigned long)primary.parameters[indices]) ...);
+		if constexpr (std::is_void_v<Result>) {
+			primary.function(*(Parameters*)((unsigned char*)pointer_base + primary.parameter_offsets[indices]) ...);
+		} else {
+			*(Result*)((unsigned char*)pointer_base + primary.result_offset) = primary.function(*(Parameters*)((unsigned char*)pointer_base + primary.parameter_offsets[indices]) ...);
+		}
 	}
 };
 
-template <typename Return, typename... Parameters>
-std_function_operation<Return, Parameters...>::std_function_operation(std::function<Return(Parameters...)> function)
+template <typename Result, typename... Parameters>
+std_function_operation<Result, Parameters...>::std_function_operation(std::function<Result(Parameters...)> function)
 : function(function)
 { }
 
-template <typename Return, typename... Parameters>
-library::type_info const & std_function_operation<Return, Parameters...>::type()
+template <typename Result, typename... Parameters>
+library::type_info const & std_function_operation<Result, Parameters...>::type()
 {
-	return library::type<std_function_operation<Return,Parameters...>>();
+	return library::type<std_function_operation<Result,Parameters...>>();
 }
 
-template <typename Return, typename... Parameters>
-unsigned long std_function_operation<Return, Parameters...>::input_count()
+template <typename Result, typename... Parameters>
+unsigned long std_function_operation<Result, Parameters...>::input_count()
 {
 	return sizeof...(Parameters);
 }
 
-template <typename Return, typename... Parameters>
-unsigned long std_function_operation<Return, Parameters...>::output_count()
+template <typename Result, typename... Parameters>
+unsigned long std_function_operation<Result, Parameters...>::output_count()
 {
 	return 1;
 }
 
 
-template <typename Return, typename... Parameters>
-void * std_function_operation<Return, Parameters...>::get_input(unsigned long which, void * pointer_base)
+template <typename Result, typename... Parameters>
+void * std_function_operation<Result, Parameters...>::get_input(unsigned long which, void * pointer_base)
 {
-	return (unsigned long)parameters[which] + pointer_base;
+	return parameter_offsets[which] + (unsigned char*)pointer_base;
+	//return *tuple_address_of(parameter_offsets, index);
+}
+
+template <typename Result, typename... Parameters>
+void * std_function_operation<Result, Parameters...>::get_output(unsigned long which, void * pointer_base)
+{
+	return result_offset + (unsigned char*)pointer_base;
+}
+
+template <typename Result, typename... Parameters>
+void std_function_operation<Result, Parameters...>::set_input(unsigned long which, void * address, void * pointer_base)
+{
+	parameter_offsets[which] = (unsigned char *)address - (unsigned char *)pointer_base;
 	//return *tuple_address_of(parameters, index);
 }
 
-template <typename Return, typename... Parameters>
-void * std_function_operation<Return, Parameters...>::get_output(unsigned long which, void * pointer_base)
+template <typename Result, typename... Parameters>
+void std_function_operation<Result, Parameters...>::set_output(unsigned long which, void * address, void * pointer_base)
 {
-	return (unsigned long)result + pointer_base;
+	result_offset = (unsigned char *)address - (unsigned char *)pointer_base;
 }
 
-template <typename Return, typename... Parameters>
-void std_function_operation<Return, Parameters...>::set_input(unsigned long which, void * address, void * pointer_base)
-{
-	parameters[which] = (unsigned char *)address - (unsigned char *)pointer_base;
-	//return *tuple_address_of(parameters, index);
-}
-
-template <typename Return, typename... Parameters>
-void std_function_operation<Return, Parameters...>::set_output(unsigned long which, void * address, void * pointer_base)
-{
-	result = (unsigned char *)address - (unsigned char *)pointer_base;
-}
-
-template <typename Return, typename... Parameters>
-library::type_info const & std_function_operation<Return, Parameters...>::input_type(unsigned long index)
+template <typename Result, typename... Parameters>
+library::type_info const & std_function_operation<Result, Parameters...>::input_type(unsigned long index)
 {
 	if constexpr (sizeof...(Parameters) == 0) {
 		return library::type<void>();
@@ -230,14 +235,14 @@ library::type_info const & std_function_operation<Return, Parameters...>::input_
 	}
 }
 
-template <typename Return, typename... Parameters>
-library::type_info const & std_function_operation<Return, Parameters...>::output_type(unsigned long index)
+template <typename Result, typename... Parameters>
+library::type_info const & std_function_operation<Result, Parameters...>::output_type(unsigned long index)
 {
-	return library::type<Return>();
+	return library::type<Result>();
 }
 
-template <typename Return, typename... Parameters>
-void std_function_operation<Return, Parameters...>::call(void * pointer_base)
+template <typename Result, typename... Parameters>
+void std_function_operation<Result, Parameters...>::call(void * pointer_base)
 {
 	detail::call(std::index_sequence_for<Parameters...>(), *this, pointer_base);
 }
@@ -262,18 +267,18 @@ static unsigned long indexed_sizeof(unsigned long index)
 	}
 }
 
-template <typename Return, typename... Parameters>
-unsigned long std_function_operation<Return, Parameters...>::input_size(unsigned long index)
+template <typename Result, typename... Parameters>
+unsigned long std_function_operation<Result, Parameters...>::input_size(unsigned long index)
 {
 	//std::tuple<Parameters...> parameters;
 	//return tuple_sizeof(parameters, index);
 	//return indexed_sizeof<Parameters...>(index);
 }
 
-template <typename Return, typename... Parameters>
-unsigned long std_function_operation<Return, Parameters...>::output_size(unsigned long index)
+template <typename Result, typename... Parameters>
+unsigned long std_function_operation<Result, Parameters...>::output_size(unsigned long index)
 {
-	return sizeof(Return);
+	return sizeof(Result);
 }
 
 */
@@ -295,8 +300,8 @@ static unsigned long offset<Parameter, Parameters...>(unsigned long index)
 }
 
 namespace std {
-template <unsigned long index, typename Return, typename... Parameters>
-auto & get(std_function_operation<Return,Parameters...> & object)
+template <unsigned long index, typename Result, typename... Parameters>
+auto & get(std_function_operation<Result,Parameters...> & object)
 {
 	if (index == 
 }

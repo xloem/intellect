@@ -4,6 +4,11 @@
 
 #include "evaluation_list.implementation.cpp"
 
+// The system has a bug:
+// the operation is stored as a pointer, but the local map to parameters and result are stored in the operation
+// when the pointer is reused for other operations, their parameters and results change with the changes of the new uses
+
+
 class evaluation_list_implement : public evaluation_list
 {
 public:
@@ -88,7 +93,7 @@ public:
 	}
 
 	virtual void subcall(unsigned long operation) {
-		operations[operation].operation->call();
+		operations[operation].operation->call(this);
 	}
 	
 private:
@@ -108,7 +113,40 @@ private:
 	library::stackvector<simple_typed_storage<>, 32> storage;
 };
 
+#include <iostream>
+
+std_function_operation<double,double,double> sum([](double a,double b)->double
+{
+	return a + b;
+});
+
+std_function_operation<double> read_number([]()->double
+{
+	double number;
+	std::cout << "Input a number: ";
+	std::cin >> number;
+	return number;
+});
+
+std_function_operation<void,double> write_number([](double a)->void
+{
+	std::cout << "Here is a number: " << a << std::endl;
+});
+
 int main()
 {
 	evaluation_list_implement elist;
+	elist.more_intermediates(4, library::type<double>());
+	elist.more_operations(4);
+	elist.set_operation(0, &read_number);
+	elist.set_operation_output(0, 0, 0);
+	elist.set_operation(1, &read_number);
+	elist.set_operation_output(1, 0, 1);
+	elist.set_operation(2, &sum);
+	elist.set_operation_input(2, 0, 0);
+	elist.set_operation_input(2, 1, 1);
+	elist.set_operation_output(2, 0, 2);
+	elist.set_operation(3, &write_number);
+	elist.set_operation_input(3, 0, 2);
+	elist.call();
 }

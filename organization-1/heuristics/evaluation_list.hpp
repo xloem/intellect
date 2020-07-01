@@ -79,14 +79,27 @@ public:
 	virtual unsigned long input_count() = 0;
 	virtual unsigned long output_count() = 0;
 
+	virtual library::type_info const & input_type(unsigned long index) = 0;
+	virtual library::type_info const & output_type(unsigned long index) = 0;
+
+	// the above are normal for all operations
+	
+	// one idea is to make everything castable to a 'callable' withappropraite parameters
+	// this would then pass off the virtual function call
+	
+	// another idea might be to place the parameters in, directly,
+	// rather than using offsets to a pointer base
+	
+	// another idea might be to normalize offset to a pointer base,
+	// not change them, but use them ...  wrapping them ...
+
+	// the below may need changing
+
 	virtual void * get_input(unsigned long which, void * pointer_base = 0) = 0;
 	virtual void * get_output(unsigned long which, void * pointer_base = 0) = 0;
 
 	virtual void set_input(unsigned long which, void * address, void * pointer_base = 0) = 0;
 	virtual void set_output(unsigned long which, void * address, void * pointer_base = 0) = 0;
-
-	virtual library::type_info const & input_type(unsigned long index) = 0;
-	virtual library::type_info const & output_type(unsigned long index) = 0;
 
 	virtual void call(void * pointer_base = 0) {}
 
@@ -168,7 +181,7 @@ class std_function_operation : public operation
 };
 */
 
-namespace std { template<typename signature> class function; }
+#include <functional>
 
 template <typename Result, typename... Parameters>
 class std_function_operation : public operation
@@ -187,17 +200,14 @@ public:
 	virtual void set_input(unsigned long which, void * address, void * pointer_base) override;
 	virtual void set_output(unsigned long which, void * address, void * pointer_base) override;
 
-	virtual unsigned long input_size(unsigned long index) override;
-	virtual unsigned long output_size(unsigned long index) override;
-
 	virtual library::type_info const & input_type(unsigned long index) override;
 	virtual library::type_info const & output_type(unsigned long index) override;
 
 	virtual void call(void * pointer_base) override;
 
 	std::function<Result(Parameters...)> function;
-	void* parameters[sizeof...(Parameters)];
-	Result* result;
+	long parameter_offsets[sizeof...(Parameters)];
+	long result_offset;
 	//unsigned char parameters[0 + ... + sizeof(Parameters)];
 	//unsigned char return_[sizeof(Return)];
 private:
