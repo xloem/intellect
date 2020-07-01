@@ -48,6 +48,8 @@ int main()
 	error(type<int(*)()>() != type(&main), "identical type calls differ");
 	error(type(&main) == type<string>(), "differing type calls identical");
 
+	error(type<void>().size != 0, "void type has size");
+
 	unsigned char storage[sizeof(call_tracker)];
 	error(type<call_tracker>().size != sizeof(storage), "size of call tracker incorrect");
 
