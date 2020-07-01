@@ -234,7 +234,7 @@ private:
 
 struct calls
 {
-	double inputs[2]; double values[254];
+	double inputs[2]; double values[30];
 	static long const input_count = 2;;
 	long value_count;
 
@@ -244,7 +244,7 @@ struct calls
 		binary_math * function;
 	};
 
-	function_call functions[254];
+	function_call functions[30];
 	long function_count;
 
 	using use_space = tuple_space<decltype(operations.begin()), vector_space<long>::iterator>;
@@ -345,6 +345,7 @@ int main(int argc, char const ** argv)
 	calls trial;
 
 	std::vector<std::vector<calls::use>> uses;
+	using use_iterator = std::vector<calls::use>::iterator;
 
 	//std::vector<std::vector<calls::use>::iterator> use;
 
@@ -370,13 +371,23 @@ int main(int argc, char const ** argv)
 		for (auto use : space) {
 			uses.back().emplace_back(use);
 		}
+		std::cout << "Extended uses with " << uses.back().size() << std::endl;
 		//uses.back().insert(uses.back().begin(), space.begin(), space.end());
 	};
+
+	// each chunk of calls is based off a model call
+	// we can store that model call in a different queue,
+	// and keep it active
+	
+	// as things get longer, each model call gets a larger
+	// set of stuff added on to it
+	// 	but each set is made of subsets, with something
+	// 	held constant
 
 	// this appends a whole bunch of call objects
 	// but there is no need.  a call object is the same as a list
 	// of uses.  maybe is better to assign uses?
-	auto append_calls = [&](calls const & source)
+	auto append_calls = [&](calls const & source/*, use_iterator & iterator*/)
 	{
 		// source gets extended
 		long index = source.function_count;
@@ -404,6 +415,8 @@ int main(int argc, char const ** argv)
 
 	extend_uses();
 	calls first;
+	first.function_count = 0;
+	first.value_count = 0;
 	first.set_inputs(1, 2);
 	append_calls(first);
 

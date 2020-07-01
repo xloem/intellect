@@ -1,4 +1,4 @@
-#include <typeinfo>
+#include <library/type_definition.cpp>
 #include "evaluation_list.hpp"
 
 template <typename Type>
@@ -7,59 +7,73 @@ Type & typed_pointer::get<Type>()
 	return *(Type*)value();
 }
 
+template <typename Type>
+simple_typed_pointer::simple_typed_pointer(Type * pointer)
+: pointer_(pointer),
+  type_(&library::type<Type>())
+{ }
+
+simple_typed_pointer::simple_typed_pointer(library::type_info const & type, void * pointer)
+: pointer_(pointer),
+  type_(&type)
+{ }
+
+template <unsigned long bytes>
+simple_typed_storage<bytes>::simple_typed_storage()
+: _type(&library::type<void>())
+{ }
+
+template <unsigned long bytes>
+simple_typed_storage<bytes>::simple_typed_storage(library::type_info const & type)
+: _type(&type)
+{
+	static_assert(bytes >= sizeof(void*));
+	if (_type->size > bytes) {
+		*(void**)&this->data = new unsigned char[_type->size];
+	}
+	_type->construct_default(value());
+}
+
 template <unsigned long bytes>
 template <typename Type>
-simple_typed_storage<size>::simple_typed_storage(Type const & data)
-: _type(Type()),
-  _size(sizeof(Type))
+simple_typed_storage<bytes>::simple_typed_storage(Type const & data)
+: _type(&library::type<Type>())
 {
 	if constexpr (sizeof(Type) > bytes) {
-		static_assert(bytes > sizeof(void*));
+		static_assert(bytes >= sizeof(void*));
 		*(void**)&this->data = new unsigned char[sizeof(Type)];
-		memcpy(*(void**)&this->data, &data, _sizeof(Type));
-	} else {
-		memcpy(this->data, &data, sizeof(Type));
 	}
+	_type->construct_copy(value(), &data);
 }
 template <unsigned long bytes>
-simple_typed_storage<size>::simple_typed_storage<typed_value>(typed_value const & data)
-: _type(data.type()),
-  _size(data.size())
+simple_typed_storage<bytes>::simple_typed_storage<typed_value>(typed_value const & data)
+: _type(&data.type())
 {
-	static_assert(bytes > sizeof(void*));
-	if (_size > bytes) {
-		*(void**)&this->data = new unsigned char[_size];
-		memcpy(*(void**)&this->data, &data, _size);
-	} else if (_size == bytes) {
-		memcpy(this->data, data.value(), bytes);
-	} else {
-		memcpy(this->data, data.value(), _size);
+	static_assert(bytes >= sizeof(void*));
+	if (_type->size > bytes) {
+		*(void**)&this->data = new unsigned char[_type->size];
 	}
+	_type->construct_copy(value(), data.value());
 }
 
 template <unsigned long bytes>
-void simple_typed_storage::clear()
+void simple_typed_storage<bytes>::clear()
 {
-	if (_size > bytes) {
+	_type->destroy(value());
+	if (_type->size > bytes) {
 		delete *(void**)(&this->data)
 	}
-	_size = 0;
+	_type = library::type<void>();
 }
 
 template <unsigned long bytes>
-simple_typed_storage::~simple_typed_storage()
+simple_typed_storage<bytes>::~simple_typed_storage()
 {
 	clear();
 }
 
 template <unsigned long bytes>
-unsigned long simple_typed_storage<bytes>::size()
-{
-	return _size;
-}
-
-template <unsigned long bytes>
-void const * simple_typed_storage<bytes>::type()
+void library::type_info const & simple_typed_storage<bytes>::type()
 {
 	return _type;
 }
@@ -67,23 +81,44 @@ void const * simple_typed_storage<bytes>::type()
 template <unsigned long bytes>
 void * simple_typed_storage<bytes>::value()
 {
-	return data;
+	if (_type->size > bytes) {
+		return *(void**)&data;
+	} else {
+		return data;
+	}
 }
 
 template <unsigned long bytes>
 typed_value & simple_typed_storage<bytes>::operator=(typed_pointer const & other)
 {
-	clear();
-	_type = other.type();
-	_size = other.size();
-	if (_size > bytes) {
-		*(void**)&this->data = new unsigned char[_size];
-		memcpy(*(void**)&this->data, &data, _size);
-	} else if (_size == bytes) {
-		memcpy(this->data, data.value(), bytes);
+	if (*_type != other.type()) {
+		clear();
+		_type = &other.type();
+		if (_type->size > bytes) {
+			*(void**)&this->data = new unsigned char[_type->size];
+		}
+		_type->construct_copy(value(), other.value());
 	} else {
-		memcpy(this->data, data.value(), _size);
+		_type->assign(value(), other.value());
 	}
+	return *this;
+}
+
+template <unsigned long bytes>
+template <typename Type>
+simple_typed_storage & simple_typed_storage<bytes>::operator=(Type const & other)
+{
+	if (*_type != library::Type<Type>()) {
+		clear();
+		_type = &library::type<Type>();
+		if (_type->size > bytes) {
+			*(void**)&this->data = new unsigned char[_type->size];
+		}
+		_type->construct_copy(value(), &data);
+	} else {
+		_type_>assign(value(), other.value());
+	}
+	return *this;
 }
 
 template <typename Return, typename ... Parameters>
@@ -91,10 +126,22 @@ struct std_function_operation<Return, Parameters...>::detail
 {
 	using Primary = std_function_operation<Return, Parameters...>
 
+	template <typename Parameter, typename... Parameters>
+	static library::type_info const & indexed_type(unsigned long index)
+	{
+		if constexpr (index > sizeof...(Parameters)) {
+			return library::type<void>();
+		} else if (index == 0) {
+			return library::type<Parameter>();
+		} else {
+			return indexed_type<Parameters...>(index - 1);
+		}
+	}
+
 	template <unsigned long... indices>
 	static void call(std::index_sequence<indices...>, Primary & primary, unsigned char * pointer_base)
 	{
-		*primary.result = primary.function(*(Parameters*)(pointer_base + (unsigned long)primary.parameters[indices]) ...);
+		*(Return*)(pointer_base + (unsigned long)primary.result) = primary.function(*(Parameters*)(pointer_base + (unsigned long)primary.parameters[indices]) ...);
 	}
 };
 
@@ -104,9 +151,9 @@ std_function_operation::std_function_operation(std::function<Return(Parameters..
 { }
 
 template <typename Return, typename... Parameters>
-void const * std_function_operation<Return, Parameters...>::type()
+void library::type_info const & std_function_operation<Return, Parameters...>::type()
 {
-	return &typeid(std_function_operation<Return,Parameters...>);
+	return library::type<std_function_operation<Return,Parameters...>>();
 }
 
 template <typename Return, typename... Parameters>
@@ -148,46 +195,43 @@ void std_function_operation<Return, Parameters...>::set_output(unsigned long whi
 	result = address - base;
 }
 
-template <typename Parameter, typename... Parameters>
-static void const * indexed_typeid(unsigned long index)
+template <typename Return, typename... Parameters>
+void library::type_info const & std_function_operation<Return, Parameters...>::input_type(unsigned long index)
 {
-	if (index == 0) {
-		return &typeid(Parameter);
-	}
 	if constexpr (sizeof...(Parameters) == 0) {
-		return 0;
+		return library::type<void>();
 	} else {
-		return indexed_typeid<Parameters...>(index - 1);
+		return detail::template indexed_type<Parameters...>(index);
 	}
 }
 
 template <typename Return, typename... Parameters>
-void const * std_function_operation<Return, Parameters...>::input_type(unsigned long index)
+void library::type_info const & std_function_operation<Return, Parameters...>::output_type(unsigned long index)
 {
-	if constexpr (sizeof...(Parameters) == 0) {
-		return 0;
-	} else {
-		return indexed_typeid<Parameters...>(index);
-	}
+	return library::type<Return>();
 }
 
 template <typename Return, typename... Parameters>
-void const * std_function_operation<Return, Parameters...>::output_type(unsigned long index)
+void std_function_operation<Return, Parameters...>::call(void * pointer_base)
 {
-	return &typeid(Return);
+	detail::call(std::index_sequence_for<Parameters...>, *this, pointer_base);
 }
+
+
+
+/// old stuff
 
 template <unsigned long index, typename... Types>
 using indexed_type_t = typename indexed_type<index, Types...>::type;
 
+/*
 template <typename Parameter, typename... Parameters>
 static unsigned long indexed_sizeof(unsigned long index)
 {
-	if (index == 0) {
-		return sizeof(Parameter);
-	}
-	if constexpr (sizeof...(Parameters) == 0) {
+	if constexpr (index > sizeof...(Parameters)) {
 		return 0;
+	} else if (index == 0) {
+		return sizeof(Parameter);
 	} else {
 		return indexed_sizeof<Parameters...>(index - 1);
 	}
@@ -198,7 +242,7 @@ unsigned long std_function_operation<Return, Parameters...>::input_size(unsigned
 {
 	//std::tuple<Parameters...> parameters;
 	//return tuple_sizeof(parameters, index);
-	return indexed_sizeof<Parameters...>(index);
+	//return indexed_sizeof<Parameters...>(index);
 }
 
 template <typename Return, typename... Parameters>
@@ -207,22 +251,7 @@ unsigned long std_function_operation<Return, Parameters...>::output_size(unsigne
 	return sizeof(Return);
 }
 
-
-template <typename Return, typename... Parameters>
-void std_function_operation<Return, Parameters...>::call(void * pointer_base)
-{
-	detail::call(std::index_sequence_for<Parameters...>, *this, pointer_base);
-
-	// need to adjust all parameters now!
-	//((Return*)return_) = std::apply(function, parameters);
-	// how will we expand parameter indices
-	//function(&parameters[offset<Parameters...>()]);
-	//	would need an index list
-}
-
-
-
-/// old stuff
+*/
 
 /*
 template <typename... Parameters>
