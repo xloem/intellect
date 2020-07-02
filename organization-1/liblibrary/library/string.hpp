@@ -35,13 +35,13 @@ public:
 
 	// these are parsing-related.  make string a subclass of heapvector, if needed, but might make more sense to make converters.
 	string(bool);
-	string(char); string(unsigned char);
-	string(short); string(unsigned short);
-	string(int); string(unsigned int);
-	string(long); string(unsigned long);
-	string(long long); string(unsigned long long);
-	string(float); string(double); string(long double);
-	string(void *);
+	string(char); string(unsigned char, int base = 16);
+	string(short, int base = 10); string(unsigned short, int base = 10);
+	string(int, int base = 10); string(unsigned int, int base = 10);
+	string(long, int base = 10); string(unsigned long, int base = 10);
+	string(long long, int base = 10); string(unsigned long long, int base = 10);
+	string(float, int base = 10); string(double, int base = 10); string(long double, int base = 10);
+	string(void *, int base = 16);
 	template <typename T>
 	string(T * pointer) : string((void*)pointer) { }
 

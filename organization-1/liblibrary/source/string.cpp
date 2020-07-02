@@ -54,62 +54,128 @@ string::string(char character)
 	(*this)[0] = character;
 }
 
-string::string(unsigned char byte)
+auto streambase(int base)
+{
+	switch (base) {
+	case 16:
+		return std::hex;
+	case 10:
+		return std::dec;
+	case 8:
+		return std::oct;
+	default:
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
+
+/*
+template <typename T>
+inline void to_chars(string & output, T value, int base, bool extend, bool prefix)
+{
+	// general integer digit calculation would be
+	// unsigned long digits = ((unsigned long)(log(value)/log(base))) + 1;
+	output.resize(32);
+
+	// total number of digits will be value log base, right?
+	// digits is floor(log(value)/log(base)) + 1
+	// note that base is an integer, so we could make a floor table or something ;P
+}
+*/
+
+string::string(unsigned char byte, int base)
 : string()
 {
 	std::stringstream stream;
-	stream << std::hex << std::setfill('0') << std::setw(sizeof(byte) * 2);
+	stream << streambase(base) << std::setfill('0') << std::setw(sizeof(byte) * 2);
 	stream << (int)byte;
 	std() = stream.str();
 }
 
-string::string(short integer)
+string::string(short integer, int base)
 : string(std::to_string(integer))
-{ }
+{
+	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(unsigned short integer)
+string::string(unsigned short integer, int base)
 : string(std::to_string(integer))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(int integer)
+string::string(int integer, int base)
 : string(std::to_string(integer))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(unsigned int integer)
+string::string(unsigned int integer, int base)
 : string(std::to_string(integer))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(long integer)
+string::string(long integer, int base)
 : string(std::to_string(integer))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(unsigned long integer)
+string::string(unsigned long integer, int base)
 : string(std::to_string(integer))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(long long integer)
+string::string(long long integer, int base)
 : string(std::to_string(integer))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(unsigned long long integer)
+string::string(unsigned long long integer, int base)
 : string(std::to_string(integer))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(float real)
+string::string(float real, int base)
 : string(std::to_string(real))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(double real)
+string::string(double real, int base)
 : string(std::to_string(real))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(long double real)
+string::string(long double real, int base)
 : string(std::to_string(real))
-{ }
+{ 	if (base != 10) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+}
 
-string::string(void* pointer)
+string::string(void* pointer, int base)
 : string()
 {
+	if (base != 16) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+
 	std::stringstream stream;
 	stream << pointer;
 	std() = stream.str();

@@ -1,12 +1,10 @@
 
-#include <library/framebuffer-armadillo.hpp>
 #include <library/framebuffer-basic.hpp>
 
 #include <cstdio>
 #include <cstdlib>
 #include <fcntl.h>
-#include <string>
-using namespace std;
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -15,23 +13,12 @@ using namespace std;
 #include <iostream>
 
 #include <library/quick.hpp>
+#include <library/string.hpp>
+using namespace library;
 
-struct fb_info
-{
-	size_t width;
-	size_t height;
-	size_t stride;
-	size_t bpp;
-	size_t Bpp;
-	size_t pixel_stride;
-	framebuffer_basic::pixel_type * back_buffer;
-	int fd;
-	framebuffer_basic::pixel_type * front_buffer;
-};
+#include "fb_info.hpp"
 
 struct unexpected_bpp : public std::exception {};
-
-#define fb (*(fb_info*)storage)
 
 void init(char const * name, void * & storage)
 {
@@ -53,13 +40,6 @@ void init(char const * name, void * & storage)
 	fb.back_buffer = new framebuffer_basic::pixel_type[fb.pixel_stride * fb.height];
 }
 
-arma::Cube<uint8_t> make_cube(char const * name, void * & storage)
-{
-	//init(name, storage);
-
-	return arma::Cube<uint8_t>(&fb.back_buffer[0][0], fb.Bpp, fb.pixel_stride, fb.height, false, true);
-}
-
 framebuffer_basic::framebuffer_basic(char const * name)
 {
 	init(name, storage);
@@ -78,13 +58,6 @@ framebuffer_basic::~framebuffer_basic()
 	fb.fd = 0;
 }
 
-framebuffer_armadillo::framebuffer_armadillo(char const * name)
-: framebuffer_basic(name), Cube(make_cube(name, storage))
-{ }
-
-framebuffer_armadillo::~framebuffer_armadillo()
-{ }
-
 int framebuffer_basic::width()
 {
 	return fb.width;
@@ -98,7 +71,7 @@ int framebuffer_basic::height()
 framebuffer_basic::pixel_type & framebuffer_basic::pixel(int column, int row)
 {
 	if (column + row * stride() * sizeof(pixel_type) > fb.stride * fb.height) {
-		cerr << "out of range" << endl;
+		library::stderr::line("out of range");
 		throw std::exception();
 	}
 	return fb.back_buffer[column + row * stride()];

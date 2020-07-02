@@ -1,0 +1,7 @@
+*.o
+*.a
+test/testframebuffer-basic
+test/testframebuffer-armadillo
+test/testvectors
+test/teststring
+test/testtype

@@ -1,18 +1,30 @@
 testvectors.o: test/testvectors.cpp library/heapvector.hpp \
  library/stackvector.hpp library/string.hpp \
- library/stackvector_definition.cpp library/heapvector_definition.cpp
-teststring.o: test/teststring.cpp library/string.hpp
-test.o: test/test.cpp library/framebuffer-armadillo.hpp \
- library/framebuffer-basic.hpp
+ library/stackvector_definition.cpp library/heapvector_definition.cpp \
+ test/test.hpp
+testframebuffer-basic.o: test/testframebuffer-basic.cpp \
+ library/framebuffer-basic.hpp test/test.hpp library/string.hpp
+testtype.o: test/testtype.cpp library/type_definition.cpp \
+ library/type.hpp test/test.hpp library/string.hpp
+teststring.o: test/teststring.cpp library/string.hpp test/test.hpp
+testframebuffer-armadillo.o: test/testframebuffer-armadillo.cpp \
+ library/framebuffer-armadillo.hpp library/framebuffer-basic.hpp \
+ test/test.hpp library/string.hpp
 demo.o: scratch/demo.cpp library/framebuffer-armadillo.hpp \
  library/framebuffer-basic.hpp
+framebuffer-armadillo.o: source/framebuffer-armadillo.cpp \
+ library/framebuffer-armadillo.hpp library/framebuffer-basic.hpp \
+ source/fb_info.hpp
 assert.o: source/assert.cpp library/assert.hpp
-regular_expression.o: source/regular_expression.cpp
-framebuffer.o: source/framebuffer.cpp library/framebuffer-armadillo.hpp \
- library/framebuffer-basic.hpp library/quick.hpp
 string.o: source/string.cpp library/string.hpp
-quick.o: source/quick.cpp library/quick.hpp
+framebuffer-kokkos.o: source/framebuffer-kokkos.cpp source/fb_info.hpp
+quick.o: source/quick.cpp library/quick.hpp library/string.hpp \
+ library/heapvector.hpp
+framebuffer-basic.o: source/framebuffer-basic.cpp \
+ library/framebuffer-basic.hpp library/quick.hpp library/string.hpp \
+ library/heapvector.hpp source/fb_info.hpp
 heapvector_definition.o: library/heapvector_definition.cpp \
  library/heapvector.hpp
+type_definition.o: library/type_definition.cpp library/type.hpp
 stackvector_definition.o: library/stackvector_definition.cpp \
  library/stackvector.hpp

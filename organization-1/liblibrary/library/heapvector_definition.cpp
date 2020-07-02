@@ -51,7 +51,7 @@ template <typename element_type>
 heapvector<element_type>::heapvector(heapvector && other)
 : heapvector()
 {
-	*this = std::forward(other);
+	*this = std::forward<heapvector>(other);
 }
 
 template <typename element_type>

@@ -9,7 +9,7 @@ PREFIX=/usr/local
 SHELL=bash
 
 all: tests
-tests: test/testtype-run test/teststring-run test/testvectors-run test/test-run
+tests: test/testtype-run test/teststring-run test/testvectors-run test/testframebuffer-basic-run test/testframebuffer-armadillo-run
 
 clean: depend
 	-rm */*.a */*.o
@@ -17,8 +17,8 @@ clean: depend
 %-run: source/liblibrary.a %
 	./$*
 
-# source/framebuffer.o source/regular_expression.o
-source/liblibrary.a: source/string.o source/quick.o source/assert.o source/framebuffer.o
+# source/regular_expression.o
+source/liblibrary.a: source/string.o source/quick.o source/assert.o source/framebuffer-basic.o source/framebuffer-armadillo.o
 	ar cr "$@" $^
 
 scratch/demo: scratch/demo.o source/liblibrary.a
@@ -26,7 +26,8 @@ scratch/demo: scratch/demo.o source/liblibrary.a
 test/testtype: test/testtype.o source/liblibrary.a
 test/teststring: test/teststring.o source/liblibrary.a
 test/testvectors: test/testvectors.o source/liblibrary.a
-test/test: test/test.o source/liblibrary.a
+test/testframebuffer-basic: test/testframebuffer-basic.o source/liblibrary.a
+test/testframebuffer-armadillo: test/testframebuffer-armadillo.o source/liblibrary.a
 
 depend:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM $(wildcard */*.cpp) > .depend
