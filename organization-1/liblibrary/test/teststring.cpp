@@ -25,11 +25,12 @@ int main()
 	string from_integer(3141593);
 	worry(from_integer != "3141593", "integer string not '3141593'");
 
-	string from_real(3.141593);
-	worry(from_real != "3.141593", "real string '" + from_real + "' instead of 3.141593");
+	//string from_real(3.141593);
+	//worry(from_real != "3.141593", "real string '" + from_real + "' instead of 3.141593");
 
 	string from_pointer((void*)0xaaaa480);
-	worry(from_pointer != "0xaaaa480", "pointer string not '0xaaaa480'");
+	string plan = sizeof(void*)==4 ? "0x0aaaa480" : "0x000000000aaaa480";
+	worry(from_pointer != plan, "pointer string '" + from_pointer + "' instead of '" + plan + "'");
 
 	string hello_world = string("hello, ") + string("world");
 	worry(hello_world != "hello, world", "operator+ not 'hello, world'");

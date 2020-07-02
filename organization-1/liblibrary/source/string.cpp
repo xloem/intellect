@@ -1,7 +1,10 @@
+#include <charconv>
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string.h>
 
 #include <library/string.hpp>
 
@@ -11,12 +14,12 @@ string::string()
 : storage(new std::string())
 { }
 
-string::string(char const * source)
-: storage(new std::string(source))
+string::string(char const * source, int size)
+: storage(size ? new std::string(source, size) : new std::string(source))
 { }
 
-string::string(char * source)
-: storage(new std::string(source))
+string::string(char * source, int size)
+: storage(size ? new std::string(source, size) : new std::string(source))
 { }
 
 /*
@@ -49,10 +52,8 @@ string::string(bool flag)
 { }
 
 string::string(char character)
-: string(" ")
-{
-	(*this)[0] = character;
-}
+: string(&character, 1)
+{ }
 
 auto streambase(int base)
 {
@@ -68,118 +69,148 @@ auto streambase(int base)
 	}
 }
 
-/*
+static string baseprefix(int base) {
+	switch(base) {
+	case 8:
+		return '0';
+	case 2:
+		return {"0b",2};
+	case 10:
+		return {"0d",2};
+	case 16:
+		return {"0x",2};
+	default:
+		string result(" B", 2);
+		if (base < 10) {
+			result[0] = '0' + base;
+		} else {
+			result[0] = 'a' + base;
+		}
+		return result;
+	}
+}
+
 template <typename T>
-inline void to_chars(string & output, T value, int base, bool extend, bool prefix)
+static inline void integer_to_chars(string & output, T value, int base, bool prefix, unsigned long digits)
 {
-	// general integer digit calculation would be
-	// unsigned long digits = ((unsigned long)(log(value)/log(base))) + 1;
-	output.resize(32);
+	bool extend = digits;
+	if (!extend) {
+		digits = ((unsigned long)(log(value)/log(base))) + 1;
+	}
+	unsigned long offset = 0;
 
-	// total number of digits will be value log base, right?
-	// digits is floor(log(value)/log(base)) + 1
-	// note that base is an integer, so we could make a floor table or something ;P
+	if (prefix) {
+		output = baseprefix(base);
+		offset = output.size();
+		output.resize(offset + digits);
+	} else {
+		output.resize(digits);
+	}
+
+	auto result = std::to_chars(output.data() + offset, output.data() + output.size(), value, base);
+
+	if (result.ptr != output.end()) {
+		if (extend) {
+			unsigned long difference = output.end() - result.ptr;
+			char * start = &output[offset];
+			memmove(start + difference, start, result.ptr - start);
+			memset(start, '0', difference);
+		} else {
+			output.resize(result.ptr - output.begin());
+		}
+	}
+	
+	// we often make a mess in our attempt to organize.
+	// maybe we do this more than we are aware of, because of
+	// memory issues.
 }
-*/
 
-string::string(unsigned char byte, int base)
+string::string(void* pointer, int base, bool prefix, int digits)
 : string()
 {
-	std::stringstream stream;
-	stream << streambase(base) << std::setfill('0') << std::setw(sizeof(byte) * 2);
-	stream << (int)byte;
-	std() = stream.str();
+	integer_to_chars(*this, (unsigned long)pointer, base, prefix, digits);
 }
 
-string::string(short integer, int base)
-: string(std::to_string(integer))
-{
-	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(unsigned short integer, int base)
-: string(std::to_string(integer))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(int integer, int base)
-: string(std::to_string(integer))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(unsigned int integer, int base)
-: string(std::to_string(integer))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(long integer, int base)
-: string(std::to_string(integer))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(unsigned long integer, int base)
-: string(std::to_string(integer))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(long long integer, int base)
-: string(std::to_string(integer))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(unsigned long long integer, int base)
-: string(std::to_string(integer))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(float real, int base)
-: string(std::to_string(real))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(double real, int base)
-: string(std::to_string(real))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(long double real, int base)
-: string(std::to_string(real))
-{ 	if (base != 10) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-}
-
-string::string(void* pointer, int base)
+string::string(unsigned char byte, int base, bool prefix, int digits)
 : string()
 {
-	if (base != 16) {
-		throw std::invalid_argument("unimplemented floating point base");
-	}
-
-	std::stringstream stream;
-	stream << pointer;
-	std() = stream.str();
+	integer_to_chars(*this, byte, base, prefix, digits);
 }
+
+string::string(signed short integer, int base, bool prefix, int digits)
+: string()
+{
+	integer_to_chars(*this, integer, base, prefix, digits);
+}
+
+string::string(unsigned short integer, int base, bool prefix, int digits)
+: string()
+{
+	integer_to_chars(*this, integer, base, prefix, digits);
+}
+
+string::string(signed int integer, int base, bool prefix, int digits)
+: string()
+{
+	integer_to_chars(*this, integer, base, prefix, digits);
+}
+
+string::string(unsigned int integer, int base, bool prefix, int digits)
+: string()
+{
+	integer_to_chars(*this, integer, base, prefix, digits);
+}
+
+string::string(signed long integer, int base, bool prefix, int digits)
+: string()
+{
+	integer_to_chars(*this, integer, base, prefix, digits);
+}
+
+string::string(unsigned long integer, int base, bool prefix, int digits)
+: string()
+{
+	integer_to_chars(*this, integer, base, prefix, digits);
+}
+
+string::string(signed long long integer, int base, bool prefix, int digits)
+: string()
+{
+	integer_to_chars(*this, integer, base, prefix, digits);
+}
+
+string::string(unsigned long long integer, int base, bool prefix, int digits)
+: string()
+{
+	integer_to_chars(*this, integer, base, prefix, digits);
+}
+
+string::string(float real, int base, bool prefix, int digits)
+: string()
+{
+	throw "unimplemented oops";
+	//to_chars(*this, real, base, prefix, digits);
+}
+
+string::string(double real, int base, bool prefix, int digits)
+: string()
+{
+	throw "unimplemented oops";
+	//to_chars(*this, real, base, prefix, digits);
+}
+
+string::string(long double real, int base, bool prefix, int digits)
+: string()
+{
+	throw "unimplemented oops";
+	//to_chars(*this, real, base, prefix, digits);
+}
+
+// is todo-list making a mess?
+// 	feels a little like one-big-thing-unaddressed
+// 		all your todo items
+// 		assume there is no mind control or global ai
+// 		they don't understand the needs of handling these things
 
 // 	ideas: -> let's plan for the time rather than using an alarm
 // 		-> let's visit the todo list on a schedule, too.
@@ -222,9 +253,19 @@ char & string::operator[](unsigned long index)
 	return (*storage)[index];
 }
 
+char const & string::operator[](unsigned long index) const
+{
+	return (*storage)[index];
+}
+
 unsigned long string::size() const
 {
 	return storage->size();
+}
+
+void string::resize(unsigned long size)
+{
+	storage->resize(size);
 }
 
 char * string::data()
