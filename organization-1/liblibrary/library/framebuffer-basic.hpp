@@ -18,7 +18,10 @@ public:
 	pixel_type & pixel(int column, int row);
 
 	int stride();
-	pixel_type * memory();
+	pixel_type * buffer();
+
+	void blit_to(int column0 = 0, int row0 = 0, int column1 = 0, int row1 = 0);
+	void blit_from(int column0 = 0, int row0 = 0, int column1 = 0, int row1 = 0);
 
 	// ?
 	//void write_raw(int offset, pixel_type const * data, int length);

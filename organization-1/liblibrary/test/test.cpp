@@ -23,14 +23,32 @@ int main()
 		uword row_distance = row - center_height;
 		uword half_width = sqrt(radius * radius - row_distance * row_distance);
 		for (uword column = center_width - half_width; column <= center_width + half_width; ++ column) {
-			fb0.pixel(uvec2{column, row})[1] = 128;
-			// fb0(1, column, row) = 128;
-			/*fb0.pixel(column, row)[1] = 128;
-			if (fb0.pixel(column, row)[1] != 128) {
-				cerr << "Failed to write pixel " << error();
-			}*/
+			fb0.framebuffer_basic::pixel(column, row)[0] = 128;
+		}
+		fb0.framebuffer_basic::blit_to(center_width - half_width, row, center_width + half_width + 1, row + 1);
+		for (uword column = center_width - half_width; column <= center_width + half_width; ++ column) {
+			fb0.framebuffer_basic::pixel(column, row)[0] = 0;
+		}
+		fb0.framebuffer_basic::blit_from(center_width - half_width, row, center_width + half_width + 1, row + 1);
+		for (uword column = center_width - half_width; column <= center_width + half_width; ++ column) {
+			if (fb0.framebuffer_basic::pixel(column, row)[0] != 128) {
+				cerr << "Failed to write pixel using basic api " << error();
+			}
+			fb0.pixel(uvec2{column, row})[2] = 128;
+		}
+		fb0.blit_to({center_width - half_width, row}, {center_width + half_width + 1, row + 1});
+		for (uword column = center_width - half_width; column <= center_width + half_width; ++ column) {
+			fb0.pixel(uvec2{column, row})[2] = 0;
+		}
+		fb0.blit_from({center_width - half_width, row}, {center_width + half_width + 1, row + 1});
+		for (uword column = center_width - half_width; column <= center_width + half_width; ++ column) {
+			if (fb0.pixel(uvec2{column, row})[2] != 128) {
+				cerr << "Failed to write pixel using armadillo api " << error();
+			}
 		}
 	}
+	fb0.blit_from();
+	fb0.blit_to();
 
 	/*
 	cerr << "fb0 width: " << fb0.width() << endl;

@@ -18,7 +18,7 @@ clean: depend
 	./$*
 
 # source/framebuffer.o source/regular_expression.o
-source/liblibrary.a: source/string.o source/quick.o source/assert.o
+source/liblibrary.a: source/string.o source/quick.o source/assert.o source/framebuffer.o
 	ar cr "$@" $^
 
 scratch/demo: scratch/demo.o source/liblibrary.a
