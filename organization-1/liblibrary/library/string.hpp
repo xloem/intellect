@@ -52,9 +52,9 @@ public:
 	string(     unsigned long, int base = 10, bool prefix = false, int digits = 0);
 	string(  signed long long, int base = 10, bool prefix = false, int digits = 0);
 	string(unsigned long long, int base = 10, bool prefix = false, int digits = 0);
-	string(      float, int base = 10, bool prefix = false, int precision = 3);
-	string(     double, int base = 10, bool prefix = false, int precision = 6);
-	string(long double, int base = 10, bool prefix = false, int precision = 9);
+	string(      float, int base = 10, bool prefix = false, int precision = -1);
+	string(     double, int base = 10, bool prefix = false, int precision = -1);
+	string(long double, int base = 10, bool prefix = false, int precision = -1);
 
 	// this is getting called for (char const *, size)
 	// if we made prefix be second argument could be quick fix

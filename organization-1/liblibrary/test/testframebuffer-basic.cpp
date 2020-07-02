@@ -33,7 +33,7 @@ int main()
 		}
 		fb0.blit_from(center_width - half_width, row, center_width + half_width + 1, row + 1);
 		for (int column = center_width - half_width; column <= center_width + half_width; ++ column) {
-			worry(fb0.pixel(column, row)[1] != 128 || fb0.pixel(column, row)[3] != 0, "Failed to write pixel");
+			worry(fb0.pixel(column, row)[1] != 128 || fb0.pixel(column, row)[3] != 0, "Wrote pixel {?,128,?,0} and read pixel {" + string(fb0.pixel(column, row)[0]) + "," + string(fb0.pixel(column, row)[1]) + "," + string(fb0.pixel(column, row)[2]) + "," + string(fb0.pixel(column, row)[3]) + "}");
 			fb0.pixel(column, row)[0] = 128;
 			fb0.pixel(column, row)[1] = 0;
 			fb0.pixel(column, row)[2] = 128;

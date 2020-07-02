@@ -90,6 +90,41 @@ static string baseprefix(int base) {
 	}
 }
 
+/*
+template <typename T>
+static inline void real_to_chars(string & output, T value, int base, bool prefix, unsigned long precision)
+{
+	unsigned long offset = 0;
+	if (prefix) {
+		output = baseprefix(base);
+		offset = output.size();
+		output.resize(offset + 32);
+	} else {
+		output.resize(32);
+	}
+
+	std::to_chars_result result;
+	if (base != 10 && base != 16) {
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+	if (precision) {
+		result = std::to_chars(output.data() + offset, output.data() + output.size(), value, (base == 16) ? std::chars_format::hex : 0, precision);
+	} else {
+		result = std::to_chars(output.data() + offset, output.data() + output.size(), value, (base == 16) ? std::chars_format::hex : 0);
+	}
+
+	if (result.ptr != output.end()) {
+		output.resize(result.ptr - output.begin());
+	}
+	
+	// [below expression spawned in response to noting the responses
+	//  to inhibition stemming from more-things-at-once]
+	// we often make a mess in our attempt to organize.
+	// maybe we do this more than we are aware of, because of
+	// memory issues.
+}
+*/
+
 template <typename T>
 static inline void integer_to_chars(string & output, T value, int base, bool prefix, unsigned long digits)
 {
@@ -124,6 +159,7 @@ static inline void integer_to_chars(string & output, T value, int base, bool pre
 	// maybe we do this more than we are aware of, because of
 	// memory issues.
 }
+
 
 string::string(void* pointer, int base, bool prefix, int digits)
 : string()
@@ -185,25 +221,68 @@ string::string(unsigned long long integer, int base, bool prefix, int digits)
 	integer_to_chars(*this, integer, base, prefix, digits);
 }
 
-string::string(float real, int base, bool prefix, int digits)
+string::string(float real, int base, bool prefix, int precision)
+: string((double)real, base, prefix, precision)
+{ }
+
+string::string(double real, int base, bool prefix, int precision)
 : string()
 {
-	throw "unimplemented oops";
-	//to_chars(*this, real, base, prefix, digits);
+	unsigned long length, offset;
+	switch (base) {
+	case 10:
+		length = 1 + snprintf(data(), 0, "%.*f", precision, real);
+		if (prefix) {
+			resize(length + 2);
+			(*this)[0] = '0';
+			(*this)[1] = 'd';
+			offset = 2;
+		} else {
+			resize(length);
+			offset = 0;
+		}
+		snprintf(data() + offset, length, "%.*f", precision, real);
+		break;
+	case 16:
+		length = 1 + snprintf(data(), 0, "%.*a", precision, real);
+		resize(length);
+		snprintf(data(), length, "%.*a", precision, real);
+		// TODO: remove prefix if not requested
+		break;
+	default:
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+	resize(size() - 1);
 }
 
-string::string(double real, int base, bool prefix, int digits)
+string::string(long double real, int base, bool prefix, int precision)
 : string()
 {
-	throw "unimplemented oops";
-	//to_chars(*this, real, base, prefix, digits);
-}
-
-string::string(long double real, int base, bool prefix, int digits)
-: string()
-{
-	throw "unimplemented oops";
-	//to_chars(*this, real, base, prefix, digits);
+	unsigned long length, offset;
+	switch (base) {
+	case 10:
+		length = 1 + snprintf(data(), 0, "%.*Lf", precision, real);
+		if (prefix) {
+			resize(length + 2);
+			(*this)[0] = '0';
+			(*this)[1] = 'd';
+			offset = 2;
+		} else {
+			resize(length);
+			offset = 0;
+		}
+		snprintf(data() + offset, length, "%.*Lf", precision, real);
+		break;
+	case 16:
+		length = 1 + snprintf(data(), 0, "%.*La", precision, real);
+		resize(length);
+		snprintf(data(), length, "%*.La", precision, real);
+		// TODO: remove prefix if not requested
+		break;
+	default:
+		throw std::invalid_argument("unimplemented floating point base");
+	}
+	resize(size() - 1);
 }
 
 // is todo-list making a mess?
