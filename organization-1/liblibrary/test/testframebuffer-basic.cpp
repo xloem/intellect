@@ -1,6 +1,7 @@
 #include <library/framebuffer-basic.hpp>
 
 #include <library/heapvector_definition.cpp>
+#include <library/time.hpp>
 
 #include <cmath>
 
@@ -15,6 +16,8 @@ int main()
 	worry(fb0.width() < 50 || fb0.width() > 5000, string("Unlikely width: ") + fb0.width());
 	worry(fb0.height() < 50 || fb0.height() > 5000, string("Unlikely height: ") + fb0.height());
 	worry(fb0.stride() < 50 || fb0.stride() > 5000, string("Unlikely height: ") + fb0.stride());
+
+	sleep_for(0.1);
 
 	int center_width = fb0.width() / 2;
 	int center_height = fb0.height() / 2;

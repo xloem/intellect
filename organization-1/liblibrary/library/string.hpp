@@ -23,6 +23,8 @@ namespace std {
 
 #include <initializer_list>
 
+#include <library/heapvector.hpp>
+
 namespace library {
 
 template <typename> struct range;
@@ -56,6 +58,8 @@ public:
 	string(     double, int base = 10, bool prefix = false, int precision = -1);
 	string(long double, int base = 10, bool prefix = false, int precision = -1);
 
+	static string file(string filename);
+
 	// this is getting called for (char const *, size)
 	// if we made prefix be second argument could be quick fix
 	//template <typename T>
@@ -79,6 +83,8 @@ public:
 	float       to_float(int base = 10);
 	double      to_double(int base = 10);
 	long double to_long_double(int base = 10);
+
+	void to_file(string filename);
 
 	void lower();
 	string lowered();
@@ -142,6 +148,8 @@ public:
 	string to_string();
 
 	void replace(library::range<char *>, string const & with);
+
+	heapvector<string> split(string delimiter);
 
 	char const * c_str() const;
 

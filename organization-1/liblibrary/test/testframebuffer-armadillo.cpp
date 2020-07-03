@@ -1,6 +1,7 @@
 #include <library/framebuffer-armadillo.hpp>
 
 #include <library/heapvector_definition.cpp>
+#include <library/time.hpp>
 
 #include <cmath>
 
@@ -12,6 +13,8 @@ int main()
 {
 	framebuffer_armadillo fb0("fb0");
 	stderr::line("fb0 dimensions: " + string(fb0.dimensions()[0]) + "x" + string(fb0.dimensions()[1]));
+
+	sleep_for(0.1);
 
 	uword center_width = fb0.width() / 2;
 	uword center_height = fb0.height() / 2;

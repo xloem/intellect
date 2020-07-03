@@ -1,16 +1,20 @@
 #include <cctype>
 #include <charconv>
 #include <cmath>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <string.h>
 
+#include <library/heapvector_definition.cpp>
 #include <library/quick.hpp>
 #include <library/string.hpp>
 
 namespace library {
+
+template class heapvector<string>;
 
 string::string()
 : storage(new std::string())
@@ -287,6 +291,14 @@ string::string(long double real, int base, bool prefix, int precision)
 	resize(size() - 1);
 }
 
+string string::file(string filename)
+{
+	std::ifstream file(filename.std());
+	std::ostringstream sstr;
+	sstr << file.rdbuf();
+	return sstr.str();
+}
+
 void string::lower()
 {
 	for (char & c : *this) {
@@ -426,6 +438,13 @@ long double string::to_long_double(int base)
 	return result;
 }
 
+void string::to_file(string filename)
+{
+	std::ofstream file(filename.std());
+	std::istringstream sstr(std());
+	file << sstr.rdbuf();
+}
+
 
 // is todo-list making a mess?
 // 	feels a little like one-big-thing-unaddressed
@@ -502,6 +521,19 @@ char * string::begin()
 char * string::end()
 {
 	return storage->data() + size();
+}
+
+heapvector<string> string::split(string delimiter)
+{
+	heapvector<string> result;
+	size_t last = 0;
+	while (last < size()) {
+		size_t next = std().find(delimiter.std(), last);
+		if (next == std::string::npos) { next = size(); }
+		result.push_back(std().substr(last, next - last));
+		last = next + 1;
+	}
+	return result;
 }
 
 char const * string::c_str() const
