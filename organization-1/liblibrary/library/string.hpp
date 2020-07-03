@@ -80,7 +80,11 @@ public:
 	double      to_double(int base = 10);
 	long double to_long_double(int base = 10);
 
+	void lower();
+	string lowered();
 
+	void upper();
+	string uppered();
 
 
 	// if we had some kind of virtual iterator this could be taken

@@ -2,7 +2,7 @@ CXX=test/measure g++
 #CXX=g++
 LINK.o=${CXX}
 CXXFLAGS=-time -std=c++17 -ggdb -Wall -Werror -O0
-CPPFLAGS=-I.
+CPPFLAGS=-I. -MMD
 LDLIBS=-Lsource -llibrary
 PREFIX=/usr/local
 
@@ -11,7 +11,7 @@ SHELL=bash
 all: tests
 tests: test/testtype-run test/teststring-run test/testvectors-run test/testframebuffer-basic-run test/testframebuffer-armadillo-run
 
-clean: depend
+clean:
 	-rm */*.a */*.o
 
 %-run: source/liblibrary.a %
@@ -29,9 +29,7 @@ test/testvectors: test/testvectors.o source/liblibrary.a
 test/testframebuffer-basic: test/testframebuffer-basic.o source/liblibrary.a
 test/testframebuffer-armadillo: test/testframebuffer-armadillo.o source/liblibrary.a
 
-depend:
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM $(wildcard */*.cpp) > .depend
-include .depend
+include $(wildcard */*.d)
 
 %.E: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $@

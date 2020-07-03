@@ -27,11 +27,11 @@ void init(char const * name, void * & storage)
 	fb.fd = open(fbname.c_str(), O_RDWR);
 	string sysdir = "/sys/class/graphics/";
 	sysdir += name; sysdir += "/";
-	to_number(file_read(sysdir + "stride"), fb.stride);
+	fb.stride = file_read(sysdir + "stride").to_unsigned_long();
 	auto dimensions = split(file_read(sysdir + "virtual_size"), ",");
-	to_number(dimensions[0], fb.width);
-	to_number(dimensions[1], fb.height);
-	to_number(file_read(sysdir + "bits_per_pixel"), fb.bpp);
+	fb.width = dimensions[0].to_unsigned_long();
+	fb.height = dimensions[1].to_unsigned_long();
+	fb.bpp = file_read(sysdir + "bits_per_pixel").to_unsigned_long();
 	if (fb.bpp != 32) { throw unexpected_bpp(); }
 	fb.Bpp = fb.bpp >> 3;
 	fb.pixel_stride = fb.stride / fb.Bpp;
@@ -125,7 +125,7 @@ void framebuffer_basic::blit_to(int column0, int row0, int column1, int row1)
 			::lseek(fb.fd, start, SEEK_SET);
 			for (size_t offset = start; offset < end; offset += fb.stride) {
 				::write(fb.fd, (uint8_t*)fb.back_buffer + offset, span);
-				::lseek(fb.fd, fb.stride, SEEK_CUR);
+				::lseek(fb.fd, fb.stride - span, SEEK_CUR);
 			}
 		}
 		::fdatasync(fb.fd);

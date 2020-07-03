@@ -10,7 +10,7 @@ string file_read(string filename);
 void file_write(string filename, string data);
 
 template <typename T>
-void to_number(string text, T & number, int base = 10);
+void to_number(char const * text, T & number, int base = 10);
 
 heapvector<string> split(string text, string delimiter);
 

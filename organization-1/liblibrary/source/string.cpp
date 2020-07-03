@@ -1,3 +1,4 @@
+#include <cctype>
 #include <charconv>
 #include <cmath>
 #include <iomanip>
@@ -6,6 +7,7 @@
 #include <string>
 #include <string.h>
 
+#include <library/quick.hpp>
 #include <library/string.hpp>
 
 namespace library {
@@ -84,7 +86,7 @@ static string baseprefix(int base) {
 		if (base < 10) {
 			result[0] = '0' + base;
 		} else {
-			result[0] = 'a' + base;
+			result[0] = 'a' + base - 10;
 		}
 		return result;
 	}
@@ -285,6 +287,146 @@ string::string(long double real, int base, bool prefix, int precision)
 	resize(size() - 1);
 }
 
+void string::lower()
+{
+	for (char & c : *this) {
+		c = std::tolower(c);
+	}
+}
+
+void string::upper()
+{
+	for (char & c : *this) {
+		c = std::toupper(c);
+	}
+}
+
+string string::lowered()
+{
+	string result = *this;
+	result.lower();
+	return result;
+}
+
+string string::uppered()
+{
+	string result = *this;
+	result.upper();
+	return result;
+}
+
+bool string::to_bool()
+{
+	string compare = lowered();
+	if (compare == "true" || compare == "t" || compare == "yes" || compare == "y") {
+		return true;
+	}
+	if (compare == "false" || compare == "f" || compare == "no" || compare == "n" || !compare.size()) {
+		return false;
+	}
+	return to_signed_long_long();
+}
+
+char string::to_char()
+{
+	if (size() == 1) {
+		return (*this)[0];
+	} else if (size() > 1) {
+		return to_signed_char(10);
+	} else {
+		return 0;
+	}
+}
+
+void * string::to_pointer(int base)
+{
+	return (void*)to_unsigned_long(base);
+}
+
+signed char string::to_signed_char(int base)
+{
+	return to_signed_int(base);
+}
+
+unsigned char string::to_unsigned_char(int base)
+{
+	return to_unsigned_int(base);
+}
+
+signed short string::to_signed_short(int base)
+{
+	return to_signed_int(base);
+}
+
+unsigned short string::to_unsigned_short(int base)
+{
+	return to_unsigned_int(base);
+}
+
+signed int string::to_signed_int(int base)
+{
+	signed int result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+unsigned int string::to_unsigned_int(int base)
+{
+	unsigned int result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+signed long string::to_signed_long(int base)
+{
+	signed long result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+unsigned long string::to_unsigned_long(int base)
+{
+	unsigned long result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+signed long long string::to_signed_long_long(int base)
+{
+	signed long long result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+unsigned long long string::to_unsigned_long_long(int base)
+{
+	unsigned long long result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+float string::to_float(int base)
+{
+	float result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+double string::to_double(int base)
+{
+	double result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+long double string::to_long_double(int base)
+{
+	long double result;
+	to_number(c_str(), result, base);
+	return result;
+}
+
+
 // is todo-list making a mess?
 // 	feels a little like one-big-thing-unaddressed
 // 		all your todo items
@@ -443,7 +585,7 @@ namespace stdout {
 	}
 	void line(string data)
 	{
-		std::cout << data.std() << std::endl;
+		std::cout << data.std() << std::endl << std::flush;
 	}
 }
 namespace stderr {
@@ -453,7 +595,7 @@ namespace stderr {
 	}
 	void line(string data)
 	{
-		std::cerr << data.std() << std::endl;
+		std::cerr << data.std() << std::endl << std::flush;
 	}
 }
 

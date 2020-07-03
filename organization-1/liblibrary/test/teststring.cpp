@@ -24,16 +24,20 @@ int main()
 
 	string from_integer(3141592);
 	worry(from_integer != "3141592", "integer string not '3141593'");
+	worry(from_integer.to_unsigned_long_long() != 3141592, "integer from string " + string(from_integer.to_unsigned_long_long()) + " instead of 3141593");
 
 	string from_real(3.141592);
 	worry(from_real != "3.141592", "real string '" + from_real + "' instead of '3.141592'");
+	worry(from_real.to_double() != 3.141592, "real from string " + string(from_real.to_long_double()) + " instead of 3.141592");
 
-	from_real = string(3.14159265358979, 10, true, 14);
+	from_real = string(3.14159265358979L, 10, true, 14);
 	worry(from_real != "0d3.14159265358979", "real string '" + from_real + "' instead of '0d3.14159265358979'");
+	worry(from_real.to_long_double() != 3.14159265358979L, "real from string " + string(from_real.to_long_double()) + " instead of 3.14159265358979");
 
 	string from_pointer((void*)0xaaaa480);
 	string plan = sizeof(void*)==4 ? "0x0aaaa480" : "0x000000000aaaa480";
 	worry(from_pointer != plan, "pointer string '" + from_pointer + "' instead of '" + plan + "'");
+	worry(from_pointer.to_pointer() != (void*)0xaaaa480, "pointer from string " + string(from_pointer.to_pointer()) + " instead of " + plan);
 
 	string hello_world = string("hello, ") + string("world");
 	worry(hello_world != "hello, world", "operator+ not 'hello, world'");
