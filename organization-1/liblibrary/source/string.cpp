@@ -163,7 +163,7 @@ static inline void integer_to_chars(string & output, T value, int base, bool pre
 {
 	bool extend = digits;
 	if (!extend) {
-		digits = ((unsigned long)(log(value)/log(base))) + 1;
+		digits = (value ? ((unsigned long)(log(value)/log(base))) : 0) + 1;
 	}
 	unsigned long offset = 0;
 
