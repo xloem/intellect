@@ -27,8 +27,9 @@ namespace std {
 
 namespace library {
 
+/*
 template <typename> struct range;
-
+*/
 
 class string
 {
@@ -94,7 +95,7 @@ public:
 
 
 	// if we had some kind of virtual iterator this could be taken
-	// out of header file
+	// out of header file [could still be moved into a _definition file]
 	template <template <typename> typename Container, typename element_type>
 	string(Container<element_type> const & source, string join/*no default*/)
 	: string()
@@ -138,8 +139,10 @@ public:
 	unsigned long size() const;
 	void resize(unsigned long new_size);
 
+	/*
 	library::range<char *> range();
 	library::range<char const *> range() const;
+	*/
 
 	char * data(); char const * data() const;
 	char * begin(); char const * begin() const;
@@ -147,7 +150,9 @@ public:
 
 	string to_string();
 
+	/*
 	void replace(library::range<char *>, string const & with);
+	*/
 
 	heapvector<string> split(string delimiter);
 

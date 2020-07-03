@@ -6,7 +6,7 @@ namespace std {
 
 namespace library {
 
-template <typename T, unsigned long _reserved>
+template <typename T, unsigned long _reserved = 128>
 class stackvector
 {
 public:

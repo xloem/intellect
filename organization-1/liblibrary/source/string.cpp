@@ -9,12 +9,13 @@
 #include <string.h>
 
 #include <library/heapvector_definition.cpp>
-#include <library/quick.hpp>
+#include <library/stackvector_definition.cpp>
 #include <library/string.hpp>
 
 namespace library {
 
 template class heapvector<string>;
+template class stackvector<string>;
 
 string::string()
 : storage(new std::string())
@@ -75,7 +76,8 @@ auto streambase(int base)
 	}
 }
 
-static string baseprefix(int base) {
+static string baseprefix(int base)
+{
 	switch(base) {
 	case 8:
 		return '0';
@@ -93,6 +95,31 @@ static string baseprefix(int base) {
 			result[0] = 'a' + base - 10;
 		}
 		return result;
+	}
+}
+
+unsigned long prefixbaseoffset(char const * pointer, int & base)
+{
+	if (base == 0 && pointer[0] == '0' && pointer[1] >= '0' && pointer[1] < '8') {
+		base = 8;
+		return 1;
+	} else if (pointer[0] == '0' && pointer[1] == 'b') {
+		base = 2;
+		return 2;
+	} else if (pointer[0] == '0' && pointer[1] == 'd') {
+		base = 10;
+		return 2;
+	} else if (pointer[0] == '0' && pointer[1] == 'x') {
+		base = 16;
+		return 2;
+	} else if (pointer[1] == 'B' && pointer[0] >= '0' && pointer[0] <= '9') {
+		base = pointer[0] - '0';
+		return 2;
+	} else if (pointer[1] == 'B' && pointer[0] >= 'a' && pointer[0] <= 'z') {
+		base = pointer[0] - 'a' + 10;
+		return 2;
+	} else {
+		return 0;
 	}
 }
 
@@ -159,6 +186,12 @@ static inline void integer_to_chars(string & output, T value, int base, bool pre
 		} else {
 			output.resize(result.ptr - output.begin());
 		}
+	}
+	if (offset && output[offset] == '-') {
+		for (unsigned long pos = offset; pos > 0; -- pos) {
+			output[pos] = output[pos - 1];
+		}
+		output[0] = '-';
 	}
 	
 	// we often make a mess in our attempt to organize.
@@ -357,85 +390,118 @@ void * string::to_pointer(int base)
 
 signed char string::to_signed_char(int base)
 {
-	return to_signed_int(base);
+	return to_signed_long(base);
 }
 
 unsigned char string::to_unsigned_char(int base)
 {
-	return to_unsigned_int(base);
+	return to_unsigned_long(base);
 }
 
 signed short string::to_signed_short(int base)
 {
-	return to_signed_int(base);
+	return to_signed_long(base);
 }
 
 unsigned short string::to_unsigned_short(int base)
 {
-	return to_unsigned_int(base);
+	return to_unsigned_long(base);
 }
 
 signed int string::to_signed_int(int base)
 {
-	signed int result;
-	to_number(c_str(), result, base);
-	return result;
+	return to_signed_long(base);
 }
 
 unsigned int string::to_unsigned_int(int base)
 {
-	unsigned int result;
-	to_number(c_str(), result, base);
-	return result;
+	return to_unsigned_long(base);
 }
 
 signed long string::to_signed_long(int base)
 {
-	signed long result;
-	to_number(c_str(), result, base);
-	return result;
+	bool negative = false;
+	char const * data = c_str();
+	if (data[0] == '-') {
+		negative = true;
+		++ data;
+	}
+	data += prefixbaseoffset(data, base);
+	return negative ? -std::strtol(data, 0, base) : std::strtol(data, 0, base);
 }
 
 unsigned long string::to_unsigned_long(int base)
 {
-	unsigned long result;
-	to_number(c_str(), result, base);
-	return result;
+	char const * data = c_str();
+	data += prefixbaseoffset(data, base);
+	return std::strtoul(data, 0, base);
 }
 
 signed long long string::to_signed_long_long(int base)
 {
-	signed long long result;
-	to_number(c_str(), result, base);
-	return result;
+	bool negative = false;
+	char const * data = c_str();
+	if (data[0] == '-') {
+		negative = true;
+		++ data;
+	}
+	data += prefixbaseoffset(data, base);
+	return negative ? -std::strtoll(data, 0, base) : std::strtoll(data, 0, base);
 }
 
 unsigned long long string::to_unsigned_long_long(int base)
 {
-	unsigned long long result;
-	to_number(c_str(), result, base);
-	return result;
+	char const * data = c_str();
+	data += prefixbaseoffset(data, base);
+	return std::strtoll(data, 0, base);
 }
 
 float string::to_float(int base)
 {
-	float result;
-	to_number(c_str(), result, base);
-	return result;
+	if (base != 10 && base != 16) { throw std::invalid_argument("unimplemented floating point base"); }
+	char const * data = c_str();
+	bool negative = false;
+	if (data[0] == '-') {
+		++ data;
+		negative = true;
+	}
+	if (data[0] == '0' && data[1] == 'd') {
+		data += 2;
+		base = 10;
+	}
+	return negative ? -std::strtof(data, 0) : std::strtof(data, 0);
 }
 
 double string::to_double(int base)
 {
-	double result;
-	to_number(c_str(), result, base);
-	return result;
+	if (base != 10 && base != 16) { throw std::invalid_argument("unimplemented floating point base"); }
+	char const * data = c_str();
+	bool negative = false;
+	if (data[0] == '-') {
+		++ data;
+		negative = true;
+	}
+	if (data[0] == '0' && data[1] == 'd') {
+		data += 2;
+		base = 10;
+	}
+	return negative ? -std::strtod(data, 0) : std::strtod(data, 0);
 }
 
 long double string::to_long_double(int base)
 {
-	long double result;
-	to_number(c_str(), result, base);
-	return result;
+	if (base != 10 && base != 16) { throw std::invalid_argument("unimplemented floating point base"); }
+	char const * data = c_str();
+	bool negative = false;
+	if (data[0] == '-') {
+		++ data;
+		negative = true;
+	}
+	if (data[0] == '0' && data[1] == 'd') {
+		data += 2;
+		base = 10;
+	}
+	return negative ? -std::strtold(data, 0) : std::strtold(data, 0);
 }
 
 void string::to_file(string filename)

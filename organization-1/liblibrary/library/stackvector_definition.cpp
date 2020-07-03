@@ -27,7 +27,7 @@ template<typename element_type, unsigned long _reserved>
 stackvector<element_type, _reserved>::stackvector(std::initializer_list<element_type> const & items)
 : stackvector()
 {
-	for (element_type & item : items) {
+	for (element_type const & item : items) {
 		push_back(item);
 	}
 }
@@ -59,7 +59,7 @@ template<typename element_type, unsigned long _reserved>
 stackvector<element_type, _reserved>::stackvector(stackvector && other)
 : stackvector()
 {
-	*this = std::forward(other);
+	*this = std::forward<stackvector>(other);
 }
 
 template<typename element_type, unsigned long _reserved>
@@ -74,7 +74,7 @@ template<typename element_type, unsigned long _reserved>
 stackvector<element_type, _reserved> & stackvector<element_type, _reserved>::operator=(stackvector && other)
 {
 	vec = std::move(*(container_namespace container<element_type, _reserved>*)other.storage);
-	resize(other.size); other.resize(0);
+	resize(other.size()); other.resize(0);
 	return *this;
 }
 
@@ -125,7 +125,7 @@ void stackvector<element_type, _reserved>::resize(unsigned long size)
 template<typename element_type, unsigned long _reserved>
 element_type & stackvector<element_type, _reserved>::front()
 {
-	return vec.data();
+	return *vec.data();
 }
 
 template<typename element_type, unsigned long _reserved>
