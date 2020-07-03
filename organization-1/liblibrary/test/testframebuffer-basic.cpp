@@ -1,6 +1,5 @@
 #include <library/framebuffer-basic.hpp>
 
-#include <library/heapvector_definition.cpp>
 #include <library/time.hpp>
 
 #include <cmath>
