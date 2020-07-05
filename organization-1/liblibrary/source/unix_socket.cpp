@@ -33,7 +33,8 @@ static int handle(int result)
 
 unix_socket::unix_socket(string pathname, bool server)
 : pathname(pathname),
-  socket(::socket(AF_UNIX, SOCK_STREAM, 0))
+  socket(::socket(AF_UNIX, SOCK_STREAM, 0)),
+  server(server)
 {
 	struct sockaddr_un addr;
 	memset(&addr, 0, sizeof(addr));
@@ -46,22 +47,35 @@ unix_socket::unix_socket(string pathname, bool server)
 		unlink(pathname.c_str());
 		handle(bind(socket, (struct sockaddr*)&addr, sizeof(addr)));
 		handle(listen(socket, 1));
-		int result = handle(accept(socket, NULL, NULL));
-		//close(socket);
-		const_cast<int&>(socket) = result;
 	} else {
 		handle(connect(socket, (struct sockaddr*)&addr, sizeof(addr)));
 	}
+}
+
+unix_socket unix_socket::accept()
+{
+	int result = handle(::accept(socket, NULL, NULL));
+	return {result};
 }
 
 unix_socket::unix_socket(int socket)
 : socket(socket)
 { }
 
+void unix_socket::close()
+{
+	if (socket) {
+		::close(socket);
+		socket = 0;
+		if (server) {
+			unlink(pathname.c_str());
+		}
+	}
+}
+
 unix_socket::~unix_socket()
 {
-	close(socket);
-	unlink(pathname.c_str());
+	close();
 }
 
 template <unsigned long reserved_bytes>
@@ -122,12 +136,10 @@ struct ancillary_message {
 
 void unix_socket::send_fds(stackvector<int,253> const & fds)
 {
-	stderr::line("sending " + string(fds.size()) + " fds ...");
-
 	ancillary_message<fds.reserved_bytes()> message;
 	message.set_data(fds.data(), fds.size(), sizeof(int));
 	int result = message.send(socket);
-
+	
 	if (result < 0) {
 		throw std::runtime_error("fds failed sendmsg: " + string(strerror(errno)).std());
 	}
@@ -136,12 +148,18 @@ void unix_socket::send_fds(stackvector<int,253> const & fds)
 stackvector<int,253> unix_socket::recv_fds()
 {
 	stackvector<int,253> fds;
+	
 	ancillary_message<fds.reserved_bytes()> message;
 	if (message.recv(socket) < 0) {
 		throw std::runtime_error("fds failed recvmsg: " + string(strerror(errno)).std());
 	}
 
-	fds.resize(message.get_data(fds.data(), sizeof(int)));
+	int count = message.get_data(fds.data(), sizeof(int));
+	
+	if (count < 0) {
+		throw std::runtime_error("fds failed recvmsg: " + string(strerror(errno)).std());
+	}
+	fds.resize(count);
 
 	return fds;
 }
