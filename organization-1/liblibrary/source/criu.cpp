@@ -2,6 +2,7 @@
 
 #include <library/string.hpp>
 #include <library/time.hpp>
+#include <library/unix_socket.hpp>
 
 #include <filesystem>
 
@@ -55,8 +56,7 @@ criu::criu()
 	handle(criu_local_init_opts((::criu_opts**)&criu_opts));
 	//criu_local_set_leave_running((::criu_opts*)criu_opts, true); // forking instead
 	criu_local_set_shell_job((::criu_opts*)criu_opts, true);
-	criu_local_set_manage_cgroups((::criu_opts*)criu_opts, true);
-	criu_local_set_manage_cgroups_mode((::criu_opts*)criu_opts, CRIU_CG_MODE_FULL);
+	criu_local_set_log_level((::criu_opts*)criu_opts, 4);
 }
 
 // note this returns out of restoration here
@@ -83,14 +83,31 @@ char const * criu::dump(bool & restored, char const * label, char const * path)
 		// we are child, dumping or restoring
 		int fd = open(wholedirname.c_str(), O_DIRECTORY);
 		criu_local_set_images_dir_fd((::criu_opts*)criu_opts, fd);
+		criu_local_set_log_file((::criu_opts*)criu_opts, "dump.log");
 		
 		stderr::line("... dumping process to " + wholedirname);
 		
+		close(0); close(1); close(2);
 		int result = criu_local_dump((::criu_opts*)criu_opts);
 		close(fd);
 		if (1 == result) {
 			// restoring
 			restored = true;
+			
+			// parent sends fds over unix socket
+			unix_socket fd_server(getpid(), true);
+
+			// when transferring, the kernel can allocate fds that actually clobber 0-2, so those are reassigned first
+			int nullfd= open("/dev/tty", O_RDWR);
+			dup2(nullfd, 0); dup2(nullfd, 1); dup2(nullfd, 2);
+
+			// receive fds and assign to standard handles
+			auto fds = fd_server.recv_fds();
+			close(0); close(1); close(2); close(nullfd);
+			dup2(fds[0], 0); dup2(fds[1], 1); dup2(fds[2], 2);
+			close(fds[0]); close(fds[1]); close(fds[2]);
+
+			stdout::line("stdout inside restored");
 			stderr::line("... process restored from " + wholedirname);
 		} else {
 			// dump failure or success
@@ -114,10 +131,23 @@ void criu::restore(char const * name, char const * path)
 		throw std::runtime_error(("failed to open criu path " + wholedirname).std());
 	}
 	criu_local_set_images_dir_fd((::criu_opts*)criu_opts, fd);
+	criu_local_set_log_file((::criu_opts*)criu_opts, "restore.log");
 	stderr::line("... restoring process from " + wholedirname);
 	int pid = handle(criu_local_restore_child((::criu_opts*)criu_opts));
 	stderr::line("... process restored as pid " + string(pid));
 	close(fd);
+
+	{
+		// child runs quick unix socket server to receive fds
+		/*do {
+			try {*/
+				unix_socket fd_client(pid, false);
+				fd_client.send_fds({0, 1, 2});
+	/*		} catch (std::runtime_error &) {
+				continue;
+			}
+		} while (false);*/
+	}
 
 	int ret;
 	waitpid(pid, &ret, 0);

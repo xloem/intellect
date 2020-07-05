@@ -27,6 +27,21 @@ namespace std {
 
 namespace library {
 
+class string;
+
+namespace stdin {
+	string word();
+	string line();
+}
+namespace stdout {
+	void write(string data);
+	void line(string data);
+}
+namespace stderr {
+	void write(string data);
+	void line(string data);
+}
+
 /*
 template <typename> struct range;
 */
@@ -95,8 +110,8 @@ public:
 
 	// if we had some kind of virtual iterator this could be taken
 	// out of header file [could still be moved into a _definition file]
-	template <template <typename> typename Container, typename element_type>
-	string(Container<element_type> const & source, string join/*no default*/)
+	template <typename Container>
+	string(Container const & source, string join/*no default*/)
 	: string()
 	{
 		bool continuing = false;
@@ -176,18 +191,5 @@ bool operator<(string const & left, string const & right);
 bool operator<=(string const & left, string const & right);
 bool operator>(string const & left, string const & right);
 bool operator>=(string const & left, string const & right);
-
-namespace stdin {
-	string word();
-	string line();
-}
-namespace stdout {
-	void write(string data);
-	void line(string data);
-}
-namespace stderr {
-	void write(string data);
-	void line(string data);
-}
 
 } // namespace library

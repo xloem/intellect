@@ -17,6 +17,8 @@ int main()
 	char const * dumpname = stasis.dump(restored, "test", "testcriu-files");
 	string filename = "testcriu-files/" + string(dumpname) + "/hello-file";
 	if (restored) {
+		stderr::line("stderr on restored process");
+		stdout::line("stdout on restored process");
 		worry(data != "hello", "'hello' data restored to '" + data + "'");
 		data = string::file(filename);
 		worry(data != "hello", "'hello' file data restored to '" + data + "'");

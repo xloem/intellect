@@ -111,9 +111,21 @@ unsigned long stackvector<element_type, _reserved>::size() const
 }
 
 template<typename element_type, unsigned long _reserved>
-unsigned long stackvector<element_type,_reserved>::reserved() const
+unsigned long constexpr stackvector<element_type,_reserved>::reserved() const
 {
 	return _reserved;
+}
+
+template<typename element_type, unsigned long _reserved>
+unsigned long stackvector<element_type, _reserved>::size_bytes() const
+{
+	return _size * sizeof(element_type);
+}
+
+template<typename element_type, unsigned long _reserved>
+unsigned long constexpr stackvector<element_type,_reserved>::reserved_bytes() const
+{
+	return _reserved * sizeof(element_type);
 }
 
 template<typename element_type, unsigned long _reserved>
