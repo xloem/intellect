@@ -16,7 +16,7 @@ int main()
 	worry(fb0.height() < 50 || fb0.height() > 5000, string("Unlikely height: ") + fb0.height());
 	worry(fb0.stride() < 50 || fb0.stride() > 5000, string("Unlikely height: ") + fb0.stride());
 
-	sleep_for(0.1);
+	sleep_for(0.2);
 
 	int center_width = fb0.width() / 2;
 	int center_height = fb0.height() / 2;

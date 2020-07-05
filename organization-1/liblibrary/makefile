@@ -3,13 +3,13 @@ CXX=test/measure g++
 LINK.o=${CXX}
 CXXFLAGS=-time -std=c++17 -ggdb -Wall -Werror -O0
 CPPFLAGS=-I. -MMD -I/usr/include/trilinos -DFBWIDTH=$$(cut -d ',' -f 1 /sys/class/graphics/fb0/virtual_size) -DFBHEIGHT=$$(cut -d ',' -f 2 /sys/class/graphics/fb0/virtual_size)
-LDLIBS=-Lsource -llibrary
+LDLIBS=-Lsource -llibrary -lcriu
 PREFIX=/usr/local
 
 SHELL=bash
 
 all: tests
-tests: test/testtype-run test/teststring-run test/testvectors-run test/testframebuffer-basic-run test/testframebuffer-armadillo-run test/testframebuffer-kokkos-run test/testframebuffer-fastor-run test/testtime-run
+tests: test/testtime-run test/testtype-run test/teststring-run test/testvectors-run test/testcriu-run test/testframebuffer-basic-run test/testframebuffer-armadillo-run test/testframebuffer-kokkos-run test/testframebuffer-fastor-run
 
 clean:
 	-rm */*.a */*.o
@@ -18,7 +18,7 @@ clean:
 	./$*
 
 # source/regular_expression.o
-source/liblibrary.a: source/string.o source/assert.o source/framebuffer-basic.o source/framebuffer-armadillo.o source/framebuffer-kokkos.o source/time.o source/heapvector.o source/stackvector.o
+source/liblibrary.a: source/string.o source/assert.o source/time.o source/framebuffer-basic.o source/framebuffer-armadillo.o source/framebuffer-kokkos.o source/heapvector.o source/stackvector.o source/criu.o
 	ar cr "$@" $^
 
 scratch/demo: scratch/demo.o source/liblibrary.a
@@ -27,6 +27,7 @@ test/testtype: test/testtype.o source/liblibrary.a
 test/teststring: test/teststring.o source/liblibrary.a
 test/testvectors: test/testvectors.o source/liblibrary.a
 test/testtime: test/testtime.o source/liblibrary.a
+test/testcriu: test/testcriu.o source/liblibrary.a
 test/testframebuffer-basic: test/testframebuffer-basic.o source/liblibrary.a
 test/testframebuffer-armadillo: test/testframebuffer-armadillo.o source/liblibrary.a
 test/testframebuffer-kokkos: test/testframebuffer-kokkos.o source/liblibrary.a -ltrilinos_kokkoscore

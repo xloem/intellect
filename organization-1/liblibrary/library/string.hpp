@@ -59,8 +59,6 @@ public:
 	string(     double, int base = 10, bool prefix = false, int precision = -1);
 	string(long double, int base = 10, bool prefix = false, int precision = -1);
 
-	static string file(string filename);
-
 	// this is getting called for (char const *, size)
 	// if we made prefix be second argument could be quick fix
 	//template <typename T>
@@ -85,6 +83,7 @@ public:
 	double      to_double(int base = 10);
 	long double to_long_double(int base = 10);
 
+	static string file(string filename);
 	void to_file(string filename);
 
 	void lower();

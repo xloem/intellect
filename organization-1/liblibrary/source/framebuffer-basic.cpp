@@ -70,7 +70,7 @@ int framebuffer_basic::height()
 framebuffer_basic::pixel_type & framebuffer_basic::pixel(int column, int row)
 {
 	if (column + row * stride() * sizeof(pixel_type) > fb.stride * fb.height) {
-		library::stderr::line("out of range");
+		stderr::line("out of range");
 		throw std::exception();
 	}
 	return fb.back_buffer[column + row * stride()];

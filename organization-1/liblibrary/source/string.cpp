@@ -683,7 +683,7 @@ namespace stdout {
 	}
 	void line(string data)
 	{
-		std::cout << data.std() << std::endl << std::flush;
+		std::cout << data.std() << std::endl;
 	}
 }
 namespace stderr {
@@ -693,7 +693,7 @@ namespace stderr {
 	}
 	void line(string data)
 	{
-		std::cerr << data.std() << std::endl << std::flush;
+		std::cerr << data.std() << std::endl;
 	}
 }
 
