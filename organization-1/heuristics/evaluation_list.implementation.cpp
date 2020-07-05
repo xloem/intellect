@@ -20,10 +20,17 @@ simple_typed_pointer::simple_typed_pointer(Type * pointer)
 
 simple_typed_pointer::simple_typed_pointer(library::type_info const & type, void * pointer)
 : pointer_(pointer),
-  type_(type)
+  type_(&type)
 { }
 
-simple_typed_pointer simple_typed_pointer::operator=(typed_pointer const & other)
+simple_typed_pointer & simple_typed_pointer::operator=(typed_pointer const & other)
+{
+	type_ = &other.type();
+	pointer_ = other.value();
+	return *this;
+}
+
+typed_value & simple_typed_reference::operator=(typed_pointer const & other)
 {
 	if (type_ != other.type()) {
 		throw type_error();
@@ -145,6 +152,20 @@ simple_typed_storage<bytes> & simple_typed_storage<bytes>::operator=(Type const 
 	}
 	return *this;
 }
+
+template <unsigned long bytes>
+void simple_typed_storage<bytes>::ensure_type(library::type_info const & type)
+{
+	if (*_type != type) {
+		clear();
+		_type = &type;
+		if (_type->size > bytes) {
+			*(void**)&this->data = new unsigned char[_type->size];
+		}
+		_type->construct_default(value());
+	}
+}
+
 
 #include <type_traits>
 template <typename Result, typename ... Parameters>

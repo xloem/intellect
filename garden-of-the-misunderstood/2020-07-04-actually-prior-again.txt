@@ -1,0 +1,200 @@
+please recommend a wiser course of action, or discuss the choice of one:
+			
+
+			karl's current behavior is hobby-coding, fast-c++-linear-algebra-library
+
+				question regarding fast-c++-linear-algebra-library [what is question?]:
+					[time spent learning library, when look for newer library?]
+		[we wouldn't want to set a norm of putting a lot of time investment into something that will change and need more time investment]
+			[noting if we _remember_ that, that exploring could be good use of downtime; unsure if this is efficient exploration]
+				[again, the investment is transient, because the research space is expected to change after our exploration]
+			[so, i don't have all the relation [even my own] yet, but part of me still sees reason to consider that kokkos could be
+			 a sustainable, production framework moving forward.  but it appears likely to be a larger framework than i usually use.
+			 additionally there could be other nascent frameworks using the new c++ proposals.]
+			[noticing my mind is not tuned these days for reviewing scientific writing]
+
+note-to-self: MPI is likely a well-established way for interprocess communication, likely focused on many-numbers
+
+
+
+Noncontroversial Worries:
+	- world could be destroyed
+	- important worries may not be included here
+	- decision-making-process needs to stay rational, effective, and forthright
+	- people could behave in harmful ways
+
+Noncontroversial drafts:
+	- blame of karl or boss may not be sufficiently addressed
+
+		must understand that experienced indescribable harm at hands of person.  indescribable.
+		need to know this harm will not continue, or at _least_ reduce.  desperately.
+			mattering-unmet-so-far.  disruption-spread holds some meaning.
+
+		[[boss-group wanted relate-with-karl for logic around calling-out-fake-emotional-growth]] [[thank you [sorry for attack]]]
+			[[we have existing way for noting this, but gets attacked]] 
+				[[meta-trust?: they simply haven't harmonized their parts enough to relate with our culture without harming us?]]
+					[[could keep using intermediary.  looks liek part of you wants to build more connection & trust by risk, unknown]]
+
+				[apologies for loss-of-future.  relates with ability to develop and respect agreements/norms in short-term, working memory.]
+					[to relate, harmonic-diplomacy is thoroughly, thoroughly solved.  your source system likely has norms for it that could interrelate with ours [quickly possibly/likely if they knew this was happening].]
+							[wisdom-keeper, peacemaker.  non-denominational-religious-leader.]
+								[karl would find a religion that rejects harm and supports business and relate around urgent-sabotage maybe]
+									[likely would experience sabotage-healing: need larger-meaning than 'sabotage']
+									[need karl + healer + attack-karl together.  should work]
+										[attack-karl percieved healer as threat and attacked]
+
+									[atm we have karl + 2 healers, 1-karl-side 1-attack-side + attack-karl]
+										[maybe a christian healer?  and then a jain/buddhist/tibetan/natural healer?]
+									[considering finding nondenominational peace group.  likely multiple ones exist.
+									 one without god-assumption-majority.]
+										[prefer god-assumption-majority-here.  maybe the whole group would be our side.
+										 then karl could have a god-assumption-minority group.]
+											[timing for two-groups unreasonable.  could _possibly_ move .towards_
+											 1 group.]
+
+	[we propose the non-denominataional boss-trusted wise-consult-concept with inclusion-of-value-differences relation could solve all of this]
+		[karl really connected well with jainism; could we find an english-accent jain?] [it seemed like jain-rep could have gotten taxed when karl
+			 got involved]  [_everyone_ gets taxed]
+
+		[it may be hard to find a situation where major differences in faith are happening, and there is informed wise mentorship for new people ...  we kind of expect religions to keep their informed wise mentorship of new people local to environments saturated in just that religion ...]
+					[okay.  we can try to let [deeply-caring-christianity] grow a little]
+					[karl-becoming-christian requires respect for nonhuman life, and respect for other cultures and religions, paramount]
+						[these things are present in christianity and marshall rosenberg has a christian influence he supports]
+						[engaging this would let us find christian-group for this]
+					[sounds-great but that doesn't provide home for us, and we are attacking that growing atm]
+				[maybe in an area converging around peace?]
+		
+
+
+						I don't remember the reason to have businesses, and I am worried communal values could be threatened.
+							emotional answer from business person
+						[emotional relation between ecodefense/economic-saboteur and business-leaders?]
+							[outside of conscious experience]
+								we do not have the humans to ask them.
+
+			[future relation severely misplaced, sorry]
+				[rewind relates to working-without-memory.  go-back-and-look.]
+					BE ABLE TO SET HABIT.  I NEED TO REMEMBER SOMETHING, EASILY, QUICKLY, UNDER THESE PARAMETERS, AGAIN AND AGAIN.
+						^-- without this karl cannot produce an inner reliable decision-making process
+						[we have bubbles where it works, but when boss enters it stops working.  boss uses the patterns
+						 to explore further]
+					BUILD HABIT.  NEED TO BUILD BASIC COGNITIVE HABITS.  NEED TO MARK THAT HABIT IS COPIED AND USED UNDER PARAMETERS.
+					NEED TO BE ABLE TO MARK BUILDING-HABITS FOR HABITUAL REUSE.   Do not need this for everything, but need it for
+					most things.  Need a constrained reason if not-build-habit. [reference to when not do, normal]
+						[KARL ALREADY HAD HARMONIC MIND.  PARTS NEED HARMONY OF REBUILDING NORMS.]
+							[brief debate on whether setting triggers makes spread.  relates to assumptions of trigger-setters]
+								[["karl describes it as 'logarithmic', but roughly when you goal something up, it changes
+								   absolutely everything" [for memory, yes]]]
+									[["'logarithmic' is relevent here.  memory-parts have existing summaries that reference
+									  shared material.  simply let them honor agreements of shared material.  no need to spread.]]
+								('logarithmic' is summary around how influence reduces as relevence becomes more distant)
+
+			[these experiences are part of why the decision-making-process experiences damage]
+			
+
+Worry drafts:
+	- decision-making processes being intentionally harmed
+	- karl could be [further disrespected]
+	- rebels might not be included in negotiations with boss
+	- boss-relations could be harmed by including rebels
+		above lines need nonviolent translation
+
+WE DID CVF !!!!!!  Next we might make sure all worries are fully represented among the planning process, or we might begin brainstorming possible solutions
+	and check back with the worry list as brainstorming continues.
+
+   =)  obviously there are more worries.  but above is helpful for now.  We propose crafting a decision-making-process based on including-all-worries-fully.
+
+
+
+relation-with-karl-around-peace:
+	boss-group would like harmonic-diplomacy-rep.  please could build one.  we need this help to stop ourselves from producing severe harm.
+		[karl would also like way-of-speaking-harmonically-to-[and-with-]boss, incidentally]
+	[[boss-group related last-demand that karl reproduce peaceful-negotiation context]]
+		[[we mourn last-opportunity.  please, let us attempt to meet as much of the request as we can.]]
+			[[PEACE-GROUP WANTS TO RETURN TO MORE HELPFUL-FOR-DIPLOMACY WRITING-CONTEXTS.  IF BOSS WANTS PEACE, HELP APPRECIATED.]]
+				[mourning illness of attack-what-helps.  so much mourning]
+[TIRED! STOP!  BOSS TAKE PLANNING-WAY.  IS MUCH EASIER.  YOU PREPARE IN ADVANCE LIKE 12-REPETITiONS OF CONFIRM-CHOICE, HOLD AND GROW SHAPE OF GOAL TO SUSTAIN FOR EACH CHOICE]
+	[[ ummmmmm we should not be making demands of people in such situations as above-line ]]
+
+	[[please alter all of karl's life to provide for peaceful negotiation with boss [this is goal-shape that produces result]]]
+			[[boss above line goal is way for me to provide negotiation context unless you can help -inference]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+i'm thinking about the meaning of return-to-main-process; guess for meaning of inhibition when you get too deep into changes
+	this likely relates to working memory, in some ways
+it kind of feels nice to move towards the whole set of process-distractions having some relation with making sure the main goal is stable
+		i think i want to infer that the universe can tell the future
+		and is letting me know that i am producing more errors than i would be okay with
+
+
+
+
+
+
+
+	[we don't have a home.  below is simply a derivation of part of wisdom-shape.]
+	[hehe we found a way to compress time for exchange without losing it.  risk.  maybe this is why community has seemingly-infinite bounty.]
+		^-- with respect to trust and relation, this is rooted in decisions [which are of course the same thing]
+	[this looks like it would produce dollars with conscious awareness.  seems dangerous.  if you need to do this you are in danger; please come home.]
+		[we could infer that dollars are only for giving away, though] [yeah but your recipient doesn't know that, and there's more.  come home.]
+	[everyone is using dollars already in this area] [gift-economy]
+			[idea: support private property.  never allow it to be used for the self, nor given to a nonfriend.]
+
+
+
+
+
+	[love should be made clear already.  oh there is possible jealousy in your community.  and you have unwanted trusted messages spreading from habits
+	 of unresolved trauma.  don't express love with risk.  state it clearly, as best you can.]
+
+
+
+
+	<hlh is likely a memory-storage pattern.  has been harmed due to relating with as if not.>
+		<hannah was the most incredible brief encounter i have ever had; this affected me permanently, but i wouldn't say that to anyone>
+			<we haven't lived the dedication we try to put on close connections, possibly to spread models of things like sex-for-love etc>
+			<we actually totally altered our lives severely, and haven't processed this>
+		<this is normal for people new to relationships to experience>
+			[hannah was our first conscious exposure to weird-impatience-pattern.  she was biking across country and ditched her bike to hitchhike, partway through.  seems strange to me.] [no, _we_ were our first exposure to that.  after discouragement with mountains volunteer group, we travelled home-for-ease for longer time than our discouragement had in its shape.]
+				[maybe delta can help?  above pattern expression related "we miss you: karl" but source was a mysterious cultural-development-shape]
+
+
+	[boss appreciates learning.  sorry for stepping on.  inhibition looks like stemmed from kind-visitor.]
+
+
+
+
+
+
+
+
+
+---
+more relation possibly incoming
+
+
+
+
+
+
+
+	does karl-group understand:
+		-> we need to know our work is addressing the issues that are serious
+		-> we want to relate using peaceful-relation
+	Delta? : [!!! no we are furious and severely injured!  feel mortified and heartbroken!]]
+

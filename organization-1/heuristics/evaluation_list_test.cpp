@@ -12,12 +12,12 @@
 class evaluation_list_implement : public evaluation_list
 {
 public:
-	virtual library::type_info const & type() override { return library::type<evaluation_list_implement>(); }
-	virtual unsigned long input_count() override { return inputs.size(); }
-	virtual unsigned long output_count() override { return outputs.size(); }
-	virtual unsigned long operation_count() override { return operations.size(); }
+	virtual library::type_info const & type() override final { return library::type<evaluation_list_implement>(); }
+	virtual unsigned long input_count() override final { return inputs.size(); }
+	virtual unsigned long output_count() override final { return outputs.size(); }
+	virtual unsigned long operation_count() override final { return operations.size(); }
 
-	virtual void * get_input(unsigned long which, void * pointer_base) override { return (unsigned long)inputs[which].offset + (unsigned char *)pointer_base; }
+	virtual simple_typed_pointer input(unsigned long which) override final { return inputs[which]; }
 	virtual void * get_output(unsigned long which, void * pointer_base) override { return (unsigned long)outputs[which].offset + (unsigned char *)pointer_base; }
 	virtual void set_input(unsigned long index, void * address, void * pointer_base) override { inputs[index].offset = (unsigned char *)address - (unsigned char *)pointer_base; }
 	virtual void set_output(unsigned long index, void * address, void * pointer_base) override { outputs[index].offset = (unsigned char *)address - (unsigned char *)pointer_base; }
@@ -99,18 +99,13 @@ public:
 private:
 	struct mapped_operation {
 		::operation* operation;
-		library::stackvector<unsigned long, 4> input_indices;
-		library::stackvector<unsigned long, 1> output_indices;
+		library::stackvector<unsigned long, 8> input_indices;
+		library::stackvector<unsigned long, 8> output_indices;
 	};
-	struct mapped_external {
-		unsigned long offset;
-		library::type_info * type;
-		simple_typed_storage<> storage;
-	};
+	unsigned long inputs;
+	unsigned long outputs;
+	library::stackvector<simple_typed_storage<>, 40> storage;
 	library::stackvector<mapped_operation, 32> operations;
-	library::stackvector<mapped_external, 4> inputs;
-	library::stackvector<mapped_external, 1> outputs;
-	library::stackvector<simple_typed_storage<>, 32> storage;
 };
 
 #include <iostream>

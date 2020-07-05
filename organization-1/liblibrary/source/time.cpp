@@ -6,6 +6,8 @@
 #include <cerrno>
 #include <ctime>
 
+#include <library/string.hpp>
+
 namespace library {
 
 void sleep_for(double seconds)
@@ -51,6 +53,37 @@ double seconds_unix()
 {
 	std::chrono::duration<double> now = std::chrono::system_clock::now().time_since_epoch();
 	return now.count();
+}
+
+char const * timestamp_iso(double seconds)
+{
+	if (0 == seconds) { seconds = seconds_unix(); }
+
+	time_t now = seconds;
+	struct tm time_struct;
+	gmtime_r(&now, &time_struct);
+
+	static thread_local string result;
+	result.resize(256);
+	size_t size = strftime(result.data(), result.size(), "%F-%T", &time_struct);
+	result.resize(size);
+
+	double integer_seconds;
+	double fractional_seconds = std::modf(seconds, &integer_seconds);
+	string nanoseconds(fractional_seconds, 10, false, 9);
+
+	result += string(nanoseconds.data() + 1, nanoseconds.size() - 1);
+
+	return result.c_str();
+}
+
+double seconds_iso(char const * timestamp)
+{
+	struct tm time_struct;
+	char * remaining = strptime(timestamp, "%F-%T", &time_struct);
+	time_t now = mktime(&time_struct) - timezone;
+
+	return now + string(remaining).to_double();
 }
 
 }

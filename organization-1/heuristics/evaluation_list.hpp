@@ -20,31 +20,48 @@ public:
 	template <typename Type> Type & get();
 };
 
+// assigning to this class changes only the pointer, not the value
 class simple_typed_pointer : public typed_pointer
 {
 public:
 	template <typename Type>
-	simple_typed_pointer(Type* pointer);
+	simple_typed_pointer(Type* pointer = 0);
 	simple_typed_pointer(library::type_info const & type, void * pointer = 0);
 
-	virtual library::type_info const & type() const override final { return type_; }
+	virtual library::type_info const & type() const override final { return *type_; }
 	virtual void * value() override final { return pointer_; }
 	virtual void const * value() const override final { return pointer_; }
 
 	simple_typed_pointer operator=(typed_pointer const & other);
 
-	void * const pointer_;
-	library::type_info const & type_;
+protected:
+	void * pointer_;
+	library::type_info const * type_;
 };
 
+// assigning to a derivative of this class changes the pointed-to value, not the pointer address
 class typed_value : public typed_pointer
 {
 public:
 	//virtual typed_value & operator=(typed_value && other) = 0;
 	virtual typed_value & operator=(typed_pointer const & other) = 0;
 	virtual ~typed_value() {}
+
+	simple_typed_pointer operator&() { return {type(), pointer()}; }
 };
 
+class simple_typed_reference : public typed_value, public virtual simple_typed_pointer
+{
+public:
+	using simple_typed_pointer::simple_typed_pointer;
+	using simple_typed_pointer::type;
+	using simple_typed_pointer::value;
+
+	// changes the value, not the pointer
+	virtual typed_value & operator=(typed_pointer const & other) override final;
+};
+
+// holds storage and can change not only its value but also its type
 template <unsigned long bytes = sizeof(void*)>
 class simple_typed_storage : public typed_value
 {
@@ -64,6 +81,7 @@ public:
 	//virtual typed_value & operator=(typed_value && other) final override;
 	virtual typed_value & operator=(typed_pointer const & other) final override;
 	template<typename Type> simple_typed_storage & operator=(Type const & other);
+	void ensure_type(library::type_info const & type);
 	virtual ~simple_typed_storage() final override;
 
 	unsigned char data[bytes];
@@ -79,29 +97,17 @@ public:
 	virtual unsigned long input_count() = 0;
 	virtual unsigned long output_count() = 0;
 
-	virtual library::type_info const & input_type(unsigned long index) = 0;
-	virtual library::type_info const & output_type(unsigned long index) = 0;
+	virtual library::type_info const & input_type(unsigned long which) = 0;
+	virtual library::type_info const & output_type(unsigned long which) = 0;
 
-	// the above are normal for all operations
-	
-	// one idea is to make everything castable to a 'callable' withappropraite parameters
-	// this would then pass off the virtual function call
-	
-	// another idea might be to place the parameters in, directly,
-	// rather than using offsets to a pointer base
-	
-	// another idea might be to normalize offset to a pointer base,
-	// not change them, but use them ...  wrapping them ...
-
-	// the below may need changing
-
-	virtual void * get_input(unsigned long which, void * pointer_base = 0) = 0;
-	virtual void * get_output(unsigned long which, void * pointer_base = 0) = 0;
-
-	virtual void set_input(unsigned long which, void * address, void * pointer_base = 0) = 0;
-	virtual void set_output(unsigned long which, void * address, void * pointer_base = 0) = 0;
-
-	virtual void call(void * pointer_base = 0) {}
+	// this solution uses void pointers but solves
+	// 	-> A threading
+	// 	-> B execution speed
+	// 	-> C reuse of operation objects
+	// type-safety is all that's left.  likely workable to pass a
+	// typed pointer if needed.
+	// 	type-safety desire rose as we considered passing into evaluation_list: it would make it easier to copy data if not all inputs are used
+	virtual void call(simple_typed_reference inputs[], simple_typed_reference outputs[]) {}
 
 protected:
 	virtual void more_inputs(unsigned long how_many, library::type_info const & type) {}
@@ -113,42 +119,57 @@ class evaluation_list : public operation
 public:
 	virtual unsigned long operation_count() = 0;
 
-	virtual operation * get_operation(unsigned long index) = 0;
-	virtual void set_operation(unsigned long index, operation * value) = 0;
+	virtual operation * get_operation(unsigned long which) = 0;
+	virtual void set_operation(unsigned long which, operation * value) = 0;
 
 	virtual typed_value * get_value(unsigned long value) = 0;
 	virtual unsigned long value_count() = 0;
 
-	virtual unsigned long get_input_value(unsigned long input) = 0;
-	virtual unsigned long get_output_value(unsigned long output) = 0;
+	virtual unsigned long input_value(unsigned long input) = 0;
+	virtual unsigned long output_value(unsigned long output) = 0;
 	//virtual unsigned long get_operation_output_value(unsigned long operation, unsigned long output) = 0;
 
-	virtual unsigned long get_operation_input(unsigned long operation, unsigned long input) = 0;
-	virtual unsigned long get_operation_output(unsigned long operation, unsigned long output) = 0;
+	virtual unsigned long get_operation_input_value(unsigned long operation, unsigned long input) = 0;
+	virtual unsigned long get_operation_output_value(unsigned long operation, unsigned long output) = 0;
 
-	virtual void set_operation_input(unsigned long operation, unsigned long input, unsigned long value) = 0;
-	virtual void set_operation_output(unsigned long operation, unsigned long output, unsigned long value) = 0;
+	virtual void set_operation_input_value(unsigned long operation, unsigned long input, unsigned long value) = 0;
+	virtual void set_operation_output_value(unsigned long operation, unsigned long output, unsigned long value) = 0;
 
-	virtual void call(void * pointer_base = 0) override {
+	virtual void call(simple_typed_reference inputs[], simple_typed_reference outputs[]) override {
 		unsigned long input_count = this->input_count();
 		unsigned long operation_count = this->operation_count();
 		unsigned long output_count = this->output_count();
 		for (unsigned long input = 0; input < input_count; ++ input) {
-			*get_value(get_input_value(input)) = simple_typed_pointer(input_type(input), get_input(input, pointer_base));
+			*get_value(input_value(input)) = inputs[input];
 		}
+		library::stackvector<simple_typed_reference, 8> inputs;
+		library::stackvector<simple_typed_reference, 8> outputs;
 		for (unsigned long index = 0; index < operation_count; ++ index) {
-			subcall(index);
+			::operation * operation = get_operation(index);
+			unsigned long operation_input_count = operation->input_count();
+			unsigned long operation_output_count = operation->output_count();
+			inputs.resize(operation_input_count);
+			outputs.resize(operation_output_count);
+			for (unsigned long input = 0; input < operation_input_count; ++ input) {
+				inputs[inputs].simple_typed_pointer::operator=(*get_value(get_operation_input(index, input)));
+			}
+			for (unsigned long output = 0; output < operation_output_count; ++ output) {
+				auto & output = *get_value(get_operation_output(index, output));
+				output.ensure_type(operation->output_type(output));
+				outputs[output].simple_typed_pointer::operator=(output);
+			}
+			operation->call(inputs.data(), outputs.data());
 		}
 		for (unsigned long output = 0; output < output_count; ++ output) {
-			simple_typed_pointer(output_type(output), get_output(output, pointer_base)) = *get_value(get_output_value(output));
+			outputs[output] = *get_value(output_value(output));
 		}
 	}
 
 protected:
-	virtual void more_intermediates(unsigned long how_many, library::type_info const & type) = 0;
+	virtual void more_values(unsigned long how_many, library::type_info const & type) = 0;
 	virtual void more_operations(unsigned long how_many) = 0;
 
-	virtual void subcall(unsigned long operation) = 0;
+	//virtual void subcall(unsigned long operation) = 0;
 };
 
 // how connect operation with operation_for_list

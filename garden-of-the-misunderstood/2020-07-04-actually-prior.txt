@@ -1,0 +1,44 @@
+i'd like to think about reasons.  i guess i'm partly done thinking about reasons now.  the summary is that reasons are time-reversal.  they are what
+		flows into the past from an experience that includes the future.
+		so if there's value on an event, the event-pattern is the reason for placing that value on its cause.
+		this is why things are relevent: past-events where they are causes or precursors or indicators.
+
+			update: even complex shit can be for simple reasons
+
+	
+	[btw system atm is expressing concern is not pro-mind-control.  what is supported is 1 dictator, rest of world mind-controlled.]
+
+anyway, how handle reasons?
+
+		maybe observe process, record experiences
+		consider patterns in experiences
+
+	so maybe say we have a bunch of functions that act on numbers?  in non-math ways.  just symbol-responses
+
+			why?  why happen?
+	every change is a track, an understandable thing.  every change.
+
+		so, 'understanding' i.e. reasons might involve
+			- conveying something that is the reason for the change
+			- predicting the change before it occurs
+			- being able to act to prevent or alter the change <- this one is interesting.
+
+		say we are counting numbers.  at 15, we always get 16 next.  we don't want 16.  we can change the number to anything we want.
+			how to prevent 16?  is so confusing.
+
+		we would have to somehow propagate the dislike from 16, to 15.  because 16 always happens after 15.
+		then when we see 15, we could change it!  and then we're safe.
+			_propagate_ the _relevence_ maybe?  from the _result_ to the _preceding event_
+
+				so if we have something-important associated with 16
+				and we learn that 15 is a strong indicator of 16: that even has statistical causality <- reason for 16
+				we would then associate something-important with 15 as well as 16
+				and have the _reason_ for association be the strong indication information. <- nature/reason of/for relevence/association
+
+	adding generalized-reasons to relevence may help a lot if relevence is used
+			I hate the number one! it always makes 2 which always makes 3 which ... always makes SIXTEEEN.  AUGH.
+			I love the number 17!  it never, ever, ever makes sixteen... it goes on forever ith so much safety!  and eventually it hits 20 which is WONDERFUL!
+			One is kinda okay ... if you can get through the 16 eventually you hit 20!  it's better to start straight at 17 though.
+
+		the above pattern was being ritualistically held in my brain.  coding it appears supported.  we don't have a lot of the struts in place
+		but we could generalize it to not need them, like the other parts we've been coding a little.
