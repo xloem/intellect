@@ -27,27 +27,27 @@ static type_info const * type_initializations[] = {
 	&type<unsigned long long const>(),
 };
 
-typed_mutable & typed_mutable::operator=(typed_const const & other)
+typed_valued & typed_value::operator=(typed_valued const & other)
 {
 	assign(other);
 	return *this;
 }
 
-void typed_mutable::assign(typed_const const & other)
+void typed_valued::assign(typed_valued const & other)
 {
-	if (type() != other.type()) {
+	if (this->type() != other.type()) {
 		throw type_mismatch();
 	}
 	assign(other.void_pointer());
 }
 
-typed_retypable & typed_retypable::operator=(typed_const const & other)
+typable_valued & typable_valued::operator=(typed_valued const & other)
 {
 	assign(other);
 	return *this;
 }
 
-void typed_retypable::assign(typed_const const & other)
+void typable_valued::assign(typed_valued const & other)
 {
 	assign(other.void_pointer(), other.type());
 }

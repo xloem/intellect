@@ -53,41 +53,45 @@ public:
 	virtual type_info const & type() const = 0;
 };
 
-class typed_const : public typed
+class typed_valued : public typed
 {
 public:
 	template <typename Type> Type const & reference() const;
+	template <typename Type> Type const * pointer() const;
+	template <typename Type> Type & reference();
+	template <typename Type> Type * pointer();
 
 	virtual void const * void_pointer() const = 0;
-};
+	virtual void * void_pointer() = 0;
 
-class typed_mutable : public typed_const
-{
-public:
-	template <typename Type> Type & reference();
-
-	typed_mutable & operator=(typed_const const & other);
-	void assign(typed_const const & other);
+	typed_valued & operator=(typed_valued const & other) final;
+	void assign(typed_valued const & other) final;
 
 	template <typename Type>
-		typed_mutable & operator=(Type const & other);
-	template <typename Type> void assign(Type const & other);
-
-	virtual void * void_pointer() = 0;
+		typed_valued & operator=(Type const & other) final;
+	template <typename Type> void assign(Type const & other) final;
 
 protected:
 	virtual void assign(void const * data) = 0;
 };
 
-class typed_retypable : public typed_mutable
+class typable_valued
 {
 public:
-	typed_retypable & operator=(typed_const const & other);
-	void assign(typed_const const & other);
+	template <typename Type> Type const & reference() const;
+	template <typename Type> Type const * pointer() const;
+	template <typename Type> Type & reference();
+	template <typename Type> Type * pointer();
+
+	virtual void const * void_pointer(type_info const & type) const = 0;
+	virtual void * void_pointer(type_info const & type) = 0;
+
+	typable_valued & operator=(typed_valued const & other) final;
+	void assign(typed_valued const & other) final;
 
 	template <typename Type>
-		typed_retypable & operator=(Type const & other);
-	template <typename Type> void assign(Type const & other);
+		typable_valued & operator=(Type const & other) final;
+	template <typename Type> void assign(Type const & other) final;
 
 protected:
 	virtual void assign(void const * data, type_info const & type) = 0;

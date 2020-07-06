@@ -135,16 +135,25 @@ type_info const & type(Type const &)
 }
 
 template <typename Type>
-Type const & typed_const::reference() const
+Type const & typed_valued::reference() const
 {
 	if (type() != library::type<Type>()) {
 		throw type_mismatch();
 	}
-	return *(Type const*)void_pointer();
+	return *(Type const *)void_pointer();
 }
 
 template <typename Type>
-Type & typed_mutable::reference()
+Type const * typed_valued::pointer() const
+{
+	if (type() != library::type<Type>()) {
+		throw type_mismatch();
+	}
+	return (Type const *)void_pointer();
+}
+
+template <typename Type>
+Type & typed_valued::reference()
 {
 	if (type() != library::type<Type>()) {
 		throw type_mismatch();
@@ -153,30 +162,63 @@ Type & typed_mutable::reference()
 }
 
 template <typename Type>
-typed_mutable & typed_mutable::operator=(Type const & other)
-{
-	assign(other);
-	return *this;
-}
-
-template <typename Type>
-void typed_mutable::assign(Type const & other)
+Type * typed_valued::pointer()
 {
 	if (type() != library::type<Type>()) {
 		throw type_mismatch();
 	}
-	assign((void*)&other);
+	return (Type*)void_pointer();
 }
 
 template <typename Type>
-typed_retypable & typed_retypable::operator=(Type const & other)
+typed_valued & typed_valued::operator=(Type const & other)
 {
 	assign(other);
 	return *this;
 }
 
 template <typename Type>
-void typed_retypable::assign(Type const & other)
+void typed_valued::assign(Type const & other)
+{
+	if (type() != library::type<Type>()) {
+		throw type_mismatch();
+	}
+	assign((void const*)&other);
+}
+
+template <typename Type>
+Type const & typable_valued::reference() const
+{
+	return *(Type const*)void_pointer(library::type<Type>());
+}
+
+template <typename Type>
+Type const * typable_valued::pointer() const
+{
+	return (Type const*)void_pointer(library::type<Type>());
+}
+
+template <typename Type>
+Type & typable_valued::reference()
+{
+	return *(Type*)void_pointer(library::type<Type>());
+}
+
+template <typename Type>
+Type * typable_valued::pointer()
+{
+	return (Type*)void_pointer(library::type<Type>());
+}
+
+template <typename Type>
+typable_valued & typable_valued::operator=(Type const & other)
+{
+	assign(other);
+	return *this;
+}
+
+template <typename Type>
+void typable_valued::assign(Type const & other)
 {
 	assign((void const*)&other, library::type<Type>());
 }

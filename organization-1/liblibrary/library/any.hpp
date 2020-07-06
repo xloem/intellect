@@ -4,7 +4,7 @@
 
 namespace library {
 
-class any : public typed_retypable
+class any : public typed_valued, public typable_valued
 {
 public:
 	any(type_info const & type = library::type<void>(), void const * data = 0);
@@ -12,7 +12,9 @@ public:
 	any(Type const & value) : any(library::type<Type>(), &value) { }
 	~any();
 
-	using typed_retypable::operator=;
+	using typable_valued::operator=;
+	using typed_valued::reference;
+	using typed_valued::pointer;
 
 	void reset();
 
