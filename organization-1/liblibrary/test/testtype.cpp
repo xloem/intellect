@@ -4,36 +4,6 @@
 
 using namespace library;
 
-
-bool called_default = false;
-bool called_copy = false;
-bool called_assign = false;
-bool called_destroy = false;
-class call_tracker
-{
-public:
-	call_tracker()
-	{
-		called_default = true;
-	}
-
-	call_tracker(call_tracker const &)
-	{
-		called_copy = true;
-	}
-
-	call_tracker& operator=(call_tracker const &)
-	{
-		called_assign = true;
-		return *this;
-	}
-
-	~call_tracker()
-	{
-		called_destroy = true;
-	}
-};
-
 int main()
 {
 	worry(type<string>().size != sizeof(string), "size of string type incorrect");
