@@ -64,12 +64,12 @@ public:
 	virtual void const * void_pointer() const = 0;
 	virtual void * void_pointer() = 0;
 
-	typed_valued & operator=(typed_valued const & other) final;
-	void assign(typed_valued const & other) final;
+	typed_valued & operator=(typed_valued const & other);
+	void assign(typed_valued const & other);
 
 	template <typename Type>
-		typed_valued & operator=(Type const & other) final;
-	template <typename Type> void assign(Type const & other) final;
+		typed_valued & operator=(Type const & other);
+	template <typename Type> void assign(Type const & other);
 
 protected:
 	virtual void assign(void const * data) = 0;
@@ -86,12 +86,12 @@ public:
 	virtual void const * void_pointer(type_info const & type) const = 0;
 	virtual void * void_pointer(type_info const & type) = 0;
 
-	typable_valued & operator=(typed_valued const & other) final;
-	void assign(typed_valued const & other) final;
+	typable_valued & operator=(typed_valued const & other);
+	void assign(typed_valued const & other);
 
 	template <typename Type>
-		typable_valued & operator=(Type const & other) final;
-	template <typename Type> void assign(Type const & other) final;
+		typable_valued & operator=(Type const & other);
+	template <typename Type> void assign(Type const & other);
 
 protected:
 	virtual void assign(void const * data, type_info const & type) = 0;
