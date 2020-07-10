@@ -3,6 +3,6 @@ KOKKOS_LDLIBS=-ltrilinos_kokkoscore
 HAVE_KOKKOS=$(g++ ${KOKKOS_CPPFLAGS} -include Kokkos_Core.hpp -x c++ -E -</dev/null >/dev/null && echo 1)
 ifeq ($(HAVE_KOKKOS),1)
 		LDLIBS+=$(KOKKOS_LDLIBS)
-		CPPFLAGS+=$(KOKKOS_CPPFLAGS)
+		CPPFLAGS+=$(KOKKOS_CPPFLAGS) -DLIBLIBRARY_HAVE_KOKKOS=1
 		OPTIONALS+=framebuffer-kokkos
 endif
