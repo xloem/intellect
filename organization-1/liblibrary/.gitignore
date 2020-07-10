@@ -1,0 +1,12 @@
+*.o
+*.a
+test/testvectors
+test/teststring
+test/testtype
+test/testtime
+test/testcriu
+test/testframebuffer-basic
+test/testframebuffer-armadillo
+test/testframebuffer-fastor
+test/testframebuffer-dlib
+test/testframebuffer-kokkos

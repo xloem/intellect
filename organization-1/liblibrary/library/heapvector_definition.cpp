@@ -51,7 +51,7 @@ template <typename element_type>
 heapvector<element_type>::heapvector(heapvector && other)
 : heapvector()
 {
-	*this = std::forward(other);
+	*this = std::forward<heapvector>(other);
 }
 
 template <typename element_type>
@@ -101,6 +101,12 @@ template <typename element_type>
 unsigned long heapvector<element_type>::reserved() const
 {
 	return vec.capacity();
+}
+
+template <typename element_type>
+void heapvector<element_type>::resize(unsigned long new_size)
+{
+	vec.resize(new_size);
 }
 
 template <typename element_type>

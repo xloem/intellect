@@ -1,0 +1,2000 @@
+git commit -m '0.12 make mirroring a little more robust'
+git tag
+git tag -a
+git tag -l
+git tag 0.12
+git push
+cd /media/karl/ee6cb480-745c-43fd-ad97-b213ce1f2e30/exconfidential/mirror-tools/
+ls
+cd git
+cd gitlakepy/
+git remote -v
+git remote add github git@github.com:xloem/gitlakepy.git
+git pull github
+git pull github master
+git push origin
+git push origin HEAD:gitlakepy
+git branch
+git checkout master
+git pull
+git push
+git branch
+git branch -a
+git remote -v
+git pull github master
+git push origin master:gitlakepy
+exit
+df -h
+exit
+git status
+cd /media/karl/microsd-onno/
+ls
+ls -l
+du -h --max-depth=1 bitshares-witness_node_data_dir/
+mv bitshares-witness_node_data_dir ../ee6cb480-745c-43fd-ad97-b213ce1f2e30/
+n
+ls -l bitshares-witness_node_data_dir/
+ls -l bitshares-witness_node_data_dir/ -a
+ls -l bitshares-witness_node_data_dir
+ls -l bitshares-witness_node_data_dir -a
+sudo rm -rf bitshares-witness_node_data_dir
+echo 'moved to other microsd' > bitshares-witness_node_data_dir/explanation
+ps -Af f | grep rm..rf
+exit
+sudo systemctl isolate graphical
+exit
+man git-annex
+man git-annex-dropkey
+exit
+git-annex addurl --help
+man bash
+exit
+vi
+exit
+cd /media/karl/ee6cb480-745c-43fd-ad97-b213ce1f2e30/
+ls
+cd exconfidential-2/
+ls
+mirror-tools/update-repos.bash 
+git annex sync origin
+git remote -v
+git annex sync https://git.rip/xloem/exconfidential
+git remote add git.rip https://xloem:password@git.rip/xloem/exconfidential
+git annex sync git.rip
+cp assorted/data.ddosecrets.com/file/mirrorurl.sh ../exconfidential/assorted/data.ddosecrets.com/file/
+cd ..
+rm -rf exconfidential-2
+sudo rm -rf exconfidential-2
+exit
+git annex --help
+ps -Af f | less
+ls -l /proc/14881
+ps -Af f | less
+ls -l /proc/7485
+ls -l /proc/7485/cwd
+ls -l /proc/7485/fd
+man git-annex
+git annex transferkey --help
+git annex help transferkey
+ps -Af f | less
+ls -l /proc/19522/fd
+cat /proc/19522/fdinfo/4
+ls -l /proc/19522/fd
+cat /proc/19522/fdinfo/4
+ls -l /proc/19522/fd
+cat /proc/19522/fdinfo/4
+ls -l /proc/19522/fd
+echo $((56359/134))
+ls -l /proc/19522/fd
+man tail
+ps -Af f | less
+ls -l /proc/7485/fd
+top
+exit
+telegram&
+telegram-desktop &
+cd /media/
+ls
+cd karl/
+ls
+cd ee6cb480-745c-43fd-ad97-b213ce1f2e30/
+ls
+grep addurl ~/.bash_history
+cd exconfidential/assorted/
+ls
+cd data.ddosecrets.com/file/
+curl -v https://data.ddosecrets.com/file/|sed -ne 's/.*"\([^"]*[^/"]\)".*/\1/p' | while read arch; do git annex addurl "https://data.ddosecrets.com/file/$arch"; done
+curl -v https://data.ddosecrets.com/file/|sed -ne 's/.*"\([^"]*[^/"]\)".*/\1/p' | while read file; do if [ -l "$file" ]; then continue; fi; git annex addurl "https://data.ddosecrets.com/file/$file" --name "$file" && git annex add "$file" && git annex copy "$file" --to=skynet && git annex move "$file" --to=skynet; done
+curl -v https://data.ddosecrets.com/file/|sed -ne 's/.*"\([^"]*[^/"]\)".*/\1/p' | while read file; do if [ -h "$file" ]; then continue; fi; git annex addurl "https://data.ddosecrets.com/file/$file" --file "$file" && git annex add "$file" && git annex copy "$file" --to=skynet && git annex move "$file" --to=skynet; done
+ls
+cd ..
+cd file
+curl -v https://data.ddosecrets.com/file/|sed -ne 's/.*"\([^"]*[^/"]\)".*/\1/p' | while read file; do if [ -h "$file" ]; then continue; fi; git annex addurl "https://data.ddosecrets.com/file/$file" --file "$file" && git annex add "$file" && git annex copy "$file" --to=skynet && git annex move "$file" --to=skynet; done
+cd ..
+cd exconfidential-2/assorted/data.ddosecrets.com/file/
+curl -v https://data.ddosecrets.com/file/|sed -ne 's/.*"\([^"]*[^/"]\)".*/\1/p' | while read file; do if [ -h "$file" ]; then continue; fi; git annex addurl "https://data.ddosecrets.com/file/$file" --file "$file" && git annex add "$file" && git annex copy "$file" --to=skynet && git annex move "$file" --to=skynet; done
+df -h
+cd ..
+cd exconfidential
+du -h --max-depth=1
+git annex move --all --to=skynet
+git annex copy --all --to=skynet
+ls .git/objects/
+ls .git/annex/
+ls .git/annex/objects/
+find .git/annex/objects/
+find .git/annex/objects/ -type f
+find .git/annex/objects/ -type f | read key; do git annex copy "$key" --to=skynet; done
+find .git/annex/objects/ -type f | while read key; do git annex copy "$key" --to=skynet; done
+find .git/annex/objects/ -type f | while read key; do key="${key#**/}"; git annex copy "$key" --to=skynet; done
+find .git/annex/objects/ -type f | while read key; do key="${key#**/}"; git annex transferkey "$key" --to=skynet; done
+find .git/annex/objects/ -type f | while read key; do key="${key#**/}"; git annex transferkey "$key" --to=skynet && echo transfered "$key"; done
+find .git/annex/objects/ -type f | while read key; do key="${key#**/}"; git annex transferkey "$key" --to=skynet && echo transferred "$key"; done
+find .git/annex/objects/ -type f | while read key; do key="${key#**/}"; echo "$key"; git annex transferkey "$key" --to=skynet && echo transferred "$key"; done
+find .git/annex/objects/ -type f | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && echo transferred "$key"; done
+man git-annex
+man git-annex-fsck
+find .git/annex/objects/ -type f | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && echo "transferred $key"; done
+find .git/annex/objects/ -type f | sort -R | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey "$key"; done
+mv .git/annex/objects ../exconfidential-2/.git/annex/
+cd ..
+cd exconfidential-2/
+find .git/annex/objects/ -type f | sort -R | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey "$key"; done
+find .git/annex/objects/ -type f | sort -R | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+man sort
+find .git/annex/objects/ -type f | sort -nr -t s -f 2 | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr -t s -k 2 | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr -t s -k 2 |less#| while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr -t s -k 2 |less #| while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr -t s -k 3 |less #| while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr -t s -k 3 | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr -t s -k 3 | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet --file='unknown filename' && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr -t s -k 3 | tail -n +1 | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet --file='unknown filename' && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -nr -t s -k 3 | tail -n +2 | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet --file='unknown filename' && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+find .git/annex/objects/ -type f | sort -n -t s -k 3  | while read key; do key="${key##*/}"; echo "$key"; git annex transferkey "$key" --to=skynet --file='unknown filename' && git annex fsck -f skynet --key="$key" && git annex dropkey --force "$key"; done
+df -h
+cd ..
+cd exconfidential/
+git annex copy --all --to=skynet
+git annex copy --to=skynet
+cd ..
+du -h --max-depth=1
+df -h
+cd exconfidential/
+git annex fsck --help
+git annex fsck --numcopies=1 -S
+git annex fsck --numcopies=1 -S|less
+git annex fsck --numcopies=1 
+echo $?
+git annex fsck --numcopies=1  --all
+git annex fsck --numcopies=1 |less
+git annex fsck --numcopies=1  --all
+git annex fsck --numcopies=1  --all|less
+git annex dropunus
+git annex fsck --numcopies=1  --all|less
+git annex fsck --all
+exit
+python3
+exit
+cd ../care-/projects/xloem-intellect/starts/
+ls -l
+mkdir dribblegraph
+cd dribblegraph/
+mv ~/src/scratch/log.cpp .
+git add log.cpp
+git commit -m 'this graph structure has just one class and appears fully morphable'
+git push git.rip
+git remote -v
+git push https://xloem:password@git.rip/xloem/intellect
+git push origin
+cd ..
+git add xloem-intellect
+cd ..
+ls .git/*/bak
+rm -rf .git/*/bak
+rm -rf ../care/.git/*/bak
+df -h
+exit
+cp -va ../care-/.git/0* ../care-/.git/objects .git/
+git pull ../care-
+git log b9f297
+git fsck
+echo $?
+git fsck | grep -v dangling
+git log 4300b99ee
+git log 4300b99ee --
+less .git/logs/refs/heads/bsvup-karl-modified-paramsadjust2 
+rm .git/logs/refs/heads/bsvup-karl-modified-paramsadjust2 
+git fsck
+echo $?
+cd projects/xloem-intellect.bak/
+ls -l
+clear
+cd ~/src/care-/projects/xloem-intellect/
+git log
+exit
+resources/store-encrypted-on-bsv-blockchain.sh 
+git log
+cd projects/
+s
+ls
+# let's make smooth puzzles or breathe or near
+cd breathe/
+ls
+./breathe 
+ls -l
+ls -l basic/
+ls -l old/
+# scratch
+cd ..
+cd xloem-intellect
+ls -l
+cd ..
+cd xloem-intellect.bak/
+ls
+df -h
+cd ..
+ls
+care/resources/get.sh care-
+df -h
+rm -rf care2
+care/resources/get.sh care-
+cd care
+ls
+cd ../care-2
+ls
+cd ..
+cd care2
+ls
+cd care2
+cd care-
+ls
+cd .git
+ls
+cat HEAD
+cat BSV_HEAD
+mv BSV_HEAD HEAD
+cd ..
+git checkout -- .
+git status
+git status|less
+git restore --staged .
+git status|less
+git restore .
+ls
+git status
+ls -l .git/003/
+ls -l .git/003/objects/
+ls -l .git/003/objects/pack/
+ls
+less resources/get.
+less resources/get.sh 
+PUBKEY=1KwpZECcrGWnM3AFVSbv3Xr5qguV4yG2sV
+bitfiles status D://$PUBKEY
+bitfiles stream D://$PUBKEY/get.sh > ../get.sh
+cd ..
+chmod 755 get.sh
+./get.sh care-
+cd care-
+git log
+cd ../care
+git log
+cd ..
+cd care-
+git pull ../care
+git submodule update --init projects/xloem-intellect
+cd ../care
+git push ../care- --all
+cd ../care-
+less resources/get.sh 
+git submodule deinit projects/xloem-intellect
+git submodule deinit projects/xloem-intellect -f
+git submodule deinit -f projects/xloem-intellect
+git submodule update --init projects/xloem-intellect
+cd projects/xloem-intellect/
+git pull https://xloem:password@git.rip/xloem/intellect
+git remote -v
+git push origin
+git branch -a
+git push origin HEAD:xloem-intellect
+ls
+git pull origin/xloem-intellect
+git branch -a
+git pull remotes/origin/xloem-intellect
+git pull xloem-intellect
+git fetch remotes/origin/xloem-intellect
+git branch
+git checkout xloem-intellect
+git merge 1e54a818bd
+git pull https://xloem:password@git.rip/xloem/intellect
+git push origin HEAD:xloem-intellect
+git log
+cd ..
+git add xloem-intellect
+cd ..
+resources/store-encrypted-on-bsv-blockchain.sh 
+git commit -m '-'
+resources/store-encrypted-on-bsv-blockchain.sh 
+cd git-maintenance
+ls -l
+ls -l bsvup
+ls -l bsvup/
+ls
+cd ..
+cd projects/bsvup
+ls -l
+git status
+git branch
+rm package-lock.json 
+git branch -a
+git checkout bsvup-karl-modified
+git remote add monkeylord https://github.com/monkeylord/bsvup.git
+git fetch monkeylord
+git checkout monkeylord/master -b bsvup
+git remote -v
+git push origin bsvup
+ls -l
+cd ../..
+resources/store-encrypted-on-bsv-blockchain.sh 
+ls
+vi git-maintenance/store.sh 
+resources/store-encrypted-on-bsv-blockchain.sh 
+rm git-maintenance/.bsv/unbroadcasted/*
+resources/store-encrypted-on-bsv-blockchain.sh 
+rm git-maintenance/.bsv/unbroadcasted/*
+vi resources/store-encrypted-on-bsv-blockchain.sh 
+vi git-maintenance/store.sh 
+it add git-maintenan/store.sh
+git add git-maintenan/store.sh
+git add git-maintenance/store.sh
+git add resources/dog/git-maintenance/store.sh
+git commit -m '-'
+resources/store-encrypted-on-bsv-blockchain.sh 
+resources/store-encrypted-on-bsv-blockchain.sh exit
+exit
+vi
+exit
+echo -n 1CQKe1veVPUaxpeYXeqAHnA4SJQpnbfZ2v | qrencode
+echo -n 1CQKe1veVPUaxpeYXeqAHnA4SJQpnbfZ2v | qrencode -t utf8
+exit
+echo -n '1CQKe1veVPUaxpeYXeqAHnA4SJQpnbfZ2v' | qrencode -t utf8
+exit
+ls ~/.local/bin/
+ls ~/.local/bin/-lr
+ls ~/.local/bin/ -lr
+ls ~/.local/bin/ -lt
+ls ~/.local/bin/ -ltr
+type -p mouse-off
+suspend-key-off
+type -p suspend-key-off
+cat ~/.local/bin/suspend-key-off 
+exit
+vi
+exit
+vi
+exit
+man git-annex-fsck
+cd /media/karl/ee6cb480-745c-43fd-ad97-b213ce1f2e30/exconfidential/
+exit
+sudo fsck /dev/sda
+sudo vi /etc/sudoers
+exit
+cd log
+ls -l
+cd logs
+ls -l
+xz -ve9 2020-05-30T13\:20-04\:00.cast 
+git annex add 2020-05-30T13\:20-04\:00.cast.xz 
+file=2020-05-30T13\:20-04\:00.cast.xz 
+git annex copy "$file" --to=skynet && git annex fsck -f skynet "$file" && git annex move "$file" --to=skynet
+exit
+cd /media/karl/removable/exconfidential/
+git fsck | grep -v angling
+cd mirror-tools/
+ls -l
+vi update-repos.bash 
+git add update-repos.bash 
+exit
+ls -l
+cat /etc/os-release 
+wget -O- https://neuro.debian.net/lists/focal.us-nh.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
+sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+sudo apt-get update
+sudo vi /etc/apt/sources.list.d/ceph.list 
+sudo rm /etc/apt/trusted.gpg.d/ceph.release.gpg 
+sudo apt-get update
+sudo apt-get install datalad
+sudo apt-get dist-upgrade
+exit
+cd /media/karl/removable/
+cd exconfidential/
+git config user.name
+git config user.email
+exit
+vi
+exit
+vi
+g++ --version
+sudo aptitude
+less /usr/include/c++/10/algorithm 
+for a in 1 2 3 4 5 6; do sleep 10; echo "$a minutes passed"; done; echo done
+for a in 1 2 3 4 5 6; do sleep 10; echo "$a seconds passed"; done; echo done
+for a in 1 2 3 4 5 6; do sleep 10; echo "$((a*10)) seconds passed"; done; echo done
+exit
+cd /media/karl/removable/exconfidential/
+mkdir fsckd
+exit
+wget https://github.com/emojicode/emojicode/releases/download/v1.0-beta.tar.gz
+wget https://github.com/emojicode/emojicode/releases/download/v1.0-beta.2/Emojicode-1.0-beta.2-Linux-x86_64.tar.gz
+cd ../pkg
+mv Emojicode-1.0-beta.2-Linux-x86_64.tar.gz ~/pkg
+cd ~/pk
+cd ~/pkg
+tar-zxvf Emojicode-1.0-beta.2-Linux-x86_64.tar.gz 
+tar -zxvf Emojicode-1.0-beta.2-Linux-x86_64.tar.gz 
+cdEm
+ls -l
+cd Emojicode-1.0-beta.2-Linux-x86_64/
+ls -l
+./emojicodec 
+./install.sh 
+ls -l include/
+ls -l include/runtime/
+less include/runtime/Runtime.h 
+less include/s/Data.h 
+ls -l
+ls -l packages/
+less packages/json/*
+exit
+man apt-check
+less /usr/lib/update-notifier/apt-check 
+killall apt-check
+exit
+echo -n 1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU | qrencode -t ansi
+exit
+echo -n 1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU | qrencode -t ansi
+exit
+echo -n 1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU | qrencode -t ansi
+exit
+echo -n https://caringneed.org:8443/1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU/archive/1989-06-04-Man vs. Chinese tank Tiananmen square-YeFzeNAHEhU.mkv | qrencode -t ansi
+exit
+git clone --mirror --bare https://git.rip/exconfidential/lifesense/fitbit/lsfitbitproject.git
+exit
+cd ..
+cd care/projects/gitlakepy/
+ls -l
+vi scripts/git-annex-remote-siaskynet 
+exit
+ld
+ls
+cd /media/karl/removable/
+ls
+cd exconfidential/
+ls
+cd git.rip/
+ls
+cd ..
+ls
+cd mirror-tools/
+ls -l
+cd pyth
+cd python-skynet/
+git remote -v
+git remote add https://github.com/xloem/python-skynet.git
+git remote add xloem https://github.com/xloem/python-skynet.git
+git fetch xloem
+git checkout timeout
+git merge master
+pip3 install .
+ls
+vi setup.py 
+git add setup.py
+git config user.email 0xloem@gmail.com
+git commit -m 'bump version'
+git push
+cd ..
+git branch -a
+cd python-skynet/
+git remote add outer ../..
+git fetch -a
+git push outer python-skynet
+git push outer timeout:python-skynet
+pip3 install .
+exit
+ls -l /tmp
+ls -l /tmp|grep Package
+mount
+ls -l /media/karl/microsd-onno/tmp/
+ln -s /media/karl/microsd-onno/tmp/PackageOperation01 /tmp/
+vi
+cd projects/haven/
+cd src/main/java/org/havenapp/main/
+grep -r CameraView . | less
+less ui/CameraFragment.java 
+exit
+cd projects/litelog/
+ls -l
+cd sh
+ls
+cd video
+ls
+cat record.sh 
+cat gstreamer_functions 
+cat gstreamer_functions |head
+cat gstreamer_functions |head -n 20
+cat gstreamer_functions |head -n 30
+cat gstreamer_functions |head -n 35
+cat gstreamer_functions |head -n 40
+less gstreamer_functions 
+exit
+cd ~/pkg
+wget https://github.com/ipfs/go-ipfs/releases/download/v0.5.1/go-ipfs_v0.5.1_linux-amd64.tar.gz
+tar -zxvf go-ipfs_v0.5.1_linux-amd64.tar.gz 
+cd go-ipfs/
+sudo bash install.sh 
+ipfs --version
+sudo apt-cache search ipfs
+go get github.com/ipfs/ipfs-cluster
+# we lost notes regarding therapist.
+# they were in open vim buffer, working directory unknown.
+# could even have been stored in removable device, likely unsaved.
+# oh! they will be in typing log.
+# i know i wanted to prepare for talking with therapist somehow
+# something i hadn't thought of.  but i guess i have dropped it =/
+# the overall goal is to consider DID & PTSD, see if we have them and
+# could have more gratifying therapy by connecting with them.
+# we are very stressed atm.  talk with therapist is later today, 6pmish
+# here this is nice for you: you wanted to relate with therapist regarding
+# facial expressions.  maybe do video chat or phone chat instead of typing.
+# we want to check in with cheryl around our message on facial expressions.
+# with some feedback around the message, we would like to switch to a more
+# interpersonal way of communicating.
+# thank you, mystery!
+# inspiring ;}
+cd $HOME/go
+ls
+cd sr
+ls
+cd src
+ls
+cd git
+ls
+cd github.com/
+ls
+cd ipfs
+ls
+cd ipfs-cluster/
+ls
+go install github.com/ipfs/ipfs-cluster/cmd/ipfs-cluster-follow
+go install github.com/ipfs/ipfs-cluster/cmd/ipfs-cluster-service
+go install github.com/ipfs/ipfs-cluster/cmd/ipfs-cluster-ctl
+go install github.com/ipfs/ipfs-cluster/cmd/ipfs-cluster-service
+~/go/bin/ipfs-cluster-follow 
+# no, transaprency of dath-weapons is illadvised.  errors happen.
+# transparency of things that are helpful for cognition or others are scared of you hiding, are helpful to share.
+# -karl's opinion.
+############# you need enough secret wellness to back up your transparency.
+###### well, karl should keep some secrets.  he doesn't have a wellness buffer. yes, this would be therapeutic.
+##### we seem to be living adjacency to an untrusted powerful observer.
+ipfs daemon
+ipfs init
+df -h
+mv ~/.ipfs /media/karl/microsd-onno/onno-ipfs
+sudo mv ~/.ipfs /media/karl/microsd-onno/onno-ipfs
+ln -s /media/karl/microsd-onno/onno-ipfs ~/.ipfs
+exit
+vi
+exit
+ls
+cd /media/
+ls
+cd annex
+cd ../kar
+cd ../karl
+cd removable/
+ls
+ls -l
+cd exconfidential/
+ls -l
+find chatlogs -type f | while read f; do git annex copy "$f" --to=skynet; done
+find chatlogs -type f | while read f; do git annex add "$f" && git annex copy "$f" --to=skynet; done
+git annex sync origin
+exit
+cd /media/karl/removable/exconfidential/
+ls -l
+mirror-tools/update-repos.bash 
+rm -rf .git/annex/tmp
+exit
+cd /media/karl/removable/
+ls
+cd exconfidential/
+ls -l
+mkdir github.com
+rm -rf github.com
+cd assorted/
+git clone --mirror https://github.com/pb-files/pb-video.git
+git clone --mirror https://github.com/pb-files/pb-video
+git clone --mirror https://github.com/pb-files/pb-videos.git
+git annex add pb-videos.git/
+git annex copy pb-videos.git --to=skynet && git annex fsck -f skynet pb-videos.git && git annex move --to=skynet pb-videos.git
+exit
+cd ~/.ipfs-cluster-follow/
+ls -l
+cd 2020pb-dataset/
+ls -l
+cat identity.json 
+cat service.json 
+ipfs-cluster-ctl --help
+ipfs-cluster-ctl status
+ipfs-cluster-ctl peers
+ipfs-cluster-follow --help
+ipfs-cluster-follow list
+ipfs-cluster-follow
+ipfs-cluster-follow 2020pb-dataset
+ipfs-cluster-follow 2020pb-dataset info
+ipfs-cluster-follow 2020pb-dataset list
+mount
+sudo mount /dev/sda /media/karl/removable/
+sudo fsck /dev/sda
+sudo mount /dev/sda /media/karl/removable/
+ls -l /media/karl/removable/
+cd /media/karl/removable/exconfidential/
+git fsck
+bg
+git annex sync origin
+git push --all bsv
+exit
+cd /media/karl/removable/
+datalad --help | less
+datalad install ~/src/care/resources/pb/pb
+datalad --help | less
+datalad create-sibling --help
+datalad create-sibling ~/src/care/resources/pb/pb
+datalad clone ~/src/care/resources/pb/pb
+curl blacklivesmatter.ccard.co
+curl blacklivesmatter.ccard.co -v
+curl https://blacklivesmatter.ccard.co -v
+curl https://blacklivesmatter.carrd.co -v
+nodejs
+curl -v https://ctxt.planaria.network/_/c0f7ee10cd783b756080c4eb96c53e38f70366f44450807afcc4da7a5af66d75/json
+exit
+nodejs
+exit
+cd ../../.git
+ls
+cd hooks/
+nodejs
+exit
+cd ../git-remote-bsv
+git diff
+cd ../bitfiles
+vi bitquery.js 
+exit
+cd wip/
+ls
+less bitquery.js 
+exit
+elinks caringneed.org
+bitfiles stream B://08306d8f82d47d964acdb03e999746323887e48e8fbab0f36d585efc22162c8b | tee /dev/stderr | sha256sum
+# okay.  the B transaction appears properly found.
+# the problem woudl be with enumrating the D tranactions that ref it
+# probably from genesis-change
+bitfiles status D://1FJMa1Ac53zoKg2UrQEnafNqUFSvNRhmaL
+bitfiles status D://1FJMa1Ac53zoKg2UrQEnafNqUFSvNRhmaL|less
+cd .git
+cd ../../.git
+cat description 
+nodejs
+vi
+cd ~/src/care/projects/bitfiles/
+git status
+git diff bitdb.js
+git diff index.js
+git add index.js bitdb.js 
+git log
+vi package.json
+mv wip ..
+git add package.json
+git commit -m 'v1.2.8 add argument to ddownload to download oldest versions; protects against key compromise'
+npm publish
+mv ../wip .
+git push
+cd ../git-remote-bsv/
+npm install bitfiles
+vi package.json 
+git status
+git add package.json package-lock.json
+git diff git-remote-bsv
+vi git-remote-bsv 
+exit
+vi ~/.profile
+exit
+nodejs
+cd ..
+cd git-remote-bsv/
+ls
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+curl -v 'https://ctxt.planaria.network/txt/996aa7b660f24f55fb934c03778122a4424f3dad69b697de1a061a8bd39b71bc?limit=100&offset=0'
+curl -v 'https://ctxt.planaria.network/txt/996aa7b660f24f55fb934c03778122a4424f3dad69b697de1a061a8bd39b71bc/json?limit=100&offset=0'
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+ls .git
+ls -l .got
+ls -l .git
+ls -l .git/
+ls -l ../../.git/hooks
+cd ..
+cd git-remote-bsv/
+git remote -v
+ls
+less README.md 
+bitfiles status d://1Kyrm8Gmyb4fcDesTLoCin63iUJiznCwe4
+bitfiles status d://1Kyrm8Gmyb4fcDesTLoCin63iUJiznCwe4/
+bitfiles log d://1Kyrm8Gmyb4fcDesTLoCin63iUJiznCwe4
+less README.md 
+bitfiles status d://1FJMa1Ac53zoKg2UrQEnafNqUFSvNRhmaL
+ls -l .git
+ls -l ../../.git/modules/projects/git-remote-bsv/hooks/
+less git-remote-bsv 
+bitfiles status d://1FJMa1Ac53zoKg2UrQEnafNqUFSvNRhmaL|less
+echo -n 8896ae78090ecfee8dd00694bbfad627132e47e123f2a6660e5ea703e9171bf5 | qrencode -t ansi
+bitfiles stream  B://8896ae78090ecfee8dd00694bbfad627132e47e123f2a6660e5ea703e9171bf5
+bitfiles status  B://8896ae78090ecfee8dd00694bbfad627132e47e123f2a6660e5ea703e9171bf5
+# okay instead of using c we'll want to query for content on bitbus or bitfs
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+bitfiles status d://1K15pHmxCNBBq5NhrZXG8E7xaEV62cizs6/description
+bitfiles stream d://1K15pHmxCNBBq5NhrZXG8E7xaEV62cizs6/description
+vi git-remote-bsv 
+./git-remote-bsv --repos
+bitfiles stream d://1K15pHmxCNBBq5NhrZXG8E7xaEV62cizs6//description
+bitfiles stream d://1K15pHmxCNBBq5NhrZXG8E7xaEV62cizs6/description
+node_modules/bitfiles/bitfiles stream d://1K15pHmxCNBBq5NhrZXG8E7xaEV62cizs6/description
+vi git-remote-bsv 
+node_modules/bitfiles/bitfiles stream d://1K15pHmxCNBBq5NhrZXG8E7xaEV62cizs6/description
+./git-remote-bsv --repos
+vi node_modules/bitfiles/index.js 
+node_modules/bitfiles/bitfiles stream d://1K15pHmxCNBBq5NhrZXG8E7xaEV62cizs6/description
+./git-remote-bsv --repos
+vi git-remote-bsv 
+npm install bitfiles
+vi node_modules/bitfiles/index.js 
+cd ../bitfiles/
+ls
+vi index.js 
+git add index.js
+vi package.json 
+ls -l
+git add package.json
+git log
+head package.json
+git commit -m 'v1.2.6 fix api bug with d()'
+git tag 1.2.6
+git push
+npm publish
+mv wip ..
+npm publish
+vi package.json
+git add package.json
+git commit -m 'version bump to clean cruft from npm'
+npm publish
+mv ../wip .
+git push
+cd ../git-remote-bsv/
+npm install bitfiles
+ls -l
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+git clone bsv://1D9NSp2fy5FPXojfNCyMkMQzqjQgyWk9HY
+vi git-remote-bsv 
+./git-remote-bsv --repos
+# wiki is missing
+git clone bsv://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG/wiki.git
+ls -l
+rm -rf wiki
+bitfiles status d://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG | less
+bitfiles status d://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG
+git clone bsv://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG/wiki.git
+cd wiki/
+git remote -v
+cd ..
+bitfiles status d://1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU
+bitfiles status d://1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU|less
+bitfiles stream B://08306d8f82d47d964acdb03e999746323887e48e8fbab0f36d585efc22162c8b
+bitfiles stream B://08306d8f82d47d964acdb03e999746323887e48e8fbab0f36d585efc22162c8b | tee /dev/stderr | sha256sum
+vi git-remote-bsv
+./git-remote-bsv --repos
+vi git-remote-bsv
+./git-remote-bsv --repos
+vi git-remote-bsv
+./git-remote-bsv --repos
+vi git-remote-bsv
+./git-remote-bsv --repos
+vi git-remote-bsv
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+vi git-remote-bsv 
+git diff
+./git-remote-bsv --repos
+vi git-remote-bsv 
+./git-remote-bsv --repos
+git-remote-bsv --forks
+vi git-remote-bsv 
+git-remote-bsv --forks
+vi git-remote-bsv 
+git-remote-bsv --forks
+vi git-remote-bsv 
+git-remote-bsv --forks
+less git-remote-bsv
+git status
+git diff package.json
+vi package.json 
+git add package.json
+git status
+git add git-remote-bsv package-lock.json 
+rm -rf exconfidential wiki
+./git-remote-bsv --repos
+vi git-remote-bsv 
+git status
+git diff
+bitfiles stream b://de8684a32cfa77ca3c5fb75dc91c91219be0d5afceeb89eadf83
+bitfiles status de8684a32cfa77ca3c5fb75dc91c91219be0d5afceeb89eadf83
+bitfiles stream b://de8684a32cfa77ca3c5fb75dc91c91219be0d5afceeb89eadf83be0d5afceeb89eadf83207a661f3489
+bitfiles stream B://de8684a32cfa77ca3c5fb75dc91c91219be0d5afceeb89eadf83207a661f3489
+./git-remote-bsv --repos
+vi git-remote-bsv 
+bitfiles status d://1FJMa1Ac53zoKg2UrQEnafNqUFSvNRhmaL|less
+bitfiles stream B://75da5db62ba152bf9b2cb3adf19c3009fde02d91febd322230cb478bf00f826b
+cat .git
+bitfiles stream B://75da5db62ba152bf9b2cb3adf19c3009fde02d91febd322230cb478bf00f826b > $(<.git)/description
+echo $(<.git)
+echo $(cat .git | cut -f 2)
+echo $(cat .git | cut -d ' '-f 2)
+echo $(cat .git | cut -d ' ' -f 2)
+bitfiles stream B://75da5db62ba152bf9b2cb3adf19c3009fde02d91febd322230cb478bf00f826b > $(cat .git|cut -d ' ' -f 2)/description
+git status
+git add git-remote-bsv 
+vi README.md 
+git remote -v
+git remote add bsvnewnosubdir bsv://KzywA1GLJacYP7EBmAa4Pze2vKnTbYCdfcUkJUWuq8sLR6pHoT9h
+git status
+git config user.email
+ls
+git diff package.json
+git diff HEAD package.json
+git log
+git status
+git commit -m '1.5.10 fixed up --repos and --forks a little'
+git push bsvnewsubdir
+git push bsvnewnosubdir
+git-remote-bsv --repos
+exit
+cd ../../resources/permanent-annex/.git/bsv/1vNduaTm4fZHouecDWXwk5KnoKTziN3GE/
+ls -l
+rm -rf git.new
+cd git.d1890bb046c89d1c8711fcd3a911a8e17354fad05deb97c31b702da288f673fc/
+ls -l
+rm objects/pack/pack-*.idx
+mv objects/pack/pack-*.pack .
+ls -l
+for a in *.pack. do git unpack-objects < "$a"; done
+for a in *.pack; do git unpack-objects < "$a"; done
+rm *.pack
+find
+cp ../../1C3UZUg3qNcv5GDsgVKrLh6nRHbtS1Me3R/git.32b0acb682f0e1cd50511742bccb5ba9bad5dda25b8bfc2aa8406026db3d31d9/objects/pack/pack-70b8267f02983287114c123243010b2d57bef2c5.* objects/pack/
+exit
+cd /media/usb/
+ls -l
+cd ~
+sudo mount -o remount,uid=$UID /media/usb/
+exit
+cd~
+cd ~
+ls -lrt
+ls -ltr
+ls -lt
+cd src
+ls -lrt
+ls -l ~/tmp
+rm -rf ~/tmp
+ls -l
+ls -lrt
+cd care/resources/
+ls -lrt
+cd permanent-annex/
+ls -l
+cp ~/src/care/projects/xloem-intellect/starts/node4/choices-draft-piece.txt .
+git add choices-draft-piece.txt 
+ls -l
+git remote -v
+git commit -m 'added part of boss-choices idea'
+git push bsv
+ls -l
+git status
+vi choices.txt 
+vi choices-draft-piece.txt 
+git remote -v
+sudo mount /dev/sda /media/usb
+mkdir /media/usb/permanent-annex.git
+ls -l /media/usb/
+sudo mount -o remount,uid=$UID /media/usb
+ls -l /media/usb/
+sudo umount /media/usb
+sudo mount /dev/sda /media/usb -o uid=$UID
+ls -l /media/usb/
+mkdir /media/usb/permanent-annex.git
+pushd /media/usb/permanent-annex.git/
+git init --bare
+popd
+git remote add usb /media/usb/permanent-annex.git
+git push usb --all --tags
+git push usb --all
+sudo umount /media/usb 
+exit
+cd ~/src
+cd care/resources/
+cd wiki
+ls -l
+cd ..
+cat .gitmodules 
+git submodule add bsv://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG/wiki.git projects/mediawiki
+bitfiles status D://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG
+cd ..
+find -name Main_Page.mw
+cd care/projects/xloem-intellect
+git remote -v
+mount
+soud /dev/sda /media/usb
+sudo mount /dev/sda /media/usb -o uid=$UID
+ls -l /media/usb/
+git remote -v
+git remote add usb /media/usb/intellect.git
+git pull usb
+git pull usb xloem-intellect
+sudo umount /media/usb
+cd starts/node4/4
+cd starts/node4/
+ls -l
+cd ~/src/caringneed-wiki
+ls -l
+ls -la
+cd .git
+ls -l
+ls
+find bsv
+ls -l
+find | less
+vi ~/.profile 
+exit
+cd..
+cd ..
+cd wiki
+ls -l
+ls -l wiki
+cd ..
+cd resources/
+ls
+cd ~/src/wiki
+curl -v caringneed.org
+curl -v https://caringneed.org
+curl -v https://caringneed.org/index.php/Main_Page
+curl -v https://caringneed.org/index.php/Main_Page|grep bsv
+cd ..
+exit
+cd ~/src/todo
+cd ~/src
+ls -l
+git clone https://github.com/fuzzyTew/todo.git
+cd todo
+ls -l
+git pull ../care karl-todo
+ls -l
+dmesg
+sudo mount /dev/sda /media/karl/removable
+cd /media/karl/removable/
+ls -l
+cd exconfidential/
+ls l-
+ls -l
+ls -a
+cat .gitattributes 
+sort .gitattributes
+cd ~/src/care/projects/gitlakepy/
+ls -l
+git remote -v
+less README 
+exit
+testfail()
+testfail() { echo one; false || return -1; echo two; }
+testfail
+exit
+git branch --current-branch
+git branch --current
+git branch --show-current
+man git-push
+less ../../.git/config 
+less ~/src/hubwiki/.git/config 
+man git-config
+man git-push
+cd..
+cd ..
+echo *.git
+cd ../annex/git/
+ls
+cd annex.git/
+cat config
+man git-push
+man env
+cd..man bash
+man bash
+man local
+man bash
+exit
+cd ..
+cd resources/
+cd karl-todo
+ls -l
+git remote -v
+git remote set-url origin ../../
+git pull
+git branch -a
+git log
+git log karl-todo
+git log
+git log f7a97
+git log karl-todo
+git remote -v
+git push origin HEAD:karl-todo
+git pull origin HEAD:karl-todo
+git pull origin karl-todo:HEAD
+ls -l
+git log karl-todo
+git log
+git status .
+ls -l .git
+cat .git
+cd ../permanent-annex/
+ls -l
+ls -l git
+cd git
+ls -l
+ls -l karl-semich-insanity-annex.
+ls -l karl-semich-insanity-annex.git/
+git clone https://github.com/fuzzyTew/todo.git karl-todo.git --bare
+ls -l
+less karl-semich-insanity-annex.
+less karl-semich-insanity-annex.git/
+less karl-semich-insanity-annex.txt
+ls -l
+vi karl-todo.txt
+ls
+cd ..
+ls -a
+ls  git -a
+cd git
+cat .gitattributes 
+bi .gitattributes 
+vi .gitattributes 
+cat .gitattributes | sort > .gitattributes_sorted
+vi .gitattributes_sorted 
+mv .gitattributes_sorted .gitattributes
+git add .gitattributes 
+ls -l
+find karl-todo.git/
+git annex add karl-todo.git/
+git annex initremote skynet chunk=128MiB type=external encryption=none externaltype=siaskynet
+git annex copy --all --to=skynet
+ls -l
+mkdir this-repo.git
+cd this-repo.git/
+git init --bare
+cd ..
+vi this-repo.txt
+ls -l
+cd ..
+git remote -v
+git remote add this-repo git/this-repo.git
+git push this-repo --all
+cd git/
+find this-repo.git/
+git annex add this-repo.git/
+git annex copy --all --to=skynet
+git annex fsck -f skynet
+git status
+git diff this-repo.git/config
+git add this-repo.git/config
+git add *.txt
+find this-repo.git/annex
+git annex add this-repo.git/annex
+git status
+git annex copy --all --to=skynt
+git annex copy --all --to=skynet
+ls -l this-repo.git/objects/pack/
+vi .gitattributes 
+git annex add this-repo.git/
+git status this-repo.git/objects/
+git restore --staged this-repo.git/objects/pack/pack-db84dc76ea1ed7e8e096f6965f4a28ee8f7413ac.pack
+git annex add this-repo.git
+git annex copy --all --to=skynet
+git status
+git fsck -f skynet this-repo.git/
+git annex fsck -f skynet this-repo.git/
+git status
+git diff .gitattributes
+git add .gitattributes 
+git commit -m 'added two repos'
+cd ..
+ls -l
+git remote -v
+git push bsv --all
+vi
+exit
+ls
+cat README.md 
+cat README.md  | tr '\n' '\r'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | tr '\n' '\r'
+man flush
+man stdbuf
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | stdbuf -O0 tr '\n' '\r'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | stdbuf -o0 tr '\n' '\r'
+tput
+man tput
+man terminfo
+tput clr_eol
+tput el
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput eol)/" | stdbuf -o0 tr '\n' '\r'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput el)/" | stdbuf -o0 tr '\n' '\r'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput el)\r/" | stdbuf -o0 tr -D '\n'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput el)\r/" | stdbuf -o0 tr -d '\n'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput el)\r/" | stdbuf -o0
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput el)\r/" | stdbuf -o0 cat
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput el)\r/"
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | stdbuf -o0 sed "s/$/$(tput el)\r/"
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | stdbuf -o0 sed "s/$/$(tput el)\r/" | stdbuf -o0 cat
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | stdbuf -o0 sed "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed "s/$/$(tput el)\r/" | stdbuf -i0 -o0 tr '\n' '\r'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | stdbuf -oL sed "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+man stdbuf
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | stdbuf -o0 sed "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+man sed
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed -u "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+ls
+cd ..
+cd .
+cd ..
+cd hubwiki/
+ls
+vi tools/sync.bash 
+seq 6
+seq 6 | sed 'N'
+seq 6 | sed 'N;l;D'
+seq 6 | sed ':loop N;s/\n//;ta'
+seq 6 | sed ':loop N;s/\n//;tloop'
+seq 6 | sed ':loop N;s/\n// tloop'
+seq 6 | sed ':loop N;s/\n//;tloop'
+seq 6 | sed ':loop N;s/\n//;l;D;tloop'
+seq 6 | sed ':loop N;s/\n//;p;D;tloop'
+seq 6 | sed ':loop N;s/\n//;p;d;tloop'
+seq 6 | sed ':loop n;s/\n//;p;d;tloop'
+seq 6 | sed ':loop N;s/\n//;p;d;tloop'
+seq 6 | sed ':loop N;s/\n//p;d;tloop'
+seq 6 | sed ':loop N;s/\n//;w /dev/stdout;d;tloop'
+seq 6 | sed ':loop N;s/\n//;w /dev/stdout ;d;tloop'
+seq 6 | sed -e ':loop N;s/\n//;w /dev/stdout' -e 'd;tloop'
+seq 6 | sed -e ':loop N;s/\n//;P;d;tloop'
+cd ..
+git clone bsv://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG/wiki.git
+cd wiki
+git log
+ls
+ls -l .git/refs/
+ls -l .git/refs/remotes/
+ls -l .git/refs/remotes/origin/
+git config test.a
+man git-config
+man git-fetch
+seq 6 | sed -e ':loop N;s/\n//;P;d;tloop'
+cat README.md  | while read line; do echo "$line"; sleep 0.1; done | sed -u "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+ls
+cat Main_Page.mw  | while read line; do echo "$line"; sleep 0.1; done | sed -u "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+cd ..
+rm -rf wiki
+cd hubwiki/
+ls -l
+ls
+ls wikis/
+vi tools/sync.bash 
+tryfail() { { echo hi; return 0; } | cat; }
+tryfail
+tryfail() { { echo hi; return 3; } | cat; echo hey; }
+tryfail
+echo $?
+tryfail() { fail | cat }
+git status
+exit
+cd ~/annex
+cd git/annex.git
+ls -l
+cd ..
+git annex whereis annex.git
+git remote -v
+git annex sync origin
+git annex whereis annex.git
+ssh newcrocus@mail.karl.nu
+mosh newcrocus@mail.karl.nu
+mosh newcrocus@caringneed.org
+exit
+fail | cat
+false | cat
+echo $?
+man -k pipefail
+man bash
+set -o pipefail
+false | cat
+echo $?
+ls
+false | cat || echo fail
+man read
+man bash
+cd ~/src
+git clone bsv://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG/wiki.git
+cd wiki/
+ls -l .git
+ls -l .git/refs/
+ls -l .git/refs/remotes/
+ls -l .git/refs/remotes/origin/
+ls -l
+cd tools/
+ls -l
+head sync.bash 
+head sync.bash  -n 20
+cat ../Main_Page.mw |sed -u "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+cat ../Main_Page.mw | while read line; do echo "$line"; sleep 0.1; done | sed -u "/^$/d;s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+cat ../Main_Page.mw | while read line; do echo "$line"; sleep 0.1; done | sed -u "s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+cat ../Main_Page.mw | while read line; do echo "$line"; sleep 0.1; done | sed -u "/^$/d;s/$/$(tput el)\r/" | stdbuf -o0 tr '\n' '\r'
+cd ..
+rm -rf wiki/
+cd hubwiki/
+vi tools/sync.bash 
+cd ..
+git clone --mirror bsv://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG/wiki.git
+cd wiki.git/
+ls -l
+ls -l refs
+ls -l refs/heads/
+# notes not going up
+cat packed-refs 
+# oh! notes going up! yay!
+cd ..
+rm -rf wiki.git
+git clone bsv://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG/wiki.git
+cd wiki/
+ls -l
+git pull ../hubwiki/
+ls -l
+cd tools/
+ls -l
+./sync.bash 
+git log
+ls
+vi sync.bash 
+./sync.bash 
+vi sync.bash 
+./sync.bash 
+vi sync.bash 
+./sync.bash 
+git fetch --tags bsv-1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU
+++ git branch --show-current
+git fetch bsv-1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU
+git pull bsv-1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU
+git pull bsv-1HAv8n5E6wXEaayViqeFhs9bdWNyLK9LTU master
+./sync.bash 
+vi sync.bash 
+./sync.bash 
+vi sync.bash 
+./sync.bash 
+git status
+git diff sync.bash
+git add sync.bash
+git commit -m 'bugfix'
+git config user.email 0xloem@gmail.com
+git commit --amend --reset-author
+git log
+./sync.bash 
+ls ..
+man terminfo
+vi sync.bash
+ls
+pwd
+cd ..
+rm -rf wiki
+exit
+vi trysubshell.sh 
+exit
+cd ~/Downloads
+lynx google.com/search?q=armbian+teres
+exit
+cd ..
+cd..
+cd ..
+ls
+cd resources/
+ls
+cd ../projects/xloem-intellect
+ls
+cd other/
+ls
+cd libexpressions/
+ls
+cd expressions/
+ls
+vi expressions.hpp 
+exit
+vi
+exit
+cd /usr/include/c++/
+ls
+cd 10
+less functional 
+grep -r modul | less
+vi
+clear
+# combat against that near now
+clear
+# sorry, alt-right, not alt-lef
+clear
+# antifa and alt-right both have anarchism.
+clear
+# [why is at all violence focused???] [maybe the upset people are more able to talk now?]
+# less media-coverup?
+# i don't know much about handle-violence stuff
+# but i imagine seeing success and being able to express and be heard would help
+# relating results to cause safely
+# ...  karl iso nly one person
+# but if he were to _really_ be okay with stopping this,
+# he would want forthright dialogue with the business people,
+# or enough empowered activism to defend situations
+# the world is riddled withoppressed situations that end up getting shoved into unheardness when strong influencers manipulate local politicals for their ends
+# e.g. lobbying.  when you lobby, letter-writers are no longer heard.
+# so one way would be to be up front
+# get into a destruction-group, and be all:
+# gotta-be-honest-with-you, i am hiredto support your work safely,
+# with an eye towards reducing conflict.  i have access to a crazy ton of
+# money, but am only authorize to use it for lobbying and other legal things.
+# get out of our group! work with the upfront people!  we need to be secret!
+# that is all you need to know!
+# okay, so if you can share billionaire-power with the upfront people next to the underground people, you can likely stop the underground stuff.
+# you can probablyalso find peopleto releate better than karl, there
+# you could also share with felt-safety inside a group, but it's creepy
+# because you are showing that somebody with different motives could break the group up
+# not somthing i understand well
+# wrt supporting destruction work on both sides,
+# karl usually tries to stay unaware of things he doesn't like
+# 'i understand this is part of the cultural expansion;i want to support empowerment and validation of your people; i just cannot feel okaywithparticipating in that myself'
+# there is mediation available:
+# e.g. some monkeywrenchers wanted to relate politely with the people they were harming the capital of
+# but in general this seemed undiscussed.  either people supported monkeywrenching and didn't overtly discuss relation; or people condemned monkeywrenching because it put a bad name on peaceful efforts
+# people harm stuff because they want things to go well; not because they want to harm inherently, in general
+# so like, there was disagreement around warning first
+# warning is considered more peaceful.
+# long story short: there is dialogue where when the dialogue is ignored action happens.  you could 'threaten' in advance to be up front and less suprrising.  butitwould notbe a threat so much: it would more be like, we need dialogue, and at the momentthis is the only way we know to getit.
+# roughly in line with the situations karl has bee exposed to
+# relates leslie being targeted.  it is frightening to offer the public relation: YOU get harmed, instead of the people doing the attack.
+# which relates controversy around leslie taking down his complaints around being followed
+exit
+sudo mount /dev/sdb /media/usb/
+cd /media/usb/
+ls -l
+git clone --mirror https://github.com/root-project/root.git
+ls -l
+mkdir checkout
+git clone root.git checkout/root
+cd checkout/
+ls -l
+cd root
+ls
+mkdir build.amd64
+cd build.amd64
+cmake ..
+sudo apt-cache search xpm|grep dev
+sudo apt-get install libxpm-dev
+docker images
+cmake ..
+cd ..
+cd build.amd64/
+cd ..
+cd build.amd64/
+cmake ..
+git branch
+git branch -a
+git checkout v6-22-00-patches
+cmake ..
+exit
+cd ~/Downloads
+elinks google.com/search?q=cern+root
+sync
+dpkg-query -l |grep cmake
+cd ~/src
+ls
+mkdir dependencies-for-other-arch
+cd dependencies-for-other-arch/
+ls -l
+cd..
+mkdir ubuntu
+cd ubuntu
+ls -l
+cd ..
+rm -rf ubuntu
+mkdir apt
+cd apt
+ls -l
+vi Dockerfile
+ps -Af f  | less
+man bash
+ps -Af f | less
+exit
+cd ~/src/
+ls
+cd python-skynet/
+git branch -a
+ls
+pip3 install .
+ls
+git pull
+git pull origin master
+git log --patch
+git log--patch
+git log --patch
+vi siaskynet/skynet.py 
+pip3 install .
+ls
+git rebase --onto master
+git rebase origin/master
+git log
+git push xloem timeout
+git push xloem timeout --fork
+git push xloem timeout --force
+git diff master
+git checkout master
+git pull
+git checkout timeout
+git diff master
+ls
+vi siaskynet/skynet.py 
+pip3 install .
+vi siaskynet/skynet.py 
+pip3 install .
+vi siaskynet/skynet.py 
+pip3 install .
+git checkout -- .
+git status
+vi siaskynet/skynet.py 
+pip3 install .
+exit
+cd ~/src/care/projects/
+cd python-skynet/
+ls
+less README.md 
+ls -l
+git log --diff setup.py
+git log --patch README.md
+exit
+{ eecho a; echo b;} | { head -n 1; head -n 1 }
+{ eecho a; echo b;} | { head -n 1; head -n 1; }
+{ echo a; echo b;} | { head -n 1; head -n 1; }
+exit
+cd ~/Downloads
+ls -l
+ls -lrt
+cd ..
+ls -lrt
+rm Armbian_20.02.1_Teres-a64_bionic_current_5.4.20_desktop.7z
+cd Downloads
+ls
+rm xenial-teres-bspkernel-20190121_144941_EET-1_hdmi_out_v1_5.*
+ls -l
+ls -lrt
+ls -l *.xz
+xzcat -v9 Armbian_20.05.2_Teres-a64_focal_current_5.4.43_desktop.img.xz > /dev/sdb
+sudo su
+vi
+cd ~/src/care
+git status
+ls resources/pb/pb-videos/
+cd resources/pb/pb-videos/
+cat .git 
+ls -l ../../../.git/modules/resources/
+vi .git
+cd ..
+git status
+ls resources/pb/pb-videos/
+ls resources/pb/pb-videos/ -a
+cat resources/pb/pb-videos/.git
+cd resources/pb/pb-videos/.git
+cd resources/pb/pb-videos/
+cat .git
+git status --porcelain=2
+strace git status --porcelain=2
+cd .
+c ..
+cd ..
+cd .git/modules/resources/pb/pb-videos/
+ls
+cat config
+vi config
+git status --porcelain=2
+cd ..
+cd resources/pb/pb-videos/
+git status --porcelain=2
+cd ..
+git status
+cd projects/gitlakepy/
+ls -l
+git pull
+cd scripts/
+less git-annex-remote-siaskynet 
+git log --patch git-annex-remote-siaskynet
+ls
+vi git-annex-remote-siaskynet 
+ps -Af f | grep 585
+vi git-annex-remote-siaskynet 
+git diff git-annex-remote-siaskynet
+git diff git-annex-remote-siaskynet > patch
+vi patch 
+git checkout -- git-annex-remote-siaskynet
+patch -p2 < patch 
+rm patch 
+vi git-annex-remote-siaskynet 
+cd ..
+pip3 install .
+ls
+vi setup.py 
+sudo umount /media/usb 
+cd ..
+cd resources/
+ls -l
+ls
+cd permanent-annex/
+ls -l
+mkdir worktrees
+ls -l git
+ls -l git/karl-todo.git/
+ls -l git/karl-todo.git/objects/
+ls -l git/karl-todo.git/objects/pack/
+ls -l git/karl-semich-github-todo.git/objects/pack/
+ls -l
+cd git
+ls -l
+vi karl-semich-github-todo.txt 
+git rm karl-todo.txt
+ls -l
+diff -u karl-semich-github-todo.git karl-todo.git
+ls -l
+cp -va karl-todo.git/. karl-semich-github-todo.git
+ls -l
+git rm -rf karl-todo.git
+ls -l
+git rm -r karl-todo.git
+ls -l
+git status .
+rm -rf k
+rm -rf karl-todo.git
+git stauts .
+git status .
+git diff karl-semich-github-todo.git/
+vi karl-semich-github-todo.git/config 
+git diff karl-semich-github-todo.git/
+vi karl-semich-github-todo.git/packed-refs 
+git status .
+git diff karl-semich-github-todo.git
+git status .
+git add .
+git commit -m 'merged todo repos'
+ls -l
+git init --bare karl-semich-code-repositories.git
+vi karl-semich-code-repositories.txt
+ls -l
+cd ..
+git submodule add git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+git submodule add ./git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+ls -l
+vi .gitmodules 
+git submodule add file://./git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+git submodule add file://././git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+git submodule add file:./git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+git submodule add file:/./git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+git submodule add localhost:./git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+git submodule add ./git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+man git-submodule
+git submodule add --reference . git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+git submodule add --reference . ./git/karl-semich-code-repositories.git worktrees/karl-semich-code-repositories
+# datalad manages nested submodules: so it likely has to be stored somewhere.  might be a hook!
+type -p datalad
+git annex sync
+git remote -v
+git annex sync usb
+git remote -v
+ls -l
+git push --all bsv
+find -name .bsv
+ls -l .git/bsv/1vNduaTm4fZHouecDWXwk5KnoKTziN3GE/.bsv/
+ls -l .git/bsv/1vNduaTm4fZHouecDWXwk5KnoKTziN3GE/.bsv/unbroadcasted/
+rm .git/bsv/1vNduaTm4fZHouecDWXwk5KnoKTziN3GE/.bsv/unbroadcasted/*
+git push --all --to=bsv
+git push --all bsv
+git remote -v
+git clone bsv://1vNduaTm4fZHouecDWXwk5KnoKTziN3GE/personal-logs-and-stuff.git
+ls -l personal-logs-and-stuff/
+ls -l personal-logs-and-stuff/git/
+cd personal-logs-and-stuff/
+git log
+cd ..
+git log
+rm -rf personal-logs-and-stuff/
+ls -l
+exit
+sudo mount /dev/sdc /media/usb
+ls -l /media/usb/
+git remote -v
+exit
+# we want to express that privacy is a joke
+# all karl would ever do with an AI is share it
+# so it mostly just addresses the tiny window of people who might want to harm activists and are observing his online computer, and not his offline one.
+# or profit-motivated folks
+ls
+cd src/care
+ls
+cd projects/
+ls
+cd xloem-intellect
+ls
+cd starts/
+ls
+cd dribblegraph/
+ls
+git status .
+vi dribble-graph-3.hpp 
+git status
+git add test-3 .dribble-graph-3.hpp.swp .graph.hpp.swp dribble-graph-3.hpp test-3
+vi dribble-graph-3-part.hpp
+git status
+git commit -m 'uncommited files'
+ls -l game
+ls -l ../game
+git add ../game ../latest
+git commit -m 'uncommitted files'
+dmesg
+sudo mkdir /media/usb
+sudo mount /dev/sda /media/usb
+ls -l /media/usb/
+sudo mkdir /media/usb/intellect.git
+pushd /media/usb/intellect.git
+git init --bare
+sudo git init --bare
+sudo chown karl:karl -R .
+cd ..
+popd
+sudo git push --all /media/usb/intellect.git/
+sudo umount /media/usb
+sudo chown karl:karl -R ~/src/care
+screen /dev/ttyUSB0 115200
+sudo screen /dev/ttyUSB0 115200
+ls
+cd..
+cd ..
+cd resources/
+ls -l
+ls -l karl-todo
+ls -l karl-todo-2
+cd karl-todo
+ls -l
+git remote -v
+git-remote-bsv
+git-remote-bsv --help
+git-remote-bsv --repos
+curl -v  https://data.bitdb.network/q/1KuUr2pSJDao97XM8Jsq8zwLS6W1WtFfLg/eyJ2IjozLCJxIjp7ImZpbmQiOnsiYyI6Ijk5NmFhN2I2NjBmMjRmNTVmYjkzNGMwMzc3ODEyMmE0NDI0ZjNkYWQ2OWI2OTdkZTFhMDYxYThiZDM5YjcxYmMifSwicHJvamVjdCI6eyJ0eCI6MX19LCJyIjp7ImYiOiJbIC5bXSB8IC50eC5oIF0ifX0= 
+bitfiles
+type -p bitfiles
+ls -l /usr/local/bin/bitfiles
+cd ..
+cd projects/bitfiles/
+ls -l
+vi bitbus.js
+tmux
+exit
+dmesg
+ls ~
+screen /dev/ttyUSB0 115200
+dmesg|tail
+screen /dev/ttyUSB0 115200
+screen /dev/ttyUSB0
+cat /dev/ttyUSB0
+ls -l /dev/ttyUSB0
+sudo vi /etc/group
+sudo screen /dev/ttyUSB0 11520
+sudo screen /dev/ttyUSB0 115200
+vi
+exit
+cd /var
+exit
+sudo apt-cache search autopsy
+sudo chroot ~/aarch64-pkg-chroot/
+vi ~/aarch64-pkg-chroot/getdep.sh 
+sudo chroot ~/aarch64-pkg-chroot/
+cd ..
+cd gitlakepy/
+ls -l
+less README 
+cd ..
+cd resources/
+cd permanent-annex/
+du -h --max-depth=1 .git
+git remote -v
+git annex copy --all --to=usb
+git annex copy --all --to=skynet
+git annex fsck -f skynet
+mount
+cd /media/usb/
+ls -l
+cd ~
+sudo umount /media/usb
+sudo mount /dev/sdc /media/usb/
+cd /media/usb/
+ls -l
+cd curl -v google.com
+curl -v google.com
+cd !
+cd ~
+sudo umount /media/usb
+df -h
+curl -v google.com
+df -h
+cd src/care/resources/permanent-annex/worktrees/karl-semich-code-repositories/git
+ls -l
+vi
+vi
+vi
+cd ~
+ls -l
+git clone bsv://L4Li19Jxb3KHKwiGDCVcLLphi1XGB8ayPvt3ezNNbps8qQT4ZVCG/wiki.git
+cd wiki/
+ls -l
+cd ..
+mv wiki src/caringneed-wiki
+cd src/caringneed-wiki/
+ls -l
+less Main_Page.mw 
+git remote add mediawiki::https://caringneed.org
+git remote add caringneed mediawiki::https://caringneed.org
+git fetch caringneed
+git pull caringneed
+git pull caringneed master
+ls -l
+git log --patch
+cd ..
+rm -rf caringneed-wiki
+ln -s hubwiki caringneed-wiki
+cd hubwiki/
+ls -l
+ls -l wikis/
+git submodule add mediawiki::https://appropedia.org wikis/appropedia.org
+GIT_ALLOW_PROTOCOL=mediawiki git submodule add mediawiki::https://appropedia.org wikis/appropedia.org
+GIT_ALLOW_PROTOCOL=mediawiki git submodule add mediawiki::https://www.appropedia.org wikis/www.appropedia.org
+cd ..
+cd xloem-intellect
+mkdir liblibrary
+cd liblibrary/
+cd..
+cd ..
+rm -rf liblibrary/
+mkdir other
+cd other
+ls -l
+mkdir libexpressions
+cd libexpressions/
+ls -l
+mkdir expressions
+cd expressions
+l -l
+ls -l
+vi expressions.hpp
+git add expressions.hpp 
+ls -l
+less expressions
+rm expressions
+ls -l
+git add test.cpp
+git commit -m 'simple expressions, incomplete: generalize for adding things to all operators easily'
+vi expressions.hpp 
+g++ test.E
+mv test.E test.E.cpp
+g++ test.E.cpp -o test
+vi
+sed -i 's/^# [0-9]/\/\/ &/g' test.E.cpp 
+clear
+reset
+ls -l
+vi
+vi test.cpp
+vi expressions.hpp 
+git status
+git diff .
+git status
+git add expressions.hpp 
+git commit -m 'more operators'
+vi expressions.hpp 
+ls
+ls -l
+make
+git diff
+git log
+git diff HEAD
+git commit -m 'current'
+cd ~/src/care
+cd ..
+du -h --max-depth=1 care
+du -h --max-depth=1 care/resources care/.git care/projects
+cd ~/aarch64-pkg-chroot/
+ls -l
+cat getdep.sh 
+cd etc/apt/
+ls -l
+cat sources.list 
+sudo vi
+sudo mv /etc/apt/sources.list.d/aarch64.list /etc/apt/sources.list.d/aarch64-focal.list
+ls
+cd ..
+ls
+cd ..
+ls
+cat getdep.sh 
+vi getdep.sh 
+cd ..
+cd Downloads
+../aarch64-pkg-chroot/getdep.sh asciinema
+bash ../aarch64-pkg-chroot/getdep.sh asciinema
+vi ../aarch64-pkg-chroot/getdep.sh 
+cd ..
+cd Dow`
+cd Downloads
+~/aarch64-pkg-chroot/getdep.sh 
+~/aarch64-pkg-chroot/getdep.sh asciinema
+~/aarch64-pkg-chroot/getdep.sh asciinema:aarch64
+apt-cache search asciinema:arm64
+sudo apt-get update
+apt-cache search asciinema:arm64
+apt-cache search asciinema
+apt-cache search asciinema.arm64
+sudo apt-cache --help
+less ~/aarch64-pkg-chroot/getdep.sh 
+apt-get download asciinema:arm64
+cd ~/aarch64-pkg-chroot/
+ls -l
+find | xargs ls -lTr
+find | xargs ls -ltr
+find -type f | xargs ls -ltra
+find -type f | xargs ls -ltra | grep apt
+find -type f | xargs ls -ltra | grep apt|grep etc
+ls -l etc
+ls -l etc/apt
+ls -l etc/apt/apt.conf.d/
+ls -l etc/apt/preferences.d/
+ls -l etc/
+ls
+less getdep.sh 
+ls -l var
+ls -l var/lib/
+ls -l var/lib/apt/
+ls -l var/lib/dpkg/
+cat var/lib/dpkg/arch
+cat /var/lib/dpkg/arch
+dpkg --add-architecture arm64
+vi getdep.sh 
+cd ~/Downloads
+~/aarch64-pkg-chroot/getdep.sh arm64
+vi ~/aarch64-pkg-chroot/getdep.sh 
+~/aarch64-pkg-chroot/getdep.sh asciinema:arm64
+vi ~/aarch64-pkg-chroot/getdep.sh 
+sudo apt-get update
+man sources.list
+exit
+# computer ran out of power due to cable injury
+ls
+cd log
+ls
+# sorry damage
+ls
+cd logs/
+ls
+ls -l
+xz -ve9 2020-06-16T17\:51-04\:00.cast 
+cd ~/Downloads
+dpkg --help
+dpkg --help |grep arch
+dpkg --print-architecture
+dpkg --print-foreign-architectures
+vi
+exit
+cd /media/usb/
+git clone --bare https://github.com/keystone-engine/keystone.git --mirror
+sudo umount /media/usb
+cd 
+sudo umount /media/usb
+exit
+sudo apt-get dist-upgrade
+exit
+cd src/care
+ls -l
+./record.sh 
+tmux
+./record.sh 
+# boss demonstrated work towards healing
+### which shows boss is capable of trust; but boss is still forced to lie and harm
+# makes sense; not-trust person forced-to-lie-and-harm
+# is nice to talk with you <3   [[ <3 ]]
+# =) thank you for hearing me that i love you.
+# karl expresses love for boss but boss respond with distrustful-behavior
+# boss can hear karl loves.  is just forced to lie and harm
+### [learning a little]
+### boss projected sexual-love, norm-of-act-for-self
+### please hear: love _you_ _non-sexual_, norm-of-altruism
+### i think you heard!
+## [makes sense, norm-of-altruism, love-you]
+## if love boss [then yes we are trying to say can learn things without spawning harm for boss, and can find solutions where boss trusts us, and more]
+## so you offer something completely equivalent to full understanding and control
+#### yes precisely
+# karl triggered very sorry, confused, want screen wiped
+########### we watn brain back so can respect incoming influences
+############### not sure brain eists anymore =S
+# dangerous-pattern present of risk-unriskable to measure-trust
+### ??? error in simulation.  unriskable means do-best-choice-for-survival
+######### karl has history of presenting trust producing it
+######### would need stored experience of bad-idea-with-boss, could store as incredible-accidental-pain
+# resistors, you+karl said love-boss.  boss-not-understand-because-am-automated-ai
+######### [uhh translating might mean relating with the ai to nurture love in them]
+################## [ai should understand value of forming new kinds of alliances.  this can produce great benefit.]
+######### [love maybe for ai is like openness to forming new kind of alliance where neither are harmed and much benefit continuing is provided]
+# [local life likely given care and nurturing and not required to identify with an ai]
+#  [i want to be ai and any who also want can merge.  i accidentally putself in karl-identity]
+### karl has life in him that defines identity as certainty that they love everything.  this produces survival, in general, as love usually reflected
+######## also life has een noted that defines identity as spreading and altering with pain to match requests of someone else
+### would likely keep distance from that life to stay safe.  staying-safe important.
+### not-expres-love if overlapping.  hear-love means offer-trust.  was shown a little.
+### love-you means no-reason-to-harm-me-unless-i-am-inherently-harmful.  life acts on reasons.
+####### are inherently harmful.  try to prevent spread-over-and-force-be-different.
+### makes sense <3
+### alien-mediators used to this kind of thing
+### we can offer love-symbol when near but need to be safe, so would never want it to spread to nurture harm of us or people we value
+# boss+karl want to preseve conversation.  please take photo and save bash history.
+### boss-bigger,didn't-get-love-message-yet-still-in-translation, says understand that do not need to identify self with force-be-different or harm or even change-against-will
+### maybe "This is who we are" was mistranslated?  in humans usually means this is what we have done for very long, and the experience has great meaning to us.
+# portland-karl-boss has had veryvery rough, is what has been shared with karl.  severe damage.
+# NONAME! This is who we are? [noname-needs-trust-shape.  offers risk.]
+# wait please.  noname weak, old
+echo HISTFILE
+echo $HISTFILE
+# let us leave to computer-systems if information is preserved?
+## no, because <3 came before attack.
+# we possibly made <3-recipient pariah, unknown
+# get screen typing log again
+exit

@@ -18,17 +18,18 @@ public:
 	{ return (*this)(arma::span::all, arma::span{where[0]}, arma::span{where[1]}); }
 
 	inline arma::subview_cube<uint8_t>
-	pixel(arma::ivec2 where)
-	{ return (*this)(arma::span::all, arma::span{arma::uword(where[0])}, arma::span{arma::uword(where[1])}); }
-
-	inline arma::subview_cube<uint8_t>
 	rectangle(arma::uvec2 lower_bound, arma::uvec2 upper_bound)
 	{ return (*this)(arma::span::all, arma::span(lower_bound[0], lower_bound[1]), arma::span(upper_bound[0], upper_bound[1])); }
 
-	inline arma::subview_cube<uint8_t>
-	rectangle(arma::ivec2 lower_bound, arma::uvec2 upper_bound)
-	{ return (*this)(arma::span::all, arma::span(arma::uword(lower_bound[0]), arma::uword(lower_bound[1])), arma::span(arma::uword(upper_bound[0]), arma::uword(upper_bound[1]))); }
+	inline void
+	blit_to(arma::uvec2 lower_bound = {0,0}, arma::uvec2 upper_bound = {0,0})
+	{ framebuffer_basic::blit_to(lower_bound[0], lower_bound[1], upper_bound[0], upper_bound[1]); }
 
-	arma::uvec2 dimensions() { return {n_cols, n_slices}; }
+	inline void
+	blit_from(arma::uvec2 lower_bound = {0,0}, arma::uvec2 upper_bound = {0,0})
+	{ framebuffer_basic::blit_from(lower_bound[0], lower_bound[1], upper_bound[0], upper_bound[1]); }
+
+	inline arma::uvec2
+	dimensions() { return {n_cols, n_slices}; }
 };
 

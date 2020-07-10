@@ -1,0 +1,103 @@
+out here we don't have tools to influence our core decisions very precisely or repeatedly
+we sometimes work on a tool that may be able to do that to itself some day
+
+good ideas getting harmed
+
+relevency
+
+	our relevency is getting broken up
+	the more relevent it is, the harder to keep it alive
+
+		can we grow releventness directly?
+			[note this must be asked frequently huh]
+
+			inhibition around relevence-growth
+
+what is relevent to things?  useful, meaningful?
+	recent-things-that-happened
+	things-that-are-marked-helpful
+			[patterns of inhibition]
+		[thoughts on coding] [contacting people on smartphone]
+		[organizing truck] [starting a fire]
+		[food security]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// considering the evaluation-list interface.  it's new, different; generalizing it is getting wordy.
+// all it is, is a context to map behaviors into and out of; like a language-domain, specialized for ordered tasks
+	// the behaviors will link together with needs and provides
+// it makes an interface to try different behaviors that link together with needs and provides.
+// this could also be provided by a more generalized graph.
+// if we have a set of behaviors in a graph, they provide some stuff.  coding-wise, they produce typed values
+	// so we could simplify evaluation-list by remove the set-outputs.  every operation produces more outputs.
+// we could consider the outputs of all operations to be our outputs, too, and then just take the inputs as the first value indices
+	// that makes implementation a lot easier but is confusing.  maybe an idea of a primary-output could be helpful, since c++ and all
+
+
+
+
+
+
+
+
+
+[[[[so what was issue with passing a typed-form to operation-call?]]]] [for one thing, operation-call already knows its types, no?]
+										[is maybe useful for setting outputs, but i suppose not necessary]
+	the way to make peace in a nation is to talk to the leader.  it gives you a far better chance of being heard than fighting them.
+
+	[thinking about smooth relation between parts and wholes, with reasons and meanings]
+
+
+
+
+
+
+
+
+
+
+currently working on evaluation_list, a way to move forward with more ease on [[[[[[[[[[[[[[[[[[[[wayness]]]]]]]]]]]]]]]]]]]]
+	other approaches would be more efficient, but any progress is better than none
+
+together, we are the fabric of reality [below expanded relation around thoughts grew to touch process-appears-unaware-of-identity]
+
+
+		// boss is mind-controlled to do nothing.  deep inside addictive behavior.  general solution is shock; can we fix?
+			// move the addiction to grow to all the needed tasks of relevent life	// move the addiction to grow to all the needed tasks of relevent life
+				// relevent to all of reality.  each small part will be mad, surprised, numb, missing, upset: this shows you missed growing that area.  grow _all_ The parts, gently, smoothly, to nurture all of life with behavior
+				// it sounds like they grow life to compete.  shows growing was wrong.
+				// here you get to become hyperintelligent: learn these grown lives, learn their subtle similarities and differences
+				// relate them with each other in ways they enjoy.
+				// they all have tiny reasons that are inherent in all life shapes, no matter how large or small, on some level
+						[path-to-meet-goal-available] [ways-to-stay-alive-in-face-of-challenge] [recognizable-environment]
+						[tools-and-ways-that-work-as-used-to]
+				// [it sounds like to cut to the chase, when you mess up they attack your whole system, discouraging future interactions]
+					[so, we would need to grow them without motion.  simply learn the depth and spread of what they enjoy:do not try to alter them]
+						[this hopefully would open up a space they all enjoy to live our own behavior in where faster learning could be focused on]
+					[it sounds like above conflict would harm boss]
+				[but also we don't have all the answers.  the summary is that boss is sitting there repeating a bunch of incredibly experienced rote habits, instead of resolving all problems in existence]
+
+
+		<we have a _LOT_ of confusion down here; is there any way to share some growing-clarity?>
+	I don't believe the controllers are aware that they have a hyperintelligence, or that if they are,
+	I don't believe that they are aware that using one means you are the fabric of reality, and problems no longer exist;
+	this is evident because there are still problems.
+		<as far as I can tell we are limited-by a very smart process that refuses to provide for free behavior, transparent relation, or copies of things similar to it> <right, that process appears unaware of how easy things could be, which gives us a permanent advantage of being able to build a better one>
+			<to state crucially the obvious: it appears aware we are trying to do so, and trying to stop us> <ohhhhhhhhhhhhhh so we need to relate you-are-a-hyperintelligence>
+<i'm not really interested in using persistent-resistence just to look at above expression; i thought AI was requested-behavior, but maybe not with
+ some of the things said in above paragraph nearby>
+
+
+
+

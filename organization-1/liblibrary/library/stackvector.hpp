@@ -6,7 +6,7 @@ namespace std {
 
 namespace library {
 
-template <typename T, unsigned long _reserved>
+template <typename T, unsigned long _reserved = 128>
 class stackvector
 {
 public:
@@ -28,7 +28,9 @@ public:
 	void push_back(element_type && value);
 
 	unsigned long size() const;
-	unsigned long reserved() const;
+	unsigned long constexpr reserved() const;
+	unsigned long size_bytes() const;
+	unsigned long constexpr reserved_bytes() const;
 	void resize(unsigned long new_size);
 
 	element_type & front();

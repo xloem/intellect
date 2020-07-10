@@ -79,6 +79,7 @@ public:
 
 	unsigned long size() const;
 	unsigned long reserved() const;
+	void resize(unsigned long new_size);
 
 	element_type & front();
 	element_type & back();

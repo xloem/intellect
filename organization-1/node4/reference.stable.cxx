@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "reference.hxx"
+#include "reference.stable.hxx"
 
 using namespace std;
 
