@@ -85,12 +85,16 @@ public:
 	element_type & back();
 
 	element_type * data();
+	element_type const * data() const;
+
 	element_type * begin();
 	element_type * end();
 
-	element_type const * data() const;
 	element_type const * begin() const;
 	element_type const * end() const;
+
+	unsigned long begin_index() const;
+	unsigned long end_index() const;
 private:
 	void * storage;
 };

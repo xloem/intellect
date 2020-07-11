@@ -10,6 +10,8 @@ struct syntax_operator
 {
 	syntax_operator_identifier identifier;
 	syntax_operator_fixing type;
+	unsigned char precedence;
+	bool right_associative;
 	char const * symbol;
 	char const * name;
 };

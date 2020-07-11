@@ -1,18 +1,22 @@
 #pragma once
 
-#include <library/type.hpp>
+#include <library/any.hpp>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/mem_fun.hpp>
 
 namespace library {
 
-// multiany is similar to the type interfaces,
-// except it does not reject wrong types at all
-// the difference is that it does not _have_ a type.  it's not typed.
-class multiany
+class multiany : public typable_valued
 {
-	template <typename T>
-	T & get(
-
-	// use a map of type_info to any under the hood
+public:
+private:
+	boost::multi_index_container<
+		library::any,
+		boost::multi_index::indexed_by<
+			boost::multi_index::ordered_unique<boost::multi_index::tag<type_info>, boost::multi_index::const_mem_fun<library::any,type_info const&,&any::type>
+		>
+	> container;
 };
 
 } // library

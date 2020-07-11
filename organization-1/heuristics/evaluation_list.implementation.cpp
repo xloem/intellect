@@ -3,6 +3,7 @@
 #include <library/type_definition.cpp>
 #include "evaluation_list.hpp"
 
+/*
 template <typename Type>
 Type & typed_pointer::get()
 {
@@ -165,6 +166,7 @@ void simple_typed_storage<bytes>::ensure_type(library::type_info const & type)
 		_type->construct_default(value());
 	}
 }
+*/
 
 
 #include <type_traits>

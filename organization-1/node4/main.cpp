@@ -105,22 +105,103 @@ DECLARE reference current-implementation;
 DECLARE reference is-of-kind;
 DECLARE reference recognition-mistake;
 
-// of-kind is a general reference subclass
-template <reference&(* kind)()>
+// we want to be able to be multiple kinds intuitively.
+// is can be a reference to a multiple.
+// check if the multiple contains the group.
+// 	the current solution works well enouogh for now.
+// 	but checking should be a method of the type.
+
+// of-kind can represent active-known types.  things we remember are stuff.
+// querying is checking that we immediately know.
+
+// it can use a reference on the data.
+// 	note: we migh
+
+DECLARE reference kind-describes; 
+DECLARE reference described-by-kind;
+
+// can we generalize the link parts of groupness and include it in core?
+
+//   there is a link-kind that means everything of that kind applies
+//   to one or another
+//   	the relationship transfers a kind or group of attribute between one item
+//   	and a collection of items
+//   the above is nice and general but cognition on it is removed from the use of it
+//   	
+//    looks like methods could be improved.
+//    atm they need a class-member-function to handle how-to-inherit
+//    			could be made core; relates groupness
+//    i kinda see ... if we fudge groupness inside inheritance, it makes
+//    things complex and introduces ordering requirements
+//
+//    			want to be able to set up classes, like code
+//    			derived classes inherit the methods of parent classes
+//    		so, attribute inheritance would do it, which is what we did
+//    		in kind-of.
+//    			kind-of problems:
+//    			- no way to enumeate kinds [fixable]
+//    			- no way to ask a kind of something is a member [harder?]
+
+DECLARE declaration;
+
+// reference-kind is a group.  because of inheritance, every group is a member.
+// 	a member of the set of things that have group-methods.
+/*
+class reference-kind : public reference
+{
+public:
+	// note: we haven't implemented inheritance yet, so these methods aren't
+	// callable.
+	METHOD reference descriptions()
+	{
+		auto descriptions = self.kind-get(kind-describes);
+		if (descriptions == null()) {
+			descriptions = reference();
+			self.kind-set(kind-describes(descriptions));
+		}
+		return descriptions;
+	}
+	METHOD reference note-is(reference item)
+	{
+		descriptions().kind-set(item, described-by-kind);
+		item.kind-set(self, kind-describes);
+	}
+	METHOD reference note-is-not(reference item)
+	{
+		descriptions().kind-set(item, null());//not-described-by-kind);
+		item.kind-set(self, null());
+	}
+
+	METHOD reference is-noted(reference item)
+	{
+		return descriptions().kind-get(item) == described-by-kind;
+	}
+
+	METHOD reference discern-is(reference item)
+	{
+		return descriptions().kind-get(item);
+	}
+};
+*/
+
+class of-kinds : public reference
+{
+public:
+};
+
+template <reference-kind &(* kind)()>
 class of-kind : public reference
 {
 public:
-	DECLARE reference is-of-kind;
-
 	of-kind(reference const & other)
 	: reference(other)
 	{
 		must-be(*this);
 	}
 
-	METHOD void construct() { } // can be called for construction: note inheritance unimplemented
+	//METHOD void construct() { } // can be called for construction: note inheritance unimplemented
 
-	// for ininheritance we might eventually use a way of method-calling
+	// for inheritance we might eventually use a way of method-calling
 	// this could be called from a call-operator reimplementation
 	static void recognise-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname)
 	{
@@ -148,6 +229,8 @@ public:
 
 	static reference-bool & check-is(reference candidate)
 	{
+		// let's change this to have a more karl-intuitive way of
+		// specifying
 		if (candidate == null()) { return bool-false(); }
 		return candidate.kind-get(kind()) == is-of-kind() ? bool-true() : bool-false();
 	}
@@ -169,6 +252,7 @@ protected:
 	: reference(data)
 	{
 		kind-set(kind(), is-of-kind());
+		// this doesn't provide for being in multiple groups
 		kind-set(method-kind-get(), basic-kind-get());
 		construct();
 	}
@@ -199,7 +283,8 @@ public:
 // DEFINE object-group-kind
 // DEFINE of-kind<object-group-kind> fruit
 //
-// DEFINE of-kind<fruit> apple;
+// DEFINE of-kind<fruit> apple;  apple.check-is();
+// DEFINE of-kind<fruit> a-fruit = apple;
 // DEFINE of-kind<apple> red-apple;
 // using fruit = of-kind<object>;
 // using apple = of-kind<fruit>;

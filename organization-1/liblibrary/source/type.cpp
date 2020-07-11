@@ -27,7 +27,7 @@ static type_info const * type_initializations[] = {
 	&type<unsigned long long const>(),
 };
 
-typed_valued & typed_value::operator=(typed_valued const & other)
+typed_valued & typed_valued::operator=(typed_valued const & other)
 {
 	assign(other);
 	return *this;

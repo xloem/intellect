@@ -2,7 +2,7 @@ CXX=test/measure g++
 #CXX=g++
 LINK.o=${CXX}
 CXXFLAGS=-time -std=c++17 -ggdb -Wall -Werror -O0
-CPPFLAGS=-I. -MMD -I/usr/include/trilinos -DFBWIDTH=$$(cut -d ',' -f 1 /sys/class/graphics/fb0/virtual_size) -DFBHEIGHT=$$(cut -d ',' -f 2 /sys/class/graphics/fb0/virtual_size)
+CPPFLAGS=-I. -MMD -DFBWIDTH=$$(cut -d ',' -f 1 /sys/class/graphics/fb0/virtual_size) -DFBHEIGHT=$$(cut -d ',' -f 2 /sys/class/graphics/fb0/virtual_size)
 LDLIBS=-Lsource -llibrary
 PREFIX=/usr/local
 
@@ -11,7 +11,7 @@ SHELL=bash
 include $(wildcard optional.*.mk)
 
 all: tests
-tests: test/testtime-run test/testtype-run test/teststring-run test/testvectors-run test/testframebuffer-basic-run test/testframebuffer-kokkos-run test/testframebuffer-fastor-run $(patsubst %, test/test%-run, $(OPTIONALS))
+tests: test/testtime-run test/testtype-run test/teststring-run test/testvectors-run test/testframebuffer-basic-run $(patsubst %, test/test%-run, $(OPTIONALS))
 
 clean:
 	-rm */*.a */*.o
@@ -20,7 +20,7 @@ clean:
 	./$*
 
 # source/regular_expression.o
-source/liblibrary.a: source/string.o source/type.o source/any.o source/assert.o source/time.o source/framebuffer-basic.o source/framebuffer-kokkos.o source/heapvector.o source/stackvector.o source/unix_socket.o $(patsubst %, source/%.o, $(OPTIONALS))
+source/liblibrary.a: source/string.o source/type.o source/any.o source/assert.o source/time.o source/framebuffer-basic.o source/heapvector.o source/stackvector.o source/unix_socket.o $(patsubst %, source/%.o, $(OPTIONALS))
 	ar cr "$@" $^
 
 scratch/demo: scratch/demo.o source/liblibrary.a

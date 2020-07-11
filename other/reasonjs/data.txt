@@ -1,0 +1,18 @@
+# id kind reference data ...
+0 act 0 some-proposal
+0 consent 0 excited-by-proposal
+ 
+required-behaviors:
+	- add-expression
+	- check-consent
+	- what-references-this [of-kind]
+	- near-things-to-thing
+	- 
+can we recommend a focus?
+	what will recommend-a-focus need?
+		given smoe things are relevent to me, expand them
+
+let us have a way to decide on a task.
+we would like to do things we consent to, until they are blocked.
+if eveerything is blocked, we would like to have discourse and resolve the blocks.
+let us make any-language-example.  let's use current-work-librar[y/ies].
