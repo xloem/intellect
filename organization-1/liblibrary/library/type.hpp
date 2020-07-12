@@ -4,6 +4,9 @@ namespace std {
 	struct type_info;
 }
 
+// this is overdesigned because it includes unplanned usage
+// we only have two reasonable uses: any and multi-any, over here
+
 namespace library {
 
 struct type_info
@@ -95,6 +98,15 @@ public:
 
 protected:
 	virtual void assign(void const * data, type_info const & type) = 0;
+};
+
+class typed_typable_valued : public typed_valued, public typable_valued
+{
+public:
+	using typable_valued::reference;
+	using typable_valued::pointer;
+	using typable_valued::operator=;
+	using typable_valued::assign;
 };
 
 } // namespace library;

@@ -6,8 +6,14 @@
 // an evaluation_list is basically a state that has a bunch of map_steps
 // that operate on it
 
-namespace library { struct type_info; }
+namespace library {
+	struct type_info;
+	class typed_valued;
+	class typable_valued;
+	class typed_typable_valued;
+}
 
+/*
 class type_error {};
 
 class typed_pointer
@@ -88,6 +94,7 @@ public:
 private:
 	library::type_info const * _type;
 };
+*/
 
 class operation
 {
@@ -100,14 +107,12 @@ public:
 	virtual library::type_info const & input_type(unsigned long which) = 0;
 	virtual library::type_info const & output_type(unsigned long which) = 0;
 
-	// this solution uses void pointers but solves
+	// this approach solves
 	// 	-> A threading
 	// 	-> B execution speed
 	// 	-> C reuse of operation objects
-	// type-safety is all that's left.  likely workable to pass a
-	// typed pointer if needed.
 	// 	type-safety desire rose as we considered passing into evaluation_list: it would make it easier to copy data if not all inputs are used
-	virtual void call(simple_typed_reference inputs[], simple_typed_reference outputs[]) {}
+	virtual void call(library::typable_valued * inputs[], library::typable_valued * outputs[]) {}
 
 protected:
 	virtual void more_inputs(unsigned long how_many, library::type_info const & type) {}
@@ -122,7 +127,9 @@ public:
 	virtual operation * get_operation(unsigned long which) = 0;
 	virtual void set_operation(unsigned long which, operation * value) = 0;
 
-	virtual typed_value * get_value(unsigned long value) = 0;
+	// for multiple-typed-values, maybe treat last set type as actual
+	// not seeing a reason to confusingly hold multiple-types together inside here
+	virtual library::typed_typable_valued & get_value(unsigned long value) = 0;
 	virtual unsigned long value_count() = 0;
 
 	virtual unsigned long input_value(unsigned long input) = 0;
@@ -135,15 +142,15 @@ public:
 	virtual void set_operation_input_value(unsigned long operation, unsigned long input, unsigned long value) = 0;
 	virtual void set_operation_output_value(unsigned long operation, unsigned long output, unsigned long value) = 0;
 
-	virtual void call(simple_typed_reference inputs[], simple_typed_reference outputs[]) override {
+	virtual void call(library::typable_valued* inputs[], library::typable_valued* outputs[]) override {
 		unsigned long input_count = this->input_count();
 		unsigned long operation_count = this->operation_count();
 		unsigned long output_count = this->output_count();
 		for (unsigned long input = 0; input < input_count; ++ input) {
-			*get_value(input_value(input)) = inputs[input];
+			get_value(input_value(input)) = inputs[input];
 		}
-		library::stackvector<simple_typed_reference, 8> inputs;
-		library::stackvector<simple_typed_reference, 8> outputs;
+		library::stackvector<library::typable_valued*, 8> inputs;
+		library::stackvector<library::typable_valued*, 8> outputs;
 		for (unsigned long index = 0; index < operation_count; ++ index) {
 			::operation * operation = get_operation(index);
 			unsigned long operation_input_count = operation->input_count();

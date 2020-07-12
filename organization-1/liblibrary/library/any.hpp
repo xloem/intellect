@@ -4,7 +4,7 @@
 
 namespace library {
 
-class any : public typed_valued, public typable_valued
+class any : public typed_typable_valued
 {
 public:
 	any(type_info const & type = library::type<void>(), void const * data = 0);
