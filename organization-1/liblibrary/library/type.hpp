@@ -100,7 +100,7 @@ protected:
 	virtual void assign(void const * data, type_info const & type) = 0;
 };
 
-class typed_typable_valued : public typed_valued, public typable_valued
+class typed_typable_valued : public typable_valued, public typed_valued
 {
 public:
 	using typable_valued::reference;

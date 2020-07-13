@@ -1,4 +1,5 @@
 #include <library/any.hpp>
+#include <library/type_definition.cpp>
 
 namespace library {
 
@@ -41,6 +42,22 @@ void * any::void_pointer()
 	}
 }
 
+void const * any::void_pointer(type_info const & type) const
+{
+	if (*_type != type) {
+		return nullptr;
+	}
+	return void_pointer();
+}
+
+void * any::void_pointer(type_info const & type)
+{
+	if (*_type != type) {
+		assign(nullptr, type);
+	}
+	return void_pointer();
+}
+
 void any::assign(void const * data)
 {
 	_type->assign(void_pointer(), data);
@@ -48,26 +65,26 @@ void any::assign(void const * data)
 
 void any::assign(void const * data, type_info const & type)
 {
-	if (*_type != type) {
-		if (*_type != library::type<void>()) {
-			_type->destroy(void_pointer());
-			if (_type->size > sizeof(_data)) {
-				delete (unsigned char *)void_pointer();
-			}
-		}
-		_type = &type;
-		if (*_type != library::type<void>()) {
-			if (_type->size > sizeof(_data)) {
-				*(unsigned char**)&this->_data = new unsigned char[_type->size];
-			}
-			if (nullptr != data) {
-				_type->construct_copy(void_pointer(), data);
-			} else {
-				_type->construct_default(void_pointer());
-			}
-		}
-	} else {
+	if (*_type == type) {
 		assign(data);
+		return;
+	}
+	if (*_type != library::type<void>()) {
+		_type->destroy(void_pointer());
+		if (_type->size > sizeof(_data)) {
+			delete (unsigned char *)void_pointer();
+		}
+	}
+	_type = &type;
+	if (*_type != library::type<void>()) {
+		if (_type->size > sizeof(_data)) {
+			*(unsigned char**)&this->_data = new unsigned char[_type->size];
+		}
+		if (nullptr != data) {
+			_type->construct_copy(void_pointer(), data);
+		} else {
+			_type->construct_default(void_pointer());
+		}
 	}
 }
 

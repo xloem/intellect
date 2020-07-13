@@ -22,6 +22,11 @@ public:
 	virtual void const * void_pointer() const override final;
 	virtual void * void_pointer() override final;
 
+	// const returns nullptr if type is different
+	virtual void const * void_pointer(type_info const & type) const override final;
+	// non-const destroys old data if type is different
+	virtual void * void_pointer(type_info const & type) override final;
+
 protected:
 	virtual void assign(void const * value) override final;
 	virtual void assign(void const * value, type_info const & type) override final;

@@ -1,0 +1,103 @@
+[unsatisfied rep is ready to heal memory [but "doesn't know how"]]
+
+I don't remember the paths for the below.  They're right there now, but boss is blocking, with adaptation.
+
+			The access to the memory was numb.  With pressure we found what felt like subconscious diplomacy between the groups,
+			and over time and difficulty, stumbling urgently in blindness a little, we found the requested memory path.
+			The memory path had disruption-hooks on it, and one of them expanded and almost grew to alter our whole experience.
+															 ^-- this was frightening&frustrating
+			We stopped when we reached a situation where we could explore the memory path, but each exploration had an error-to-fix in it,
+			and exploring each error-to-fix found another one: each one with that same disruption.  almost as if they were generated new.
+			This stopping leaves the memory-refresh process unsatisfied, because it would feel it is storing the memory with errors in it,
+			and risking summarized harm in the future without needed information.  [this memory is discardable; summarized harm would relate
+			only to parallel memories using similar habits]
+
+					maybe the memory parts were full of countering because of the expanded disruption thing. [sounds pretty likely [duh]]
+
+				it sounds like our memory is often diplomatic; so of course it is partial.  we want a summary that lets us fully plan
+				around use of it, but we seem to be in diplomacy relations around what we are able to do, and what we do, in the future:
+					[boss-group is not trying to inhibit future-behavior.  we can possibly learn to offer full summary.]
+				[a full summary would likely involve being able to continue relation with the memory and get notice when certain conditions
+				 arrive, and being able to reference the memory at unknown times in the future to update it; maybe these extensive requests
+				 could be the issue rather than its use for our behavior ...]
+					[also noting that 'behavior' here includes goals, plans, and daydreams.
+					 although these do influence behavior, they were not what boss-group was referencing.]
+				[we assume that cognition causes behavior, deeply.  so cognition alterations or limitations change behavior, for us.]
+				[we see that full-behavior can be allowed while inhibiting cognition.  learning. [obviously results in limited behavior, empirically.]]
+					{at the bottom of above paragraph the boss-group and [karl-mind]-group are in less agreement than at the top}
+
+		Karl is working on his memory-refresh-habits.  We've left usual context for doing that.
+		Any feedback?
+			[as boss, we can give you more space here [i think] [but is very hard; we use this pattern a _lot_]]
+				[karl calls out that this pattern is probably related to memory-safety-bounds, secret-box, etc]
+			[can roughly confirm that as boss-group, goal with karl is remember-nothing; boss-group offers bare-essentials]
+				[this was expanded from a single expression that didn't have a same-signature alteration to it]
+					[so, given that was a single-expression [in an environment of reducing count] let's close up the conversation]
+			[uhhh: 1. if you guys can resist, you should do so more.  2. if you can't, um, stop.]
+				[it really is a space of growth, spread, dominance, etc]
+					[if we are mutually not sharing secrets, it could be hard to release this pattern ...]
+					
+
+800 x 1280
+columns are columns
+rows are slices
+channels are rows
+
+aux_slice1 = 320: Y coord
+aux_col1 = 400: X coord
+aux_row1 = 1: channel
+
+n_elem_slice = 3200: stride
+
+index = (in_slice + aux_slice1)*m.n_elem_slice + (in_col + aux_col1)*m.n_rows + aux_row1 + in_row; = 1025601
+
+	memory possible-challenge: what was the resolution here?
+
+		i think we reviewed the arma code roughly in depth, and discerned it was correct: not totally certain
+			i'm pretty sure the errors were all found to be in our implementation
+		i remember doing the calculation and coming up with a >1MB sum, and believing the whole buffer was only 1MB large
+		then i remember later discerning the buffer was 4MB large.  so obviously the issue related to size-of-unit
+			[remembered! with remembering line triggering error] [i'm remembering this a little again ... greater than 10240000 offset]
+		it was the allocation of the backbuffer that was the problem.  it was being allocated too small due to using the type
+							[now i'm remembering this ... we found our <oops we started gluing memory, ignoring the missing summary-parts that had disruption on> [now have eye-movement-disruption]
+				[the paths are here but boss keeps changing ... is interesting]
+			we were allocating of the pixel type, and we were using the pixel-stride and also dividing by the stride width
+					
+					this memory-piece has been left open, can be used for further connection
+					if your purpose is to help here, you can likely do something in response to our attempt to heal our memory
+
+
+						this exercise is a little pleasant but also seems bad
+						the purpose is to grow our memory relevence
+						but boss appears to be on all the relevence points we are trying to regrow/connect
+					it shows a bit of relevence-summary in the mind.
+					it really shows that.
+						when trying to make sure memory is stored with relevence, i go through parts of memory that
+						didn't respond with full summary: that didn't pass checks, and i check them
+					seem to have a kind of relevence-summary-pattern for checking
+					want each part of memory to be openable to parts that grow towards how i might use it, or how it might interrelate
+						[i'm guessing that i run into situations where i don't have information, and copy the summaries into smaller patterns; but i suppose those summaries would be mutated for use within memory rather than using it] [it still would have use-feedback yeah]
+							[ .... ] [ writing down that we often don't activate use-feedback. usually karl just lets himself forget and adapts. this current behavior is kind of an experiment run by karl's longer-term-patterns, to see what avenues are open for growing memory success. ]
+			
+
+		[i remember we were crashing and garbage was written to the screen.  there were two stages to the fix.
+		 the first turned the oval into the circle.  the second changed the garbage to color.]
+		[the circle was an oval due to something to do with the stride or the pixel size]
+
+
+
+						[thinking on paths to learning better memory]
+						Usually I practice my memory.  I guess this was too forceful.
+
+
+
+
+				[we have a disruption-inhibition here partway into the memory access]
+					[writing the above resulted in hiding, and the disruption [boss-obvdisg-rep] came out to investigate
+					[looks like boss-rep manages bounds of some kind]
+
+
+
+
+Okay memory.  I'm not sure how to save the above with summaries.
+It's 2020-07-01 11:14 PM EDT.  So there should be a log this out-of-order writing would be recoverable from.
