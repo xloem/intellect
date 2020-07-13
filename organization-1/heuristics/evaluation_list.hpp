@@ -112,6 +112,7 @@ public:
 	// 	-> B execution speed
 	// 	-> C reuse of operation objects
 	// 	type-safety desire rose as we considered passing into evaluation_list: it would make it easier to copy data if not all inputs are used
+	// 		don't understand. something about uninitiailized stuff?  should this be a typable or a typed or something else?
 	virtual void call(library::typable_valued * inputs[], library::typable_valued * outputs[]) {}
 
 protected:
@@ -136,18 +137,18 @@ public:
 	virtual unsigned long output_value(unsigned long output) = 0;
 	//virtual unsigned long get_operation_output_value(unsigned long operation, unsigned long output) = 0;
 
-	virtual unsigned long get_operation_input_value(unsigned long operation, unsigned long input) = 0;
-	virtual unsigned long get_operation_output_value(unsigned long operation, unsigned long output) = 0;
+	virtual unsigned long get_operation_input(unsigned long operation, unsigned long input) = 0;
+	virtual unsigned long get_operation_output(unsigned long operation, unsigned long output) = 0;
 
-	virtual void set_operation_input_value(unsigned long operation, unsigned long input, unsigned long value) = 0;
-	virtual void set_operation_output_value(unsigned long operation, unsigned long output, unsigned long value) = 0;
+	virtual void set_operation_input(unsigned long operation, unsigned long input, unsigned long value) = 0;
+	virtual void set_operation_output(unsigned long operation, unsigned long output, unsigned long value) = 0;
 
-	virtual void call(library::typable_valued* inputs[], library::typable_valued* outputs[]) override {
+	virtual void call(library::typable_valued* _inputs[], library::typable_valued* _outputs[]) override {
 		unsigned long input_count = this->input_count();
 		unsigned long operation_count = this->operation_count();
 		unsigned long output_count = this->output_count();
 		for (unsigned long input = 0; input < input_count; ++ input) {
-			get_value(input_value(input)) = inputs[input];
+			get_value(input_value(input)) = *_inputs[input];
 		}
 		library::stackvector<library::typable_valued*, 8> inputs;
 		library::stackvector<library::typable_valued*, 8> outputs;
@@ -158,17 +159,18 @@ public:
 			inputs.resize(operation_input_count);
 			outputs.resize(operation_output_count);
 			for (unsigned long input = 0; input < operation_input_count; ++ input) {
-				inputs[inputs].simple_typed_pointer::operator=(*get_value(get_operation_input(index, input)));
+				inputs[input] = &get_value(get_operation_input(index, input));
 			}
 			for (unsigned long output = 0; output < operation_output_count; ++ output) {
-				auto & output = *get_value(get_operation_output(index, output));
-				output.ensure_type(operation->output_type(output));
-				outputs[output].simple_typed_pointer::operator=(output);
+				auto & value = get_value(get_operation_output(index, output));
+				// call takes typable now.  it used to take like-typed.  not sure which one is better; picked typable before I saw this.
+				//value.ensure_type(operation->output_type(output));
+				outputs[output] = &value;//.simple_typed_pointer::operator=(output);
 			}
 			operation->call(inputs.data(), outputs.data());
 		}
 		for (unsigned long output = 0; output < output_count; ++ output) {
-			outputs[output] = *get_value(output_value(output));
+			*_outputs[output] = get_value(output_value(output));
 		}
 	}
 
