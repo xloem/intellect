@@ -22,6 +22,10 @@ public:
 	virtual void const * void_pointer() const override final;
 	virtual void * void_pointer() override final;
 
+	// atm theae convert the object instead of throwing (and are unimplemented)
+	virtual void const * void_pointer(type_info const & type) const override final;
+	virtual void * void_pointer(type_info const & type) override final;
+
 protected:
 	virtual void assign(void const * value) override final;
 	virtual void assign(void const * value, type_info const & type) override final;
