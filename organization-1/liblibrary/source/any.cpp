@@ -1,4 +1,5 @@
 #include <library/any.hpp>
+#include <library/type_definition.cpp>
 
 namespace library {
 
@@ -43,17 +44,18 @@ void * any::void_pointer()
 
 void const * any::void_pointer(type_info const & type) const
 {
-	if (*_type == type) {
-		return void_pointer();
+	if (*_type != type) {
+		return nullptr;
 	}
+	return void_pointer();
 }
 
 void * any::void_pointer(type_info const & type)
 {
 	if (*_type != type) {
-		assign(nullptr,,,,,d type);
-		return void_pointer();
+		assign(nullptr, type);
 	}
+	return void_pointer();
 }
 
 void any::assign(void const * data)
