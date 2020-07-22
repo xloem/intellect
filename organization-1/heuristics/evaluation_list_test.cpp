@@ -14,8 +14,8 @@ class evaluation_list_implement : public evaluation_list, library::typed
 {
 public:
 	virtual library::type_info const & type() override final { return library::type<evaluation_list_implement>(); }
-	virtual unsigned long input_count() override final { return inputs.size(); }
-	virtual unsigned long output_count() override final { return outputs.size(); }
+	virtual unsigned long input_count() override final { return inputs/*.size()*/; }
+	virtual unsigned long output_count() override final { return outputs/*.size()*/; }
 	virtual unsigned long operation_count() override final { return operations.size(); }
 
 	/*
@@ -32,12 +32,21 @@ public:
 		operations[index].output_indices.resize(operation->output_count());
 	}
 
-	virtual library::type_info const & input_type(unsigned long index) override { return *inputs[index].type; }
-	virtual library::type_info const & output_type(unsigned long index) override { return *outputs[index].type; }
+	virtual library::type_info const & input_type(unsigned long index) override
+	{
+		return get_value(input_value(index)).type();
+		//return *inputs[index].type;
+	}
+	virtual library::type_info const & output_type(unsigned long index) override
+	{
+		return get_value(output_value(index)).type();
+		//return *outputs[index].type;
+	}
 
 
 	virtual library::typed_typable_valued & get_value(unsigned long value) override
 	{
+		/*
 		if (value < inputs.size()) {
 			return &inputs[value].storage;
 		}
@@ -46,12 +55,14 @@ public:
 			return &outputs[value].storage;
 		}
 		value -= outputs.size();
-		return &storage[value];
+		*/
+		//return &storage[value];
+		return storage[value];
 	}
 
-	virtual unsigned long get_input_value(unsigned long input) override { return input; }
-	virtual unsigned long get_output_value(unsigned long output) override { return output + inputs.size(); }
-	virtual unsigned long value_count() override { return storage.size() + outputs.size() + inputs.size(); }
+	virtual unsigned long input_value(unsigned long input) override { return input; }
+	virtual unsigned long output_value(unsigned long output) override { return output + inputs; }
+	virtual unsigned long value_count() override { return storage.size(); }
 
 	virtual unsigned long get_operation_input(unsigned long operation, unsigned long input) override { return operations[operation].input_indices[input]; }
 	virtual unsigned long get_operation_output(unsigned long operation, unsigned long output) override { return operations[operation].output_indices[output]; }
@@ -71,9 +82,14 @@ public:
 
 	virtual void more_inputs(unsigned long how_many, library::type_info const & type) override
 	{
-		inputs.resize(inputs.size() + how_many);
-		for (unsigned long i = inputs.size() - how_many; i < inputs.size(); ++ i) {
-			inputs[i].storage = simple_typed_storage(type);
+		unsigned long old_tail = input_value(inputs);
+		unsigned long new_tail = old_tail + how_many;
+		storage.resize(storage.size() + how_many);
+		for (auto move = new_tail; move < storage.size(); ++ move) {
+			storage[move] = storage[move - how_many];
+		}
+		for (auto create = old_tail; create < new_tail; ++ create) {
+			storage[create] = library::any(type);
 		}
 	}
 	virtual void more_outputs(unsigned long how_many, library::type_info const & type) override
@@ -83,12 +99,16 @@ public:
 			outputs[i].storage = simple_typed_storage(type);
 		}
 	}
-	virtual void more_intermediates(unsigned long how_many, library::type_info const & type) override
+	virtual void more_values(unsigned long how_many, library::type_info const & type) override
 	{
 		storage.resize(storage.size() + how_many);
 		for (unsigned long i = storage.size() - how_many; i < storage.size(); ++ i) {
 			storage[i] = simple_typed_storage(type);
 		}
+	}
+	void more_values(unsigned long how_many, library::type_info const & type, unsigned long offset)
+	{
+		storage.resize(storage.size() + how_many);
 	}
 	virtual void more_operations(unsigned long how_many) override
 	{
