@@ -1,7 +1,7 @@
 
 #define ___STATIC_
 #define ___EXTERN_ extern
-//# 1 "multi-any.hpp"
+# 1 "multi-any.hpp"
 #pragma once
 
 #include <experimental/any>
@@ -18,7 +18,7 @@
 #define ___STATIC_ static
 #define ___EXTERN_ static
 class multi_any
-//# 11 "multi-any.hpp"
+# 11 "multi-any.hpp"
 {
 public:
 	template <typename T>
@@ -81,7 +81,7 @@ public:
 #define ___CLASSNAME__ hash_type_info_pointer
 #define ___CLASSNAMESTR__ "hash_type_info_pointer"
 	struct hash_type_info_pointer {
-//# 71 "multi-any.hpp"
+# 71 "multi-any.hpp"
 		size_t operator()(std::type_info const * const & to_hash) const
 		{
 			return to_hash->hash_code();
@@ -89,7 +89,7 @@ public:
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
-//# 76 "multi-any.hpp"
+# 76 "multi-any.hpp"
 
 	std::unordered_map<std::type_info const *, std::any> data;
 };

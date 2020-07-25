@@ -1,9 +1,9 @@
-LINK.o=${CXX}
-CXXFLAGS=-std=c++1z -ggdb -Wall -Werror -I../include
 LDLIBS=-L../lib -llibrary
-BINFMT=$(shell lsb_release -si)-$(shell lsb_release -sr)-$(shell uname -m)
-PREPROCESS=preprocess-$(BINFMT)
 PREFIX=/usr/local
+
+include include.mk
+
+CXXFLAGS+= -I../include
 
 next: $(PREPROCESS)
 
@@ -38,14 +38,8 @@ clean:
 
 %: %.o
 	${LINK.o} ${CXXFLAGS} $^ ${LDLIBS} -o $@
-%.o: %.cxx $(patsubst %.hpp,%.hxx, $(wildcard *.hpp))
-	${CXX} ${CXXFLAGS} ${CPPFLAGS} -c $< -o $@
 
 %.stable.cxx: %.cxx $(PREPROCESS) test
 	sed -e 's/^\(#include .*\)\.\([ch]xx\)"/\1.stable.\2"/' $< > $@
 %.stable.hxx: %.hxx $(PREPROCESS) test
 	sed -e 's/^\(#include .*\)\.hxx"/\1.stable.hxx"/' $< > $@
-%.cxx: %.cpp preprocess.bash #$(patsubst %.hpp,%.hxx, $(wildcard *.hpp))
-	./$(PREPROCESS) $< $@
-%.hxx: %.hpp preprocess.bash
-	./$(PREPROCESS) $< $@

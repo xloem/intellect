@@ -151,7 +151,7 @@ METHOD reference reference::kind-set(reference kind, reference value)
 			return null();
 		} else {
 			// remove value and return it
-			auto result = spot.second;
+			auto result = spot->second;
 			map.erase(spot);
 			return result;
 		}

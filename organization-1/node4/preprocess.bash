@@ -12,7 +12,7 @@
 #       set of sed calls.  it might be simplest to compare the content of a
 #	.*pp file to a .*xx file to see the implementation.
 
-LINENUMBERS=0
+LINENUMBERS=1
 
 echo > "$2"
 echo "#define ___STATIC_" >> "$2"

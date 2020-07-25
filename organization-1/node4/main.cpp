@@ -189,7 +189,7 @@ class of-kinds : public reference
 public:
 };
 
-template <reference-kind &(* kind)()>
+template <reference &(* kind)()>
 class of-kind : public reference
 {
 public:
@@ -254,12 +254,12 @@ protected:
 		kind-set(kind(), is-of-kind());
 		// this doesn't provide for being in multiple groups
 		kind-set(method-kind-get(), basic-kind-get());
-		construct();
+
+		//construct();
 	}
 };
 DEFINE reference recognition-mistake;
-template <reference&(* kind)()>
-DEFINE reference of-kind<kind>::is-of-kind;
+DEFINE reference is-of-kind;
 
 
 // class object seems to help.

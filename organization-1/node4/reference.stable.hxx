@@ -1,7 +1,7 @@
 
 #define ___STATIC_
 #define ___EXTERN_ extern
-//# 1 "reference.hpp"
+# 1 "reference.hpp"
 #pragma once
 
 #include <memory>
@@ -49,7 +49,7 @@ class reference;
 #define ___STATIC_ static
 #define ___EXTERN_ static
 class reference
-//# 42 "reference.hpp"
+# 42 "reference.hpp"
 {
 public:
 	// construction
@@ -94,37 +94,37 @@ ___EXTERN_ reference & recognised_methods();
 ___EXTERN_ reference & basic_kind_get();
 ___EXTERN_ reference & method_kind_get();
 	reference kind_get(reference kind);
-//# 84 "reference.hpp"
+# 84 "reference.hpp"
 
-	// set a kinded property, returns old value
+	// set a kinded property, returns old value; pass null to unset
 ___EXTERN_ reference & basic_kind_set();
 ___EXTERN_ reference & method_kind_set();
 	reference kind_set(reference kind, reference value);
-//# 87 "reference.hpp"
+# 87 "reference.hpp"
 
 	// get all kinded property kinds, ordered
 ___EXTERN_ reference & basic_get_all_kinds();
 ___EXTERN_ reference & method_get_all_kinds();
 	reference get_all_kinds();
-//# 90 "reference.hpp"
+# 90 "reference.hpp"
 
 	// get the count of ordered properties
 ___EXTERN_ reference & basic_order_count();
 ___EXTERN_ reference & method_order_count();
 	reference order_count();
-//# 93 "reference.hpp"
+# 93 "reference.hpp"
 
 	// get an ordered property by index.  index is expected to have index_t data
 ___EXTERN_ reference & basic_order_get();
 ___EXTERN_ reference & method_order_get();
 	reference order_get(reference index);
-//# 96 "reference.hpp"
+# 96 "reference.hpp"
 
 	// set an ordered property by index_t number [setting at index=count extendss]
 ___EXTERN_ reference & basic_order_set();
 ___EXTERN_ reference & method_order_set();
 	reference order_set(reference index, reference value);
-//# 99 "reference.hpp"
+# 99 "reference.hpp"
 
 	// Warning: IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
 
@@ -132,14 +132,14 @@ ___EXTERN_ reference & method_order_set();
 ___EXTERN_ reference & basic_operator_equals();
 ___EXTERN_ reference & method_operator_equals();
 	reference operator_equals(reference other);
-//# 104 "reference.hpp"
+# 104 "reference.hpp"
 	reference operator=(reference other) { return operator_equals(other); }
 
 	// no default; method_operator_brackets property must be set to not throw
 ___EXTERN_ reference & basic_operator_brackets();
 ___EXTERN_ reference & method_operator_brackets();
 	reference operator_brackets(reference index);
-//# 108 "reference.hpp"
+# 108 "reference.hpp"
 	reference operator[](reference index) { return operator_brackets(index); }
 
 	// called on destruction: dangerous as inheritance is not managed yet
@@ -186,7 +186,7 @@ private:
 #define ___STATIC_
 #undef ___EXTERN_
 #define ___EXTERN_ extern
-//# 148 "reference.hpp"
+# 148 "reference.hpp"
 
 
 // parameters take types and names
@@ -236,11 +236,11 @@ namespace std {
 #define ___CLASSNAME__ hash<reference>
 #define ___CLASSNAMESTR__ "hash<reference>"
 	struct hash<reference>
-//# 195 "reference.hpp"
+# 195 "reference.hpp"
 	{
 		size_t operator()(const reference & to_hash) const;
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
-//# 198 "reference.hpp"
+# 198 "reference.hpp"
 }
