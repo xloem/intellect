@@ -744,3 +744,8 @@ namespace stderr {
 }
 
 } // namespace library
+
+size_t std::hash<library::string>::operator()(const library::string & to_hash) const
+{
+	return std::hash<std::string>()(to_hash.std());
+}
