@@ -73,6 +73,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 			method.shared = getter(recognised-methods(), kind).pointer();
 		} catch (reference) { }
 	}
+#if 0
 	if (method == null()) {
 		//method = kind; // <- this would simplify things, and may be a comparable hack to the below
 		/*
@@ -94,6 +95,13 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 			shared = parameters.begin()->pointer();
 			return *this;
 		}
+	}
+#endif
+	if (method == basic-operator-equals() || (method == null() && kind == method-operator-equals())) {
+		// default implementation can't be done with a method call because references are passed to methods by copy for now
+		if (parameters.size() != 1) { throw kindness-mistake(); }
+		shared = parameters.begin()->pointer();
+		return *this;
 	}
 
 	//
