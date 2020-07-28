@@ -1,3 +1,5 @@
+#pragma once
+
 #include "reference.hpp"
 
 // link objects could replace this with a lot more functionality.

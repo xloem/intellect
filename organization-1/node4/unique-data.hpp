@@ -1,16 +1,20 @@
 #include "reference.hpp"
 
 template <typename element-type>
-class unique-data : public virtual reference
+class unique-data : public reference
 {
 public:
 	using reference::reference;
-	unique-data(element-type const & data)
+	unique-data(element-type const & data, reference const & source = null())
 	{
+		if (source != null()) { reference::operator=(source); }
 		if (index.count(data)) {
-			(*this) = index[data];
+			(*(reference*)this) = index[data];
 		} else {
-			this->template default-data<element-type>() = data;
+			auto & data = this->template data-default<element-type>(data);
+			if (index.contains(data)) {
+				throw presence-mistake();
+			}
 			index[data] = *this;
 		}
 	}

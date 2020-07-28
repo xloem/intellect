@@ -6,7 +6,7 @@
 
 #include <library/string.hpp>
 
-class easy : public unique-data<library::string>, public reference
+class easy : public unique-data<library::string>
 {
 public:
 	easy(reference source);
@@ -15,7 +15,7 @@ public:
 	using reference::operator=;
 	easy & operator=(easy & other);
 
-	kinded-assignable & operator[](easy kind);
+	kinded-assignable operator[](easy kind);
 	// now, returning the kinded-assignable is very similar to returning
 	// a reference: but it makes sure to call the methods when used.
 
@@ -26,7 +26,9 @@ public:
 
 //	METHOD void apply
 };
-easy operator+(const char * left, const char * right);
+
+easy operator+(easy const & left, const char * right);
+easy operator+(const char * left, easy const & right);
 
 easy operator "" _e(const char*);
 
