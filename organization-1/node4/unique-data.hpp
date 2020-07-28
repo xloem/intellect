@@ -10,21 +10,21 @@ public:
 		if (index.count(data)) {
 			(*this) = index[data];
 		} else {
-			this->default-data<element-type>() = data;
+			this->template default-data<element-type>() = data;
 			index[data] = *this;
 		}
 	}
 
 	operator element-type &()
 	{
-		return this->data<element-type>();
+		return this->template data<element-type>();
 	}
 
 	element-type & data()
 	{
-		return this->data<elemnt-type>();
+		return this->template data<element-type>();
 	}
 
 private:
-	static std::unordered_map<data, unique-data<element-type>> index;
+	static std::unordered_map<element-type, reference> index;
 };

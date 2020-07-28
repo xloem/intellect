@@ -15,7 +15,7 @@ public:
 		return *this;
 	}
 
-	operator reference() const
+	operator reference()
 	{
 		return source.kind-get(kind);
 	}
@@ -29,7 +29,7 @@ class ordered-assignable
 {
 public:
 	ordered-assignable(reference source, reference index)
-	: source(source), kind(kind)
+	: source(source), index(index)
 	{ }
 
 	ordered-assignable & operator=(reference const & other)
@@ -38,7 +38,7 @@ public:
 		return *this;
 	}
 
-	opereator reference() const
+	operator reference()
 	{
 		return source.order-get(index);
 	}
