@@ -37,6 +37,6 @@ int main(int argc, char const * const* argv)
 	string infilename = argv[1];
 	string outfilename = argv[2];
 
-	string command = "/usr/bin/env bash preprocess.bash '" + infilename + "' '" + outfilename + "'";
+	string command = "/usr/bin/env bash node4-preprocess.bash '" + infilename + "' '" + outfilename + "'";
 	return system(command.c_str());
 }

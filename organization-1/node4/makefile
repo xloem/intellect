@@ -7,17 +7,18 @@ CXXFLAGS+= -I../include
 
 next: $(PREPROCESS)
 
-install: $(patsubst %.hpp,%.hxx, $(wildcard *.hpp)) $(PREPROCESS) libnode4.a
+install: $(patsubst %.hpp,%.hxx, $(wildcard *.hpp)) $(PREPROCESS) libnode4.a include.mk
 	mkdir -p ${PREFIX}/lib
-	cp libnode4.a  ${PREFIX}/lib
+	cp -v libnode4.a  ${PREFIX}/lib
 	mkdir -p ${PREFIX}/include/node4
-	cp -va *.hxx *.hpp ${PREFIX}/include/node4
+	cp -v *.hxx *.hpp ${PREFIX}/include/node4
+	mkdir -p ${PREFIX}/share/node4
+	cp -v node4-preprocess.bash $(PREPROCESS) include.mk ${PREFIX}/share/node4
 	mkdir -p ${PREFIX}/bin
-	cp preprocess.bash ${PREFIX}/bin/node4-preprocess
-	chmod 755 ${PREFIX}/bin/node4-preprocess
+	ln -vs ${PREFIX}/share/node4/node4-* ${PREFIX}/bin
 
 uninstall:
-	-rm -rf ${PREFIX}/lib/libnode4.a ${PREFIX}/include/node4 ${PREFIX}/bin/node4-preprocess
+	-rm -rf ${PREFIX}/lib/libnode4.a ${PREFIX}/include/node4 ${PREFIX}/share/node4 ${PREFIX}/bin/node4-*
 
 libnode4.a: reference.o easy.o
 	ar cr "$@" $^
