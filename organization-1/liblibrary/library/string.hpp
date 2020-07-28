@@ -176,10 +176,14 @@ public:
 	string(std::string const & source);
 
 	std::string & std();
-	operator std::string &();
 	std::string const & std() const;
-	operator std::string const &() const;
 	std::string && move();
+
+private: // i made these private because i wasn't using them, in case they
+	 // cause some ambiguity issue somewhere.  feel free to make public
+	 // or to remove.
+	operator std::string &();
+	operator std::string const &() const;
 	operator std::string &&();
 
 private:
@@ -198,3 +202,10 @@ bool operator>(string const & left, string const & right);
 bool operator>=(string const & left, string const & right);
 
 } // namespace library
+
+namespace std {
+	template <typename> struct hash;
+	template <> struct hash<library::string> {
+		size_t operator()(const library::string & to_hash) const;
+	};
+}
