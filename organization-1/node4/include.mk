@@ -12,3 +12,5 @@ CXXFLAGS=-std=c++1z -ggdb -Wall -Werror
 	$(PREPROCESS) $< $@
 %.hxx: %.hpp ${NODE4_DIR}/node4-preprocess.bash
 	$(PREPROCESS) $< $@
+%: %.o
+	${LINK.o} ${CXXFLAGS} $^ ${LDLIBS} -o $@

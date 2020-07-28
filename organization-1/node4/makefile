@@ -5,6 +5,8 @@ include include.mk
 
 CXXFLAGS+= -I../include
 
+all: libnode4.a
+
 next: $(PREPROCESS)
 
 install: $(patsubst %.hpp,%.hxx, $(wildcard *.hpp)) $(PREPROCESS) libnode4.a include.mk
@@ -36,9 +38,6 @@ clean:
 
 .PRECIOUS: multi-any.stable.hxx reference.stable.hxx reference.stable.cxx preprocess.stable.hxx preprocess.stable.cxx
 .SUFFIXES:
-
-%: %.o
-	${LINK.o} ${CXXFLAGS} $^ ${LDLIBS} -o $@
 
 %.stable.cxx: %.cxx $(PREPROCESS) test
 	sed -e 's/^\(#include .*\)\.\([ch]xx\)"/\1.stable.\2"/' $< > $@

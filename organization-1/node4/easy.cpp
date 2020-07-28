@@ -53,9 +53,9 @@ METHOD void easy::line()
 	library::stdout::line(self.data());
 }
 
-easy operator "" _e(const char * text)
+easy operator "" _e(const char text [], unsigned long size)
 {
-	return text;
+	return library::string(text, size);
 }
 
 input::input(reference source)

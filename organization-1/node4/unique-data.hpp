@@ -1,3 +1,5 @@
+#pragma once
+
 #include "reference.hpp"
 
 template <typename element-type>
@@ -35,5 +37,7 @@ public:
 	}
 
 private:
-	static std::unordered_map<element-type, reference, std::hash<std::string>> index;
+	static std::unordered_map<element-type, reference> index;
 };
+template <typename element-type>
+std::unordered_map<element-type, reference> unique-data<element-type>::index;

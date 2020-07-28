@@ -19,18 +19,16 @@ public:
 	// now, returning the kinded-assignable is very similar to returning
 	// a reference: but it makes sure to call the methods when used.
 
-	operator const char *();
-
 	METHOD void write();
 	METHOD void line();
 
 //	METHOD void apply
 };
 
-easy operator+(easy const & left, const char * right);
-easy operator+(const char * left, easy const & right);
+//easy operator-(easy const & left, easy const & right);
+//easy operator+(easy const & left, easy const & right);
 
-easy operator "" _e(const char*);
+easy operator "" _e(const char text [], unsigned long size);
 
 // sometimes we have singletons.  an object with a lot of methods.
 // wonder how to make that.
