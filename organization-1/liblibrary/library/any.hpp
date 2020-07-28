@@ -10,8 +10,13 @@ public:
 	any(type_info const & type = library::type<void>(), void const * data = 0);
 	template <typename Type>
 	any(Type const & value) : any(library::type<Type>(), &value) { }
+	any(typed_valued const & value) : any(value.type(), value.void_pointer()) { }
 	~any();
 
+	any(any const & value) : any((typed_valued const &)value) { }
+	any & operator=(any const & value) { operator=((typed_valued const &)value); return *this; }
+
+	using typable_valued::operator=;
 	using typed_valued::reference;
 	using typed_valued::pointer;
 

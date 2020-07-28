@@ -59,7 +59,7 @@ public:
 	// these are parsing-related.  make string a subclass of heapvector, if needed, but might make more sense to make converters.
 	string(bool); // converts to "true" or "false"
 	string(char); // makes a size=1 string
-	string(            void *, int base = 16, bool prefix = true,  int digits = sizeof(void*)*2);
+	string(      void const *, int base = 16, bool prefix = true,  int digits = sizeof(void const *)*2);
 	string(       signed char, int base,      bool prefix = false, int digits = 0);
 	string(     unsigned char, int base = 16, bool prefix = false, int digits = sizeof(unsigned char)*2);
 	string(      signed short, int base = 10, bool prefix = false, int digits = 0);
@@ -77,8 +77,8 @@ public:
 	// this is getting called for (char const *, size)
 	// if we made prefix be second argument could be quick fix
 	//template <typename T>
-	//string(T * pointer, int base = 16, bool prefix = true, int digits = sizeof(T*)*2)
-	//: string((void*)pointer, base, prefix, digits)
+	//string(T const * pointer, int base = 16, bool prefix = true, int digits = sizeof(T*)*2)
+	//: string((void const *)pointer, base, prefix, digits)
 	//{ }
 
 	bool to_bool();

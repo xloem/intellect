@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include <stdexcept>
+
 using namespace library;
 
 void worry(bool concern, string meaning)
@@ -9,7 +11,7 @@ void worry(bool concern, string meaning)
 	if (!concern) { return; }
 	stderr::line(meaning);
 
-	struct danger : public string{ using string::string; };
+	struct danger : public std::logic_error { using logic_error::logic_error; };
 	throw danger(meaning.std());
 }
 

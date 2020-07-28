@@ -4,7 +4,37 @@
 #include <typeinfo>
 #include <type_traits>
 
+// for debugging
+//#include <library/string.hpp>
+
 namespace library {
+
+#if defined(TYPE_ALLOCATION_DEBUG)
+extern class allocation_debugger_t
+{
+public:
+	allocation_debugger_t();
+	~allocation_debugger_t() noexcept(false);
+	void allocate(void const * pointer, type_info const & type);
+	void access(void const * pointer, type_info const & type);
+	void deallocate(void const * pointer, type_info const & type);
+	unsigned long id(void const * pointer, type_info const & type);
+
+private:
+	void * storage;
+	void * storage_2;
+} allocation_debugger;
+#else
+static class allocation_debugger_t
+{
+public:
+	allocation_debugger_t() {}
+	~allocation_debugger_t() {}
+	inline void allocate(void const * pointer, type_info const & type) {}
+	inline void access(void const * pointer, type_info const & type) {}
+	inline void deallocate(void const * pointer, type_info const & type) {}
+} allocation_debugger;
+#endif
 
 inline bool type_info::operator<(const type_info & other) const
 {
@@ -99,6 +129,8 @@ type_info const & type()
 		static void _construct_default(void * placement)
 		{
 			if constexpr (std::is_default_constructible_v<Type>) {
+				//stderr::line("construct default: "_s + placement + " as " + type<Type>().name);
+				allocation_debugger.allocate(placement, type<Type>());
 				new (placement) Type();
 			}
 		}
@@ -106,6 +138,9 @@ type_info const & type()
 		static void _construct_copy(void * placement, void const * other)
 		{
 			if constexpr (std::is_copy_constructible_v<Type>) {
+				//stderr::line("construct copy: "_s + placement + " from " + other + " as " + type<Type>().name);
+				allocation_debugger.allocate(placement, type<Type>());
+				allocation_debugger.access(other, type<Type>());
 				new (placement) Type(*(Type const *)other);
 			}
 		}
@@ -113,6 +148,8 @@ type_info const & type()
 		static void _assign(void * object, void const * other)
 		{
 			if constexpr (std::is_copy_assignable_v<Type>) {
+				//stderr::line("assign: "_s + object + " from " + other + " as " + type<Type>().name);
+				allocation_debugger.access(other, type<Type>());
 				*(Type*)object = *(Type const *)other;
 			}
 		}
@@ -120,6 +157,8 @@ type_info const & type()
 		static void _destroy(void * object)
 		{
 			if constexpr (std::is_destructible_v<Type>) {
+				//stderr::line("destroy: "_s + object + " as " + type<Type>().name);
+				allocation_debugger.deallocate(object, type<Type>());
 				((Type*)object)->~Type();
 			}
 		}

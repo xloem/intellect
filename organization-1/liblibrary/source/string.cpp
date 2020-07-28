@@ -10,6 +10,7 @@
 
 #include <library/heapvector_definition.cpp>
 #include <library/stackvector_definition.cpp>
+#include <library/type_definition.cpp>
 #include <library/string.hpp>
 
 namespace library {
@@ -19,15 +20,21 @@ template class stackvector<string>;
 
 string::string()
 : storage(new std::string())
-{ }
+{
+	allocation_debugger.allocate(storage, type<std::string>());
+}
 
 string::string(char const * source, int size)
 : storage(size ? new std::string(source, size) : new std::string(source))
-{ }
+{
+	allocation_debugger.allocate(storage, type<std::string>());
+}
 
 string::string(char * source, int size)
 : storage(size ? new std::string(source, size) : new std::string(source))
-{ }
+{
+	allocation_debugger.allocate(storage, type<std::string>());
+}
 
 /*
 template <template<typename> class Container>
@@ -42,15 +49,34 @@ string::string<Container>(Container<string> const & source)
 */
 
 string::string(std::string && source)
-: storage(new std::string(std::move(source)))
-{ }
+{
+	allocation_debugger.access(&source, type<std::string>());
+	storage = new std::string(std::move(source));
+	allocation_debugger.allocate(storage, type<std::string>());
+}
 
 string::string(std::string const & source)
-: storage(new std::string(source))
-{ }
+{
+	allocation_debugger.access(&source, type<std::string>());
+	storage = new std::string(source);
+	allocation_debugger.allocate(storage, type<std::string>());
+	/*
+	recursion_detector<string> stack;
+	if (!stack.depth()) {
+		stderr::line("construct string at "_s + this + " using " + storage);
+	}
+	*/
+}
 
 string::~string()
 {
+	allocation_debugger.deallocate(storage, type<std::string>());
+	/*
+	recursion_detector<string> stack;
+	if (!stack.depth()) {
+		stderr::line("destroy string at "_s + this + " using " + storage);
+	}
+	*/
 	delete storage;
 }
 
@@ -200,7 +226,7 @@ static inline void integer_to_chars(string & output, T value, int base, bool pre
 }
 
 
-string::string(void* pointer, int base, bool prefix, int digits)
+string::string(void const * pointer, int base, bool prefix, int digits)
 : string()
 {
 	integer_to_chars(*this, (unsigned long)pointer, base, prefix, digits);
