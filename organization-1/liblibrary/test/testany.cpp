@@ -9,8 +9,17 @@ int main()
 {
 	any str = string("hello");
 	any number = 3;
+
+	worry(str.type() != type<string>(), string("string type is ") + str.type().name + " instead of " + type<string>().name);
+	worry(number.type() != type<decltype(3)>(), string("number type is ") + number.type().name + " instead of " + type<decltype(3)>().name);
+	worry(str.reference<string>() != "hello", "string content is '" + str.reference<string>() + "' instead of 'hello'");
+	worry(number.reference<decltype(3)>() != 3, string("number content is ") + number.reference<decltype(3)>() + " instead of 3");
 	
 	any temp = str;
+
+	worry(temp.type() != type<string>(), string("assigned string type is ") + temp.type().name + " instead of " + type<string>().name);
+	worry(temp.reference<string>() != "hello", "assigned string content is '" + temp.reference<string>() + "' instead of 'hello'");
+
 	str = number;
 	number = temp;
 

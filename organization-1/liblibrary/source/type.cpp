@@ -52,4 +52,10 @@ void typable_valued::assign(typed_valued const & other)
 	assign(other.void_pointer(), other.type());
 }
 
+typed_typable_valued & typed_typable_valued::operator=(typed_typable_valued const & other)
+{
+	typable_valued::operator=((typed_valued const &)other);
+	return *this;
+}
+
 } // namespace library

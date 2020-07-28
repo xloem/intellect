@@ -11,7 +11,7 @@ SHELL=bash
 include $(wildcard optional.*.mk)
 
 all: tests
-tests: test/testtime-run test/testtype-run test/teststring-run test/testvectors-run test/testframebuffer-basic-run $(patsubst %, test/test%-run, $(OPTIONALS))
+tests: test/testtime-run test/testtype-run test/teststring-run test/testany-run test/testvectors-run test/testframebuffer-basic-run $(patsubst %, test/test%-run, $(OPTIONALS))
 
 clean:
 	-rm */*.a */*.o

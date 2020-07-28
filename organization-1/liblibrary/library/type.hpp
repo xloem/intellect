@@ -107,6 +107,7 @@ public:
 	using typable_valued::pointer;
 	using typable_valued::operator=;
 	using typable_valued::assign;
+	typed_typable_valued & operator=(typed_typable_valued const &);
 };
 
 } // namespace library;

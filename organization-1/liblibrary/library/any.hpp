@@ -12,7 +12,6 @@ public:
 	any(Type const & value) : any(library::type<Type>(), &value) { }
 	~any();
 
-	using typable_valued::operator=;
 	using typed_valued::reference;
 	using typed_valued::pointer;
 
