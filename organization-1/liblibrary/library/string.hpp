@@ -183,6 +183,8 @@ private:
 	std::string * storage;
 };
 
+string operator "" _s(char const source [], unsigned long size);
+
 string operator+(string const & left, string const & right);
 string operator,(string const & left, string const & right); // synonym for +
 bool operator==(string const & left, string const & right);

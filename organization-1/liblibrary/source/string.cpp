@@ -622,6 +622,11 @@ std::string && string::move()
 	return std::move(*storage);
 }
 
+string operator "" _s(char const source [], unsigned long size)
+{
+	return {source, (int)size};
+}
+
 string operator+(string const & left, string const & right)
 {
 	return {left.std() + right.std()};

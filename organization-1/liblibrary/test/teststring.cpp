@@ -11,7 +11,11 @@ int main()
 
 	string from_cstring("hello, world");
 	worry(from_cstring.size() != 12, "cstring has incorrect size");
-	worry(from_cstring != "hello, world", "cstring comparse false to content");
+	worry(from_cstring != "hello, world", "cstring compares false to content");
+
+	string from_literal = "hello, world"_s;
+	worry(from_literal.size() != 12, "literal string has incorrect size");
+	worry(from_literal != "hello, world", "literal string compares false to content");
 
 	string from_mutable_cstring((char*)"hello, world");
 	worry(from_cstring.size() != 12, "mutable cstring has incorrect size");
