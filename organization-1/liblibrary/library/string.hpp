@@ -176,8 +176,11 @@ public:
 	string(std::string const & source);
 
 	std::string & std();
+	operator std::string &();
 	std::string const & std() const;
+	operator std::string const &() const;
 	std::string && move();
+	operator std::string &&();
 
 private:
 	std::string * storage;

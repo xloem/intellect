@@ -638,14 +638,29 @@ std::string & string::std()
 	return *storage;
 }
 
+string::operator std::string &()
+{
+	return std();
+}
+
 std::string const & string::std() const
 {
 	return *storage;
 }
 
+string::operator std::string const &() const
+{
+	return std();
+}
+
 std::string && string::move()
 {
 	return std::move(*storage);
+}
+
+string::operator std::string &&()
+{
+	return move();
 }
 
 string operator "" _s(char const source [], unsigned long size)

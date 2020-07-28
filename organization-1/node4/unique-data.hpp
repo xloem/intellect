@@ -7,28 +7,33 @@ public:
 	using reference::reference;
 	unique-data(element-type const & data, reference const & source = null())
 	{
-		if (source != null()) { reference::operator=(source); }
-		if (index.count(data)) {
-			(*(reference*)this) = index[data];
-		} else {
-			auto & data = this->template data-default<element-type>(data);
-			if (index.contains(data)) {
-				throw presence-mistake();
+		element-type const * value = &data;
+		if (null() != source) {
+			reference::operator=(source);
+			value = &this->template data-default<element-type>(data);
+		}
+		auto insertion_result = index.emplace(*value, *this);
+		if (!insertion_result.second) {
+			reference & other = insertion_result.first->second;
+			if (other != *this) {
+				if (null() != source) {
+					throw presence-mistake();
+				}
+				reference::operator=(other);
 			}
-			index[data] = *this;
 		}
 	}
 
 	operator element-type &()
 	{
-		return this->template data<element-type>();
+		return reference::template data<element-type>();
 	}
 
 	element-type & data()
 	{
-		return this->template data<element-type>();
+		return reference::template data<element-type>();
 	}
 
 private:
-	static std::unordered_map<element-type, reference> index;
+	static std::unordered_map<element-type, reference, std::hash<std::string>> index;
 };
