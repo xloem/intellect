@@ -9,6 +9,6 @@ CXXFLAGS=-std=c++1z -ggdb -Wall -Werror
 	${CXX} ${CXXFLAGS} ${CPPFLAGS} -c $< -o $@
 
 %.cxx: %.cpp ${NODE4_DIR}/node4-preprocess.bash #$(patsubst %.hpp,%.hxx, $(wildcard *.hpp))
-	./$(PREPROCESS) $< $@
+	$(PREPROCESS) $< $@
 %.hxx: %.hpp ${NODE4_DIR}/node4-preprocess.bash
-	./$(PREPROCESS) $< $@
+	$(PREPROCESS) $< $@

@@ -116,6 +116,7 @@ sed -i -f "-" "$2" <<-"END"
 	:reredehyphenate s/\([a-zA-Z]\)_``_\([a-zA-Z]\)/\1_\2/g;t reredehyphenate
 	# header file name changing
 	s/^\(#include ".*\)hpp"/\1hxx"/
+	s/^\(#include <node4\/.*\)hpp>/\1hxx>/
 	# brackets becoming parentheses
 	#s/\([^[]\)\[\([^[]\)/\1(\2/g
 	#s/\([^]]\)\]\([^]]\)/\1)\2/g

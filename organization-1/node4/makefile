@@ -15,7 +15,7 @@ install: $(patsubst %.hpp,%.hxx, $(wildcard *.hpp)) $(PREPROCESS) libnode4.a inc
 	mkdir -p ${PREFIX}/share/node4
 	cp -v node4-preprocess.bash $(PREPROCESS) include.mk ${PREFIX}/share/node4
 	mkdir -p ${PREFIX}/bin
-	ln -vs ${PREFIX}/share/node4/node4-* ${PREFIX}/bin
+	ln -vsf ${PREFIX}/share/node4/node4-* ${PREFIX}/bin
 
 uninstall:
 	-rm -rf ${PREFIX}/lib/libnode4.a ${PREFIX}/include/node4 ${PREFIX}/share/node4 ${PREFIX}/bin/node4-*
