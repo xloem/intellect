@@ -9,7 +9,8 @@
 // 	 	[having objects that represent the structures of other objects,
 // 	 	 and letting those be used easily at compile-time]
 
-// 	 [note: there is map-related-confusion in this file]
+// 	 [note: there is confusion in this file related to maps and runtime process design]
+// 	 [runtime process design doesn't appear to have immediate return [verify?]: could we separate its content out in this file?]
 
 #include "reference.hpp"
 
