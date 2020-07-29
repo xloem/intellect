@@ -9,11 +9,10 @@ public:
 	using reference::reference;
 	unique-data(element-type const & data, reference const & source = null())
 	{
-		element-type const * value = &data;
 		if (null() != source) {
 			reference::operator=(source);
-			value = &this->template data-default<element-type>(data);
 		}
+		element-type const * value = &this->template data-default<element-type>(data);
 		auto insertion_result = index.emplace(*value, *this);
 		if (!insertion_result.second) {
 			reference & other = insertion_result.first->second;
