@@ -1,6 +1,16 @@
 #include <iostream>
 #include <string>
 
+
+// [please organize the structural typing content of this file for wayness:
+// 	1 request]
+// 	[wayness is very important, and the generalization of it is interwound
+// 	 with structural typing here.]
+// 	 	[having objects that represent the structures of other objects,
+// 	 	 and letting those be used easily at compile-time]
+
+// 	 [note: there is map-related-confusion in this file]
+
 #include "reference.hpp"
 
 using namespace std;

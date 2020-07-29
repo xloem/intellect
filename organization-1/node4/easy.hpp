@@ -1,5 +1,9 @@
 #pragma once
 
+// Just a note: this easy.hpp file is obviously a quick attempt to make
+// something usable, and results of it might be imported by a more
+// advanced project
+
 #include "reference.hpp"
 #include "unique-data.hpp"
 #include "basic-assignables.hpp"
@@ -28,7 +32,7 @@ public:
 	using reference::operator=;
 	easy & operator=(easy & other);
 
-	kinded-assignable operator[](easy kind);
+	inverting-kinded-assignable operator[](easy kind);
 	// now, returning the kinded-assignable is very similar to returning
 	// a reference: but it makes sure to call the kind-get or kind-set methods when used.
 
@@ -40,6 +44,8 @@ public:
 
 // multiple could be used to track incoming links
 // you could iterate over the links incoming, using it
+// i wonder if inverting-kinded-assignable coudl be changed to use it?
+// looks like it would work for link objects?
 class multiple : public reference
 {
 public:
