@@ -6,6 +6,19 @@
 
 #include <library/string.hpp>
 
+// can you let us make thoughts with non-unique names?
+// can you let us identify if a thought has a name?
+// 	-> one approach is to use ["name"] to be the name.
+// 		[how get all thoughts with a name?]
+// 			[could use e.g. ordered links on the name]
+//
+// we would like an interface where you can get all the thoughts given a name,
+// and possibly also given a thought get its name
+// 	[is solved by walking links reverse-wise]
+// 	[this is crazy! well meaning-vm supports multiple-links-one-type]
+// 	[here we have to make a link to an ordered list? or something?]
+// 		[okay actually reviewed this, and proposed reference with
+// 		ordered content was fine for multiple links =S]
 class easy : public unique-data<library::string>
 {
 public:
@@ -17,12 +30,22 @@ public:
 
 	kinded-assignable operator[](easy kind);
 	// now, returning the kinded-assignable is very similar to returning
-	// a reference: but it makes sure to call the methods when used.
+	// a reference: but it makes sure to call the kind-get or kind-set methods when used.
 
 	METHOD void write();
 	METHOD void line();
 
 //	METHOD void apply
+};
+
+// multiple could be used to track incoming links
+// you could iterate over the links incoming, using it
+class multiple : public reference
+{
+public:
+	using reference::reference;
+
+	ordered-assignable operator[](index_t index);
 };
 
 //easy operator-(easy const & left, easy const & right);
