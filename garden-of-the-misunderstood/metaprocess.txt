@@ -1,0 +1,7 @@
+# plan: do metaprocess in this file.  store bits in git history, then delete.
+
+<planning>
+
+<decision-making>
+
+<acting>
