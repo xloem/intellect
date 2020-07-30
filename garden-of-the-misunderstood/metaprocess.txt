@@ -4,14 +4,21 @@
 	[request: history file, could be separate from other history files maybe?]
 		[concern: we lose things that aren't interwound with other things we use.  would want a link to find it, with instructions.]
 
+	[concern: this computer is misbehaving, and is not open source.  atm handling a misbehavior.]
+		[hd 'mu' is not making a device file, hd '2' is making one successfully.]
+	[concern: diagnosing this prevents access to metaprocess file during diagnosis]
+
 <decision-making / disruption> <== go here or above if disruption happens
 	-> review-old-file (or at least save it)
-	-> get usb hub for accessing concept blockchain properly
+	-> access blockchain using current usb hub [not really working]
 	-> plan in this document
 
 <inner: acting>
 	-> get usb hub for accessing concept blockchain properly
 
+
+relations:
+	[dreams says that if mc-freedom can relate around what long-term goals to build, they can build sustaining them]
 
 
 == RECORD ==
