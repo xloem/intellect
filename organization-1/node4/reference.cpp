@@ -148,6 +148,16 @@ METHOD reference reference::kind-get(reference kind)
 	}
 }
 
+METHOD reference reference::kind-get-or-create-empty(reference kind)
+{
+	reference result = kind-get(kind);
+	if (null() == result) {
+		result = reference();
+		kind-set(kind, result);
+	}
+	return result;
+}
+
 METHOD reference reference::kind-set(reference kind, reference value)
 {
 	if (!self.pointer()) { throw presence-mistake(); }
@@ -202,6 +212,16 @@ METHOD reference reference::order-get(reference index)
 		throw presence-mistake();
 	}
 	return vector[index-data];
+}
+
+METHOD reference reference::order-get-or-create-empty(reference index)
+{
+	reference result = order-get(index);
+	if (null() == result) {
+		result = reference();
+		order-set(index, result);
+	}
+	return result;
 }
 
 METHOD reference reference::order-set(reference index, reference value)

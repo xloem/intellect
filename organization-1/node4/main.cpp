@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 
-
 // [please organize the structural typing content of this file for wayness:
 // 	1 request]
 // 	[wayness is very important, and the generalization of it is interwound

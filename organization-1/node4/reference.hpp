@@ -82,6 +82,8 @@ public:
 	// this method controls all other methods by providing their default values, and can be changed
 	METHOD reference kind-get(reference kind);
 
+	METHOD reference kind-get-or-create-empty(reference kind);
+
 	// set a kinded property, returns old value; pass null to unset
 	METHOD reference kind-set(reference kind, reference value);
 
@@ -93,6 +95,8 @@ public:
 
 	// get an ordered property by index.  index is expected to have index_t data
 	METHOD reference order-get(reference index);
+
+	METHOD reference order-get-or-create-empty(reference index);
 
 	// set an ordered property by index_t number [setting at index=count extendss]
 	METHOD reference order-set(reference index, reference value);

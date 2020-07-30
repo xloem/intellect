@@ -36,11 +36,11 @@ easy & easy::operator=(easy & other)
 // 		let's implement easy in ways that are reusable elsewhere,
 // 		at least a smidge.
 
-kinded-assignable easy::operator[](easy index)
+inverting-kinded-assignable easy::operator[](easy index)
 {
 	//return kind-get(index);
 	//kind-get returns a copy, makes assignment hard
-	return kinded-assignable(*this, index);
+	return inverting-kinded-assignable(*this, index);
 }
 
 METHOD void easy::write()

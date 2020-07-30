@@ -4,9 +4,15 @@
 
 // link objects could replace this with a lot more functionality.
 
-class kinded-assignable
+class kinded-assignable //: public reference
 {
 public:
+	/*
+	DECLARE reference source;
+	DECLARE reference kind;
+	DECLARE reference inverse;
+	*/
+
 	kinded-assignable(reference source, reference kind)
 	: source(source), kind(kind)
 	{ }
@@ -22,7 +28,7 @@ public:
 		return source.kind-get(kind);
 	}
 
-private:
+protected:
 	reference source;
 	reference kind;
 };
@@ -43,6 +49,40 @@ public:
 	operator reference()
 	{
 		return source.order-get(index);
+	}
+
+	bool operator==(ordered-assigned const & other)
+	{
+		return source == other.source && index.data<index_t>() == other.index.data<index_t>();
+	}
+
+	bool operator!=(ordered-assigned const & other)
+	{
+		return source != other.source || index.data<index_t>() != other.index.data<index_t>();
+	}
+
+	ordered-assignable & operator++()
+	{
+		index = reference((any)(index_t)(index.data<index_t>() + 1));
+	}
+
+	ordered-assignable & operator--()
+	{
+		index = reference((any)(index_t)(index.data<index_t>() - 1));
+	}
+
+	ordered-assignable operator++(int)
+	{
+		ordered-assignable result(source, index);
+		index = reference((any)(index_t)(index.data<index_t>() + 1));
+		return result;
+	}
+
+	ordered-assignable operator--(int)
+	{
+		ordered-assignable result(source, index);
+		index = reference((any)(index_t)(index.data<index_t>() - 1));
+		return result;
 	}
 
 private:
