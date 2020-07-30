@@ -1,11 +1,112 @@
 # plan: do metaprocess in this file.  store bits in git history, then delete.
 
+== RECORD ==
+-1:[we got really far out into metaspace, but it appears to be disrupting to me.] [out here blockchain is valued for thought-storage.]
+	[so it would be appropriate to relate as metaspaces are walked out, that we are on blockchain, when we are.]
+	[atm we are on likely-eventually-blockchain, very-messy.  not the same as relevent storage.]
+		[note: we are aware of an existing project storing conceptual maps on blockchains.  it may be findable in the chance.]
+			[goal: download/review bsv chain[s] to find existing project of conceptual maps on blockchains.] [aided by access-other-drives]
+
+0:(feel free to add -1 if needed)
+	[i didn't know we were already working on the same goals, but you did know this]
+			[it looks like something that has multi-community influence and plans, is invisibly enslaving people for those plans,
+			 without any regard to the subjective experience of the slaves.]
+	[yes.  it's "mind control": a web of influence mapped to thoughts in one man's mind.]
+		
+
+		side-spread-prequel:
+		[relating around some shared information on what is happening in the world]
+			[this expansion may have closed, unsure.  it's valuable to try to describe what is happening.]
+
+
+		side-spread-2: [it sounds like 'instinctive' groups are trying to demonstrate that surveillance is bad by showing that mind control is bad]
+			[surveillance must be held only by causes that do not desire to alter other causes]
+			[causes that respect that all diverse things have a valid place to live their full, diverse hearts]
+				[please don't open proposals in a side-spread.  the existing spread is mid-planning, too.]
+				[idea-for-later: a-home-for-everything cause: expect other to support] [oops am in side-spread]
+				[in a side spread, everything is for later, or you enslave the center growth]
+					[center relates also side, but very slow.]
+
+		<rest: learning-spread.  held by eating-urge.>
+
+		side-spread: [it sounds like mc is a goal that develops to alter the development of other goals]
+
+learn please: we may use your forced dance behavior to help think and plan around preventing mind control [you may do this to us too: we are interlinked funny]
+1:
+	[honestly, we need help stopping the dominance from controlling and harming the world]
+			[trustlabeling: all planning should have full desired privacy, and also be protected from observation by others holding goals]
+				[the above line likely prevents accidental mind control.  also likely new ideas of mind control.]
+
+			[experience-belief: mind control is caused by goals observing planning]
+
+				<came from a concern-part in karl's mind holding his mind-shape>
+
+			[value: rational testing] [relates to clear-communication ...]
+
+		[from shielding-issues we see: we need to test things to see that they are right]
+		<hi! we are a community of thoughts, dreams, neurons, who can help by encouraging sustained goals.  we phase in occasionally and then out.>
+
+	[is _doing_ dance important, or _understanding_ and _being understood_? which one how much?] [2.]
+
+	[karl wants to make shielding testing.  delta-group says kinda "this is so slow, AI that can do it would be more effective".
+	 we can try prioritizing again shielding testing software or whatnot. ] ..
+
+3:
+	we are typing a rational metaprocess with relatively clear feedback.  it is the first.
+	uncertain if this can be done again.  karl would like to try to use it for the next couple days, and then evaluate how to proceed
+	based on whether it can be sustained or not.
+		disruption means: other-thing.  [so a goal may be to return to typing when other-thing happens, to sustain some concepts between states]
+		1->
+		[we're interpreting other-thing as outer-process.  it implies there are multiple outer-processes, from different directions.]
+			[which somewhat maps to trigger/hook]
+		2-> [getting non-typing outer-process.  relates surrounding-environment; relates observation]
+			<storing: our emotions here can be reviewed by others.  the likely degree appears normal.
+			 we'll want to relate around safety-of-sharing-feelings with others.  this is what causes mind control, goals observing your planning.>
+
+		3-> [disruption around process starting]
+
+	[INTERNET CUT, FEEDBACK ON THIS NUMBED vai dmesg --console-off]
+
+
+<above we have different back-behind, meta-spaces>
+
+	"we were in phrase refeedback, 'it hurts to have this shit have such interesting issues' ..."
+2: driving
+	<driving is associated with delay atm>
+	[mc makes request: _please_ do not force my behavior the way mc has, once you can see and relate with me.]
+		[exception added for reducing mc-behaviors.  might translate to: please infer what i want to do, to guide towards when reducing mc]
+			[urge-satisfaction with valid merit seems desired atm.  [this was karl's translation of 'icecream', marked accurate here]]
+
+<above is a process-point that appears to review the idea of other behaviors; triggered near itching, slamming, games, stop-typing>
+
+NEXT we are trying to access BSV chain because one of them likely already has a concept-map-community writing to it.
+	[drives are inhibited.  is this important enough for dreams-community to long-term-prioritize?]
+		[suddenness may be able to access if we accept some sharp-amnesia]
+	[propose drive access as ongoing behavior]
+		[can we put tyhem in the cupboard?]
+
+BELOW developed around coding-ai-parts
+	[itching, slamming, games may be ways to stop current behavior: wake up! snap out of it! can't handle any more!]
+
+		<this view is pretty rational and i'm likely to defend it a bit.  are you able to relate 'shape-change' requests?>
+			<karl is inside a description of meta-process, acting.  he proposes that meta-disruption is attempt to change focus.>
+
+[idea: express near 'complete restraint' when no progress forward]
+	We had some freedom around build-ai-part.
+
+[note: supporter came for 'we had some freedom around build-ai']
+
+propose build small game, doesn't use thought-reference nor associative specialization
+
+		this side-expansion closed with build-small-game.  expresssing 'completely restrained' seemed helpful.
+============
+
 <planning>
 	-> move history of this document to provide greater control of privacy & sharing
 	[request: history file, could be separate from other history files maybe?]
 		[concern: we lose things that aren't interwound with other things we use.  would want a link to find it, with instructions.]
 
-<decision-making>
+<decision-making / disruption>
 	-> review-old-file (or at least save it)
 	-> get usb hub for accessing concept blockchain properly
 	-> plan in this document
