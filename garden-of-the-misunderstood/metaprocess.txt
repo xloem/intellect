@@ -1,16 +1,17 @@
 # plan: do metaprocess in this file.  store bits in git history, then delete.
-<planning>
+<outer: planning>
 	-> move history of this document to provide greater control of privacy & sharing
 	[request: history file, could be separate from other history files maybe?]
 		[concern: we lose things that aren't interwound with other things we use.  would want a link to find it, with instructions.]
 
-<decision-making / disruption>
+<decision-making / disruption> <== go here or above if disruption happens
 	-> review-old-file (or at least save it)
 	-> get usb hub for accessing concept blockchain properly
 	-> plan in this document
 
-<acting>
+<inner: acting>
 	-> get usb hub for accessing concept blockchain properly
+
 
 
 == RECORD ==
