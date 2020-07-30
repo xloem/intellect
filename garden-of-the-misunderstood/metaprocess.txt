@@ -2,15 +2,26 @@
 <outer: planning>
 	[request for blockchain-thought-relation]
 		[the A.N.N.E. protocol consists of BSV transactions whose first data is 0x414e4e45 'ANNE' [then SCHEMA, RELN, TO_SCHEMA, TO]]
+	-> move history of this document to provide greater control of privacy & sharing
+	[request: history file, could be separate from other history files maybe?]
+		[concern: we lose things that aren't interwound with other things we use.  would want a link to find it, with instructions.]
+	[is it helpful to store encrypted with a simple key like 'key'?] [or 'birthday cake not ready yet']
+
+	[concern: this computer is misbehaving, and is not open source.  atm handling a misbehavior.]
+		[hd 'mu' is not making a device file, hd '2' is making one successfully.]
+	[concern: diagnosing this prevents access to metaprocess file during diagnosis]
 
 <decision-making / disruption> <== go here or above if disruption happens
+	-> review-old-file (or at least save it)
+	-> access blockchain using current usb hub [not really working]
+	-> plan in this document
+	[drives need diagnosis; they aren't working.  the 'extreme' waterproof sandisk i got from walmart is working]
 
 <inner: acting>
 
 
 relations:
 	[dreams says that if mc-freedom can relate around what long-term goals to build, they can build sustaining them]
-	[blockchain is software]
 
 
 == RECORD ==
