@@ -3,13 +3,28 @@
 <outer: planning>
 	[request for blockchain-thought-relation]
 		[the A.N.N.E. protocol consists of BSV transactions whose first data is 0x414e4e45 'ANNE' [then SCHEMA, RELN, TO_SCHEMA, TO]]
+	[wv has all the stuff i'm buying already bought]
+	[noah in freedom, has story for blockchain]
+		[find-noah] [found address, not number]
 
 <decision-making / disruption> <== go here or above if disruption happens
 
 	considering other-than-A.N.N.E.
 		[well we are strengthening our brain, and typing in this document]
 
+	<disruption>
+		[i want to reference what we were thinking about before <disruption>]
+			[i may want to reference things that aren't being included]
+
+	{{
+		[i have a queue of karl's wellbeing: organization, health, shower, relation with family]
+			[that's a good one, wasn't where i was at]
+	}} [the neurons want to care for this guy more than everyone else] [and he's incredibly used to living poorly]
+	 [found address, not number]	[we have relation from parent emotions, desire for standards of life for karl, appears strong]
+
 <inner: acting>
+	[pursuing blockchain money a little: means debugging bitshares]
+		[karl encountered an open process and switched to resolve it; does this a lot]
 
 
 relations:
