@@ -2,15 +2,10 @@
 # gently recorded
 
 <outer: planning>
-	[karl if you could move persistent data into another file, this one might work easier!]
-		[a nonverbal relation proposed instead move to bottom]
-
 
 <decision-making / disruption> <== go here or above if disruption happens
 
-
 <inner: acting>
-
 
 	[pursuing blockchain money a little: means debugging bitshares]
 	[considering bathing and setting small backup battery up]
