@@ -6,7 +6,19 @@ template <typename element-type>
 class unique-data : public reference
 {
 public:
-	using reference::reference;
+	unique-data(reference const & other)
+	: reference(other)
+	{
+		element-type const * value = &this->template data<element-type>();
+		auto insertion_result = index.emplace(*value, *this);
+		if (!insertion_result.second) {
+			reference & other = insertion_result.first->second;
+			if (other != *this) {
+				// merging I suppose would be appropriate here
+				throw presence-mistake();
+			}
+		}
+	}
 	unique-data(element-type const & data, reference const & source = null())
 	{
 		if (null() != source) {
@@ -18,6 +30,7 @@ public:
 			reference & other = insertion_result.first->second;
 			if (other != *this) {
 				if (null() != source) {
+					// merging might be appropriate here
 					throw presence-mistake();
 				}
 				reference::operator=(other);

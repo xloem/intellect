@@ -117,9 +117,9 @@ public:
 
 
 	// useful basic objects
-	static reference const& null(); // empty reference
-	static reference& kindness-mistake(); // thrown when kind mismatches
-	static reference& presence-mistake(); // thrown when a null reference is used
+	DECLARE reference const null; // empty reference
+	DECLARE reference kindness-mistake; // thrown when kind mismatches
+	DECLARE reference presence-mistake; // thrown when a null reference is used
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
