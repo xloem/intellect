@@ -1,7 +1,10 @@
 # plan: do metaprocess in this file.  store bits in git history, then delete.
-# gently recorded.
+# gently recorded
 
 <outer: planning>
+	[this file has persistence.  how is it okay?]
+		[it's supposed to be freely wipable; wipe every update, kinda]
+	[karl if you could move persistent data into another file, this one might work easier!]
 
 
 <decision-making / disruption> <== go here or above if disruption happens
@@ -17,6 +20,7 @@
 
 	[considering bathing and setting small backup battery up]
 
+	[note: there is other ongoing 'todo lists', the most recent of which is in permanent-annex]
 
 relations:
 	[dreams says that if mc-freedom can relate around what long-term goals to build, they can build sustaining them]
