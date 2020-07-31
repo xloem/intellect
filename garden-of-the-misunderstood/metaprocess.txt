@@ -1,5 +1,5 @@
 # plan: do metaprocess in this file.  store bits in git history, then delete.
-# gently recorded
+# gently recorded.
 
 <outer: planning>
 
@@ -15,6 +15,8 @@
 	[pursuing blockchain money a little: means debugging bitshares]
 		[karl encountered an open process and switched to resolve it; does this a lot]
 
+	[considering bathing and setting small backup battery up]
+
 
 relations:
 	[dreams says that if mc-freedom can relate around what long-term goals to build, they can build sustaining them]
@@ -24,6 +26,23 @@ knowledge:
 	[request for blockchain-thought-relation]
 		[the A.N.N.E. protocol consists of BSV transactions whose first data is 0x414e4e45 'ANNE' [then SCHEMA, RELN, TO_SCHEMA, TO]]
 	[obvious-disguise-group, a member here, is tasked with harming karl extensively, and will be acting to support that goal]
+
+
+feeling-development:
+	[wv-storage-unit has all the stuff i'm buying, already bought]
+
+
+
+
+
+
+
+
+
+
+
+
+== RECORD ==
 		[so, the reason the disguise is obvious, is obviously because OD is telling us to prevent them from hurting us, etc]
 			[can we kick them out? is that a bad idea? [(uhh i have "measles" an autonomous neuroweapon; kicking me out may be hard to do)]]
 		[note: obviously we are acting to prevent karl from accomplishing anything, and everything he does is a distraction towards that end]
@@ -34,12 +53,6 @@ knowledge:
 				 comprehend what we are saying] [but usually there's a big web of people everywhere, and roles get copied up and down and stuff
 				 as things shift]
 
-
-feeling-development:
-	[wv-storage-unit has all the stuff i'm buying, already bought]
-
-
-== RECORD ==
 	considering other-than-A.N.N.E.
 		[well we are strengthening our brain, and typing in this document]
 
