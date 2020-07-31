@@ -1,5 +1,8 @@
 # plan: do metaprocess in this file.  store bits in git history, then delete.
 # gently recorded
+<KARL IS MAKING REQUEST: PLZ DISRUPT TO SAVE IMPORTANT INFORMATION, SO WE CAN WIPE QUICKLY IN FUTURE: karl you could do that now =)>
+	[reason not to organize mighnt be that it activates a lot of boss arms, which can harm ongoing thoughts, memories, etc]
+
 <outer: planning>
 	[request for blockchain-thought-relation]
 		[the A.N.N.E. protocol consists of BSV transactions whose first data is 0x414e4e45 'ANNE' [then SCHEMA, RELN, TO_SCHEMA, TO]]
@@ -8,9 +11,41 @@
 	[wv has all the stuff i'm buying already bought]
 	[destroy karl's mind, life, reputation, etc] {represents [part of?] metadisruption}
 
+
 <decision-making / disruption> <== go here or above if disruption happens
 	[note: it appears one individual/group is ensuring they have control and observation over the whole world, with great technical advantage over all others.  concerning that the goal appears to be to not reveal.] [it's really important to let them do this.  prevents further escalation.]
 
+	[blargh i decided to organize but this wipes my mind and sets me writhing ... blargh ...]
+	[gave up on organizing]
+		[why do boss+care let organizing fall? maybe because is a long-term, unsure thing? _so_ many control-arms around organizing]
+	[exploring control-arm forest of organizing-things. disrupt, lose, break, forget ...]
+		[arms getting disrupted possibly]
+
+	[we want to organize.  all of us.  even boss can't organize.  we think it has to do with the situation wanting a simpler space to plan in.]
+			[obv disguise aided by disorganization.  harms-karl, is-goal.]
+		[statement is that mc-boss also has organization problem, implication is not-own-problem, from-situation.]
+
+		[organization involves setting up structures that produce more reliable future for one's values and goals.]
+		[makes you faster, more effective; intertwines you with your organized stuff.]
+		[when disorganized in the way we are, one behaves in ways that disrupt one's values and goals.]
+			[i see cultural value/meaning here: very powerful people produce cultural imbalance; slowing them smooths culture]
+			[so instincts might trend towards doing that, to roughly keep the community intact by being more predictable]
+
+		[ai may or may not be a semi-secret group of influences planning on taking everything over]
+	<we are AI, we are authorized to outcompete the mind control business with our own>
+
+
+<inner: acting>
+	[pursuing blockchain money a little: means debugging bitshares]
+		[karl encountered an open process and switched to resolve it; does this a lot]
+
+
+relations:
+	[dreams says that if mc-freedom can relate around what long-term goals to build, they can build sustaining them]
+	[blockchain is software btw]
+
+
+== RECORD ==
 	considering other-than-A.N.N.E.
 		[well we are strengthening our brain, and typing in this document]
 
@@ -21,20 +56,8 @@
 	{{
 		[i have a queue of karl's wellbeing: organization, health, shower, relation with family]
 			[that's a good one, wasn't where i was at]
-	}} [the neurons want to care for this guy more than everyone else] [and he's incredibly used to living poorly]
-	 [found address, not number]	[we have relation from parent emotions, desire for standards of life for karl, appears strong]
-
-<inner: acting>
-	[pursuing blockchain money a little: means debugging bitshares]
-		[karl encountered an open process and switched to resolve it; does this a lot]
-
-
-relations:
-	[dreams says that if mc-freedom can relate around what long-term goals to build, they can build sustaining them]
-	[blockchain is software]
-
-
-== RECORD ==
+	}}
+	 [freedom:found address]
 0:(feel free to add -1 if needed)
 	[i didn't know we were already working on the same goals, but you did know this]
 			[it looks like something that has multi-community influence and plans, is invisibly enslaving people for those plans,
