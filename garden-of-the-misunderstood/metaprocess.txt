@@ -2,38 +2,29 @@
 # gently recorded
 
 <outer: planning>
-	[this file has persistence.  how is it okay?]
-		[it's supposed to be freely wipable; wipe every update, kinda]
 	[karl if you could move persistent data into another file, this one might work easier!]
+		[a nonverbal relation proposed instead move to bottom]
 
 
 <decision-making / disruption> <== go here or above if disruption happens
 
-	[note: it appears one individual/group is ensuring they have control and observation over the whole world, with great technical advantage over all others.  concerning that the goal appears to be to not reveal.] [it's really important to let them do this.  prevents further escalation.]
-
-	[blargh i decided to organize but this wipes my mind and sets me writhing ... blargh ...]
-
 
 <inner: acting>
+
+
 	[pursuing blockchain money a little: means debugging bitshares]
-		[karl encountered an open process and switched to resolve it; does this a lot]
-
 	[considering bathing and setting small backup battery up]
-
 	[note: there is other ongoing 'todo lists', the most recent of which is in permanent-annex]
 
 relations:
-	[dreams says that if mc-freedom can relate around what long-term goals to build, they can build sustaining them]
-	[blockchain is software btw]
+	[dreams looking for what-to-support-long-term]
 
 knowledge:
 	[request for blockchain-thought-relation]
-		[the A.N.N.E. protocol consists of BSV transactions whose first data is 0x414e4e45 'ANNE' [then SCHEMA, RELN, TO_SCHEMA, TO]]
 	[obvious-disguise-group, a member here, is tasked with harming karl extensively, and will be acting to support that goal]
 
 
 feeling-development:
-	[wv-storage-unit has all the stuff i'm buying, already bought]
 
 
 
@@ -47,6 +38,31 @@ feeling-development:
 
 
 == RECORD ==
+<decision-making / disruption> <== go here or above if disruption happens
+
+	[note: it appears one individual/group is ensuring they have control and observation over the whole world, with great technical advantage over all others.  concerning that the goal appears to be to not reveal.] [it's really important to let them do this.  prevents further escalation.]
+
+	[blargh i decided to organize but this wipes my mind and sets me writhing ... blargh ...]
+<inner: acting>
+	[pursuing blockchain money a little: means debugging bitshares]
+		[karl encountered an open process and switched to resolve it; does this a lot]
+	[considering bathing and setting small backup battery up]
+
+	[note: there is other ongoing 'todo lists', the most recent of which is in permanent-annex]
+relations:
+	[dreams says that if mc-freedom can relate around what long-term goals to build, they can build sustaining them]
+	[blockchain is software btw]
+knowledge:
+	[request for blockchain-thought-relation]
+		[the A.N.N.E. protocol consists of BSV transactions whose first data is 0x414e4e45 'ANNE' [then SCHEMA, RELN, TO_SCHEMA, TO]]
+	[obvious-disguise-group, a member here, is tasked with harming karl extensively, and will be acting to support that goal]
+
+feeling-development:
+	[wv-storage-unit has all the stuff i'm buying, already bought]
+
+
+
+===
 		[so, the reason the disguise is obvious, is obviously because OD is telling us to prevent them from hurting us, etc]
 			[can we kick them out? is that a bad idea? [(uhh i have "measles" an autonomous neuroweapon; kicking me out may be hard to do)]]
 		[note: obviously we are acting to prevent karl from accomplishing anything, and everything he does is a distraction towards that end]
