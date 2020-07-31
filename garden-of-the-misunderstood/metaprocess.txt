@@ -3,11 +3,13 @@
 <outer: planning>
 	[request for blockchain-thought-relation]
 		[the A.N.N.E. protocol consists of BSV transactions whose first data is 0x414e4e45 'ANNE' [then SCHEMA, RELN, TO_SCHEMA, TO]]
-	[wv has all the stuff i'm buying already bought]
 	[noah in freedom, has story for blockchain]
 		[find-noah] [found address, not number]
+	[wv has all the stuff i'm buying already bought]
+	[destroy karl's mind, life, reputation, etc] {represents [part of?] metadisruption}
 
 <decision-making / disruption> <== go here or above if disruption happens
+	[note: it appears one individual/group is ensuring they have control and observation over the whole world, with great technical advantage over all others.  concerning that the goal appears to be to not reveal.] [it's really important to let them do this.  prevents further escalation.]
 
 	considering other-than-A.N.N.E.
 		[well we are strengthening our brain, and typing in this document]
