@@ -110,6 +110,19 @@ void heapvector<element_type>::resize(unsigned long new_size)
 }
 
 template <typename element_type>
+void heapvector<element_type>::splice(unsigned long index, unsigned long old_length, element_type const * source, unsigned long new_length)
+{
+	auto output_position = vec.begin() + index;
+	if (old_length < new_length) {
+		std::copy(source, source + old_length, output_position);
+		vec.insert(output_position + old_length, source + old_length, source + new_length);
+	} else {
+		std::copy(source, source + new_length, output_position);
+		vec.erase(output_position + new_length, output_position + old_length);
+	}
+}
+
+template <typename element_type>
 element_type & heapvector<element_type>::front()
 {
 	return *begin();

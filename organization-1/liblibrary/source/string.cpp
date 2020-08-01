@@ -619,6 +619,7 @@ void string::resize(unsigned long size)
 
 void string::splice(unsigned long index, unsigned long old_length, char const * source, unsigned long new_length)
 {
+	/*
 	unsigned long new_size = size() - old_length + new_length;
 	char * where;
 	if (old_length < new_length) {
@@ -631,6 +632,15 @@ void string::splice(unsigned long index, unsigned long old_length, char const * 
 		resize(new_size);
 	}
 	memcpy(where, source, new_length);
+	*/
+	auto output_position = std().begin() + index;
+	if (old_length < new_length) {
+		std::copy(source, source + old_length, output_position);
+		std().insert(output_position + old_length, source + old_length, source + new_length);
+	} else {
+		std::copy(source, source + new_length, output_position);
+		std().erase(output_position + new_length, output_position + old_length);
+	}
 }
 
 char * string::data()
