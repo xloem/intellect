@@ -79,11 +79,11 @@ char const * timestamp_iso(double seconds)
 
 double seconds_iso(char const * timestamp)
 {
-	struct tm time_struct = {
-		.tm_isdst = 0,
-		.tm_gmtoff = 0,
-		.tm_zone = "GMT"
-	};
+	struct tm time_struct;
+	time_struct.tm_isdst = 0;
+	time_struct.tm_gmtoff = 0;
+	time_struct.tm_zone = "GMT";
+
 	char * remaining = strptime(timestamp, "%F-%T", &time_struct);
 	time_t now = mktime(&time_struct) - timezone;
 

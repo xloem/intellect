@@ -6,12 +6,11 @@
 
 using namespace library;
 
+struct danger : public std::logic_error { using logic_error::logic_error; };
+
 void worry(bool concern, string meaning)
 {
 	if (!concern) { return; }
-	stderr::line(meaning);
-
-	struct danger : public std::logic_error { using logic_error::logic_error; };
 	throw danger(meaning.std());
 }
 

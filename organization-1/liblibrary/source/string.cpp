@@ -1,5 +1,4 @@
 #include <cctype>
-#include <charconv>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
@@ -102,26 +101,33 @@ auto streambase(int base)
 	}
 }
 
-static string baseprefix(int base)
+static char * prefixbaseprefix(char * postquel, int base)
 {
+	postquel -= 2;
 	switch(base) {
 	case 8:
-		return '0';
+		++ postquel;
+		*postquel = '0';
+		break;
 	case 2:
-		return {"0b",2};
+		memcpy(postquel, "0b", 2);
+		break;
 	case 10:
-		return {"0d",2};
+		memcpy(postquel, "0d", 2);
+		break;
 	case 16:
-		return {"0x",2};
+		memcpy(postquel, "0x", 2);
+		break;
 	default:
-		string result(" B", 2);
 		if (base < 10) {
-			result[0] = '0' + base;
+			*postquel = '0' + base;
 		} else {
-			result[0] = 'a' + base - 10;
+			*postquel = 'a' + base - 10;
 		}
-		return result;
+		postquel[1] = 'B';
+		break;
 	}
+	return postquel;
 }
 
 unsigned long prefixbaseoffset(char const * pointer, int & base)
@@ -185,41 +191,53 @@ static inline void real_to_chars(string & output, T value, int base, bool prefix
 */
 
 template <typename T>
-static inline void integer_to_chars(string & output, T value, int base, bool prefix, unsigned long digits)
+static inline void integer_to_chars(string & output, T value, int base, bool add_prefix, unsigned long digits)
 {
-	bool extend = digits;
-	if (!extend) {
-		digits = (value ? ((unsigned long)(log(value)/log(base))) : 0) + 1;
-	}
-	unsigned long offset = 0;
-
-	if (prefix) {
-		output = baseprefix(base);
-		offset = output.size();
-		output.resize(offset + digits);
-	} else {
-		output.resize(digits);
+	bool negative = false;
+	if (value < 0) {
+		negative = true;
+		value = -value;
 	}
 
-	auto result = std::to_chars(output.data() + offset, output.data() + output.size(), value, base);
+	stackvector<char, sizeof(T) * 8 + 3> buffer;
+	buffer.resize(buffer.reserved());
 
-	if (result.ptr != output.end()) {
-		if (extend) {
-			unsigned long difference = output.end() - result.ptr;
-			char * start = &output[offset];
-			memmove(start + difference, start, result.ptr - start);
-			memset(start, '0', difference);
+	char * end_pointer = buffer.begin() + buffer.reserved();
+	char * digit_pointer = end_pointer;
+	char * begin_pointer = end_pointer - digits;
+
+	if (!value) {
+		-- digit_pointer;
+		*digit_pointer = '0';
+	} else do {
+		-- digit_pointer;
+		auto val = std::div((typename std::make_signed_t<T>) value, (typename std::make_signed_t<T>) base);
+		value = val.quot;
+		char digit = val.rem;
+		if (digit < 10) {
+			digit += '0';
 		} else {
-			output.resize(result.ptr - output.begin());
+			digit += 'a' - 10;
 		}
-	}
-	if (offset && output[offset] == '-') {
-		for (unsigned long pos = offset; pos > 0; -- pos) {
-			output[pos] = output[pos - 1];
-		}
-		output[0] = '-';
+		*digit_pointer = digit;
+	} while (value);
+
+	if (begin_pointer < digit_pointer) {
+		memset(begin_pointer, '0', digit_pointer - begin_pointer);
+	} else {
+		begin_pointer = digit_pointer;
 	}
 	
+	if (add_prefix) {
+		begin_pointer = prefixbaseprefix(begin_pointer, base);
+	}
+	if (negative) {
+		-- begin_pointer;
+		*begin_pointer = '-';
+	}
+	
+	output.std().assign(begin_pointer, end_pointer);
+
 	// we often make a mess in our attempt to organize.
 	// maybe we do this more than we are aware of, because of
 	// memory issues.
@@ -598,6 +616,22 @@ unsigned long string::size() const
 void string::resize(unsigned long size)
 {
 	storage->resize(size);
+}
+
+void string::splice(unsigned long index, unsigned long old_length, char const * source, unsigned long new_length)
+{
+	unsigned long new_size = size() - old_length + new_length;
+	char * where;
+	if (old_length < new_length) {
+		resize(new_size);
+		where = begin() + index;
+		memmove(where + new_length, where + old_length, end() - where);
+	} else {
+		where = begin() + index;
+		memmove(where + new_length, where + old_length, end() - where);
+		resize(new_size);
+	}
+	memcpy(where, source, new_length);
 }
 
 char * string::data()

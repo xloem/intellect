@@ -68,5 +68,14 @@ int main()
 		++ data;
 	}
 
+	hello_world = string("howdy there, world");
+	hello_world.splice(1, 10, "ello", 4);
+	worry(hello_world != "hello, world", "splicing shorter failed");
+
+	hello_world = string("hey, world");
+	hello_world.splice(1, 2, "ello", 4);
+	worry(hello_world != "hello, world", "splicing longer failed");
+
+
 	stderr::line("string passed test");
 }
