@@ -643,6 +643,18 @@ void string::splice(unsigned long index, unsigned long old_length, char const * 
 	}
 }
 
+void string::splice(unsigned long index, unsigned long old_length, char const & source, unsigned long new_length)
+{
+	auto output_position = std().begin() + index;
+	if (old_length < new_length) {
+		std::fill(output_position, output_position + old_length, source);
+		std().insert(output_position + old_length, new_length - old_length, source);
+	} else {
+		std::fill(output_position, output_position + new_length, source);
+		std().erase(output_position + new_length, output_position + old_length);
+	}
+}
+
 char * string::data()
 {
 	return storage->data();

@@ -70,6 +70,22 @@ void testvector(unsigned long size, unsigned long max_size)
 				for (unsigned long i = splice_start + erased_length; i < size; ++ i) {
 					worry(test1[i + inserted_length - erased_length] != base[i], "post vector values not preserved after splice");
 				}
+				test1 = test2;
+				elem value = random_value<elem>();
+				test1.splice(splice_start, erased_length, value, inserted_length);
+				for (unsigned long i = 0; i < base.size(); ++ i) {
+					worry(test2[i] != base[i], "splice corrupted memory of test2");
+				}
+				worry(test1.size() != base.size() - erased_length + inserted_length, "wrong-sized splice result");
+				for (unsigned long i = 0; i < splice_start; ++i) {
+					worry(test1[i] != base[i], "prior vector values not preserved after splice");
+				}
+				for (unsigned long i = 0; i < inserted_length; ++ i) {
+					worry(test1[splice_start + i] != value, "spliced data not correct");
+				}
+				for (unsigned long i = splice_start + erased_length; i < size; ++ i) {
+					worry(test1[i + inserted_length - erased_length] != base[i], "post vector values not preserved after splice");
+				}
 			}
 		}
 	}

@@ -123,6 +123,19 @@ void heapvector<element_type>::splice(unsigned long index, unsigned long old_len
 }
 
 template <typename element_type>
+void heapvector<element_type>::splice(unsigned long index, unsigned long old_length, element_type const & source, unsigned long new_length)
+{
+	auto output_position = vec.begin() + index;
+	if (old_length < new_length) {
+		std::fill(output_position, output_position + old_length, source);
+		vec.insert(output_position + old_length, new_length - old_length, source);
+	} else {
+		std::fill(output_position, output_position + new_length, source);
+		vec.erase(output_position + new_length, output_position + old_length);
+	}
+}
+
+template <typename element_type>
 element_type & heapvector<element_type>::front()
 {
 	return *begin();

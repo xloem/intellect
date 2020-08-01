@@ -88,6 +88,13 @@ int main()
 	hello_world.splice(1, 2, "ello", 4);
 	worry(hello_world != "hello, world", "splicing longer failed");
 
+	hello_world = string("heyallo, world");
+	hello_world.splice(2, 4, 'l', 2);
+	worry(hello_world != "hello, world", "splice filling shorter failed");
+
+	hello_world = string("heyo, world");
+	hello_world.splice(2, 1, 'l', 2);
+	worry(hello_world != "hello, world", "splice filling longer failed");
 
 	stderr::line("string passed test");
 }
