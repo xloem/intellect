@@ -146,7 +146,7 @@ void stackvector<element_type, _reserved>::splice(unsigned long index, unsigned 
 		std::copy(source, source + new_length, output_position);
 	} else {
 		std::copy(source, source + new_length, output_position);
-		std::move(output_position + old_length, output_position + old_size, output_position + new_length);
+		std::move(output_position + old_length, output_position + old_size - index, output_position + new_length);
 		resize(new_size);
 	}
 }
