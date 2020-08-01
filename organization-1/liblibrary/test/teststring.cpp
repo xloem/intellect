@@ -38,6 +38,10 @@ int main()
 	worry(from_integer != "5141592653589793238", "integer string '" + from_integer + "' instead of '5141592653589793238'");
 	worry(from_integer.to_unsigned_long_long() != 5141592653589793238, "integer from string " + string(from_integer.to_unsigned_long_long()) + " instead of 5141592653589793238");
 
+	from_integer = string((long long)-3141592653589793238, 10, true);
+	worry(from_integer != "-0d3141592653589793238", "integer string '" + from_integer + "' instead of '-0d3141592653589793238'");
+	worry(from_integer.to_signed_long_long() != -3141592653589793238, "integer from string " + string(from_integer.to_signed_long_long()) + " instead of -3141592653589793238");
+
 	string from_real(3.141592);
 	worry(from_real != "3.141592", "real string '" + from_real + "' instead of '3.141592'");
 	worry(from_real.to_double() != 3.141592, "real from string " + string(from_real.to_long_double()) + " instead of 3.141592");

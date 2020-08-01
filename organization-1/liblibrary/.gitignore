@@ -1,5 +1,6 @@
 *.o
 *.a
+test/testany
 test/testvectors
 test/teststring
 test/testtype
