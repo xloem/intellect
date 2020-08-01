@@ -94,6 +94,7 @@ public:
 	}
 	virtual void more_outputs(unsigned long how_many, library::type_info const & type) override
 	{
+		storage.resize(storage.size() + how_many); // adding this to replace next line, incomplete concept
 		outputs.resize(outputs.size() + how_many);
 		for (unsigned long i = outputs.size() - how_many; i < outputs.size(); ++ i) {
 			outputs[i].storage = simple_typed_storage(type);
@@ -127,6 +128,7 @@ private:
 	};
 	unsigned long inputs;
 	unsigned long outputs;
+	// current structure; storage is a list of inputs followed by a list of outputs, followed by intermediate values
 	library::stackvector<library::any, 40> storage;
 	library::stackvector<mapped_operation, 32> operations;
 };
