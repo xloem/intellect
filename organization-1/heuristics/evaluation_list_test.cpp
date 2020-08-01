@@ -82,34 +82,17 @@ public:
 
 	virtual void more_inputs(unsigned long how_many, library::type_info const & type) override
 	{
-		unsigned long old_tail = input_value(inputs);
-		unsigned long new_tail = old_tail + how_many;
-		storage.resize(storage.size() + how_many);
-		for (auto move = new_tail; move < storage.size(); ++ move) {
-			storage[move] = storage[move - how_many];
-		}
-		for (auto create = old_tail; create < new_tail; ++ create) {
-			storage[create] = library::any(type);
-		}
+		storage.splice(input_value(inputs), 0, library::any(type), how_many);
+		inputs += how_many;
 	}
 	virtual void more_outputs(unsigned long how_many, library::type_info const & type) override
 	{
-		storage.resize(storage.size() + how_many); // adding this to replace next line, incomplete concept
-		outputs.resize(outputs.size() + how_many);
-		for (unsigned long i = outputs.size() - how_many; i < outputs.size(); ++ i) {
-			outputs[i].storage = simple_typed_storage(type);
-		}
+		storage.splice(output_value(outputs), 0, library::any(type), how_many);
+		outputs += how_many;
 	}
 	virtual void more_values(unsigned long how_many, library::type_info const & type) override
 	{
-		storage.resize(storage.size() + how_many);
-		for (unsigned long i = storage.size() - how_many; i < storage.size(); ++ i) {
-			storage[i] = simple_typed_storage(type);
-		}
-	}
-	void more_values(unsigned long how_many, library::type_info const & type, unsigned long offset)
-	{
-		storage.resize(storage.size() + how_many);
+		storage.splice(value_count(), 0, library::any(type), how_many);
 	}
 	virtual void more_operations(unsigned long how_many) override
 	{
@@ -117,6 +100,9 @@ public:
 	}
 
 	virtual void subcall(unsigned long operation) {
+		library::stackvector<library::typable_valued *, 8> inputs;
+		library::stackvector<library::typable_valued *, 8> outputs;
+		for (
 		operations[operation].operation->call(this);
 	}
 	
