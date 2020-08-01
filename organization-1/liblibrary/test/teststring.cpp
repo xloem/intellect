@@ -26,9 +26,17 @@ int main()
 	worry(from_true != "true", "bool string not 'true'");
 	worry(from_false != "false", "bool string not 'false'");
 
-	string from_integer(3141592);
-	worry(from_integer != "3141592", "integer string not '3141593'");
-	worry(from_integer.to_unsigned_long_long() != 3141592, "integer from string " + string(from_integer.to_unsigned_long_long()) + " instead of 3141593");
+	string from_integer((unsigned char)0xc7);
+	worry(from_integer != "c7", "byte string '" + from_integer + "' instead of 'c7'");
+	worry(from_integer.to_unsigned_char(16) != 0xc7, "byte from string " + string(from_integer.to_unsigned_char(16), 16, true) + " instead of 0xc7");
+
+	from_integer = string((unsigned long)3141592653);
+	worry(from_integer != "3141592653", "integer string '" + from_integer + "' instead of '3141592653'");
+	worry(from_integer.to_unsigned_long() != 3141592653, "integer from string " + string(from_integer.to_unsigned_long()) + " instead of 3141592653");
+
+	from_integer = string((unsigned long long)5141592653589793238);
+	worry(from_integer != "5141592653589793238", "integer string '" + from_integer + "' instead of '5141592653589793238'");
+	worry(from_integer.to_unsigned_long_long() != 5141592653589793238, "integer from string " + string(from_integer.to_unsigned_long_long()) + " instead of 5141592653589793238");
 
 	string from_real(3.141592);
 	worry(from_real != "3.141592", "real string '" + from_real + "' instead of '3.141592'");

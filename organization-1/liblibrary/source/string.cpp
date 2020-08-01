@@ -211,9 +211,8 @@ static inline void integer_to_chars(string & output, T value, int base, bool add
 		*digit_pointer = '0';
 	} else do {
 		-- digit_pointer;
-		auto val = std::div((typename std::make_signed_t<T>) value, (typename std::make_signed_t<T>) base);
-		value = val.quot;
-		char digit = val.rem;
+		char digit = value % base;
+		value = value / base;
 		if (digit < 10) {
 			digit += '0';
 		} else {
