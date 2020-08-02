@@ -12,6 +12,7 @@
 #       set of sed calls.  it might be simplest to compare the content of a
 #	.*pp file to a .*xx file to see the implementation.
 
+#LINENUMBERS=$(grep '^# 1' "$2" >/dev/null && echo 1 || echo 0)
 LINENUMBERS=1
 
 echo > "$2"

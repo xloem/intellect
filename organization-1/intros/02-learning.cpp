@@ -45,7 +45,8 @@ void make-core-behaviors(easy self)
 		// basic time association relevence?
 	 	
 		// link this-event to nearby-events
-		// will need types-of-events, which is fine [good/bad for now]
+		// will need types-of-events, which is fine [good/bad for now] [or just event-name or event-data]
+
 
 	};
 
