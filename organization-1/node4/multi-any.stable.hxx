@@ -59,6 +59,17 @@ public:
 	}
 
 	template <typename T>
+	T const * pointer() const
+	{
+		auto location = data.find(&typeid(T));
+		if (location != data.end()) {
+			return std::any_cast<T>(&location->second);
+		} else {
+			return nullptr;
+		}
+	}
+
+	template <typename T>
 	bool has()
 	{
 		return pointer<T>();
@@ -81,7 +92,7 @@ public:
 #define ___CLASSNAME__ hash_type_info_pointer
 #define ___CLASSNAMESTR__ "hash_type_info_pointer"
 	struct hash_type_info_pointer {
-# 71 "multi-any.hpp"
+# 82 "multi-any.hpp"
 		size_t operator()(std::type_info const * const & to_hash) const
 		{
 			return to_hash->hash_code();
@@ -89,7 +100,7 @@ public:
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
-# 76 "multi-any.hpp"
+# 87 "multi-any.hpp"
 
 	std::unordered_map<std::type_info const *, std::any> data;
 };

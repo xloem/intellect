@@ -58,6 +58,8 @@ public:
 		data-type & data-default(data-type default-data = {});
 	template <typename data-type>
 		data-type & data();
+	template <typename data-type>
+		data-type const & data() const;
 
 	// function call if data has a matching std::function
 	template <typename... parameter-types>
@@ -148,6 +150,7 @@ private:
 	std::weak_ptr<part> weak;
 
 	multi-any & raw-data();
+	multi-any const & raw-data() const;
 };
 
 
@@ -168,6 +171,16 @@ template <typename data-type>
 data-type & reference::data()
 {
 	data-type * pointer = this->raw-data().pointer<data-type>();
+	if (pointer == nullptr) {
+		throw kindness-mistake();
+	}
+	return *pointer;
+}
+
+template <typename data-type>
+data-type const & reference::data() const
+{
+	data-type const * pointer = this->raw-data().pointer<data-type>();
 	if (pointer == nullptr) {
 		throw kindness-mistake();
 	}

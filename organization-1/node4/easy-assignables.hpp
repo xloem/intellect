@@ -30,12 +30,12 @@ class inverting-kinded-assignable : public kinded-assignable
 {
 public:
 
-	inverting-assignable(easy source, reference kind)
-	: basic-assignable(source, kind)
+	inverting-kinded-assignable(reference source, reference kind)
+	: kinded-assignable(source, kind)
 	{ }
 
 	// TODO? use structured typedness to provide constness of attributes?
-	inverting-assignable & operator=(reference const & other)
+	inverting-kinded-assignable & operator=(reference & other)
 	{
 		if (source.kind-get(kind).order-count().data<index_t>() > 0) {
 			throw "assigned reference is ordered; try to fix in a way that doesn't make a new big issue later?  or just add code to handle it?";
@@ -44,27 +44,27 @@ public:
 		// this does: source.kind-set(kind, other);
 		kinded-assignable::operator=(other);
 
-		reference inverse-kind = kind.kind-get(inverse());
+		reference inverse-kind = kind.kind-get(kind-inverse());
 		// if inverse is made wrongly, merge it with the right node
 		// may require enumeration of all nodes or a hook placed
 		// on the wrong one to notice when used [might be helpful
 		//  to make 'accessed' or somesuch method gets called before
 		//  returning it]
-		if (null() == inverse-kind) {
+		if (reference::null() == inverse-kind) {
 			inverse-kind = reference();
-			kind.kind-set(inverse(), inverse-kind);
-			inverse-kind.kind-set(inverse(), kind);
+			kind.kind-set(kind-inverse(), inverse-kind);
+			inverse-kind.kind-set(kind-inverse(), kind);
 		}
 		reference inverses = other.kind-get(inverse-kind);
-		if (null() == inverses) {
+		if (reference::null() == inverses) {
 			other.kind-set(inverse-kind, source);
 		} else if (inverses.order-count().data<index_t>() == 0) {
 			reference inverse_set;
-			inverse_set.order-set((any)(index_t)0, inverses);
+			inverse_set.order-set((std::any)(index_t)0, inverses);
 			other.kind-set(inverse-kind, inverse_set);
-			inverse_set.order-set((any)(index_t)1, source);
+			inverse_set.order-set((std::any)(index_t)1, source);
 		} else {
-			inverse_set.order-set(inverse_set.order-count(), source);
+			inverses.order-set(inverses.order-count(), source);
 		}
 		return *this;
 	}
@@ -76,7 +76,7 @@ public:
 		if (count.data<index_t>() == 0) {
 			return result;
 		} else if (count.data<index_t>() == 1) {
-			return result.order-get((any)(index_t)(0));
+			return result.order-get((std::any)(index_t)(0));
 		} else {
 			throw "do you think this ambiguity could make a big issue later? reference is ordered with count > 1; could use link objects to resolve, or just ignore: presently handled with begin(), end()";
 		} 
@@ -85,7 +85,7 @@ public:
 	ordered-assignable begin()
 	{
 		reference result = source.kind-get(kind);
-		return {result, reference((any)(index_t)(0))};
+		return {result, reference((std::any)(index_t)(0))};
 	}
 
 	ordered-assignable end()

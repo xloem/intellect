@@ -87,7 +87,7 @@ END
 sed -i -f "-" "$2" <<-"END"
 	# declarations
 	s/^\t*DECLARE\s\s*\([^(; \t]*\)\s*;/___EXTERN_ reference \& \1();/
-	s/^\t*DECLARE\s\s*\(\S*\)\s\s*\([^(; \t]*\)\s*;/___EXTERN_ \1 \& \2();/
+	s/^\t*DECLARE\s\s*\(\S[^(;]*\)\s\s*\([^(; \t]*\)\s*;/___EXTERN_ \1 \& \2();/
 	# definitions
 	s/^\t*DEFINE-REGISTER\s\s*\([^(; \t]*\)\s\s*\([^;]*\)\s*;/___STATIC_ reference \& \1() { static reference storage({string("\1")}); static int registration-barrier = ((\2),0); (void)registration-barrier; return storage; }/
 	s/^\t*DEFINE\s\s*\([^(; \t]*\)\s*;/___STATIC_ reference \& \1() { static reference storage({string("\1")}); return storage; }/

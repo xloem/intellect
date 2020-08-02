@@ -48,6 +48,17 @@ public:
 	}
 
 	template <typename T>
+	T const * pointer() const
+	{
+		auto location = data.find(&typeid(T));
+		if (location != data.end()) {
+			return std::any_cast<T>(&location->second);
+		} else {
+			return nullptr;
+		}
+	}
+
+	template <typename T>
 	bool has()
 	{
 		return pointer<T>();
