@@ -26,23 +26,44 @@ DECLARE reference kind-inverse;
 // 		 [our very waynesses are intertwined through each other?]
 // 		 [marked with reasons so should be okay to give for other]
 // 		 [remember to make sure to produce lasting contribution in choices]
-class inverting-kinded-assignable : public kinded-assignable
+
+
+// WARNING: this was intended to maintain inverse information, but structure
+//  was altered without verifying correctness of that part
+// inverse information helps generalize attribute, category, and name lookups
+// 	[the structure is that every kind may have an inverse linked with
+// 	 kind-inverse().  inverses are linked back, which requires multiple
+// 	 same-kind links.  these are held transparently by sub-references with
+// 	 ordered data.]
+template <typename Type>
+class inverting-kinded-assignable : public Type
 {
 public:
 
 	inverting-kinded-assignable(reference source, reference kind)
-	: kinded-assignable(source, kind)
-	{ }
+	: Type(reference::null()), source(source), kind(kind)
+	{
+		Type::reseat(get());
+	}
 
 	// TODO? use structured typedness to provide constness of attributes?
-	inverting-kinded-assignable & operator=(reference & other)
+	inverting-kinded-assignable & operator=(reference const & _other)
 	{
-		if (source.kind-get(kind).order-count().data<index_t>() > 0) {
-			throw "assigned reference is ordered; try to fix in a way that doesn't make a new big issue later?  or just add code to handle it?";
+		reference other = _other;
+
+		{
+			reference old = source.kind-get(kind);
+			if (reference::null() != old) {
+				if (old.order-count().data<index_t>() > 0) {
+					throw "assigned reference is ordered; try to fix in a way that doesn't make a new big issue later?  or just add code to handle it?";
+				}
+			}
 		}
 
-		// this does: source.kind-set(kind, other);
-		kinded-assignable::operator=(other);
+		/// set
+		source.kind-set(kind, other);
+		this->reseat(other);
+		/// ---
 
 		reference inverse-kind = kind.kind-get(kind-inverse());
 		// if inverse is made wrongly, merge it with the right node
@@ -69,9 +90,13 @@ public:
 		return *this;
 	}
 
-	operator reference()
+	reference get()
 	{
+		// this being different from kinded-assignable was part of why the classes got separated in a quick fix attempt
 		reference result = source.kind-get(kind);
+		if (reference::null() == result) {
+			return result;
+		}
 		reference count = result.order-count();
 		if (count.data<index_t>() == 0) {
 			return result;
@@ -93,4 +118,8 @@ public:
 		reference result = source.kind-get(kind);
 		return {result, result.order-count()};
 	}
+
+protected:
+	reference source;
+	reference kind;
 };

@@ -9,15 +9,7 @@ public:
 	unique-data(reference const & other)
 	: reference(other)
 	{
-		element-type const * value = &this->template data<element-type>();
-		auto insertion_result = index.emplace(*value, *this);
-		if (!insertion_result.second) {
-			reference & other = insertion_result.first->second;
-			if (other != *this) {
-				// merging I suppose would be appropriate here
-				throw presence-mistake();
-			}
-		}
+		verify-inserted();
 	}
 	unique-data(element-type const & data, reference const & source = null())
 	{
@@ -40,7 +32,12 @@ public:
 
 	operator element-type &()
 	{
-		return reference::template data<element-type>();
+		return data();
+	}
+
+	operator element-type const &() const
+	{
+		return data();
 	}
 
 	element-type & data()
@@ -48,7 +45,34 @@ public:
 		return reference::template data<element-type>();
 	}
 
+	element-type const & data() const
+	{
+		return reference::template data<element-type>();
+	}
+
+protected:
+	void reseat(reference const & other)
+	{
+		reference::reseat(other);
+		
+		verify-inserted();
+	}
+
 private:
+	void verify-inserted() const
+	{
+		// throws if data not present.
+		element-type const * value = &data();
+		auto insertion_result = index.emplace(*value, *this);
+		if (!insertion_result.second) {
+			reference & other = insertion_result.first->second;
+			if (other != *this) {
+				// merging I suppose would be appropriate here
+				throw presence-mistake();
+			}
+		}
+	}
+
 	static std::unordered_map<element-type, reference> index;
 };
 template <typename element-type>

@@ -4,7 +4,8 @@
 
 // link objects could replace this with a lot more functionality.
 
-class kinded-assignable //: public reference
+template <typename Type>
+class kinded-assignable : public Type
 {
 public:
 	/*
@@ -14,18 +15,15 @@ public:
 	*/
 
 	kinded-assignable(reference source, reference kind)
-	: source(source), kind(kind)
+	: Type(source.kind-get(kind)), source(source), kind(kind)
 	{ }
 
-	kinded-assignable & operator=(reference const & other)
+	kinded-assignable<Type> & operator=(reference const & other)
 	{
 		source.kind-set(kind, other);
-		return *this;
-	}
+		this->reseat(other);
 
-	operator reference()
-	{
-		return source.kind-get(kind);
+		return *this;
 	}
 
 protected:

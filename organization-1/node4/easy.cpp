@@ -5,16 +5,18 @@
 using string = library::string;
 using library::operator""_s;
 
+DEFINE reference kind-inverse;
+
 // concepts: unique_data
 //           operator form
 //           kindedness
 
 easy::easy(reference source)
-: unique-data("<unnamed "_s + std::hash<reference>()(source) + ">"_s, source)
+: reference(unique-data("<unnamed "_s + std::hash<reference>()(source) + ">"_s, source))
 { }
 
 easy::easy(string text)
-: unique-data(text)
+: reference(unique-data(text))
 { }
 easy::easy(char const * text)
 : easy(string(text))
@@ -24,6 +26,11 @@ easy & easy::operator=(easy & other)
 {
 	(*(reference*)this) = (reference &)other;
 	return *this;
+}
+
+library::string const & easy::data() const
+{
+	return unique-data<string>(*this).data();
 }
 
 //#include <unordered_map>
@@ -36,11 +43,11 @@ easy & easy::operator=(easy & other)
 // 		let's implement easy in ways that are reusable elsewhere,
 // 		at least a smidge.
 
-inverting-kinded-assignable easy::operator[](easy index)
+inverting-kinded-assignable<easy> easy::operator[](easy index)
 {
 	//return kind-get(index);
 	//kind-get returns a copy, makes assignment hard
-	return inverting-kinded-assignable(*this, index);
+	return inverting-kinded-assignable<easy>(*this, index);
 }
 
 METHOD void easy::write()

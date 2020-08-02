@@ -23,7 +23,7 @@
 // 	[here we have to make a link to an ordered list? or something?]
 // 		[okay actually reviewed this, and proposed reference with
 // 		ordered content was fine for multiple links =S]
-class easy : public unique-data<library::string>
+class easy : public reference
 {
 public:
 	easy(reference source);
@@ -32,7 +32,9 @@ public:
 	using reference::operator=;
 	easy & operator=(easy & other);
 
-	inverting-kinded-assignable operator[](easy kind);
+	library::string const & data() const;
+
+	inverting-kinded-assignable<easy> operator[](easy kind);
 	// now, returning the kinded-assignable is very similar to returning
 	// a reference: but it makes sure to call the kind-get or kind-set methods when used.
 

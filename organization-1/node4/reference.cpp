@@ -100,7 +100,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	if (method == basic-operator-equals() || (method == null() && kind == method-operator-equals())) {
 		// default implementation can't be done with a method call because references are passed to methods by copy for now
 		if (parameters.size() != 1) { throw kindness-mistake(); }
-		shared = parameters.begin()->pointer();
+		reseat(*parameters.begin());
 		return *this;
 	}
 
@@ -128,6 +128,16 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	default:
 		throw "more than 8 method arguments, need new case line here";
 	}
+}
+
+void reference::reseat(reference const & other) {
+	// this is just operator-equals ... subclasses using reference
+	// want a way to adjust the c++ meaning without worrying about
+	// runtime changes.  don't remember how to do that with
+	// method implementation .... basic-operator-equals?
+	// and then how do subclasses like unique-data change?  to manage
+	// index?
+	shared = other.pointer();
 }
 
 DEFINE reference reference::recognised-methods;

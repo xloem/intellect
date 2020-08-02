@@ -5,7 +5,7 @@ include include.mk
 
 CXXFLAGS+= -I../include
 
-all: stable-bootstrap libnode4.a
+all: stable-bootstrap test
 
 stable-bootstrap: preprocess.stable.cxx reference.stable.cxx reference.stable.hxx multi-any.stable.hxx
 
@@ -30,7 +30,7 @@ libnode4.a: reference.o easy.o
 test: main
 	./main
 
-main: main.o reference.o
+main: main.o libnode4.a
 
 $(PREPROCESS):
 	${CXX} ${CXXFLAGS} ${CPPFLAGS} preprocess.stable.cxx reference.stable.cxx ${LDLIBS} -o $@

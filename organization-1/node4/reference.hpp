@@ -1,5 +1,6 @@
 #pragma once
 
+	
 #include <memory>
 #include <functional>
 #include "multi-any.hpp"
@@ -138,6 +139,9 @@ public:
 
 	bool operator==(reference const & other) const;
 	bool operator!=(reference const & other) const;
+
+protected:
+	void reseat(reference const & other);
 
 private:
 	class part;
