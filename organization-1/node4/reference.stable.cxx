@@ -428,40 +428,41 @@ reference reference::indirect_set((function<reference(reference,reference,refere
 */
 
 reference const& reference::null() { static reference null((bool *****)"token_for_making_null_reference"); return null; }
-___STATIC_ reference & reference::kindness_mistake() { static reference storage; return storage; }
-___STATIC_ reference & reference::presence_mistake() { static reference storage; return storage; }
+___STATIC_ reference & agreement_mistake() { static reference storage; return storage; }
+___STATIC_ reference & kindness_mistake() { static reference storage; return storage; }
+___STATIC_ reference & presence_mistake() { static reference storage; return storage; }
 
 ___STATIC_ reference & reference::method_operator_equals() { static reference storage({string("reference::method-operator-equals")}); static int registration_barrier = ((recognise_method(storage, basic_operator_equals(), "reference", "operator-equals")),0); (void)registration_barrier; return storage; }
 reference reference::operator_equals(reference other) { return (*this)(method_operator_equals(), {   other}); }
 reference & reference::basic_operator_equals(){static reference storage({string("operator-equals"),(std::function<reference(reference, reference other)>)
 [](reference __uncasted_self, reference other) -> reference { using __return_type = reference; reference self = __uncasted_self;{
-# 303 "reference.cpp"
-	throw presence_mistake;
 # 304 "reference.cpp"
-	return (reference)(__return_type){};
+	throw presence_mistake;
 # 305 "reference.cpp"
-}}}); return storage;}
+	return (reference)(__return_type){};
 # 306 "reference.cpp"
+}}}); return storage;}
+# 307 "reference.cpp"
 ___STATIC_ reference & reference::method_operator_brackets() { static reference storage({string("reference::method-operator-brackets")}); static int registration_barrier = ((recognise_method(storage, basic_operator_brackets(), "reference", "operator-brackets")),0); (void)registration_barrier; return storage; }
 reference reference::operator_brackets(reference other) { return (*this)(method_operator_brackets(), {   other}); }
 reference & reference::basic_operator_brackets(){static reference storage({string("operator-brackets"),(std::function<reference(reference, reference other)>)
 [](reference __uncasted_self, reference other) -> reference { using __return_type = reference; reference self = __uncasted_self;{
-# 308 "reference.cpp"
-	throw presence_mistake;
 # 309 "reference.cpp"
-	return (reference)(__return_type){};
+	throw presence_mistake;
 # 310 "reference.cpp"
-}}}); return storage;}
+	return (reference)(__return_type){};
 # 311 "reference.cpp"
+}}}); return storage;}
+# 312 "reference.cpp"
 
 /*
 ___STATIC_ reference & reference::method_destruct() { static reference storage({string("reference::method-destruct")}); static int registration_barrier = ((recognise_method(storage, basic_destruct(), "reference", "destruct")),0); (void)registration_barrier; return storage; }
 void reference::destruct() {  (*this)(method_destruct(), { }); }
 reference & reference::basic_destruct(){static reference storage({string("destruct"),(std::function<void(reference)>)
 [](reference __uncasted_self) -> void {  reference self = __uncasted_self;{
-# 315 "reference.cpp"
-}}}); return storage;}
 # 316 "reference.cpp"
+}}}); return storage;}
+# 317 "reference.cpp"
 reference::~reference()
 {
 	if (is_nonweak() && shared.use_count() == 1) {

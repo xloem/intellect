@@ -39,6 +39,10 @@ class reference;
 	// -> make the method static object be prefixed with basic-
 	// -> make a member function that acts as the method
 
+DECLARE reference agreement-mistake; // thrown when things are not as expected
+DECLARE reference kindness-mistake; // thrown when kind mismatches
+DECLARE reference presence-mistake; // thrown when a null reference is used
+
 class reference
 {
 public:
@@ -121,8 +125,6 @@ public:
 
 	// useful basic objects
 	DECLARE reference const null; // empty reference
-	DECLARE reference kindness-mistake; // thrown when kind mismatches
-	DECLARE reference presence-mistake; // thrown when a null reference is used
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior

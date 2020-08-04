@@ -295,8 +295,9 @@ reference reference::indirect-set((function<reference(reference,reference,refere
 */
 
 reference const& reference::null() { static reference null((bool *****)"token_for_making_null_reference"); return null; }
-DEFINE reference reference::kindness-mistake;
-DEFINE reference reference::presence-mistake;
+DEFINE reference agreement-mistake;
+DEFINE reference kindness-mistake;
+DEFINE reference presence-mistake;
 
 METHOD reference reference::operator-equals(reference other)
 {

@@ -43,6 +43,10 @@ class reference;
 	// -> make the method static object be prefixed with basic-
 	// -> make a member function that acts as the method
 
+___EXTERN_ reference & agreement_mistake(); // thrown when things are not as expected
+___EXTERN_ reference & kindness_mistake(); // thrown when kind mismatches
+___EXTERN_ reference & presence_mistake(); // thrown when a null reference is used
+
 #undef ___STATIC_
 #undef ___EXTERN_
 #define ___CLASSNAME_ reference
@@ -50,7 +54,7 @@ class reference;
 #define ___STATIC_ static
 #define ___EXTERN_ static
 class reference
-# 43 "reference.hpp"
+# 47 "reference.hpp"
 {
 public:
 	// construction
@@ -97,47 +101,47 @@ ___EXTERN_ reference & recognised_methods();
 ___EXTERN_ reference & basic_kind_get();
 ___EXTERN_ reference & method_kind_get();
 	reference kind_get(reference kind);
-# 87 "reference.hpp"
+# 91 "reference.hpp"
 
 ___EXTERN_ reference & basic_kind_get_or_create_empty();
 ___EXTERN_ reference & method_kind_get_or_create_empty();
 	reference kind_get_or_create_empty(reference kind);
-# 89 "reference.hpp"
+# 93 "reference.hpp"
 
 	// set a kinded property, returns old value; pass null to unset
 ___EXTERN_ reference & basic_kind_set();
 ___EXTERN_ reference & method_kind_set();
 	reference kind_set(reference kind, reference value);
-# 92 "reference.hpp"
+# 96 "reference.hpp"
 
 	// get all kinded property kinds, ordered
 ___EXTERN_ reference & basic_get_all_kinds();
 ___EXTERN_ reference & method_get_all_kinds();
 	reference get_all_kinds();
-# 95 "reference.hpp"
+# 99 "reference.hpp"
 
 	// get the count of ordered properties
 ___EXTERN_ reference & basic_order_count();
 ___EXTERN_ reference & method_order_count();
 	reference order_count();
-# 98 "reference.hpp"
+# 102 "reference.hpp"
 
 	// get an ordered property by index.  index is expected to have index_t data
 ___EXTERN_ reference & basic_order_get();
 ___EXTERN_ reference & method_order_get();
 	reference order_get(reference index);
-# 101 "reference.hpp"
+# 105 "reference.hpp"
 
 ___EXTERN_ reference & basic_order_get_or_create_empty();
 ___EXTERN_ reference & method_order_get_or_create_empty();
 	reference order_get_or_create_empty(reference index);
-# 103 "reference.hpp"
+# 107 "reference.hpp"
 
 	// set an ordered property by index_t number [setting at index=count extendss]
 ___EXTERN_ reference & basic_order_set();
 ___EXTERN_ reference & method_order_set();
 	reference order_set(reference index, reference value);
-# 106 "reference.hpp"
+# 110 "reference.hpp"
 
 	// Warning: IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
 
@@ -145,14 +149,14 @@ ___EXTERN_ reference & method_order_set();
 ___EXTERN_ reference & basic_operator_equals();
 ___EXTERN_ reference & method_operator_equals();
 	reference operator_equals(reference other);
-# 111 "reference.hpp"
+# 115 "reference.hpp"
 	reference operator=(reference other) { return operator_equals(other); }
 
 	// no default; method_operator_brackets property must be set to not throw
 ___EXTERN_ reference & basic_operator_brackets();
 ___EXTERN_ reference & method_operator_brackets();
 	reference operator_brackets(reference index);
-# 115 "reference.hpp"
+# 119 "reference.hpp"
 	reference operator[](reference index) { return operator_brackets(index); }
 
 	// called on destruction: dangerous as inheritance is not managed yet
@@ -162,8 +166,6 @@ ___EXTERN_ reference & method_operator_brackets();
 
 	// useful basic objects
 ___EXTERN_ reference const & null(); // empty reference
-___EXTERN_ reference & kindness_mistake(); // thrown when kind mismatches
-___EXTERN_ reference & presence_mistake(); // thrown when a null reference is used
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
@@ -203,7 +205,7 @@ private:
 #define ___STATIC_
 #undef ___EXTERN_
 #define ___EXTERN_ extern
-# 159 "reference.hpp"
+# 161 "reference.hpp"
 
 
 // parameters take types and names
@@ -263,11 +265,11 @@ namespace std {
 #define ___CLASSNAME__ hash<reference>
 #define ___CLASSNAMESTR__ "hash<reference>"
 	struct hash<reference>
-# 216 "reference.hpp"
+# 218 "reference.hpp"
 	{
 		size_t operator()(const reference & to_hash) const;
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
-# 219 "reference.hpp"
+# 221 "reference.hpp"
 }
