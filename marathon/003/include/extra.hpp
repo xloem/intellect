@@ -1,4 +1,6 @@
+#pragma once
 
+/*
 void verify(ref what)
 {
 	for (auto refs : what->refs) {
@@ -7,41 +9,42 @@ void verify(ref what)
 		}
 	}
 }
+*/
 
-text to_text(ref what, bool contents = true)
+//text to_text(ref what, bool contents = true);
+
+text to_text(ref what, bool contents)
 {
-	static thread_local std::unordered_set<concept*> found;
-	if (found.count(&*what) || !what->refs.size()) { contents = false; }
+	static thread_local std::unordered_map<concept*, text> found;
+	static unsigned long long id = 0;
 	text result;
-       	if (contents) { result += "["; }
-	if (what->_data.has_value()) {
-		if (what->_data.type() == typeid(cxxcode)) {
-			result += "<cxxcode>";
-		} else if (what->_data.type() == typeid(text)) {
-			result += what->data<text>();
-		} else {
-			result += text("<") + what->_data.type().name() + ">";
-		}
-		if (contents) { result += ":"; }
+	if (found.count(&*what)) {
+		result = found[&*what];
+		contents = false;
+	} else if (!what->refs.size()) {
+		contents = false;
 	}
-	ref next = symbols::nothing;
-	if (contents) {
-		found.insert(&*what);
-		for (auto refs : what->refs) {
-			if (refs.first == symbols::next) {
-				next = refs.second;
-				continue;
+	if (!result.size()) {
+		if (what->_data.has_value()) {
+			if (what->_data.type() == typeid(cxxcode)) {
+				result = "<cxxcode>";
+			} else if (what->_data.type() == typeid(text)) {
+				result = what->data<text>();
+			} else {
+				result = text("<") + what->_data.type().name() + ">";
 			}
+		} else {
+			result = std::to_string(++id);
+		}
+		found[&*what] = result;
+	}
+	if (contents) {
+		result = "[" + result + ":";
+		for (auto refs : what->refs) {
 			result += to_text(refs.first, false) + "=" + to_text(refs.second);
 		}
-	}
-	if (contents) { result += "]"; }
-	if (next->isthing()) {
-		result += ",";
-		result += to_text(next, contents);
-	}
-	if (contents) {
-		found.erase(&*what);
+		result += "]";
+		//found.erase(&*what);
 	}
 	return result;
 }
