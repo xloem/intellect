@@ -16,7 +16,7 @@ text to_text(ref what, bool contents = true)
        	if (contents) { result += "["; }
 	if (what->_data.has_value()) {
 		if (what->_data.type() == typeid(cxxcode)) {
-			result += "<habit>";
+			result += "<cxxcode>";
 		} else if (what->_data.type() == typeid(text)) {
 			result += what->data<text>();
 		} else {
