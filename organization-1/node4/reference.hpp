@@ -22,6 +22,8 @@ class reference;
  *
  * UPDATE BELOW as methods progress
  * METHOD: preprocess.bash processes METHOD lines
+ * 	NOTE: methods call recognise-method statically to identify.
+ *
  * 	they are turned into a member function that accesses the method-methodname attribute and calls it.
  *	method-methodname is made into a static function that returns a reference for the method
  *	it has the provided function as data, which is used as a default implementation
