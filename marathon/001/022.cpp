@@ -15,27 +15,27 @@ using text = std::string;
 
 ref create(il<std::pair<ref,ref>> refs = {}, std::any data = {});
 
-#define symbol(name) ref name = create({},::text(#name))
+#define sym(name) ref name = create({},::text(#name))
 
 namespace symbols
 {
-	symbol(nothing);
+	sym(nothing);
 
-	symbol(what);
-	symbol(next);
+	sym(what);
+	sym(next);
 
-	symbol(context);
-	symbol(outer);
+	sym(context);
+	sym(outer);
 
-	symbol(state);
-	symbol(step);
-	symbol(steps);
-	symbol(variable);
-	symbol(inputs);
-	symbol(outputs);
+	sym(state);
+	sym(step);
+	sym(steps);
+	sym(variable);
+	sym(inputs);
+	sym(outputs);
 
-	symbol(hello);
-	symbol(world);
+	sym(hello);
+	sym(world);
 	ref space = create({}, text(" "));
 	ref endl = create({}, text("\n"));
 }
@@ -81,7 +81,7 @@ struct concept
 
 	void set(ref what, ref value = symbols::nothing)
 	{
-		if (!value) { value = what; }
+		if (!value->isthing()) { value = what; }
 		refs.insert(wipe(what), std::pair(what, value));
 	}
 
