@@ -18,7 +18,7 @@ namespace symbols {
 #include <list>
 
 ref start_enumeration = habit({symbols::state}, {symbols::options}, [](ref context){
-	static symbol(states);
+	static sym(states);
 	context->set(symbols::state, create({
 		{states, seq({create({
 			{symbols::options, context->get(symbols::options)},
