@@ -12,12 +12,12 @@ public:
 
 	ref get()
 	{
-		return ref::get(sym::what);
+		return get(sym::what);
 	}
 
 	void set(ref what)
 	{
-		ref::set(sym::what, what);
+		set(sym::what, what);
 	}
 
 	/*

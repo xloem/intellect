@@ -16,12 +16,7 @@ public:
 
 	iterator & operator++()
 	{
-		return *this = ref::get(sym::next);
-	}
-
-	ref operator*()
-	{
-		return get();
+		return *this = (*this)[sym::next];
 	}
 };
 
@@ -38,16 +33,16 @@ public:
 
 	seq & operator+=(wrapped item)
 	{
-		if (!this->get(sym::first)) {
+		if (!(*this)[sym::first]) {
 			*(ref*)this += {
 				{sym::first, item},
 				{sym::last, item}
 			};
 		} else {
-			ref preceding = this->get(sym::last);
-			preceding.set(sym::next, item);
-			item.ref::set(sym::previous, preceding);
-			this->set(sym::last, item);
+			ref preceding = (*this)[sym::last];
+			preceding[sym::next] = item;
+			item[sym::previous] = preceding;
+			(*this)[sym::last] = item;
 		}
 		++ data<unsigned long>();
 		return *this;
@@ -55,7 +50,7 @@ public:
 
 	iterator begin()
 	{
-		return this->get(sym::first);
+		return (*this)[sym::first];
 	}
 
 	iterator end()
