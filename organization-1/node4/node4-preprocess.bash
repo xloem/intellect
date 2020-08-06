@@ -14,6 +14,7 @@
 
 #LINENUMBERS=$(grep '^# 1' "$2" >/dev/null && echo 1 || echo 0)
 LINENUMBERS=1
+#LINENUMBERS=0
 
 echo > "$2"
 echo "#define ___STATIC_" >> "$2"

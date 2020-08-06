@@ -26,6 +26,8 @@ class reference;
  *
  * UPDATE BELOW as methods progress
  * METHOD: preprocess.bash processes METHOD lines
+ * 	NOTE: methods call recognise_method statically to identify.
+ *
  * 	they are turned into a member function that accesses the method_methodname attribute and calls it.
  *	method_methodname is made into a static function that returns a reference for the method
  *	it has the provided function as data, which is used as a default implementation
@@ -54,7 +56,7 @@ ___EXTERN_ reference & presence_mistake(); // thrown when a null reference is us
 #define ___STATIC_ static
 #define ___EXTERN_ static
 class reference
-# 47 "reference.hpp"
+# 49 "reference.hpp"
 {
 public:
 	// construction
@@ -101,47 +103,47 @@ ___EXTERN_ reference & recognised_methods();
 ___EXTERN_ reference & basic_kind_get();
 ___EXTERN_ reference & method_kind_get();
 	reference kind_get(reference kind);
-# 91 "reference.hpp"
+# 93 "reference.hpp"
 
 ___EXTERN_ reference & basic_kind_get_or_create_empty();
 ___EXTERN_ reference & method_kind_get_or_create_empty();
 	reference kind_get_or_create_empty(reference kind);
-# 93 "reference.hpp"
+# 95 "reference.hpp"
 
 	// set a kinded property, returns old value; pass null to unset
 ___EXTERN_ reference & basic_kind_set();
 ___EXTERN_ reference & method_kind_set();
 	reference kind_set(reference kind, reference value);
-# 96 "reference.hpp"
+# 98 "reference.hpp"
 
 	// get all kinded property kinds, ordered
 ___EXTERN_ reference & basic_get_all_kinds();
 ___EXTERN_ reference & method_get_all_kinds();
 	reference get_all_kinds();
-# 99 "reference.hpp"
+# 101 "reference.hpp"
 
 	// get the count of ordered properties
 ___EXTERN_ reference & basic_order_count();
 ___EXTERN_ reference & method_order_count();
 	reference order_count();
-# 102 "reference.hpp"
+# 104 "reference.hpp"
 
 	// get an ordered property by index.  index is expected to have index_t data
 ___EXTERN_ reference & basic_order_get();
 ___EXTERN_ reference & method_order_get();
 	reference order_get(reference index);
-# 105 "reference.hpp"
+# 107 "reference.hpp"
 
 ___EXTERN_ reference & basic_order_get_or_create_empty();
 ___EXTERN_ reference & method_order_get_or_create_empty();
 	reference order_get_or_create_empty(reference index);
-# 107 "reference.hpp"
+# 109 "reference.hpp"
 
 	// set an ordered property by index_t number [setting at index=count extendss]
 ___EXTERN_ reference & basic_order_set();
 ___EXTERN_ reference & method_order_set();
 	reference order_set(reference index, reference value);
-# 110 "reference.hpp"
+# 112 "reference.hpp"
 
 	// Warning: IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
 
@@ -149,14 +151,14 @@ ___EXTERN_ reference & method_order_set();
 ___EXTERN_ reference & basic_operator_equals();
 ___EXTERN_ reference & method_operator_equals();
 	reference operator_equals(reference other);
-# 115 "reference.hpp"
+# 117 "reference.hpp"
 	reference operator=(reference other) { return operator_equals(other); }
 
 	// no default; method_operator_brackets property must be set to not throw
 ___EXTERN_ reference & basic_operator_brackets();
 ___EXTERN_ reference & method_operator_brackets();
 	reference operator_brackets(reference index);
-# 119 "reference.hpp"
+# 121 "reference.hpp"
 	reference operator[](reference index) { return operator_brackets(index); }
 
 	// called on destruction: dangerous as inheritance is not managed yet
@@ -205,7 +207,7 @@ private:
 #define ___STATIC_
 #undef ___EXTERN_
 #define ___EXTERN_ extern
-# 161 "reference.hpp"
+# 163 "reference.hpp"
 
 
 // parameters take types and names
@@ -265,11 +267,11 @@ namespace std {
 #define ___CLASSNAME__ hash<reference>
 #define ___CLASSNAMESTR__ "hash<reference>"
 	struct hash<reference>
-# 218 "reference.hpp"
+# 220 "reference.hpp"
 	{
 		size_t operator()(const reference & to_hash) const;
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
-# 221 "reference.hpp"
+# 223 "reference.hpp"
 }

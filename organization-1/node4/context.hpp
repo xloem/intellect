@@ -26,24 +26,26 @@ public:
 	}
 	~context() //no_throw(false)
 	{
-		verify-agreements();
+		reference this-context = contexts.kind-get(category);
+		if (*this != this-context) { throw agreement-mistake(); }
+		reference replaced-context = this-context.kind-get(context::kind-outer());
+		if (replaced-context != last-context) { throw agreement-mistake(); }
 		contexts.kind-set(category, last-context);
 	}
 
 	static reference get(reference category = context::default-category())
 	{
 		reference result = contexts.kind-get(category);
-		(*(context*)(&result)).verify-agreements();
+		if (result == null()) {
+			result = reference();
+			contexts.kind-set(category, result);
+		}
 		return result;
 	}
 
 private:
 	void verify-agreements()
 	{
-		reference this-context = contexts.kind-get(category);
-		if (*this != this-context) { throw agreement-mistake(); }
-		reference replaced-context = this-context.kind-get(context::kind-outer());
-		if (replaced-context != last-context) { throw agreement-mistake(); }
 	}
 
 	static thread_local reference contexts;

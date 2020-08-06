@@ -38,6 +38,7 @@ namespace symbols
 	sym(outer);
 
 	sym(state);
+	sym(states);
 	sym(step);
 	sym(steps);
 	sym(variable);

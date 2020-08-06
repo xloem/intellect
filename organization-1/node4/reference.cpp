@@ -2,6 +2,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <iostream> // for debugging
+
 #include "reference.hpp"
 
 using namespace std;
@@ -143,6 +145,7 @@ void reference::reseat(reference const & other) {
 DEFINE reference reference::recognised-methods;
 void reference::recognise-method(reference method-kind, reference basic-implementation, char const * classname, char const * methodname)
 {
+	std::cerr << "method recognised: " << methodname << std::endl;
 	basic-kind-set()(recognised-methods(), method-kind, basic-implementation);
 }
 

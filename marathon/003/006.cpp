@@ -17,12 +17,18 @@ namespace symbols {
 #include <iostream>
 #include <list>
 
+ref start_enumeration = habit({symbols::state}, {symbols::options}, [](ref context){
+	static symbol(states);
+	context->set(symbols::state, create({
+		{states, seq({create({
+			{symbols::options, context->get(symbols::options)},
+			{symbols::work, seq({})}
+		})})}
+	}));
+});
+
 int main()
 {
-
-
-
-
 	sym(one);
 	sym(two);
 	sym(three);
