@@ -4,9 +4,11 @@
 class wrapped : public ref
 {
 public:
-	wrapped(ref what)
-	: ref({{sym::what, what}})
-	{ }
+	wrapped(ref what, il<std::pair<ref,ref>> refs = {})
+	: ref(refs)
+	{
+		ref::set(sym::what, what);
+	}
 
 	wrapped(wrapped const & other) = default;
 

@@ -12,14 +12,14 @@ int main()
 
 	std::cout << list.dump() << std::endl;
 
-	for (ref item : list) {
-		std::cout << item.data<std::string>() << std::endl;
-	}
-
 	cxxhabit printlist({},{sym::seq},[](ref context)
 	{
-
+		for (ref item : seq(context.get(sym::seq))) {
+			std::cout << item.data<std::string>() << std::endl;
+		}
 	});
+
+	printlist({list});
 }
 
 // investment time expands when skill
