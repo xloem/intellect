@@ -1,9 +1,9 @@
-LINK.o=$(CXX)
-CXXFLAGS=-std=c++1z -ggdb -Wall -Werror
+LINK.o=$(CXX) -Wl,-rpath,$$(pwd)
+CXXFLAGS=-std=c++1z -ggdb -Wall -Werror 
 
 all:
-	FILE=$$(ls *.cpp | tail -n 1 | sed 's/\.cpp//'); make "$$FILE" && ./$$FILE
-%-run: %
-	./$^
+	for a in $$(ls *pp | grep -v '-'); do ln -f $$(ls *-"$$a" | tail -n -1) "$$a"; done
+	make main && ./main
 
-%: %.o
+main: main.o
+main.o: main.cpp *.hpp
