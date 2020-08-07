@@ -3,59 +3,12 @@
 #include "seq.hpp"
 #include "habit.hpp"
 #include "dump.hpp"
-
-// want to refactor to use operator sugar with refs: += -= =, taking il<>
+#include "gen.hpp"
 
 namespace sym {
 	symbol(options);
 	symbol(work);
 }
-
-namespace sym {
-	symbol(gen);
-}
-
-class gen; template<>
-il<il<ref>> assumes_has<gen> = {
-	{sym::is, sym::gen},
-	{sym::habit},
-	{sym::gen}
-};
-
-class gen : public ref
-{
-public:
-	// setup's first output is the context that is repeatedly passed to generate
-	gen(cxxhabit setup, cxxhabit generate)
-	: ref({
-		{sym::is, sym::gen},
-		{sym::habit, setup.as<cxxhabit>()},
-		{sym::gen, generate.as<cxxhabit>()}
-	})
-	{ }
-
-	// start could return an iterable
-	ref start_with_ctx(ref ctx)
-	{
-		verify_has(assumes_has<gen>);
-		cxxhabit setup = (*this)[sym::habit].as<cxxhabit>();
-		setup.call_with_ctx(ctx);
-		return ctx[setup.output()];
-	}
-	ref start(il<ref> inputs)
-	{
-		verify_has(assumes_has<gen>);
-		cxxhabit setup = (*this)[sym::habit].as<cxxhabit>();
-		return setup(inputs);
-	}
-
-	ref next(ref ctx)
-	{
-		cxxhabit generate = (*this)[sym::gen].as<cxxhabit>();
-		generate.call_with_ctx(ctx);
-		return ctx[generate.output()];
-	}
-};
 
 gen seq_gen({{sym::context},{sym::seq},[](ref ctx)
 	{
