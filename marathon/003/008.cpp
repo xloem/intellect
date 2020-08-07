@@ -1,3 +1,5 @@
+auto notice = "towards unharmable rationality";
+
 #include "include/025.hpp"
 #include "include/habits-004.hpp"
 #include "include/extra.hpp"
