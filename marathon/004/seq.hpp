@@ -156,12 +156,12 @@ public:
 		return data<unsigned long>();
 	}
 
-	iterator begin()
+	iterator begin() const // this is const because iterator returns a copy
 	{
 		return this->get(sym::first);
 	}
 
-	iterator end()
+	iterator end() const // const because iterator returns a copy
 	{
 		return iterator(sym::nothing);
 	}

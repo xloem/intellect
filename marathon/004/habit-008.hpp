@@ -7,6 +7,8 @@ namespace sym {
 	symbol(habit);
 	symbol(inputs);
 	symbol(outputs);
+	symbol(input);
+	symbol(output);
 	symbol(cxxcode);
 }
 
