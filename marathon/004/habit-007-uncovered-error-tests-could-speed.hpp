@@ -1,6 +1,7 @@
 #pragma once
 #include "ref.hpp"
 #include "text.hpp"
+#include "var.hpp"
 
 namespace sym {
 	symbol(habit);
