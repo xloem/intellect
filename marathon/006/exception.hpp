@@ -1,4 +1,5 @@
 #include "ref.hpp"
+#include "text.hpp"
 
 namespace sym {
 	symbol(todo);
@@ -28,5 +29,12 @@ public:
 	: ref(refs), runtime_error(dump(as<ref>()))
 	{
 		ref::data<std::string>(runtime_error::what());
+	}
+
+	template <class t>
+	exception & operator +=(t const &)
+	{
+		throw exception({sym::what, text("atm exception generates its message during construction")});
+		return *this;
 	}
 };

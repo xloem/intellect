@@ -3,6 +3,8 @@
 #include "text.hpp"
 #include "var.hpp"
 
+#define self (*this)
+
 namespace sym {
 	symbol(habit);
 	symbol(inputs);
@@ -28,28 +30,33 @@ public:
 	}, function)
 	{ }
 
+	std::function<void(ref)> const & data()
+	{
+		return ref::data<std::function<void(ref)>>();
+	}
+
 	void call_with_ctx(ref context)
 	{
-		ref::data<std::function<void(ref)>>()(context);
+		return data()(context);
 	}
 
 	ref operator()(il<ref> inputs) {
 		ref ctx;
 		auto input = inputs.begin();
-		for (ref name : seq(get(sym::inputs))) {
+		for (ref name : self[sym::inputs].as<seq>()) {
 			if (input == inputs.end()) { break; }
-			ctx.set(name, *input);
+			ctx <= r{name, *input};
 			++ input;
 		}
 		call_with_ctx(ctx);
-		ref first_output_name = *seq(get(sym::outputs)).begin();
+		ref first_output_name = *self[sym::outputs].as<seq>().begin();
 		return ctx[first_output_name];
 	}
 
 	ref input(unsigned long index = 0)
 	{
 		unsigned long current = 0;
-		for (auto input : (*this)[sym::inputs].as<seq>()) {
+		for (auto input : self[sym::inputs].as<seq>()) {
 			if (current == index) { return input; }
 			++ current;
 		}
@@ -59,7 +66,7 @@ public:
 	ref output(unsigned long index = 0)
 	{
 		unsigned long current = 0;
-		for (auto output : (*this)[sym::outputs].as<seq>()) {
+		for (auto output : self[sym::outputs].as<seq>()) {
 			if (current == index) { return output; }
 			++ current;
 		}
@@ -100,8 +107,8 @@ namespace act
 	});
 
 	// run a single step in a set-up context
-	cxxhabit steps_next = cxxhabit({sym::outputs}, {sym::state}, [](ref outer_context) {
-		ref state = outer_context[sym::state];
+	cxxhabit steps_next = cxxhabit({sym::outputs}, {sym::state}, [](ref outer_ctx) {
+		ref state = outer_ctx[sym::state];
 		ref ctx = state[sym::context];
 		iterator step_entry = state[sym::step].as<iterator>();
 		ref step = *step_entry;
@@ -119,7 +126,7 @@ namespace act
 			if (value[sym::variable]) {
 				value = ctx[value];
 			}
-			subcontext.set(*habit_input, value);
+			subcontext <= r{*habit_input, value};
 			++ habit_input;
 		}
 
@@ -133,7 +140,7 @@ namespace act
 			if (value[sym::variable]) {
 				value = subcontext[value];
 			}
-			ctx.set(output, value);
+			ctx <= r{output, value};
 			++ habit_output;
 		}
 
@@ -142,7 +149,7 @@ namespace act
 			state.set(sym::step, next);
 		} else {
 			state.wipe(sym::step);
-			outer_context.set(sym::outputs, ctx);
+			outer_ctx <= r{sym::outputs, ctx};
 		}
 	});
 

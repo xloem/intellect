@@ -43,13 +43,13 @@ void ref::verify_has(il<il<ref>> refs) const
 			found = true;
 		}
 		if (!found) {
-			throw "does not have assumed";
-			exception err({});
-			err += {sym::assumed_has_a, assumption[0]};
-			if (assumption.size() > 1) {
-				err += {sym::assumed_has_to, assumption[1]};
-			}
-			throw err;
+			throw assumption.size() > 1 ?
+				exception{
+					{sym::assumed_has_a, assumption[0]},
+					{sym::assumed_has_to, assumption[1]}
+				} : exception{
+					{sym::assumed_has_a, assumption[0]},
+				};
 		}
 	}
 }

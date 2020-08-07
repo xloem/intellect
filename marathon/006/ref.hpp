@@ -36,13 +36,16 @@ using basic_link = decltype(basic_concept::refs)::iterator;
 
 class ref;
 
+using r = std::pair<ref,ref>;
+using rs = il<r>;
+
 template <class t>
 il<il<ref>> assumes_has = {};
 
 class ref : public basic_ref
 {
 public:
-	ref (il<std::pair<ref,ref>> refs = {}, std::any data = {})
+	ref (rs refs = {}, std::any data = {})
 	: basic_ref(new basic_concept{{refs.begin(), refs.end()}, data})
 	{ }
 
@@ -74,13 +77,13 @@ public:
 		return result;
 	}
 
-	ref & operator+=(il<std::pair<ref,ref>> refs)
+	ref & operator+=(rs refs)
 	{
 		(**this).refs.insert(refs.begin(), refs.end());
 		return *this;
 	}
 
-	ref & operator+=(std::pair<ref,ref> refs)
+	ref & operator+=(r refs)
 	{
 		add(refs.first, refs.second);
 		return *this;
@@ -90,8 +93,13 @@ public:
 	{
 		for (auto item : refs)
 		{
-			(**this).refs.erase(item);
+			(*this) -= item;
 		}
+		return *this;
+	}
+	ref & operator-=(ref refs)
+	{
+		(**this).refs.erase(refs);
 		return *this;
 	}
 
@@ -101,6 +109,10 @@ public:
 		result->refs.insert((**this).refs.begin(), (**this).refs.end());
 		return result;
 	}
+	ref operator+(std::pair<ref,ref> refs)
+	{
+		return (*this) + il<std::pair<ref,ref>>{refs};
+	}
 
 	ref operator-(il<ref> refs)
 	{
@@ -108,9 +120,13 @@ public:
 		result -= refs;
 		return result;
 	}
+	ref operator-(ref refs)
+	{
+		return (*this) - il<ref>{refs};
+	}
 
-	// note: this doesn't wipe unmentioned items
-	ref & operator=(il<std::pair<ref,ref>> refs)
+	// sets only the passed refs
+	ref & operator<=(il<std::pair<ref,ref>> refs)
 	{
 		std::unordered_set<basic_ref> found;
 		for (auto item : refs)
@@ -123,6 +139,10 @@ public:
 			}
 		}
 		return *this;
+	}
+	ref & operator<=(std::pair<ref,ref> refs)
+	{
+		return (*this) <= il<std::pair<ref,ref>>{refs};
 	}
 
 	bool has_data()
