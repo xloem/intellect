@@ -1,3 +1,4 @@
+#include "dump.hpp"
 #include "ref.hpp"
 
 namespace sym {
@@ -15,7 +16,7 @@ public:
 	//  could add operator- to ref to remove 'what'
 	//  could add depth attribute to dumping
 	exception(il<std::pair<ref,ref>> refs)
-	: ref(refs, std::string()), runtime_error(dump(true))
+	: ref(refs, std::string()), runtime_error(dump(*this))
 	{
 		ref::data<std::string>() = runtime_error::what();
 	}
