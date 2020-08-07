@@ -3,6 +3,7 @@
 #include <any>
 #include <functional>
 #include <memory>
+#include <string>
 #include <unordered_map>
 
 template <class t>
@@ -39,22 +40,28 @@ public:
 	: basic_ref(basic)
 	{ }
 
-	virtual void assuming_is() {}
+	void assuming_is() const {}
 
 	template <class t>
-	t & as() // this template annotation could be moved to the whole class
+	t as() // this template annotation could be moved to the whole class
 	{        // for use-is-more-frequent-than-design.  then every
 	         // subclass would inherit ref's copy-constructor,
 		 // and this code would move to ref constructor.
-		t result = static_cast<t&>(*this);
-		result.assuming_is();
+		t & result = static_cast<t&>(*this);
+			// system raised error if & is removed in const function, but not here; was still error here.  now system returns by value
+		result.t::assuming_is();
 		return result;
 	}
 
 	template <class t>
-	t const & as() const
-	{
-		return static_cast<t const&>(*this);
+	t const as() const
+	         // this template annotation could be moved to the whole class
+	{        // for use-is-more-frequent-than-design.  then every
+	         // subclass would inherit ref's copy-constructor,
+		 // and this code would move to ref constructor.
+		t const & result = static_cast<t const&>(*this);
+		result.t::assuming_is();
+		return result;
 	}
 
 	ref & operator+=(il<std::pair<ref,ref>> refs)
@@ -106,9 +113,16 @@ public:
 		(**this).refs.insert(std::pair<basic_ref,basic_ref>(what, value));
 	}
 
-	void set(ref what, ref value = sym::nothing)
+	void set(ref what)
 	{
-		if (!value) { value = what; }
+		set(what, what);
+	}
+
+	void set(ref what, ref value)
+	{
+		if (!value) {
+			throw "unsure whether you want to wipe or reference nothing";
+		}
 		(**this).refs.insert(wipe(what), std::pair<basic_ref,basic_ref>(what, value));
 	}
 

@@ -1,3 +1,10 @@
+[ request from neural-rep : want to work to aid mind-healing ]
+		[ have: cognitive-holes-expansion combine-with rationality]
+	[ rationality is near build-ai, repeat-behavior-a-lot ]
+		[ considering including in ai: missing bits in communication ]
+			[ filling in those bits going wrongly due to unfamiliar change ]
+sleep-time now
+
 typos /* NOTE we are lost in wilderness between pilgrimages */
 	- missed a couple
 	- didn't hold relevent information when acting in a context

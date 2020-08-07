@@ -36,7 +36,7 @@ public:
 	: ref(other)
 	{ }
 
-	virtual void assuming_is() override
+	void assuming_is() const
 	{
 		ref::assuming_is(); // maybe
 		if (get(sym::is) != sym::seq) {
@@ -108,34 +108,47 @@ public:
 	// time to consider that it could be harder than it seems.
 	ref pop_front()
 	{
-		if (!this->get(sym::first)) {
+		if (!(*this)[sym::first]) {
 			throw exception({
 				{sym::assumed_present, sym::first},
 				{sym::actually_absent, sym::first}
 			});
 		}
-		ref result = this->get(sym::first);
+		wrapped result = (*this)[sym::first].as<wrapped>();
 		wrapped following = result[sym::next].as<wrapped>();
-		this->set(sym::first, following);
+		if (!following) {
+			(*this).wipe(sym::first);
+			(*this).wipe(sym::last);
+		} else {
+			(*this).set(sym::first, following);
+		}
 		result.wipe(sym::next);
 		following.wipe(sym::previous);
-		return following.get();
+		// returned wrong of two values, fixed later
+		// many other small pattern-inversions made
+		// errors in these two functions
+		return result.get();
 	}
 
 	ref pop_back()
 	{
-		if (!this->get(sym::last)) {
+		if (!(*this)[sym::last]) {
 			throw exception({
 				{sym::assumed_present, sym::last},
 				{sym::actually_absent, sym::last}
 			});
 		}
-		ref result = this->get(sym::last);
-		wrapped preceding = result[sym::previous];
-		this->set(sym::last, preceding);
+		wrapped result = (*this)[sym::last].as<wrapped>();
+		wrapped preceding = result[sym::previous].as<wrapped>();
+		if (!preceding) {
+			(*this).wipe(sym::last);
+			(*this).wipe(sym::first);
+		} else {
+			(*this).set(sym::last, preceding);
+		}
 		result.wipe(sym::previous);
 		preceding.wipe(sym::next);
-		return preceding.get();
+		return result.get();
 	}
 
 	unsigned long size()

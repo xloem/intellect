@@ -57,6 +57,7 @@ int main()
 
 	while (states.size() < 16) {
 		ref state = states.pop_front();
+		std::cout << dump(state) << std::endl;
 		seq work = state[sym::work].as<seq>();
 		seq options = state[sym::options].as<seq>();
 		for (ref option : options) {

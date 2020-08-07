@@ -8,7 +8,8 @@ template <typename t>
 char const * dump(t what) __attribute__((warn_unused_result));
 
 char const * dump(ref what, bool contents) __attribute__((warn_unused_result));
-char const * dump(seq what, bool contents) __attribute__((warn_unused_result));
+// see below, no specialization yet
+//char const * dump(seq what, bool contents) __attribute__((warn_unused_result));
 
 char const * dump(ref what, bool contents)
 {
