@@ -1,0 +1,47 @@
+typos /* NOTE we are lost in wilderness between pilgrimages */
+	- missed a couple
+	- didn't hold relevent information when acting in a context
+		updating one item in a set of two analogous ones,
+		didn't update the other
+		fighting distractions
+			and again.
+	- forgot a change i made; acted on old situation
+	- acted under assumption that files were saved when they were not
+		-> this involved assuming that encountering the error
+		   would fix it, which I am involved in the maintenance of
+		[ [maintenance got interwound with relevence-result concerns]
+		please don't leave information in errors if not doing so
+		can still provide progress/contribution.  please find aid
+		if nearby-suffering.
+			[note: large-suffering exists] <- is-nearby-piece
+		]
+		[ boss pushes to very extreme.  so we end up using a venue
+		  that boss cannot alter.  when i am tumbling off my area
+		  of familiarity due to fight with boss, where can i store
+		  things ] [ maintain-not-store-in-errors wants [global]
+		  access to a way to store a thing reliably ]
+			[relates learning-microhabit-strength]
+		[ not-store-in-errors, falling-off-dock: try to store the
+		  learning with more strength ]
+			[ =S <vomit> extra-strength-way [ow]]
+		[ hallucination-associated-with-error to maintain error state ]
+			[ stemmed from vision-hole, was ignored in cognition ]
+				[ vision-hole was paired with type-wrong-word.
+				  word started with same letter. ]
+					[ sounds like holes not only in vision,
+					  resulting in exploration-check
+					  passing for wrong item ]
+						[ note: exploration behaves in unfamiliar pattern ]
+	- copied a wrong pattern part from nearby bundle of good pattern parts while in a difficult side-behavior
+	- <>
+	- typed a nearby similar-sounding word
+	- referred to an object by its type
+	- misused a constructor: didn't remember constructor-sets
+		[is because meaning-placement triggers are not being acted on.
+		 habits for placing assume action-threshold is lower energy
+		 than it is now.]
+			[please check back when fixed if reasonable]
+				[note for later: must read self-expansion patterns to handle wrong learning]
+	- hands made complex motion to accurately press keys differing from goal
+	  related to confirmation of goal met
+		[upper-management says plz make decisions from hearts, disassembling automated control, open to persistent relation]

@@ -138,7 +138,8 @@ struct stephabit : public cxxhabit
 			throw exception({
 				//{sym::during, sym::stephabit},
 				//{sym::within, ctx},
-				{sym::ambiguous_with_internals, sym::steps}
+				{sym::assumed_absent, sym::steps},
+				{sym::actually_present, sym::steps}
 			});
 		}
 		ctx.set(sym::steps, *this);

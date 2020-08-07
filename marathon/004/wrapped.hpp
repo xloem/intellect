@@ -23,6 +23,9 @@ public:
 	}
 
 	/*
+	 * making the change of commenting this out produced errors.
+	 * need both fluid learning (microlearninghabit strength increase)
+	 * and reduced changes from working states
 	ref & operator*()
 	{
 		return ref::operator[](sym::what);
