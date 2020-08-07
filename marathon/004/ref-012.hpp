@@ -124,14 +124,10 @@ public:
 
 	void set(ref what, ref value)
 	{
-		auto pos = wipe(what);
-		if (value) {
-			(**this).refs.insert(pos, std::pair<basic_ref,basic_ref>(what, value));
-		} else {
-			// setting to nothing erased but did not produce success
-			// been found to be a common use to erase
-			// note that get() returns nothing for erased members
+		if (!value) {
+			throw "unsure whether you want to wipe or reference nothing";
 		}
+		(**this).refs.insert(wipe(what), std::pair<basic_ref,basic_ref>(what, value));
 	}
 
 	basic_link wipe(ref what)

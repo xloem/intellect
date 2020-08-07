@@ -48,6 +48,7 @@ public:
 			if (current == index) { return input; }
 			++ current;
 		}
+		return sym::nothing;
 	}
 
 	ref output(unsigned long index = 0)
@@ -57,6 +58,7 @@ public:
 			if (current == index) { return output; }
 			++ current;
 		}
+		return sym::nothing;
 	}
 };
 
