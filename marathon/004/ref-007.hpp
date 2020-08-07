@@ -72,12 +72,6 @@ public:
 		return *std::any_cast<t>(&(**this).data);
 	}
 
-	template <typename t>
-	t const & data() const
-	{
-		return *std::any_cast<t const>(&(**this).data);
-	}
-
 	operator bool() const
 	{
 		return *this != sym::nothing;

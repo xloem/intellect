@@ -19,7 +19,13 @@ int main()
 		}
 	});
 
+	cxxhabit write({},{sym::text},[](ref context)
+	{
+		std::cout << context[sym::text].as<text>().data() << std::endl;
+	});
+
 	printlist({list});
+	write({text("hello world\n")});
 }
 
 // investment time expands when skill

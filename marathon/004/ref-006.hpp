@@ -21,8 +21,10 @@ namespace sym {
 
 // note: link objects could be temporary data refs where data is an iterator
 struct basic_concept {
-	// instead of a multimap, i think a map
-	// of unordered sets would be more clear
+	// although a map of steps might be faster,
+	// it makes construction more verbose, and
+	// produces a possible issue of accidentally
+	// overwriting the sets on insertion
 	std::unordered_multimap<basic_ref,basic_ref> refs;
 	std::any data;
 };
@@ -72,25 +74,44 @@ public:
 		return *std::any_cast<t>(&(**this).data);
 	}
 
-	template <typename t>
-	t const & data() const
-	{
-		return *std::any_cast<t const>(&(**this).data);
-	}
-
 	operator bool() const
 	{
 		return *this != sym::nothing;
 	}
 
+	basic_link getonelink(ref what) const
+	{
+		return (**this).refs.find(what);
+	}
+
+	basic_link getemptylink() const
+	{
+		return (**this).refs.find();
+	}
+
 	ref const get(ref what) const
 	{
-		auto result = (**this).refs.find(what);
-		if (result == (**this).refs.end()) {
+		auto result = getonelink(what);
+		if (result == getemptylink()) {
 			return sym::nothing;
 		} else {
 			return result->second;
 		}
+	}
+
+	std::pair<basic_link,basic_link> getalllinks(ref what) const
+	{
+		return (**this).refs.equal_range(what);
+	}
+
+	std::unordered_set const getall(ref what) const
+	{
+		std::unordered_set result;
+		auto range = getalllinks(what);
+		for (auto & entry : range) {
+			result.insert(entry.second);
+		}
+		return result;
 	}
 
 	void add(ref what, ref value)
@@ -108,7 +129,7 @@ public:
 
 	basic_link wipe(ref what)
 	{
-		auto range = (**this).refs.equal_range(what);
+		auto range = getalllinks(what);
 		return (**this).refs.erase(range.first, range.second);
 	}
 

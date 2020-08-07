@@ -32,6 +32,7 @@ public:
 	seq(ref other)
 	: ref(other)
 	{
+		// .as<> breaks this, could fix with virtual function or partly by establishing ::is norm
 		if (get(sym::is) != sym::seq) {
 			throw exception({ // ^_^
 				{sym::misinterpreted_as, sym::seq},
