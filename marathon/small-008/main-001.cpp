@@ -169,9 +169,39 @@ int main()
 	gen_use parameter_gen(seq_gen, {parameters});
 	gen_use habit_gen(seq_gen, {habits});
 
+	cxxhabit habit = habit_gen.next().as<cxxhabit>();
+	seq parameter_gens({});
+	// could make constructor to seq that maps a habit over another seq
+	for (ref input : habit[sym::inputs].as<seq>()) {
+		parameter_gens += parameter_gen.make_new();
+	}
+	for (ref output : habit[sym::outputs].as<seq>()) {
+		parameter_gens += parameter_gen.make_new();
+	}
+
+	// TODO: pass parameter_gens to finite_combinations_gen to get all the options
+	// instead of the below chunk
+
+	seq parameters({});
+	for (ref genref : parameter_gens) {
+		gen_use gen = genref.as<gen_use>();
+		parameters += gen.next();
+	}
+
+
+	ref ctx({
+		{sym::habit_gen_use, habit_gen},
+		{sym::parameter_gen_use, parameter_gen},
+		{sym::work, rs{
+			{sym::habit, habit},
+			{sym::seq, parameter_gens}
+		},
+		{sym::habit, habit},
+		{sym::seq, parameters}
+	});
+
 	ref first_habit = habit_gen.next();
 	std::cout << dump(first_habit) << std::endl;
 	ref first_parameter = parameter_gen.next();
 	std::cout << dump(first_parameter) << std::endl;
-
 }
