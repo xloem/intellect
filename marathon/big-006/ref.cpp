@@ -21,13 +21,16 @@ ref const ref::get(ref what) const
 void ref::verify_has(il<il<ref>> refs) const
 {
 	std::unordered_set<unsigned long> links;
+	/* // FOR UNORDERED_MAP
 	unsigned long bucket_count = (**this).refs.bucket_count();
+	*/
 	for (std::vector<ref> assumption : refs) {
 		bool found = false;
 		ref found_other = sym::nothing;
 		if (!assumption.size()) { continue; }
-		unsigned long bucket = (**this).refs.bucket(assumption[0]);
 		unsigned long index = 0;
+		/* // FOR UNORDERED_MAP
+		unsigned long bucket = (**this).refs.bucket(assumption[0]);
 		for (auto link = (**this).refs.begin(bucket); link != (**this).refs.end(bucket); ++ link) {
 			index += bucket_count;
 			if (link->first != assumption[0]) {
@@ -42,6 +45,21 @@ void ref::verify_has(il<il<ref>> refs) const
 				continue;
 			}
 			links.insert(hash);
+			found = true;
+		}
+		*/
+		auto range = self->refs.equal_range(assumption[0]);
+		unsigned long hash = std::hash<basic_ref>()(assumption[0]) * self->refs.size();
+		for (auto link = range.first; link != range.second; ++ link) {
+			index ++;
+			if (assumption.size() > 1 && link->second != assumption[1]) {
+				found_other = link->second;
+				continue;
+			}
+			if (links.count(hash + index)) {
+				continue;
+			}
+			links.insert(hash + index);
 			found = true;
 		}
 		if (!found) {
