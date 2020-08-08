@@ -23,7 +23,7 @@ gen seq_gen({{sym::context},{sym::seq},[](ref ctx)
 	}},{{sym::what},{sym::state},[](ref ctx)
 	{
 		// get next from seq
-		iterator element = ctx[sym::state].as<iterator>();
+		iterator<ref> element = ctx[sym::state].as<iterator<ref>>();
 
 		ctx.set(sym::what, *element);
 
@@ -32,7 +32,89 @@ gen seq_gen({{sym::context},{sym::seq},[](ref ctx)
 		ctx.set(sym::state, element);
 	}});
 
-// gen instance different from gen
+namespace sym
+{
+	symbol(habit_gen_use);
+	symbol(literal_gen_use);
+	symbol(variable_gen_use);
+	symbol(seq_option_gen_use);
+}
+
+// a step generator is a 'count'er where each digits place has a different base
+// it finds combinations between generator groups
+// but it does so in a certain procedure.
+// 	-> the habit decides the number of inputs and outputs
+// 	-> each input may be either literal or variable
+// 	-> each output is a variable
+// state would contain the current habit gen, and then gens for each input and output.
+gen step_gen({{sym::context},{sym::habit_gen_use, sym::literal_gen_use, sym::variable_gen_use, sym::seq_option_gen_use},[](ref ctx){
+		// stub
+	}},{{sym::step},{sym::habit_gen_use, sym::literal_gen_use, sym::variable_gen_use, sym::seq_option_gen_use},[](ref ctx){
+		// stub
+
+		// to meet goal quickly, propose select variables/literals
+		// naively for now, using existing tools.
+
+		// step generation can then simplify.
+		// variables and literals go in 1 big list
+		// and one is rpovided for each input/output
+
+		// this will make a numbered combination of 1 list
+	}});
+
+// might be sensical to have gen setup list its outputs and
+// preserve those, passing all to next context
+
+// generates sequences of items from the provided sequence of gen_uses
+gen finite_combinations_gen({{sym::state},{sym::seq},[](ref ctx)
+	{
+		seq genuses = ctx[sym::seq].as<seq>();
+		seq result({});
+		for (ref refitem : genuses) {
+			gen_use item = refitem.as<gen_use>();
+			item.reset();
+			result += item.next();
+		}
+		ctx.set(sym::state, rs{
+			{sym::state, genuses},
+			{sym::work, result},
+		});
+	}},{{sym::seq},{sym::state, sym::work},[](ref ctx)
+	{
+		ref work = ctx[sym::work];
+		if (!work) {
+			ctx <= r{sym::seq, sym::nothing};
+			return;
+		}
+		seq spot = work.as<seq>();
+		seq result = spot.clone();
+		seq genuses = ctx[sym::state].as<seq>();
+		
+		bool done = true;
+		iterator<ref> workitem = spot.begin();
+		for (ref refgenerator : genuses) {
+			gen_use generator = refgenerator.as<gen_use>();
+			ref item = generator.next();
+			if (item) {
+				workitem.set(sym::what, item);
+				done = false;
+				break;
+			} else {
+				generator.reset();
+				item = generator.next();
+				workitem.set(sym::what, item);
+			}
+		}
+
+		if (done) {
+			ctx.set(sym::work, sym::nothing);
+		}
+
+		ctx <= r{sym::seq, result};
+	}});
+
+// generates infinite combinations from a single sequence, producing longer
+// and longer sequences
 gen forever_seq_gen({{sym::state},{sym::gen_use},[](ref ctx)
 	{
 		gen_use gen = ctx[sym::gen_use].as<gen_use>();

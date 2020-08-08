@@ -110,7 +110,7 @@ namespace act
 	cxxhabit steps_next = cxxhabit({sym::outputs}, {sym::state}, [](ref outer_ctx) {
 		ref state = outer_ctx[sym::state];
 		ref ctx = state[sym::context];
-		iterator step_entry = state[sym::step].as<iterator>();
+		iterator<ref> step_entry = state[sym::step].as<iterator<ref>>();
 		ref step = *step_entry;
 
 		seq inputs = step[sym::inputs].as<seq>();
