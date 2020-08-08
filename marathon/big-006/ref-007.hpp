@@ -51,11 +51,9 @@ il<il<ref>> assumes_has = {};
 class ref : public basic_ref
 {
 public:
-	ref(rs refs = {}, std::any data = {});
-	ref(r refs, std::any data = {});
+	ref (rs refs = {}, std::any data = {});
+	ref (r refs, std::any data = {});
 	ref(basic_ref const & basic);
-
-	ref clone();
 
 	template <class t>
 	t as() // this template annotation could be moved to a single subclass
@@ -177,13 +175,6 @@ ref::ref (r refs, std::any data)
 ref::ref(basic_ref const & basic)
 : basic_ref(basic)
 { }
-
-ref ref::clone()
-{
-	ref result;
-	*result = *self;
-	return result;
-}
 
 void ref::verify_has(il<il<ref>> refs) const
 {

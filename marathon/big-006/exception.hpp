@@ -18,8 +18,7 @@ namespace sym {
 	symbol(actually_has_to);
 }
 
-template <typename t>
-char const * dump(t what);
+char const * dump(ref what);
 
 #include <stdexcept>
 class exception : public ref, public std::runtime_error
