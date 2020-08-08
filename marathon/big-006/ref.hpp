@@ -49,17 +49,9 @@ il<il<ref>> assumes_has = {};
 class ref : public basic_ref
 {
 public:
-	ref (rs refs = {}, std::any data = {})
-	: basic_ref(new basic_concept{{refs.begin(), refs.end()}, data})
-	{ }
-
-	ref (r refs, std::any data = {})
-	: ref({refs}, data)
-	{ }
-
-	ref(basic_ref const & basic)
-	: basic_ref(basic)
-	{ }
+	ref (rs refs = {}, std::any data = {});
+	ref (r refs, std::any data = {});
+	ref(basic_ref const & basic);
 
 	template <class t>
 	t as() // this template annotation could be moved to a single subclass
@@ -68,9 +60,7 @@ public:
 		 // and this code would move to ref constructor.
 		return (t)((ref const *)this)->as<t>();
 	}
-
 	void verify_has(il<il<ref>> refs) const;
-
 	template <class t>
 	t const as() const
 	         // this template annotation could be moved to a single subclass
@@ -85,75 +75,22 @@ public:
 		return result;
 	}
 
-	ref & operator+=(rs refs)
-	{
-		(**this).refs.insert(refs.begin(), refs.end());
-		return *this;
-	}
+	ref & operator+=(rs refs);
+	ref & operator+=(r refs);
+	ref & operator-=(il<ref> refs);
+	ref & operator-=(ref refs);
 
-	ref & operator+=(r refs)
-	{
-		add(refs.first, refs.second);
-		return *this;
-	}
+	ref operator+(rs refs);
+	ref operator+(r refs);
 
-	ref & operator-=(il<ref> refs)
-	{
-		for (auto item : refs)
-		{
-			(*this) -= item;
-		}
-		return *this;
-	}
-	ref & operator-=(ref refs)
-	{
-		(**this).refs.erase(refs);
-		return *this;
-	}
-
-	ref operator+(il<std::pair<ref,ref>> refs)
-	{
-		ref result(refs);
-		result->refs.insert((**this).refs.begin(), (**this).refs.end());
-		return result;
-	}
-	ref operator+(std::pair<ref,ref> refs)
-	{
-		return (*this) + il<std::pair<ref,ref>>{refs};
-	}
-
-	ref operator-(il<ref> refs)
-	{
-		ref result = (*this) + il<std::pair<ref,ref>>{};
-		result -= refs;
-		return result;
-	}
-	ref operator-(ref refs)
-	{
-		return (*this) - il<ref>{refs};
-	}
+	ref operator-(il<ref> refs);
+	ref operator-(ref refs);
 
 	// sets only the passed refs
-	ref & operator<=(il<std::pair<ref,ref>> refs)
-	{
-		std::unordered_set<basic_ref> found;
-		for (auto item : refs)
-		{
-			if (!found.count(item.first)) {
-				set(item.first, item.second);
-				found.insert(item.first);
-			} else {
-				add(item.first, item.second);
-			}
-		}
-		return *this;
-	}
-	ref & operator<=(std::pair<ref,ref> refs)
-	{
-		return (*this) <= il<std::pair<ref,ref>>{refs};
-	}
+	ref & operator<=(il<std::pair<ref,ref>> refs);
+	ref & operator<=(std::pair<ref,ref> refs);
 
-	bool has_data() { return ((**this).data.has_value()); }
+	bool has_data();
 
 	template <typename t>
 	void data(t const & value)
@@ -222,6 +159,18 @@ basic_ref create(il<std::pair<basic_ref,basic_ref>> refs, std::any data)
 	return ref((il<std::pair<ref,ref>> &)refs, data);
 }
 
+ref::ref (rs refs, std::any data)
+: basic_ref(new basic_concept{{refs.begin(), refs.end()}, data})
+{ }
+
+ref::ref (r refs, std::any data)
+: ref({refs}, data)
+{ }
+
+ref::ref(basic_ref const & basic)
+: basic_ref(basic)
+{ }
+
 void ref::verify_has(il<il<ref>> refs) const
 {
 	std::unordered_set<unsigned long> links;
@@ -288,6 +237,74 @@ void ref::verify_has(il<il<ref>> refs) const
 	}
 }
 
+ref & ref::operator+=(rs refs)
+{
+	self->refs.insert(refs.begin(), refs.end());
+	return self;
+}
+
+ref & ref::operator+=(r refs)
+{
+	add(refs.first, refs.second);
+	return self;
+}
+
+ref & ref::operator-=(il<ref> refs)
+{
+	for (auto item : refs)
+	{
+		self -= item;
+	}
+	return self;
+}
+ref & ref::operator-=(ref refs)
+{
+	self->refs.erase(refs);
+	return self;
+}
+
+ref ref::operator+(rs refs)
+{
+	ref result(refs);
+	result->refs.insert(self->refs.begin(), self->refs.end());
+	return result;
+}
+ref ref::operator+(r refs)
+{
+	return self + rs{refs};
+}
+
+ref ref::operator-(il<ref> refs)
+{
+	ref result = self + rs{};
+	result -= refs;
+	return result;
+}
+ref ref::operator-(ref refs)
+{
+	return self - il<ref>{refs};
+}
+
+// sets only the passed refs
+ref & ref::operator<=(il<std::pair<ref,ref>> refs)
+{
+	std::unordered_set<basic_ref> found;
+	for (auto item : refs)
+	{
+		if (!found.count(item.first)) {
+			set(item.first, item.second);
+			found.insert(item.first);
+		} else {
+			add(item.first, item.second);
+		}
+	}
+	return *this;
+}
+ref & ref::operator<=(std::pair<ref,ref> refs)
+{
+	return self <= il<std::pair<ref,ref>>{refs};
+}
+
 template <>
 std::any & ref::data<std::any>()
 {
@@ -298,6 +315,11 @@ template <>
 std::any const & ref::data<std::any>() const
 {
 	return self->data;
+}
+
+bool ref::has_data()
+{
+	return data<std::any>().has_value();
 }
 
 ref::operator bool() const
