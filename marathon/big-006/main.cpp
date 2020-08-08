@@ -32,36 +32,6 @@ gen seq_gen({{sym::context},{sym::seq},[](ref ctx)
 		ctx.set(sym::state, element);
 	}});
 
-namespace sym
-{
-	symbol(habit_gen_use);
-	symbol(literal_gen_use);
-	symbol(variable_gen_use);
-	symbol(seq_option_gen_use);
-}
-
-// a step generator is a 'count'er where each digits place has a different base
-// it finds combinations between generator groups
-// but it does so in a certain procedure.
-// 	-> the habit decides the number of inputs and outputs
-// 	-> each input may be either literal or variable
-// 	-> each output is a variable
-// state would contain the current habit gen, and then gens for each input and output.
-gen step_gen({{sym::context},{sym::habit_gen_use, sym::literal_gen_use, sym::variable_gen_use, sym::seq_option_gen_use},[](ref ctx){
-		// stub
-	}},{{sym::step},{sym::habit_gen_use, sym::literal_gen_use, sym::variable_gen_use, sym::seq_option_gen_use},[](ref ctx){
-		// stub
-
-		// to meet goal quickly, propose select variables/literals
-		// naively for now, using existing tools.
-
-		// step generation can then simplify.
-		// variables and literals go in 1 big list
-		// and one is rpovided for each input/output
-
-		// this will make a numbered combination of 1 list
-	}});
-
 // might be sensical to have gen setup list its outputs and
 // preserve those, passing all to next context
 
@@ -145,6 +115,30 @@ gen forever_seq_gen({{sym::state},{sym::gen_use},[](ref ctx)
 			});
 		}
 		ctx.set(sym::seq, work);
+	}});
+
+namespace sym {
+	symbol(habit_gen_use);
+	symbol(parameter_gen_use);
+}
+
+// when get up, unplug from vehicle battery and plug vehicle battery into
+// solar. LATER
+
+// makes steps by combining parameters and habits
+gen step_gen({{sym::context},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
+		//ctx <= r{
+		//ctx[sym::habit_gen_use];
+		// stub
+	}},{{sym::step},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
+		// stub
+
+		// to meet goal quickly, propose select variables/literals
+		// naively for now, using existing tools.
+
+		// step generation can then simplify.
+		// variables and literals go in 1 big list
+		// and one is rpovided for each input/output
 	}});
 
 #include <iostream>
