@@ -10,11 +10,15 @@ namespace sym {
 	symbol(work);
 }
 
-gen seq_gen({{sym::state},{sym::seq},[](ref ctx)
+gen seq_gen({{sym::context},{sym::seq},[](ref ctx)
 	{
 		// setup from seq
 		seq list = ctx[sym::seq].as<seq>();
-		ctx <= r{sym::state, list.begin()};
+		ctx <= r{
+			sym::context, r{
+				sym::state, list.begin()
+			}
+		};
 
 	}},{{sym::what},{sym::state},[](ref ctx)
 	{
@@ -32,7 +36,7 @@ gen seq_gen({{sym::state},{sym::seq},[](ref ctx)
 // preserve those, passing all to next context
 
 // generates sequences of items from the provided sequence of gen_uses
-gen finite_combinations_gen({{sym::state, sym::work},{sym::seq},[](ref ctx)
+gen finite_combinations_gen({{sym::state},{sym::seq},[](ref ctx)
 	{
 		seq genuses = ctx[sym::seq].as<seq>();
 		seq result({});
@@ -41,10 +45,10 @@ gen finite_combinations_gen({{sym::state, sym::work},{sym::seq},[](ref ctx)
 			item.reset();
 			result += item.next();
 		}
-		ctx <= rs{
+		ctx.set(sym::state, rs{
 			{sym::state, genuses},
-			{sym::work, result}
-		};
+			{sym::work, result},
+		});
 	}},{{sym::seq},{sym::state, sym::work},[](ref ctx)
 	{
 		ref work = ctx[sym::work];
@@ -81,17 +85,17 @@ gen finite_combinations_gen({{sym::state, sym::work},{sym::seq},[](ref ctx)
 
 // generates infinite combinations from a single sequence, producing longer
 // and longer sequences
-gen forever_seq_gen({{sym::gen_use, sym::work},{sym::gen_use},[](ref ctx)
+gen forever_seq_gen({{sym::state},{sym::gen_use},[](ref ctx)
 	{
 		gen_use gen = ctx[sym::gen_use].as<gen_use>();
-		ctx <= rs{
+		ctx <= r{sym::state, rs{
 			{sym::gen_use, gen},
 			{sym::work, seq({
 				ref({
 					{sym::work, seq({})}
 				})
 			})}
-		};
+		}};
 	}},{{sym::seq},{sym::gen_use, sym::work},[](ref ctx)
 	{
 		seq states = ctx[sym::work].as<seq>();
@@ -120,15 +124,15 @@ namespace sym {
 
 // makes steps by combining parameters and habits
 // 	make a finite_combination_gen for the outputs and inputs
-gen step_gen({{sym::habit_gen_use,sym::parameter_gen_use},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
+gen step_gen({{sym::context},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
 		gen_use habitgen = ctx[sym::habit_gen_use].as<gen_use>();
 		ref firsthabit = habitgen.next();
-		ctx <= rs{
+		ctx <= r{ sym::context, rs{
 			{sym::habit_gen_use, ctx[sym::habit_gen_use]},
 			{sym::parameter_gen_use, ctx[sym::parameter_gen_use]},
 			//{sym::habit, 
 		//ctx[sym::habit_gen_use];
-		};
+		}};
 		// stub
 	}},{{sym::step},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
 		// stub

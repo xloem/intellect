@@ -36,19 +36,32 @@ public:
 	})
 	{ }
 
-	// start could return an iterable
+	// start could return an iterable?
 	ref start_with_ctx(ref ctx)
 	{
 		verify_has(assumes_has<gen>);
 		cxxhabit setup = self[sym::setup].as<cxxhabit>();
 		setup.call_with_ctx(ctx);
-		return ctx[setup.output()];
+		ref result;
+		for (auto output : setup[sym::outputs].as<seq>()) {
+			while (ref item = ctx.take(output)) {
+				result.add(output, item);
+			}
+		}
+		return result;
 	}
 	ref start(il<ref> inputs)
 	{
 		verify_has(assumes_has<gen>);
 		cxxhabit setup = self[sym::setup].as<cxxhabit>();
-		return setup(inputs);
+		ref ctx = setup.call_making_ctx(inputs);
+		ref result;
+		for (auto output : setup.get(sym::outputs).as<seq>()) {
+			while (ref item = ctx.take(output)) {
+				result.add(output, item);
+			}
+		}
+		return result;
 	}
 
 	ref next(ref ctx)
@@ -76,6 +89,10 @@ public:
 		{sym::gen, generator},
 		{sym::state, generator.start_with_ctx(ctx)}
 	})
+	{ }
+
+	gen_use(gen generator, il<ref> inputs)
+	: gen_use(generator, generator[sym::setup].as<cxxhabit>().ctx_from_inputs(inputs))
 	{ }
 
 	gen_use make_new() const
