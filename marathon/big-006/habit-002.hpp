@@ -86,15 +86,37 @@ public:
 	}
 };
 
+// BUG noted, bumped into: constructors don't verify, so typecasts don't verify
+// closest solution is calling as<> in copy constructor
+
 struct step : public ref
 {
-	step(il<ref> outputs, il<ref> inputs, ref what)
+	step(il<ref> outputs, il<ref> inputs, cxxhabit what)
 	: ref({
 		{sym::outputs, seq(outputs)},
 		{sym::inputs, seq(inputs)},
-		{sym::what, seq(what)}
+		{sym::what, what}
 	})
 	{ }
+	step(seq outputs_then_inputs, cxxhabit what)
+	{
+		seq outputs({});
+		seq inputs({});
+		iterator output_iterator = what[sym::outputs].as<seq>().begin();
+		for (ref parameter : outputs_then_inputs) {
+			if (output_iterator) {
+				outputs += parameter;
+				++ output_iterator;
+			} else {
+				inputs += parameter;
+			}
+		}
+		self <= rs{
+			{sym::outputs, outputs},
+			{sym::inputs, inputs},
+			{sym::what, what}
+		};
+	}
 };
 
 namespace sym

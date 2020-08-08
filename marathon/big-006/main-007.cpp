@@ -127,38 +127,54 @@ gen step_gen({{sym::habit_gen_use,sym::parameter_gen_use,sym::work},{sym::habit_
 		cxxhabit habit = habit_gen.next().as<cxxhabit>();
 		// could make constructor to seq that maps a habit over another seq
 		seq parameter_gens({});
-		for (ref input : habit[sym::inputs].as<seq>()) {
-			parameter_gens += parameter_gen.make_new();
-		}
 		for (ref output : habit[sym::outputs].as<seq>()) {
 			parameter_gens += parameter_gen.make_new();
 		}
-	
-		seq parameters({});
-		for (ref genref : parameter_gens) {
-			gen_use gen = genref.as<gen_use>();
-			parameters += gen.next();
+		for (ref input : habit[sym::inputs].as<seq>()) {
+			parameter_gens += parameter_gen.make_new();
 		}
+		gen_use habit_parameter_gen(finite_combinations_gen, parameter_gens);
 	
 		ctx <= rs{
 			{sym::habit_gen_use, habit_gen},
 			{sym::parameter_gen_use, parameter_gen},
 			{sym::state, rs{
 				{sym::habit, habit},
-				{sym::gen, parameter_gens}
-			}},
-			{sym::habit, habit},
-			{sym::seq, parameters}
+				{sym::gen, habit_parameter_gen}
+			}}//,
+			//{sym::habit, habit},
+			//{sym::seq, parameters}
 		};
-	}},{{sym::step},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
-		// stub
-
-		// to meet goal quickly, propose select variables/literals
-		// naively for now, using existing tools.
-
-		// step generation can then simplify.
-		// variables and literals go in 1 big list
-		// and one is rpovided for each input/output
+	}},{{sym::step},{sym::habit_gen_use, sym::parameter_gen_use, sym::state},[](ref ctx){
+		ref state = ctx[sym::state];
+		ref refhabit = state[sym::habit];
+		if (!refhabit) {
+			return;
+		}
+		cxxhabit habit = refhabit.as<cxxhabit>();
+		gen_use habit_parameter_gen = state[sym::gen].as<gen_use>();
+		seq parameters = habit_parameter_gen.next().as<seq>();
+		if (!parameters) {
+			gen_use habit_gen_use = ctx[sym::habit_gen_use].as<gen_use>();
+			habit = habit_gen_use.next().as<cxxhabit>();
+			state <= r{sym::habit, habit};
+			if (!habit) {
+				ctx <= r{sym::step, sym::nothing};
+				return;
+			}
+			gen_use parameter_gen = ctx[sym::parameter_gen_use].as<gen_use>();
+			seq parameter_gens({});
+			for (ref output : habit[sym::outputs].as<seq>()) {
+				parameter_gens += parameter_gen.make_new();
+			}
+			for (ref input : habit[sym::inputs].as<seq>()) {
+				parameter_gens += parameter_gen.make_new();
+			}
+			habit_parameter_gen = gen_use(finite_combinations_gen, parameter_gens);
+			state <= r{sym::gen, habit_parameter_gen};
+			parameters = habit_parameter_gen.next().as<seq>();
+		}
+		ctx <= r{sym::step, step(parameters, habit)};
 	}});
 
 #include <iostream>
