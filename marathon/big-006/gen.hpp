@@ -16,6 +16,12 @@ il<il<ref>> assumes_has<gen> = {
 	{sym::next}
 };
 
+// note: generators would be simpler if the outputs of setup were copied to the
+//       input context of next by name.  many setups might not even need a name
+// note: it would be nice if next could re-call setup.  could use a special symbol
+//       to reference the gen itself in the context (like symbol::gen).  might expand
+//       to simplifcation of state data, unsure.
+
 // a generator of values.  has a setup and a next method.
 class gen : public ref
 {

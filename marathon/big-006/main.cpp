@@ -122,13 +122,17 @@ namespace sym {
 	symbol(parameter_gen_use);
 }
 
-// when get up, unplug from vehicle battery and plug vehicle battery into
-// solar. LATER
-
 // makes steps by combining parameters and habits
+// 	make a finite_combination_gen for the outputs and inputs
 gen step_gen({{sym::context},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
-		//ctx <= r{
+		gen_use habitgen = ctx[sym::habit_gen_use].as<gen_use>();
+		ref firsthabit = habitgen.next();
+		ctx <= r{ sym::context, rs{
+			{sym::habit_gen_use, ctx[sym::habit_gen_use]},
+			{sym::parameter_gen_use, ctx[sym::parameter_gen_use]},
+			//{sym::habit, 
 		//ctx[sym::habit_gen_use];
+		}};
 		// stub
 	}},{{sym::step},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
 		// stub
