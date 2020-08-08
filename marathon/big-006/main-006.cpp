@@ -118,7 +118,7 @@ namespace sym {
 	symbol(parameter_gen_use);
 }
 
-// makes steps by combining parameters and habits
+// make steps by combining parameters and habits
 // 	make a finite_combination_gen for the outputs and inputs
 gen step_gen({{sym::habit_gen_use,sym::parameter_gen_use},{sym::habit_gen_use, sym::parameter_gen_use},[](ref ctx){
 		gen_use habitgen = ctx[sym::habit_gen_use].as<gen_use>();

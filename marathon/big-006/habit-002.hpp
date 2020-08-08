@@ -2,6 +2,7 @@
 #include "ref.hpp"
 #include "text.hpp"
 #include "var.hpp"
+#include "seq.hpp"
 
 #define self (*this)
 
