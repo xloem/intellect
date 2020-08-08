@@ -16,13 +16,20 @@ gen seq_gen({{sym::state},{sym::seq},[](ref ctx)
 	}},{{sym::what},{sym::state},[](ref ctx)
 	{
 		// get next from seq
-		iterator<ref> element = ctx[sym::state].as<iterator<ref>>();
 
-		act::set({ctx, sym::what, *element});
-		//ctx.set(sym::what, *element);
+		// boilerplate prolog
+		iterator<ref> state = ctx[sym::state].as<iterator<ref>>();
 
-		++ element;
+		// 2 calls.  {'what' and 'next' are relevent to sym::state being an iterator}
 
+		ref what = act::get({state, sym::what});
+		//ctx.set(sym::what, *state);
+
+		//++ state;
+		state = act::get({state, sym::next});
+
+		// boilerplate epilog
 		//ctx.set(sym::state, element);
-		act::set({ctx, sym::state, element});
+		act::set({ctx, sym::state, state});
+		act::set({ctx, sym::what, what});
 	}});

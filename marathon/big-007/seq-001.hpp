@@ -12,6 +12,7 @@ namespace sym {
 	symbol(previous);
 	symbol(first);
 	symbol(last);
+	symbol(iterator);
 }
 
 template <class t = ref> // iterators are templated to build a little towards seqs being templated

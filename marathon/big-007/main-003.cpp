@@ -283,7 +283,7 @@ int main()
 	});
 
 	stephabit readwrite({word},{},{
-		{{},{text("enter a word, 'done' to stop:\n")}, write},
+		{{},{text("enter a word, 'q' to stop:\n")}, write},
 		{{word},{}, read},
 		{{},{text{"you entered: "}}, write},
 		{{},{word}, write},
@@ -302,7 +302,7 @@ int main()
 
 		text input = readwrite({});
 		std::cout << input.data() << std::endl;
-		if (input.data() == "done") { break; }
+		if (input.data() == "q") { break; }
 	}
 
 }
