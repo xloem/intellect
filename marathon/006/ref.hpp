@@ -49,6 +49,10 @@ public:
 	: basic_ref(new basic_concept{{refs.begin(), refs.end()}, data})
 	{ }
 
+	ref (r refs, std::any data = {})
+	: ref({refs}, data)
+	{ }
+
 	ref(basic_ref const & basic)
 	: basic_ref(basic)
 	{ }

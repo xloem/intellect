@@ -14,17 +14,29 @@ gen seq_gen({{sym::context},{sym::seq},[](ref ctx)
 	{
 		// setup from seq
 		seq list = ctx[sym::seq].as<seq>();
-		ctx.set(sym::context, ref({{sym::state, list.begin()}}));
+		ctx <= r{
+			sym::context, r{
+				sym::state, list.begin()
+			}
+		};
 
 	}},{{sym::what},{sym::state},[](ref ctx)
 	{
 		// get next from seq
 		iterator element = ctx[sym::state].as<iterator>();
+
 		ctx.set(sym::what, *element);
+
 		++ element;
+
 		ctx.set(sym::state, element);
 	}});
 
+// gen instance different from gen
+//gen forever_gen({{sym::context},{sym::gen
+
+// this is a combination generator i suppose
+// it produces combinations of what is generated in arbitrary length
 namespace enumeration {
 	symbol(states);
 	
@@ -36,7 +48,6 @@ namespace enumeration {
 			{sym::options, options},
 			{enumeration::states, seq({
 				ref({
-		//			{sym::state, generator.setup(options)},
 					{sym::work, seq({})}
 				})
 			})}
@@ -52,11 +63,14 @@ namespace enumeration {
 		//ref options = ctxstate[sym::options]();
 
 		// gens could be iterable
-		gen generator = ctxstate[sym::gen].as<gen>();
-		ref genstate = generator.start({ctxstate[sym::options]});
+		//gen generator = ctxstate[sym::gen].as<gen>();
+		//ref genstate = generator.start({ctxstate[sym::options]});
+		gen_use generator(
+				ctxstate[sym::gen].as<gen>(),
+				r{sym::seq, ctxstate[sym::options]});
 
 		ref option;
-		while ( (option = generator.next(genstate)) ) {
+		while ( (option = generator.next(/*genstate*/)) ) {
 			seq next_work = work.clone();
 			next_work += option;
 			states += ref({
