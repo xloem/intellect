@@ -13,6 +13,7 @@ namespace sym {
 	symbol(actually_present);
 	symbol(actually_absent);
 	symbol(actually_is);
+	symbol(actually_has_to);
 }
 
 template <typename t>

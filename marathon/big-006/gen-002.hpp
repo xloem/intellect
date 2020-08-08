@@ -5,6 +5,7 @@
 
 namespace sym {
 	symbol(gen);
+	symbol(gen_use);
 	symbol(setup);
 }
 
@@ -51,18 +52,40 @@ public:
 	}
 };
 
-class gen_use : public gen
+class gen_use; template<>
+il<il<ref>> assumes_has<gen_use> = {
+	{sym::is, sym::gen_use},
+	{sym::state},
+	{sym::gen}
+};
+
+class gen_use : public ref
 {
 public:
 	gen_use(gen generator, ref ctx)
-	: gen(generator)
+	: ref({
+		{sym::is, sym::gen_use},
+		{sym::context, ctx},
+		{sym::gen, generator},
+		{sym::state, generator.start_with_ctx(ctx)}
+	})
+	{ }
+
+	gen_use make_new() const
 	{
-		self <= r{sym::state, gen::start_with_ctx(ctx)};
-		// if inhibited you can always restart
+		return {self[sym::gen].as<gen>(), self[sym::context]};
+	}
+
+	void reset()
+	{
+		gen generator = self[sym::gen].as<gen>();
+		ref state = generator.start_with_ctx(self[sym::context]);
+		self <= r{sym::state, state};
 	}
 
 	ref next()
 	{
-		return gen::next(self[sym::state]);
+		gen generator = self[sym::gen].as<gen>();
+		return generator.next(self[sym::state]);
 	}
 };

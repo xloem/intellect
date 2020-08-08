@@ -33,60 +33,37 @@ gen seq_gen({{sym::context},{sym::seq},[](ref ctx)
 	}});
 
 // gen instance different from gen
-//gen forever_gen({{sym::context},{sym::gen
-
-// this is a combination generator i suppose
-// it produces combinations of what is generated in arbitrary length
-namespace enumeration {
-	symbol(states);
-	
-	cxxhabit start({sym::state},{sym::gen,sym::options},[](ref ctx){
-		gen generator = ctx[sym::gen].as<gen>();
-		ref options = ctx[sym::options];
-		ctx.set(sym::state, ref({
-			{sym::gen, generator},
-			{sym::options, options},
-			{enumeration::states, seq({
+gen forever_seq_gen({{sym::state},{sym::gen_use},[](ref ctx)
+	{
+		gen_use gen = ctx[sym::gen_use].as<gen_use>();
+		ctx <= r{sym::state, rs{
+			{sym::gen_use, gen},
+			{sym::work, seq({
 				ref({
 					{sym::work, seq({})}
 				})
 			})}
-		}));
-	});
-
-	cxxhabit pop_and_append({sym::work},{sym::state},[](ref ctx){
-		ref ctxstate = ctx[sym::state];
-		seq states = ctxstate[enumeration::states].as<seq>();
+		}};
+	}},{{sym::seq},{sym::gen_use, sym::work},[](ref ctx)
+	{
+		seq states = ctx[sym::work].as<seq>();
 
 		ref state = states.pop_front();
 		seq work = state[sym::work].as<seq>();
-		//ref options = ctxstate[sym::options]();
 
-		gen_use generator(
-				ctxstate[sym::gen].as<gen>(),
-				r{sym::seq, ctxstate[sym::options]});
+		gen_use generator = ctx[sym::gen_use].as<gen_use>();
+		generator.reset();
 
 		ref option;
-		while ( (option = generator.next(/*genstate*/)) ) {
+		while ( (option = generator.next()) ) {
 			seq next_work = work.clone();
 			next_work += option;
 			states += ref({
 				{sym::work, next_work}
 			});
 		}
-
-		/*for (ref option : options) {
-			seq next_work = work.clone();
-			next_work += option;
-			states += ref({
-				{sym::options, options},
-				{sym::work, next_work}
-			});
-		}*/
-		ctx.set(sym::work, work);
-	});
-
-}
+		ctx.set(sym::seq, work);
+	}});
 
 #include <iostream>
 int main()
@@ -112,11 +89,16 @@ int main()
 
 	printlist({list});
 
-	ref state = enumeration::start({seq_gen, list});
+	//ref state = enumeration::start({seq_gen, list});
+	gen_use gen(forever_seq_gen, r{
+		sym::gen_use, gen_use(seq_gen, r{
+			sym::seq, list
+		})
+	});
 
 	//while (state[enumeration::states].as<seq>().size() < 64) {//states.size() < 16) {
 	for (unsigned long i = 0; i < 16; ++ i) {
-		ref work = enumeration::pop_and_append({state});
+		ref work = gen.next();//enumeration::pop_and_append({state});
 		printlist({work});
 	}
 
