@@ -200,12 +200,12 @@ int main()
 			} else {
 				std::cout << ",";
 			}
-			std::cout << item.data<std::string>();
+			std::cout << dump(item,false);
 		}
-		std::cout << std::endl;
 	});
 
 	printlist({list});
+	std::cout << std::endl;
 
 
 	//ref state = enumeration::start({seq_gen, list});
@@ -219,6 +219,7 @@ int main()
 	for (unsigned long i = 0; i < 16; ++ i) {
 		ref work = gen.next();//enumeration::pop_and_append({state});
 		printlist({work});
+		std::cout << std::endl;
 	}
 
 	gen_use gen2(finite_combinations_gen,
@@ -231,6 +232,7 @@ int main()
 
 	while (ref work = gen2.next()) {
 		printlist({work});
+		std::cout << std::endl;
 	}
 
 	std::cout << dump(list) << std::endl;
@@ -251,38 +253,41 @@ int main()
 	text space(" ");
 	text endl("\n");
 
+	symbol(word);
 	seq words({
 		space,
 		endl,
 		text("hello"),
 		text("world"),
 		text("enter a word"),
-		text("you entered:")
+		text("you entered:"),
+		var(word)
 	});
+
+	// it coudl be good to be able to display steps before creating them
 
 	seq actions({
 		write,
 		read
 	});
 
+	cxxhabit printsteps({},{sym::steps},[&](ref ctx)
+	{
+		stephabit steps = ctx[sym::steps].as<stephabit>();
 
-	symbol(word);
-	seq variables({
-		var(word)
+		std::cout << dump(steps, false) << ":" << std::endl;
+		for (ref step : steps[sym::what].as<seq>()) {
+			std::cout << "  ";
+			seq outputs = step[sym::outputs].as<seq>();
+			if (outputs.size()) {
+				printlist({step[sym::outputs]});
+				std::cout << " = " ;
+			}
+			std::cout << dump(step[sym::what], false) << "(";
+			printlist({step[sym::inputs]});
+			std::cout << ")" << std::endl;
+		}
 	});
-
-	// each step is made of an action,
-	// and then each input or output is made of either a word or a variable
-	
-	// the combinations of the above are what we want to pick among
-	
-	/*
-	ref action_enumeration = enumeration::start({actions});
-
-	while (true) {
-		ref action = action_enumeration.
-	}
-	*/
 
 	stephabit helloworld({},{},{
 		{{},{text("hello")}, write},
@@ -302,4 +307,6 @@ int main()
 	helloworld({});
 	readwrite({});
 
+	printsteps({helloworld});
+	printsteps({readwrite});
 }
