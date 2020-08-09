@@ -314,7 +314,7 @@ int main()
 		printsteps({a_habit});
 		text input = readwrite({});
 		std::cout << input.data() << std::endl;
-		if (input.data() == "q") {
+		if (input.data() == "q" || !input) {
 			ctx.wipe(sym::what);
 		} else {
 			ctx.set(sym::what, sym::is);
@@ -326,7 +326,10 @@ int main()
 		{{var(sym::what)}, {sym::is}, setvar},
 		{{},{var(sym::what)}, write},
 		{{},{endl}, write},
-		{{},{var(sym::what),seq({step({},{},loopbody)})},act::whilesteps}
+		{{},{var(sym::what),seq({
+			// output from loopbody was discarded
+			step({sym::what},{},loopbody)
+		})},act::whilesteps}
 	});
 
 	mainloop({});
