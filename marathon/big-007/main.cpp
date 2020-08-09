@@ -123,11 +123,14 @@ gen step_gen({{sym::habit_gen_use,sym::parameter_gen_use,sym::state},{sym::habit
 			//{sym::seq, parameters}
 		};
 	}},{{sym::step},{sym::habit_gen_use, sym::parameter_gen_use, sym::state},[](ref ctx){
+		// prolog
 		ref state = ctx[sym::state];
 		ref refhabit = state[sym::habit];
+
 		if (!refhabit) {
-			return;
+			return; // control flow.
 		}
+
 		cxxhabit habit = refhabit.as<cxxhabit>();
 		gen_use habit_parameter_gen = state[sym::gen].as<gen_use>();
 		ref parametersref = habit_parameter_gen.next();
@@ -290,6 +293,8 @@ int main()
 		{{},{endl}, write}
 	});
 
+	// let's make the loop be a stephabit.
+	// it will need a way to break.
 	stephabit readwrite({word},{},{
 		{{},{text("enter a word, 'q' to stop:\n")}, write},
 		{{word},{}, read},
@@ -303,14 +308,35 @@ int main()
 
 	helloworld({});
 
-	while (true) {
+	cxxhabit loopbody({sym::what},{},[&](ref ctx)
+	{
 		stephabit a_habit({},{},habit_gen.next().as<seq>());
-
 		printsteps({a_habit});
-
 		text input = readwrite({});
 		std::cout << input.data() << std::endl;
-		if (input.data() == "q") { break; }
+		if (input.data() == "q") {
+			ctx.wipe(sym::what);
+		} else {
+			ctx.set(sym::what, sym::is);
+		}
+	});
+	cxxhabit setvar({sym::what},{sym::what},[](ref ctx){});
+
+	stephabit mainloop({},{},{
+		{{var(sym::what)}, {sym::is}, setvar},
+		{{},{var(sym::what)}, write},
+		{{},{endl}, write},
+		{{},{var(sym::what),seq({step({},{},loopbody)})},act::whilesteps}
+	});
+
+	mainloop({});
+	/*
+	while (true) {
+			// makes a habit
+			 		// passing a step list
+
+
 	}
+	*/
 
 }

@@ -98,14 +98,6 @@ struct step : public ref
 		{sym::what, what}
 	})
 	{ }
-	step(ref label, il<ref> outputs, il<ref> inputs, cxxhabit what)
-	: ref({
-		{sym::text, label},
-		{sym::outputs, seq(outputs)},
-		{sym::inputs, seq(inputs)},
-		{sym::what, what}
-	})
-	{ }
 	step(seq outputs_then_inputs, cxxhabit what)
 	{
 		seq outputs({});
@@ -125,13 +117,6 @@ struct step : public ref
 			{sym::what, what}
 		};
 	}
-	step(ref label, seq outputs_then_inputs, cxxhabit what)
-	: step(outputs_then_inputs, what)
-	{
-		if (label) {
-			set(sym::text, label);
-		}
-	}
 };
 
 namespace sym
@@ -143,15 +128,6 @@ namespace sym
 	symbol(outer);
 	symbol(step_context);
 }
-
-// how to loop in stephabits
-// only matters at compiletime, where things are made with constructors.
-// one way is to add a link to the habit entry, to the step.
-// then you can walk that link to loop to it, after predeclaring it.
-// 	another way is to label each step, and go to the label, which sounds better.
-// 	but how do you go to the label?  [you'd need to mutate the label into the
-// 	step .. in the way you go-to.  you could have variables be lines.]
-// 		=S  is fine for now for variables to be lines
 
 namespace act
 {
@@ -170,11 +146,10 @@ namespace act
 	});
 
 	// run a single step in a set-up context
-	cxxhabit steps_next = cxxhabit({sym::outputs, sym::step, sym::next}, {sym::state}, [](ref outer_ctx) {
+	cxxhabit steps_next = cxxhabit({sym::outputs, sym::next}, {sym::state}, [](ref outer_ctx) {
 		ref state = outer_ctx[sym::state];
 		ref ctx = state[sym::context];
 		iterator<ref> step_entry = state[sym::step].as<iterator<ref>>();
-		outer_ctx.set(sym::step, step_entry);
 		outer_ctx.set(sym::next, step_entry[sym::next]);
 		ref step = *step_entry;
 
@@ -258,8 +233,6 @@ struct stephabit : public cxxhabit
 	stephabit(il<text> outputs, il<text> inputs, seq steps = {{}})
 	: cxxhabit(outputs, inputs, [this](ref ctx){
 		if (ctx[sym::steps]) {
-			// a better solution here is to pass ctx to steps_run inside another
-			// object.
 			throw exception({
 				//{sym::during, sym::stephabit},
 				//{sym::within, ctx},
@@ -272,24 +245,5 @@ struct stephabit : public cxxhabit
 	})
 	{
 		set(sym::what, steps);
-
-		// below code mutates step labels to the steps they label,
-		// in inputs to function calls.
-		ref labels;
-		for (auto step = steps.begin(); step != steps.end(); ++ step) {
-			auto label = (*step)[sym::text];
-			if (label) {
-				labels.set(label, step);
-			}
-		}
-		for (auto step : steps) {
-			seq inputs = step[sym::inputs].as<seq>();
-			for (auto input = inputs.begin(); input != inputs.end(); ++ input) {
-				auto destination = labels[*input];
-				if (destination) {
-					input.set(sym::what, destination);
-				}
-			}
-		}
 	}
 };
