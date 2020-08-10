@@ -170,10 +170,6 @@ ref::ref (r refs, std::any data)
 : ref({refs}, data)
 { }
 
-ref::ref(basic_ref const & basic)
-: basic_ref(basic)
-{ }
-
 ref ref::clone()
 {
 	ref result;

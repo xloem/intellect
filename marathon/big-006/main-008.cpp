@@ -297,6 +297,11 @@ int main()
 	gen_use single_step_gen(step_gen, {actions_gen, words_gen});
 	gen_use habit_gen(forever_seq_gen, {single_step_gen});
 
+	// below line is stored to aid memorization
+	r("made another stupid error.  noting: mind control is real
+	 and is severely influencing society.  there is public proof
+	 of this; we are simply mind controlled to ignore it.");
+
 	stephabit helloworld({},{},{
 		{{},{text("hello")}, write},
 		{{},{space}, write},

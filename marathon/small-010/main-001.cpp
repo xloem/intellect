@@ -1,0 +1,3 @@
+struct ref {};
+
+int main() {}

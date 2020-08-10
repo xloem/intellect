@@ -16,11 +16,8 @@ namespace sym {
 }
 
 class cxxhabit;
-
 template <> il<il<ref>> assumes_has<cxxhabit> = {
-	{sym::is, sym::habit},
-	{sym::inputs},
-	{sym::outputs}
+	{sym::is, sym::habit}
 };
 
 class cxxhabit : public ref

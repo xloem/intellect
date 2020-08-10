@@ -5,31 +5,31 @@
 
 #define self (*this)
 
+class gen;
+
 namespace sym {
 	symbol(gen);
 	symbol(gen_use);
 	symbol(setup);
 }
 
-class gen; template<>
-il<il<ref>> assumes_has<gen> = {
+template<> il<il<ref>> assumes_has<gen> = {
 	{sym::is, sym::gen},
 	{sym::setup},
 	{sym::next}
 };
 
-// note: generators would be simpler if the outputs of setup were copied to the
-//       input context of next by name.  many setups might not even need a name
 // note: it would be nice if next could re-call setup.  could use a special symbol
 //       to reference the gen itself in the context (like symbol::gen).  might expand
 //       to simplifcation of state data, unsure.
+//       	maybe habit outer context could hold this?
+//       	or a self symbol?
 
 // a generator of values.  has a setup and a next method.
 class gen : public ref
 {
 public:
-	// setup's first output is the context that is repeatedly passed to generate
-	// MAYBE TODO: setup's outputs are copied into the context passed to next
+	// setup's outputs are copied into the context passed to next
 	gen(cxxhabit setup, cxxhabit next)
 	: ref({
 		{sym::is, sym::gen},
