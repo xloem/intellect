@@ -322,24 +322,17 @@ int main()
 	});
 	cxxhabit setvar({sym::what},{sym::what},[](ref ctx){});
 
-	stephabit mainloop({},{},{
+	/*stephabit mainloop({},{},{
 		{{var(sym::what)}, {sym::is}, setvar},
 		{{},{var(sym::what)}, write},
 		{{},{endl}, write},
 		{{},{var(sym::what),seq({
-			// output from loopbody was discarded
-			step({sym::what},{},loopbody)
+			step({sym::what},{},loopbody),
+			step({},{sym::what},write)
 		})},act::whilesteps}
 	});
 
-	mainloop({});
-	/*
-	while (true) {
-			// makes a habit
-			 		// passing a step list
-
-
-	}
-	*/
+	mainloop({});*/
+	while (loopbody({}));
 
 }
