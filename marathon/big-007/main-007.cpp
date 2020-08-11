@@ -326,7 +326,7 @@ int main()
 		{{var(sym::what)}, {sym::is}, setvar},
 		{{},{var(sym::what)}, write},
 		{{},{endl}, write},
-		{{},{var(sym::what),seq({
+		{{var(sym::what)},{var(sym::what),seq({ // todo? change whilesteps to not rely on outer context, or to copy outer context in fully
 			step({sym::what},{},loopbody),
 			step({},{sym::what},write)
 		})},act::whilesteps}

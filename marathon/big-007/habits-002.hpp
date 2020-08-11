@@ -37,7 +37,7 @@ namespace act {
 		}
 	});
 
-	cxxhabit whilesteps({},{sym::what,sym::steps/*seq*/},[](ref ctx)
+	cxxhabit whilesteps_gimmick({sym::what},{sym::what,sym::steps/*seq*/},[](ref ctx)
 	{
 		ref what = ctx[sym::what];
 		seq steps = ctx[sym::steps].as<seq>();
