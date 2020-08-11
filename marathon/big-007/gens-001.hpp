@@ -26,7 +26,7 @@ gen seq_gen({{sym::state},{sym::seq},[](ref ctx)
 		ref what = act::get({state, sym::what});
 
 		//++ state;
-		state = act::get({state, sym::next}); // common thing to do to an iterator
+		state = act::get({state, sym::next}).as<iterator<ref>>(); // common thing to do to an iterator
 
 		// boilerplate epilog
 		act::set({ctx, sym::state, state});

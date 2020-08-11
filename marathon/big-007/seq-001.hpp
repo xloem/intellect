@@ -18,11 +18,10 @@ namespace sym {
 template <class t = ref> // iterators are templated to build a little towards seqs being templated
 class iterator : public ref {
 public:
-	using ref::ref;
-
 	iterator & operator++()
 	{
-		return *this = ref::get(sym::next);
+		*(ref*)this = ref::get(sym::next);
+		return *this;
 	}
 
 	t operator*()
@@ -154,11 +153,11 @@ public:
 
 	iterator<ref> begin() const // this is const because iterator returns a copy
 	{
-		return this->get(sym::first);
+		return this->get(sym::first).as<iterator<ref>>();
 	}
 
 	iterator<ref> end() const // const because iterator returns a copy
 	{
-		return iterator<ref>(sym::nothing);
+		return sym::nothing.as<iterator<ref>>();
 	}
 };

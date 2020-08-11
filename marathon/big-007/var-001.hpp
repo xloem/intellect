@@ -17,7 +17,7 @@ struct var : public text
 	{
 		set(sym::variable);
 	}
-	var(basic_ref symb0l)
+	var(ref symb0l)
 	: text(symb0l)
 	{
 		if (!get(sym::variable)) {

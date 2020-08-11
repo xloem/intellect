@@ -6,15 +6,16 @@ class seq;
 
 char const * dump(ref what) __attribute__((warn_unused_result));
 
-char const * dump_ex(ref what, bool contents, std::string indentation = "") __attribute__((warn_unused_result));
+char const * dump_ex(ref what, bool contents, std::string indentation = "", bool reset = false) __attribute__((warn_unused_result));
 // see below, no specialization yet
 //char const * dump(seq what, bool contents) __attribute__((warn_unused_result));
 
-char const * dump_ex(ref what, bool contents, std::string indentation)
+char const * dump_ex(ref what, bool contents, std::string indentation, bool reset)
 {
 	static thread_local std::string storage;
 	static thread_local unsigned long long id = 0;
 	static thread_local std::unordered_map<basic_ref, std::string> found;
+	if (reset) { found.clear();}
 	std::string result;
 	if (found.count(what)) {
 		result = found[what];

@@ -29,7 +29,6 @@ class ref : public basic_ref
 public:
 	ref(rs refs = {}, std::any data = {});
 	ref(r refs, std::any data = {});
-	ref(basic_ref const & basic);
 
 	ref clone();
 
@@ -168,10 +167,6 @@ ref::ref (rs refs, std::any data)
 
 ref::ref (r refs, std::any data)
 : ref({refs}, data)
-{ }
-
-ref::ref(basic_ref const & basic)
-: basic_ref(basic)
 { }
 
 ref ref::clone()

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ref.hpp"
+
 namespace sym
 {
 	symbol(text);
@@ -23,7 +25,7 @@ struct text : public ref
 			*this = ref({{sym::is,sym::text}}, data);
 		}
 	}
-	text(basic_ref symb0l)
+	text(ref symb0l)
 	: ref(symb0l)
 	{
 		this->set(sym::is,sym::text);
