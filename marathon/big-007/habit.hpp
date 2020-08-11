@@ -1,7 +1,7 @@
 #pragma once
 #include "ref.hpp"
 #include "text.hpp"
-#include "var.hpp"
+#include "lit.hpp"
 #include "seq.hpp"
 
 #define self (*this)
@@ -192,7 +192,9 @@ namespace act
 		for (ref input : inputs) {
 			if (habit_input == habit_inputs.end()) { break; }
 			ref value = input;
-			if (value[sym::variable]) {
+			if (value[sym::literal]) {
+				value = value.as<lit>().get();
+			} else {
 				value = ctx[value];
 			}
 			subcontext <= r{*habit_input, value};
@@ -208,7 +210,9 @@ namespace act
 		for (ref output : outputs) {
 			if (habit_output == habit_outputs.end()) { break; }
 			ref value = *habit_output;
-			if (value[sym::variable]) {
+			if (value[sym::literal]) {
+				value = value.as<lit>().get();
+			} else {
 				value = subcontext[value];
 			}
 			ctx <= r{output, value};

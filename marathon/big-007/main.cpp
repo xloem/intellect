@@ -233,7 +233,7 @@ int main()
 	});
 
 	// default-to-literal inefficient
-	cxxhabit read({var(sym::text)},{},[](ref context)
+	cxxhabit read({sym::text},{},[](ref context)
 	{
 		std::string word;
 		std::cin >> word;
@@ -266,13 +266,13 @@ int main()
 
 	symbol(word);
 	seq words({
-		space,
-		endl,
-		text("hello"),
-		text("world"),
-		text("enter a word"),
-		text("you entered:"),
-		var(word)
+		lit(space),
+		lit(endl),
+		lit(text("hello")),
+		lit(text("world")),
+		lit(text("enter a word")),
+		lit(text("you entered:")),
+		word
 	});
 
 	seq actions({
@@ -323,13 +323,13 @@ int main()
 	cxxhabit setvar({sym::what},{sym::what},[](ref ctx){});
 
 	stephabit mainloop({},{},{
-		{{var(sym::what)}, {sym::is}, setvar},
-		{{},{var(sym::what)}, write},
+		{{sym::what}, {sym::is}, setvar},
+		{{},{sym::what}, write},
 		{{},{endl}, write},
-		{{var(sym::what)},{var(sym::what),seq({ // todo? change whilesteps to not rely on outer context, or to copy outer context in fully
+		{{sym::what},{sym::what,lit(seq({ // todo? change whilesteps to not rely on outer context, or to copy outer context in fully
 			step({sym::what},{},loopbody),
 			step({},{sym::what},write)
-		})},act::whilesteps_gimmick}
+		}))},act::whilesteps_gimmick}
 	});
 
 	mainloop({});
