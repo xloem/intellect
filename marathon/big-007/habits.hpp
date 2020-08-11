@@ -3,7 +3,6 @@
 #include "seq.hpp"
 
 namespace sym {
-	symbol(from);
 	symbol(type);
 	symbol(to);
 

@@ -314,6 +314,7 @@ int main()
 		printsteps({a_habit});
 		text input = readwrite({});
 		std::cout << input.data() << std::endl;
+		std::cout << dump_ex(input, true, "", true) << std::endl;
 		if (input.data() == "q" || !input) {
 			ctx.wipe(sym::what);
 		} else {
