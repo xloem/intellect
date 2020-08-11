@@ -24,13 +24,10 @@ template <> il<il<ref>> assumes_has<cxxhabit> = {
 	{sym::outputs}
 };
 
-#include <functional>
 class cxxhabit : public ref
 {
 public:
-	using cxxfunction = std::function<void(ref)>;
-
-	cxxhabit(il<text> outputs, il<text> inputs, cxxfunction function)
+	cxxhabit(il<text> outputs, il<text> inputs, std::function<void(ref)> function)
 	: ref({
 		{sym::is, sym::habit},
 		{sym::inputs, seq(*(il<ref>*)&inputs)},
@@ -38,9 +35,9 @@ public:
 	}, function)
 	{ }
 
-	cxxfunction const & data()
+	std::function<void(ref)> const & data()
 	{
-		return ref::data<cxxfunction>();
+		return ref::data<std::function<void(ref)>>();
 	}
 
 	void call_with_ctx(ref context)
@@ -163,9 +160,7 @@ namespace sym
 namespace act
 {
 	// set up a habit run context
-	void steps_start_func(ref context);
-	cxxhabit steps_start = cxxhabit({sym::state}, {sym::steps, sym::context}, steps_start_func);
-	void steps_start_func(ref context)
+	cxxhabit steps_start = cxxhabit({sym::state}, {sym::steps, sym::context}, [](ref context)
 	{
 		ref habit = context[sym::steps];
 		seq steps = habit[sym::what].as<seq>();
@@ -176,13 +171,10 @@ namespace act
 			{sym::step, steps.begin()}
 		}));
 		contextee.set(sym::step_context, context);
-	}
+	});
 
 	// run a single step in a set-up context
-	void steps_next_func(ref context);
-	cxxhabit steps_next = cxxhabit({sym::outputs, sym::step, sym::next}, {sym::state}, steps_next_func);
-	void steps_next_func(ref outer_ctx)
-	{
+	cxxhabit steps_next = cxxhabit({sym::outputs, sym::step, sym::next}, {sym::state}, [](ref outer_ctx) {
 		ref state = outer_ctx[sym::state];
 		ref ctx = state[sym::context];
 		iterator<ref> step_entry = state[sym::step].as<iterator<ref>>();
@@ -253,13 +245,10 @@ namespace act
 			state.wipe(sym::step);
 			outer_ctx <= r{sym::outputs, ctx};
 		}
-	}
+	});
 
 	// run a habit to completion
-	void steps_run_func(ref context);
-	cxxhabit steps_run = cxxhabit({}, {sym::steps}, steps_run_func);
-	void steps_run_func(ref context)
-	{
+	cxxhabit steps_run = cxxhabit({}, {sym::steps}, [](ref context) {
 		ref steps = context[sym::steps];
 		ref subcontext({
 			{sym::steps, steps},
@@ -269,7 +258,7 @@ namespace act
 		do {
 			steps_next.call_with_ctx(subcontext);
 		} while (!subcontext[sym::outputs]);
-	}
+	});
 }
 
 
