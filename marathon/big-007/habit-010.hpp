@@ -200,8 +200,9 @@ namespace act
 			++ habit_input;
 		}
 		ref call{{
+			{sym::state, state},
 			{sym::inputs, subcontext.clone()},
-			{sym::habit, action}
+			{sym::step, step_entry}
 		}};
 
 		// call action
