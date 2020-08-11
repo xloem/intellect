@@ -43,6 +43,9 @@ char const * dump_ex(ref what, bool contents, std::string indentation, bool rese
 		} else {
 			result = std::to_string(id);
 		}
+		if (what.get(sym::variable)) {
+			result += "<var>";
+		}
 		found[what] = result;
 	}
 	if (contents) {
