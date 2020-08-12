@@ -62,6 +62,7 @@ public:
 			// this should probably be cloned
 			// in fact it should probably be cloned before passed to the function
 			// ^-- this is important if values are mutated
+
 			inputs.push_back(context[inputname]);
 		}
 		ref step_ctx = context[sym::step_context];
