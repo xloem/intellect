@@ -4,7 +4,6 @@
 
 namespace sym {
 	symbol(type);
-	symbol(to);
 
 	//symbol(first);
 	symbol(second);
