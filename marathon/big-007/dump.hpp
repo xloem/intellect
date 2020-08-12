@@ -10,6 +10,8 @@ char const * dump_ex(ref what, bool contents, char const * indentation = "", boo
 // see below, no specialization yet
 //char const * dump(seq what, bool contents) __attribute__((warn_unused_result));
 
+using cxxfunction = cxxhabit::cxxfunction;
+
 char const * dump_ex(ref what, bool contents, char const * indentation, bool reset)
 {
 	static thread_local std::string storage;
@@ -27,7 +29,7 @@ char const * dump_ex(ref what, bool contents, char const * indentation, bool res
 		std::any & data = (*what).data;
 		++ id;
 		if (data.has_value()) {
-			if (data.type() == typeid(std::function<void(ref)>)) {
+			if (data.type() == typeid(cxxfunction)) {
 				result = std::to_string(id) + "<habit>";
 			} else if (data.type() == typeid(std::string)) {
 				result = what.data<std::string>();
