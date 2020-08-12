@@ -6,7 +6,7 @@ class seq;
 
 char const * dump(ref what) __attribute__((warn_unused_result));
 
-char const * dump_ex(ref what, unsigned depth = 4, char const * indentation = "", bool reset = false) __attribute__((warn_unused_result));
+char const * dump_ex(ref what, unsigned depth = 2, char const * indentation = "", bool reset = false) __attribute__((warn_unused_result));
 // see below, no specialization yet
 //char const * dump(seq what, bool contents) __attribute__((warn_unused_result));
 
@@ -116,5 +116,5 @@ char const * dump(seq what, bool contents)
 
 char const * dump(ref what)
 {
-	return dump_ex(what, 5, "");
+	return dump_ex(what, 2, "");
 }
