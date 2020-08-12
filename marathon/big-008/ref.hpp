@@ -11,7 +11,6 @@
 template <class t>
 using il = std::initializer_list<t>;
 
-//using basic_ref = std::shared_ptr<struct con>;
 using basic_link = std::multimap<class ref,class ref>::iterator;
 
 class ref;
@@ -22,7 +21,7 @@ using rs = il<r>;
 template <class t>
 il<il<ref>> assumes_has = {};
 
-class ref : public std::shared_ptr<struct con>//basic_ref
+class ref : public std::shared_ptr<struct con>
 {
 public:
 	ref(rs refs = {}, std::any data = {});
@@ -130,7 +129,7 @@ public:
 	*/
 
 private:
-	unsigned long thread_ref_id;
+	unsigned long thread_ref_id; // this could be used as a way to look up how the ref was created; or for thread local keys [which would be done with a per-thread associated ref with every ref]
 };
 
 template <> void ref::data<std::any>(std::any const &);
