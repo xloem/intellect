@@ -55,16 +55,10 @@ char const * dump_ex(ref what, unsigned depth, char const * indentation, bool re
 	if (depth) {
 		result = "[" + result + ":\n";
 		bool first = true;
-		bool from = false;
 		std::string subindentation = indentation + std::string("  ");
-		for (std::pair<ref,ref> refs : (*what).refs) {
+		for (auto refs : (*what).refs) {
 			if (!refs.second) {
 				continue;
-			}
-			if (refs.first == sym::from) {
-				if (from) { continue; }
-				refs = std::pair<ref,ref>(sym::from, what.back(sym::from));
-				from = true;
 			}
 			if (!first) {
 				//result += ",";

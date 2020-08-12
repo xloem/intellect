@@ -26,7 +26,7 @@ public:
 
 	t operator*()
 	{
-		return get(sym::what).as<t>();
+		return get(sym::what).template as<t>();
 	}
 };
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "habit.hpp"
 #include "ref.hpp"
 
 class seq;

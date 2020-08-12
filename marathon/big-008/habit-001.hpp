@@ -4,6 +4,7 @@
 #include "var.hpp"
 #include "seq.hpp"
 #include "exception.hpp"
+#include "from.hpp"
 
 namespace sym {
 	symbol(habit);
@@ -53,6 +54,12 @@ public:
 		return ref::data<cxxfunction>();
 	}
 
+	static ref where_from(ref what)
+	{
+		// TODO BUG: incorrect if multi-threaded, could use flow id (or thread id) to fix
+		return what.back(sym::from);
+	}
+
 	void call_with_ctx(ref context)
 	{
 		static thread_local ref last_call = sym::nothing;
@@ -73,7 +80,7 @@ public:
 		for (ref inputname : self[sym::inputs].as<seq>()) {
 			// TODO BUG: if values are mutated, this won't be correct; deep cloning them (before passing to function) would fix
 			ref input = context[inputname];
-			ref from = input.back(sym::from); // TODO BUG: incorrect if multi-threaded, could use flow id (or thread id) to fix
+			ref from = where_from(input);
 			inputs.push_back(ref({
 				{sym::what, input},
 				{sym::from, from}

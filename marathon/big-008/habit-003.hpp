@@ -53,8 +53,7 @@ public:
 		return ref::data<cxxfunction>();
 	}
 
-	// making these inline may ease the gdb stack strace
-	inline void call_with_ctx(ref context)
+	void call_with_ctx(ref context)
 	{
 		static thread_local ref last_call = sym::nothing;
 		context.set(sym_self, self);
@@ -95,7 +94,7 @@ public:
 		}
 	}
 
-	inline ref ctx_from_inputs(il<ref> inputs) const
+	ref ctx_from_inputs(il<ref> inputs) const
 	{
 		ref ctx;
 		auto input = inputs.begin();
@@ -107,14 +106,14 @@ public:
 		return ctx;
 	}
 
-	inline ref call_making_ctx(il<ref> inputs)
+	ref call_making_ctx(il<ref> inputs)
 	{
 		ref ctx = ctx_from_inputs(inputs);
 		call_with_ctx(ctx);
 		return ctx;
 	}
 
-	inline ref operator()(il<ref> inputs)
+	ref operator()(il<ref> inputs)
 	{
 		ref ctx = call_making_ctx(inputs);
 		ref first_output_name = *self[sym::outputs].as<seq>().begin();
@@ -122,7 +121,7 @@ public:
 	}
 
 	template <class... t>
-	inline ref operator()(t... inputs)
+	ref operator()(t... inputs)
 	{
 		return (*this)(il<ref>{inputs...});
 	}
@@ -348,9 +347,8 @@ template <> il<il<ref>> assumes_has<stephabit> = {
 	{sym::what}
 };
 
-class stephabit : public cxxhabit
+struct stephabit : public cxxhabit
 {
-public:
 	stephabit(il<text> outputs, il<text> inputs, il<step> steps = {})
 	: stephabit(outputs, inputs, seq((il<ref>&)steps))
 	{ }

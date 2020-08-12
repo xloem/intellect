@@ -36,7 +36,7 @@ public:
 	template <class t>
 	exception & operator +=(t const &)
 	{
-		throw exception({sym::what, text("atm exception generates its message during construction")});
+		throw exception({{sym::what, text("atm exception generates its message during construction")}});
 		return *this;
 	}
 };

@@ -11,7 +11,7 @@
 template <class t>
 using il = std::initializer_list<t>;
 
-//using basic_ref = std::shared_ptr<struct con>;
+using basic_ref = std::shared_ptr<struct con>;
 using basic_link = std::multimap<class ref,class ref>::iterator;
 
 class ref;
@@ -22,7 +22,7 @@ using rs = il<r>;
 template <class t>
 il<il<ref>> assumes_has = {};
 
-class ref : public std::shared_ptr<struct con>//basic_ref
+class ref : public basic_ref
 {
 public:
 	ref(rs refs = {}, std::any data = {});
@@ -128,16 +128,11 @@ public:
 		return *(ref*)&result->second;
 	}
 	*/
-
-private:
-	unsigned long thread_ref_id;
 };
 
 template <> void ref::data<std::any>(std::any const &);
 template <> std::any & ref::data<std::any>();
 template <> std::any const & ref::data<std::any>() const;
-
-template <> class std::hash<ref> : public hash<std::shared_ptr<struct con>> {};
 
 #if defined main_unit
 #define symbol(name) ref name({}, std::string(#name)) 
@@ -166,10 +161,8 @@ struct con {
 #include "exception.hpp"
 #define self (*this)
 
-static thread_local unsigned long thread_ref_id = 0;
-
 ref::ref (rs refs, std::any data)
-: shared_ptr(new con{{refs.begin(), refs.end()}, data}), thread_ref_id(++::thread_ref_id)
+: basic_ref(new con{{refs.begin(), refs.end()}, data})
 { }
 
 ref::ref (r refs, std::any data)
@@ -180,7 +173,6 @@ ref ref::clone()
 {
 	ref result;
 	*result = *self;
-	result.thread_ref_id = self.thread_ref_id;
 	return result;
 }
 
@@ -215,7 +207,7 @@ void ref::verify_has(il<il<ref>> refs) const
 		}
 		*/
 		auto range = self->refs.equal_range(assumption[0]);
-		unsigned long hash = std::hash<ref>()(assumption[0]) * self->refs.size();
+		unsigned long hash = std::hash<basic_ref>()(assumption[0]) * self->refs.size();
 		for (auto link = range.first; link != range.second; ++ link) {
 			index ++;
 			if (assumption.size() > 1 && link->second != assumption[1]) {
@@ -304,7 +296,7 @@ ref ref::operator-(ref refs)
 // sets only the passed refs
 ref & ref::operator<=(il<std::pair<ref,ref>> refs)
 {
-	std::unordered_set<ref> found;
+	std::unordered_set<basic_ref> found;
 	for (auto item : refs)
 	{
 		if (!found.count(item.first)) {
