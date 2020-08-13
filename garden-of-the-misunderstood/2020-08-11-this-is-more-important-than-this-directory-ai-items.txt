@@ -1,25 +1,26 @@
 building next steps:
 	- smooth out current work (middle-relevencish) so that fewer errors
-		- dataflow.
-			[bug: flows do not show steps (maybe no steps yet)]
-			[still unimplemented: alarm if output unused]
-			[bug pending: input flows aren't threaded if we assume the latest flow is the relevent one. ]
-			[bug pending: not sure if anybody is outputing a step_context in their from]
-				[goal: link output instance to input instance] [link to from objects of inputs.  each input has a different from object.  these should be specified in inputs list in outputs.]
-			->[ ] catch unused outputs, helps with flow issues
-				after a call, we'd ensure the context has no outputs that are not in the outputs specification
-			[function call log idea]
 
-		- for-side: variable wraps rather than mutates
-		- for-side: separate step-variables from specification-variables?  for thinking while debugging
 		- produce small chunk that runs.  test not passed yet.
+			- propose functional programming for now, to reduce issue-management
+			- and propose a chunk used to produce the running chunk, is produced
+				uhhh this collapses to generating the main loop.
 		- considering: type-checking.  would reduce errors. (1 identified)
 			type-checking can also aid in matching variables when generating habits
+		- can we combine time-relevence with habit generation?  need a way to find
+		  working/nonworking habits -karl-daydream
+		- considering: using flow-tracking to provide for scrubbing through script execution
+		- for-side: variable wraps rather than mutates
+		- for-side: separate the step-variables from specification-variables?  for thinking while debugging.  maybe one of these is unneccessary?
 		- considering: make-most-habits-text, to comprehend dump output
 		- considering: function pointers / class methods over std::function.med-high return.
 		- considering: wrapped values in contexts.  for not mutating values to tag them.
 		- considering: more clear dump format (1 delay): name looked like key
 		- discarded: literal special case.  return too small
+
+		- dataflow.
+			[issue,relevence: inspecting your own dataflow at runtime would make a recursion loop] [quick solution is a hard barrier on time: only things prior to a certain flow]
+			[bug possibly pending: input flows aren't threaded if we assume the latest flow is the relevent one. ]
 
 
 	considering focus management, kinda

@@ -10,14 +10,14 @@ namespace sym
 	symbol(variable);
 }
 
-struct var : public text
+struct variable : public text
 {
-	var(std::string data)
-	: text(data)
+	variable(std::string data)
+	: text(data, false)
 	{
 		set(sym::variable);
 	}
-	var(ref symb0l)
+	variable(ref symb0l)
 	: text(symb0l)
 	{
 		if (!get(sym::variable)) {
