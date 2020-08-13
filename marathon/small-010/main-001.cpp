@@ -1,3 +1,3 @@
-struct ref {};
-
-int main() {}
+int main()
+{
+}
