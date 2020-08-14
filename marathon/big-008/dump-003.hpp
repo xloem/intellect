@@ -11,7 +11,7 @@ char const * dump_ex(ref what, unsigned depth = 2, char const * indentation = ""
 // see below, no specialization yet
 //char const * dump(seq what, bool contents) __attribute__((warn_unused_result));
 
-using cxxfunction = cxxhabit::cxxfunction;
+using cxxfunction = cxxhabit::cxxctxfunction;
 
 char const * dump_ex(ref what, unsigned depth, char const * indentation, bool reset)
 {

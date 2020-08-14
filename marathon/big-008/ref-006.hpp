@@ -101,8 +101,6 @@ public:
 	ref take(ref what);
 	//std::unordered_set<ref> getall(ref what) const;
 
-	unsigned long count(ref what, ref value) const;
-
 	void add(ref what, ref value);
 
 	void set(ref what) { set(what, what); }
@@ -440,18 +438,6 @@ std::unordered_set<ref> ref::getall(ref what) const
 	}
 }
 */
-
-unsigned long ref::count(ref what, ref value) const
-{
-	unsigned long result = 0;
-	auto range = self->refs.equal_range(what);
-	for (auto iterator = range.first; iterator != range.second; ++ iterator) {
-		if (iterator->second == value) {
-			++ result;
-		}
-	}
-	return result;
-}
 
 void ref::add(ref what, ref value)
 {
