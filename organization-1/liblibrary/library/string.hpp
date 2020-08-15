@@ -154,6 +154,7 @@ public:
 	void resize(unsigned long new_size);
 
 	void splice(unsigned long index, unsigned long old_length, char const * source, unsigned long new_length);
+	void splice(unsigned long index, unsigned long old_length, char const & source, unsigned long new_length);
 
 	/*
 	library::range<char *> range();

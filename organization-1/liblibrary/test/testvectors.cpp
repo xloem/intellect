@@ -27,7 +27,7 @@ int random_value<int>()
 }
 
 template <typename vector>
-void testvector(unsigned long size)
+void testvector(unsigned long size, unsigned long max_size)
 {
 	using elem = typename vector::element_type;
 	std::vector<elem> base(size);
@@ -51,12 +51,50 @@ void testvector(unsigned long size)
 			worry(test1[j] != base[j], "vector values not preserved");
 		}
 	}
+	
+	for (unsigned long splice_start = 0; splice_start < size; ++ splice_start) {
+		for (unsigned long erased_length = 0; erased_length < size - splice_start; ++ erased_length) {
+			for (unsigned long inserted_length = 0; inserted_length < size && size + inserted_length - erased_length <= max_size; ++ inserted_length) {
+				test1 = test2;
+				test1.splice(splice_start, erased_length, base.data(), inserted_length);
+				for (unsigned long i = 0; i < base.size(); ++ i) {
+					worry(test2[i] != base[i], "splice corrupted memory of test2");
+				}
+				worry(test1.size() != base.size() - erased_length + inserted_length, "wrong-sized splice result");
+				for (unsigned long i = 0; i < splice_start; ++i) {
+					worry(test1[i] != base[i], "prior vector values not preserved after splice");
+				}
+				for (unsigned long i = 0; i < inserted_length; ++ i) {
+					worry(test1[splice_start + i] != base[i], "spliced data not correct");
+				}
+				for (unsigned long i = splice_start + erased_length; i < size; ++ i) {
+					worry(test1[i + inserted_length - erased_length] != base[i], "post vector values not preserved after splice");
+				}
+				test1 = test2;
+				elem value = random_value<elem>();
+				test1.splice(splice_start, erased_length, value, inserted_length);
+				for (unsigned long i = 0; i < base.size(); ++ i) {
+					worry(test2[i] != base[i], "splice corrupted memory of test2");
+				}
+				worry(test1.size() != base.size() - erased_length + inserted_length, "wrong-sized splice result");
+				for (unsigned long i = 0; i < splice_start; ++i) {
+					worry(test1[i] != base[i], "prior vector values not preserved after splice");
+				}
+				for (unsigned long i = 0; i < inserted_length; ++ i) {
+					worry(test1[splice_start + i] != value, "spliced data not correct");
+				}
+				for (unsigned long i = splice_start + erased_length; i < size; ++ i) {
+					worry(test1[i + inserted_length - erased_length] != base[i], "post vector values not preserved after splice");
+				}
+			}
+		}
+	}
 }
 
 template <typename... types>
-void testvectors(int size)
+void testvectors(int size, int max_size)
 {
-	int null[] = {(testvector<types>(size),0) ...};
+	int null[] = {(testvector<types>(size, max_size),0) ...};
 	(void)null;
 }
 
@@ -64,7 +102,7 @@ int main()
 {
 	srand(time(0));
 	for (auto size : {0, 4, 16}) {
-		testvectors<heapvector<int>, stackvector<int,16>>(size);
+		testvectors<heapvector<int>, stackvector<int,16>>(size, 16);
 	}
 	stderr::line("vectors passed test");
 }

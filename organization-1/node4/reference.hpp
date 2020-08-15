@@ -1,5 +1,6 @@
 #pragma once
 
+	
 #include <memory>
 #include <functional>
 #include "multi-any.hpp"
@@ -21,6 +22,8 @@ class reference;
  *
  * UPDATE BELOW as methods progress
  * METHOD: preprocess.bash processes METHOD lines
+ * 	NOTE: methods call recognise-method statically to identify.
+ *
  * 	they are turned into a member function that accesses the method-methodname attribute and calls it.
  *	method-methodname is made into a static function that returns a reference for the method
  *	it has the provided function as data, which is used as a default implementation
@@ -37,6 +40,10 @@ class reference;
 	// -> make a method kind static object, prefixed with method-
 	// -> make the method static object be prefixed with basic-
 	// -> make a member function that acts as the method
+
+DECLARE reference agreement-mistake; // thrown when things are not as expected
+DECLARE reference kindness-mistake; // thrown when kind mismatches
+DECLARE reference presence-mistake; // thrown when a null reference is used
 
 class reference
 {
@@ -120,8 +127,6 @@ public:
 
 	// useful basic objects
 	DECLARE reference const null; // empty reference
-	DECLARE reference kindness-mistake; // thrown when kind mismatches
-	DECLARE reference presence-mistake; // thrown when a null reference is used
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
@@ -138,6 +143,9 @@ public:
 
 	bool operator==(reference const & other) const;
 	bool operator!=(reference const & other) const;
+
+protected:
+	void reseat(reference const & other);
 
 private:
 	class part;

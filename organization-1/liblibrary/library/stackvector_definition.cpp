@@ -134,6 +134,40 @@ void stackvector<element_type, _reserved>::resize(unsigned long size)
 	_size = size;
 }
 
+template <typename element_type, unsigned long _reserved>
+void stackvector<element_type, _reserved>::splice(unsigned long index, unsigned long old_length, element_type const * source, unsigned long new_length)
+{
+	unsigned long old_size = size();
+	unsigned long new_size = old_size - old_length + new_length;
+	auto output_position = vec.begin() + index;
+	if (old_length < new_length) {
+		resize(new_size);
+		std::move_backward(output_position + old_length, vec.begin() + old_size, vec.begin() + new_size);
+		std::copy(source, source + new_length, output_position);
+	} else {
+		std::copy(source, source + new_length, output_position);
+		std::move(output_position + old_length, output_position + old_size - index, output_position + new_length);
+		resize(new_size);
+	}
+}
+
+template <typename element_type, unsigned long _reserved>
+void stackvector<element_type, _reserved>::splice(unsigned long index, unsigned long old_length, element_type const & source, unsigned long new_length)
+{
+	unsigned long old_size = size();
+	unsigned long new_size = old_size - old_length + new_length;
+	auto output_position = vec.begin() + index;
+	if (old_length < new_length) {
+		resize(new_size);
+		std::move_backward(output_position + old_length, vec.begin() + old_size, vec.begin() + new_size);
+		std::fill(output_position, output_position + new_length, source);
+	} else {
+		std::fill(output_position, output_position + new_length, source);
+		std::move(output_position + old_length, output_position + old_size - index, output_position + new_length);
+		resize(new_size);
+	}
+}
+
 template<typename element_type, unsigned long _reserved>
 element_type & stackvector<element_type, _reserved>::front()
 {

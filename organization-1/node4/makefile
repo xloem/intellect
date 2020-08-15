@@ -5,9 +5,11 @@ include include.mk
 
 CXXFLAGS+= -I../include
 
-all: stable-bootstrap libnode4.a
+all: stable-bootstrap-new
 
-stable-bootstrap: preprocess.stable.cxx reference.stable.cxx reference.stable.hxx multi-any.stable.hxx
+stable-bootstrap: test preprocess.stable.cxx reference.stable.cxx reference.stable.hxx multi-any.stable.hxx
+stable-bootstrap-new: $(PREPROCESS)-new
+	make stable-bootstrap
 
 next: $(PREPROCESS)
 
@@ -24,15 +26,18 @@ install: $(patsubst %.hpp,%.hxx, $(wildcard *.hpp)) $(PREPROCESS) libnode4.a inc
 uninstall:
 	-rm -rf ${PREFIX}/lib/libnode4.a ${PREFIX}/include/node4 ${PREFIX}/share/node4 ${PREFIX}/bin/node4-*
 
-libnode4.a: reference.o easy.o
+libnode4.a: reference.o easy.o context.o
 	ar cr "$@" $^
 
 test: main
 	./main
 
-main: main.o reference.o
+main: main.o libnode4.a
 
 $(PREPROCESS):
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} preprocess.stable.cxx reference.stable.cxx ${LDLIBS} -o $@
+
+$(PREPROCESS)-new: stable-bootstrap
 	${CXX} ${CXXFLAGS} ${CPPFLAGS} preprocess.stable.cxx reference.stable.cxx ${LDLIBS} -o $@
 
 clean:

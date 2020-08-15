@@ -12,6 +12,7 @@
 #       set of sed calls.  it might be simplest to compare the content of a
 #	.*pp file to a .*xx file to see the implementation.
 
+#LINENUMBERS=$(grep '^# 1' "$2" >/dev/null && echo 1 || echo 0)
 LINENUMBERS=1
 
 echo > "$2"
@@ -87,7 +88,11 @@ END
 sed -i -f "-" "$2" <<-"END"
 	# declarations
 	s/^\t*DECLARE\s\s*\([^(; \t]*\)\s*;/___EXTERN_ reference \& \1();/
+<<<<<<< HEAD
 	s/^\t*DECLARE\s\s*\(\S.*\)\s\s*\([^(; \t][^(; \t]*\)\s*;/___EXTERN_ \1 \& \2();/
+=======
+	s/^\t*DECLARE\s\s*\(\S[^(;]*\)\s\s*\([^(; \t]*\)\s*;/___EXTERN_ \1 \& \2();/
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 	# definitions
 	s/^\t*DEFINE-REGISTER\s\s*\([^(; \t]*\)\s\s*\([^;]*\)\s*;/___STATIC_ reference \& \1() { static reference storage({string("\1")}); static int registration-barrier = ((\2),0); (void)registration-barrier; return storage; }/
 	s/^\t*DEFINE\s\s*\([^(; \t]*\)\s*;/___STATIC_ reference \& \1() { static reference storage({string("\1")}); return storage; }/

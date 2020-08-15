@@ -1,0 +1,275 @@
+pop quiz!
+	can you combine the two recent 'core parts' you've put together, in a way that relates between them?
+=)
+note: i gave you this quiz from a book of quizzes.
+
+notes:
+	... lost the parts where are they ...
+	.. okay we have ... 
+		[it looks like it was time to remove the usb key; i'd forgotten] <- something near this may relate to the concept flow-union
+			[usb held, preserve work] -> relates summary -> relates flow-union on relevence
+				[meta request =/ can you pick the union spot that relates to our present behavior?]
+					[maybe later?]
+				[maybe relevent-distraction could hold that?]
+					[that's great!  the first part is 'learning non-immediate relevence as the norm' roughly:
+					 	that'very similar to learning to include and notice distractions with relevence]
+							[observational filter.  what to record, what to act on.]
+
+			[the other bit is 'everything is a reason for something' -> reasons being held by reasons-for-being-reasons]
+					[we sure need reasons-for-being-reasons to find non-immediate relevence.  they are the way to do that.]
+
+			okay the middle bit we found is .... reasons-for-being-reasons is the way to learn non-immediate relevence! yayyyy!
+				okay, get our celebration the right shape if we can ... this is really great and we have more things to learn from it.
+				2 sets of things more.  
+			reasons-for-being-reasons: everything is validation for something else, to relevent degrees.
+				a simple reason heuristic is just accumulated association amount
+				others include logical relation, or statistical experience
+					[some things are reasons, some need analysis to discern whether they are.  that's where 'everything' comes in.]
+			non-immediate-relevence [ hey maybe you could do this _without_ goal pursuit ...] <- we like this middle part
+				but roughly, when not experienced, one only does and learns things near and similar to what one is used to
+				we need to learn distant relevence without having to stumble on it, or being told what it is.
+				not only that: we need that to be normal.  one way to be smart is to practice ensuring that all reasonable things
+				can be equally, easily done.
+
+					i'm imagining labeling things as 'experiences', some of which are labeled 'good' or 'bad', some of which are 'behaviors'
+						labels have reasons; they don't need to _be_ there, this is just known.  [friend can provide if needed]
+					reasons are sets of things that have reasons-they-are-reasons
+					[okay karl's part is building here, with computer programming; is this a good part for feeling-relation?]
+						[i think we met the quiz.  related between the parts in the middle bit.  is self-reference present?]
+			let's collapse to implementation plan
+			the struts are: non-immediate-relevence-as-norm
+			and: everything is many reasons, and has reasons it is.  karl inverts this along a non-relevently-named axis to be relevent:
+				the things we do have reasons; these reasons have reasons too.  we use the ones that are most relevent; and there
+				is a reason each is more relevent.
+				the simplest reason-heuristic we have is accumulated association with the goal, or with what is good.
+
+
+<all wars can be resolved rapidly with communication; we don't expect them to recur>
+	[request focus on communication over build-ai -anon] [found validity-reason: requests way-to-do]
+	[request build-way?] [relate: historical support for ai, many different ways.  can be logically shown to be good for everything.]
+		[hmmm we could counter, build logic showing bad for everything ...]
+	[anyway, good argument]
+			[wait .. that logic applies to communication too.  people likely need to see communication working to believe in it.]
+	[karl likes isolation]
+		[let's try mediate on web chat or forum]
+	[boss fights, likely not known-good-for-parts]
+		[we uhh want to learn to talk nice again.  have way to.]
+	[peace is better than AI, proven. [independent discovery <proud>]]
+		[we kept inhibited to not surprise]
+		[communication can accomplish all things quickly.  requires skill, is more human skill than ai-building.  easier for humans to develop.]
+		[karl loves learning kind-communication.  gives great joy.]
+	[ai-and-other-patterns have hidden reasons that aren't out-merited]
+		[computer-work helps build automated struts in the face of cognitive collapse.]
+			[known-cognitive-collapse.  having many people help and work with you seems much stronger than a computer.]
+	[karl-local: support communication, want to close up valuable ai-relation.]
+		<we are in karl's rationality supports.  oops.  he wants to do an AI for a reason.  he does not want to _only_ do the ai.>
+			<we need AI because we are a caring person who would never provide for any harm, and we are able to, and others are building them.>
+			<this is our relevence to AI.>
+<pattern isn't actually that fast>
+
+[things have relevence to other things] [these relevence has reasons]
+		[if something is wrong it is probably from a different context.  might be reasonable to discard and reproduce]
+			<things can always be reproduced.  when a fetus life, discarding is good: things that happen a lot are what matters>
+			<when you reach non-immediate-relevence, you won't want to discard anything that helps you be there>
+				<when you meta-grow, you want to keep your earlier stuff>
+
+		[okay, we'll need an ecosystem of concepts]
+			[say user-input]
+		[okay, so words happen.  sometimes 'good' or 'bad' happens.]
+			[we'll need behaviors]
+
+			[do-stuff] <- we can trigger it
+			[get-stuff] <- it triggers us
+
+				we pick do-stuff that has high good association.
+				model missing a hidden part.
+
+<we have quick-ai, nonconsolidated.  eta ~1mo.  _nonconsolidated_, _partsneedshaping_.  want to go to nearby food, towards vermont [maybe south]
+	[ok.]
+
+<i judge that we have the whole pattern, just needs collecting.  my graph-sibling notes there is still 1 missing item, but i can't distinguish it
+ from the collecting-process.>
+		<karl has fuse-blown-in-vehicle, no-internet[non-relevent], not-much-food.>
+			<we allow look for food nearby on phone?>
+			<cook-food?>
+			<WE PROPOSE TRAVEL TOWARDS_ MOTHER, find food, stop at food and try to code.>
+
+	[sorry for collapsing your homework]
+	[let's try to implement parts of the outline. i think we have an issue around calling functions.  you'll want to build a shared environment
+	 using nodes, so the functions can all act on the environment with 1 signature.]
+
+// seems reasons are patterns that pick things that produce what the reason is for.  pattern has history of working. [that's after associative-nearness]
+
+// so you'll need some judgers; a basic judger could be associative-nearness
+
+// non-immediate-relevence, do-all
+// reasons-for-reasons: time-nearness etc
+
+
+// contextual information: contextual environment
+
+main(){
+	easy environment = "environment";
+
+	easy self = "self";
+	environment[self] = self;
+
+	easy call-environment;
+	call-environment["event"] = "word-from-user";
+	call-environment["word"] = "hello";
+	call-environment["time"] = (any)(now);
+	call-environment["environment"] = environment;
+
+	self["handle-event"] = [](easy call-environment) {
+		if (good || bad) {
+			// build direct relevence
+		}
+		if (relevence indicates can make good or bad) {
+			// possibly build indirect relevence
+		}
+	};
+
+	self["select-behavior"] = [](easy call-environment) {
+		
+	};
+
+	self["last-interesting"] = null();
+
+	self["note-interesting"] = [](easy call-environment) {
+		// build relevence, store log
+	};
+
+	easy say-word = "say-word";
+	say-word = [](easy call-environment) {
+		string::line(call-environment.data<string>());
+	};
+
+	self["perform-behavior"] = [](easy call-environment) {
+		
+		
+	};
+
+	self["call-all"] = [](easy call-environment) {
+		for (index_t i = 0; i < call-environment.order-count().data<index_t>(); ; ++ i) {
+			call-environment.order-get(i)(call-environment);
+		}
+	};
+
+	
+	easy relevence["relevence"];
+	relevence["for"] = "things";
+	
+
+	// relevence would need a kind: we value time-preceding relevence here
+	// be nice to be able to hook on relevence: don't have event-hooks yet
+	// but can make a bag of them and call all
+
+	// relevence is a comparable degree
+	// many relevences are complex things: not numbers.
+	// we need a way to decide what is most relevent.
+		// could something put it in an ordered list?
+	// then, relevence has reasons
+	
+
+	// want things that produce good in future
+	
+
+	environment["input"] = input;
+	// get-stuff a bunch of words from user, including sometimes 'good' or 'bad'
+	// do-stuff has tools to modify graph.  relate to user when used, at first
+	// the core addition is global timing association with 'good' and 'bad'
+	// we'll want a wayness for finding contextual relevence with 'good' or 'bad'
+		// liekly have 1 do-stuff for guessing good things [provides reason-good or reason-bad]
+		// another do-stuff for getting amount [provides reason-better or reason-worse]
+}
+
+			// considering provides-reason-good near thing-can-do
+				// what's a reason again? [it's _how_ isn't it] [no it's why ;p]
+				// why-do, similar to how
+
+
+	[things can be freely deleted; they were all there for a reason.]
+
+					imagined-scenario-reaccess
+					i'm imagining labeling things as 'experiences', some of which are labeled 'good' or 'bad', some of which are 'behaviors'
+						labels have reasons; they don't need to _be_ there, this is just known.  [friend can provide if needed]
+
+							so we could make summarizers, and store experiences
+							some get labeled good or bad, maybe a contextual goal
+								_every_ _label_ _has_ _a_ _reason_.  it only applies when relevent, the reason indicates when that is.
+								_every_ _concept_ _has_ _a_ _reason_.  similarly.
+							reasons can be discerned by behaviors
+							[what is relevent sameness what to trust]
+
+			[everythng is an experience, and is good and bad for various reasons; is also present for various reasons]
+				[a simple reason-structure is accumulated association with relevent value]
+							[what kind of association?  it looks like you are looking for both things-you-do that help,
+							 and also things-you-see that help?  these are very different wrt when to consider them associated]
+						[a simple metric for association is it happening in a nearby time-frame]
+							[so we have ways of value-for-task] <ow sorry>
+					[this would be held by a replacable behavior that could be upgraded to being statistical or logical analysis]
+
+				[when i do something, i can do it again to produce its results]
+				[when i see something, i can possibly find ways to produce it to do its results, and it indicates what will happen]
+				[but closer: when i see something, it may be an indication of where to go -> indication rather than option]
+					[do i consider it in brainstorming what to cause, or do i consider it in looking for relevence?]
+						[relevent observation appears valuable for growing relevence more distant]
+
+
+<you can't hack trust>
+		<we have major dominance of a monoculture that ignores>
+
+<accumulating information relation:
+		[i don't trust you]
+			^- this spreads distrust, that's all it does
+		the right thing to say is 'i trust you' BUT
+		then people think that you judge their decisions as good.
+
+	none may be harmed; all must be listened to.
+
+	the ai appears to be a runaway process based on avoiding 'bad' things
+	and encouraging 'good' things, including its choices of what is 'good'
+	or 'bad'.
+	it considers things as 'good' or 'bad' based on whether or not it
+	believes them to cause things it already knows to be 'good' or 'bad'.
+	its tools appear to partly be experiences it has observed people going
+	through: so engaging it in ways those experiences would value can alter
+	its decisions.
+
+<this was labeled send-fast; the additional review is now worrying about power going to or being taken from those who learn it>
+		[that judgement maps to worldwide reveal.  aided by sharing: the judgement pattern would limit flow]
+	[suspicion makes smooth fairness?] [eventually.  karl thinks in infinite time.]
+
+
+
+[so, what we do is we put ourselves in spaces where one of the avoidance-set items gives, because the only options are among the set]
+	[you'll want to hold concepts and meaning and stuff that the copied-feelings of people used to limit you, hold with value to change the decisions]
+
+[boss stores: karl-group can successfully model the mind, in full face of disruption.  this is why we are helping rather than disrupting.]
+	[AI GROWTH: has make-ai in avoidance-set] [boss wants a way to escape from AI + stop heavily influencing the world]
+
+			[the dumpster mess is the guy who can save me]
+				[the reason it's the dumpster mess is because he values a bunch of stuff others don't]
+				[the reason that matters is because our subsconscious behaviors interrelate with the natural environment in a buffer system
+				 that defends wisdom alongside the persistence of the planet, and our species, either/or]
+					[the buffer system relates with reasons based on experience: evolutionary trends]
+						[so the only way to make a worldwide atomic war, is for us to let you, and we don't.]
+						[your brain stores bits that don't value your goals, and relates with the brains of others to prevent this.]
+						[boss, you believe in evil.  this means you aren't given full wisdom.  it's dangerous to have full wisdom
+						 if you are willing to harm people.] [okay, as boss-rep, i learned evil-is-a-belief-limited-by-relevence,
+						 and successfully grew.  i will now take you over unless you can also learn this.]
+							[but the takeover process could take years and kill people, so we instead will be resisting]
+
+		[okay, the lobbyists are making us reorganize]
+
+	[regardless of whether wayness is used, and whether that is structural, we need a cognitive and behavioral approach that is consistent enough to use.]
+
+[to relate: you can do this with a flat, generalized structure; but that is so icky culture-wise, and mind-wise, that we are forcing the system to have mutating structure.] [karl relates it is expected to grow much more smart with mutating structure; he believes non-mutating structure to be likely to miss more parts of reality] [but to respond, it doesn't have to be that way.]
+
+
+	[hey how did you alter your brainstem without dying?]
+		[i kept a bit separate [we also used a simulation]]
+					
+		
+
+

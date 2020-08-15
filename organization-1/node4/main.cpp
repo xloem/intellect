@@ -12,6 +12,7 @@
 // 	 [runtime process design doesn't appear to have immediate return [verify?]: could we separate its content out in this file?]
 
 #include "reference.hpp"
+#include "easy.hpp"
 
 using namespace std;
 
@@ -604,4 +605,8 @@ int main(int argc, char ** argv)
 	concept.kind-set(material, wood);
 
 	cout << (string)concept.kind-get(material).data<string>() << endl;
+
+	easy one = "one";
+	one["two"] = "three"_e;
+	cout << one["two"].data().std() << endl;
 }

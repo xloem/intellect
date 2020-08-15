@@ -118,7 +118,11 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	if (method == basic_operator_equals() || (method == null() && kind == method_operator_equals())) {
 		// default implementation can't be done with a method call because references are passed to methods by copy for now
 		if (parameters.size() != 1) { throw kindness_mistake(); }
+<<<<<<< HEAD
 		shared = parameters.begin()->pointer();
+=======
+		reseat(*parameters.begin());
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 		return *this;
 	}
 
@@ -148,6 +152,16 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	}
 }
 
+void reference::reseat(reference const & other) {
+	// this is just operator_equals ... subclasses using reference
+	// want a way to adjust the c++ meaning without worrying about
+	// runtime changes.  don't remember how to do that with
+	// method implementation .... basic_operator_equals?
+	// and then how do subclasses like unique_data change?  to manage
+	// index?
+	shared = other.pointer();
+}
+
 ___STATIC_ reference & reference::recognised_methods() { static reference storage; return storage; }
 void reference::recognise_method(reference method_kind, reference basic_implementation, char const * classname, char const * methodname)
 {
@@ -158,6 +172,7 @@ ___STATIC_ reference & reference::method_kind_get() { static reference storage({
 reference reference::kind_get(reference kind) { return (*this)(method_kind_get(), {   kind}); }
 reference & reference::basic_kind_get(){static reference storage({string("kind-get"),(std::function<reference(reference, reference kind)>)
 [](reference __uncasted_self, reference kind) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 141 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
 # 142 "reference.cpp"
@@ -197,11 +212,53 @@ reference & reference::basic_kind_get_or_create_empty(){static reference storage
 # 159 "reference.cpp"
 }}}); return storage;}
 # 160 "reference.cpp"
+=======
+# 151 "reference.cpp"
+	if (!self.pointer()) { throw presence_mistake(); }
+# 152 "reference.cpp"
+	auto & map = self.pointer()->data.get<part::kinded>();
+# 153 "reference.cpp"
+	auto result = map.find(kind);
+# 154 "reference.cpp"
+	if (result == map.end()) {
+# 155 "reference.cpp"
+		return (reference)(__return_type)null();
+# 156 "reference.cpp"
+	} else {
+# 157 "reference.cpp"
+		return (reference)(__return_type)result->second;
+# 158 "reference.cpp"
+	}
+# 159 "reference.cpp"
+}}}); return storage;}
+# 160 "reference.cpp"
+
+___STATIC_ reference & reference::method_kind_get_or_create_empty() { static reference storage({string("reference::method-kind-get-or-create-empty")}); static int registration_barrier = ((recognise_method(storage, basic_kind_get_or_create_empty(), "reference", "kind-get-or-create-empty")),0); (void)registration_barrier; return storage; }
+reference reference::kind_get_or_create_empty(reference kind) { return (*this)(method_kind_get_or_create_empty(), {   kind}); }
+reference & reference::basic_kind_get_or_create_empty(){static reference storage({string("kind-get-or-create-empty"),(std::function<reference(reference, reference kind)>)
+[](reference __uncasted_self, reference kind) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+# 163 "reference.cpp"
+	reference result = self.kind_get(kind);
+# 164 "reference.cpp"
+	if (null() == result) {
+# 165 "reference.cpp"
+		result = reference();
+# 166 "reference.cpp"
+		self.kind_set(kind, result);
+# 167 "reference.cpp"
+	}
+# 168 "reference.cpp"
+	return (reference)(__return_type)result;
+# 169 "reference.cpp"
+}}}); return storage;}
+# 170 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 
 ___STATIC_ reference & reference::method_kind_set() { static reference storage({string("reference::method-kind-set")}); static int registration_barrier = ((recognise_method(storage, basic_kind_set(), "reference", "kind-set")),0); (void)registration_barrier; return storage; }
 reference reference::kind_set(reference kind, reference value) { return (*this)(method_kind_set(), {   kind,   value}); }
 reference & reference::basic_kind_set(){static reference storage({string("kind-set"),(std::function<reference(reference, reference kind, reference value)>)
 [](reference __uncasted_self, reference kind, reference value) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 163 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
 # 164 "reference.cpp"
@@ -253,11 +310,65 @@ reference & reference::basic_kind_set(){static reference storage({string("kind-s
 # 187 "reference.cpp"
 }}}); return storage;}
 # 188 "reference.cpp"
+=======
+# 173 "reference.cpp"
+	if (!self.pointer()) { throw presence_mistake(); }
+# 174 "reference.cpp"
+	auto & map = self.pointer()->data.get<part::kinded>();
+# 175 "reference.cpp"
+	if (value == null()) {
+# 176 "reference.cpp"
+		auto spot = map.find(kind);
+# 177 "reference.cpp"
+		if (spot == map.end()) {
+# 178 "reference.cpp"
+			// already unfilled
+# 179 "reference.cpp"
+			return (reference)(__return_type)null();
+# 180 "reference.cpp"
+		} else {
+# 181 "reference.cpp"
+			// remove value and return (reference)(__return_type)it
+# 182 "reference.cpp"
+			auto result = spot->second;
+# 183 "reference.cpp"
+			map.erase(spot);
+# 184 "reference.cpp"
+			return (reference)(__return_type)result;
+# 185 "reference.cpp"
+		}
+# 186 "reference.cpp"
+	}
+# 187 "reference.cpp"
+	auto result = map.emplace(kind, value);
+# 188 "reference.cpp"
+	if (result.second) {
+# 189 "reference.cpp"
+		// insertion happened: no old element
+# 190 "reference.cpp"
+		return (reference)(__return_type)null();
+# 191 "reference.cpp"
+	} else {
+# 192 "reference.cpp"
+		// kind already present
+# 193 "reference.cpp"
+		reference old_value = result.first->second;
+# 194 "reference.cpp"
+		result.first->second = value;
+# 195 "reference.cpp"
+		return (reference)(__return_type)old_value;
+# 196 "reference.cpp"
+	}
+# 197 "reference.cpp"
+}}}); return storage;}
+# 198 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 
 ___STATIC_ reference & reference::method_get_all_kinds() { static reference storage({string("reference::method-get-all-kinds")}); static int registration_barrier = ((recognise_method(storage, basic_get_all_kinds(), "reference", "get-all-kinds")),0); (void)registration_barrier; return storage; }
 reference reference::get_all_kinds() { return (*this)(method_get_all_kinds(), { }); }
 reference & reference::basic_get_all_kinds(){static reference storage({string("get-all-kinds"),(std::function<reference(reference)>)
 [](reference __uncasted_self) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 191 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
 # 192 "reference.cpp"
@@ -275,11 +386,31 @@ reference & reference::basic_get_all_kinds(){static reference storage({string("g
 # 198 "reference.cpp"
 }}}); return storage;}
 # 199 "reference.cpp"
+=======
+# 201 "reference.cpp"
+	if (!self.pointer()) { throw presence_mistake(); }
+# 202 "reference.cpp"
+	auto & map = self.pointer()->data.get<part::kinded>();
+# 203 "reference.cpp"
+	reference result;
+# 204 "reference.cpp"
+	for (auto & item : map) {
+# 205 "reference.cpp"
+		result.order_set(result.order_count(), item.first);
+# 206 "reference.cpp"
+	}
+# 207 "reference.cpp"
+	return (reference)(__return_type)result;
+# 208 "reference.cpp"
+}}}); return storage;}
+# 209 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 
 ___STATIC_ reference & reference::method_order_count() { static reference storage({string("reference::method-order-count")}); static int registration_barrier = ((recognise_method(storage, basic_order_count(), "reference", "order-count")),0); (void)registration_barrier; return storage; }
 reference reference::order_count() { return (*this)(method_order_count(), { }); }
 reference & reference::basic_order_count(){static reference storage({string("order-count"),(std::function<reference(reference)>)
 [](reference __uncasted_self) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 202 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
 # 203 "reference.cpp"
@@ -287,11 +418,21 @@ reference & reference::basic_order_count(){static reference storage({string("ord
 # 204 "reference.cpp"
 }}}); return storage;}
 # 205 "reference.cpp"
+=======
+# 212 "reference.cpp"
+	if (!self.pointer()) { throw presence_mistake(); }
+# 213 "reference.cpp"
+	return (reference)(__return_type)(any)(index_t)self.pointer()->data.get<part::ordered>().size();
+# 214 "reference.cpp"
+}}}); return storage;}
+# 215 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 
 ___STATIC_ reference & reference::method_order_get() { static reference storage({string("reference::method-order-get")}); static int registration_barrier = ((recognise_method(storage, basic_order_get(), "reference", "order-get")),0); (void)registration_barrier; return storage; }
 reference reference::order_get(reference index) { return (*this)(method_order_get(), {   index}); }
 reference & reference::basic_order_get(){static reference storage({string("order-get"),(std::function<reference(reference, reference index)>)
 [](reference __uncasted_self, reference index) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 208 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
 # 209 "reference.cpp"
@@ -309,11 +450,31 @@ reference & reference::basic_order_get(){static reference storage({string("order
 # 215 "reference.cpp"
 }}}); return storage;}
 # 216 "reference.cpp"
+=======
+# 218 "reference.cpp"
+	if (!self.pointer()) { throw presence_mistake(); }
+# 219 "reference.cpp"
+	index_t index_data = index.data<index_t>();
+# 220 "reference.cpp"
+	auto & vector = self.pointer()->data.get<part::ordered>();
+# 221 "reference.cpp"
+	if (index_data < 0 || index_data >= (index_t)vector.size()) {
+# 222 "reference.cpp"
+		throw presence_mistake();
+# 223 "reference.cpp"
+	}
+# 224 "reference.cpp"
+	return (reference)(__return_type)vector[index_data];
+# 225 "reference.cpp"
+}}}); return storage;}
+# 226 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 
 ___STATIC_ reference & reference::method_order_get_or_create_empty() { static reference storage({string("reference::method-order-get-or-create-empty")}); static int registration_barrier = ((recognise_method(storage, basic_order_get_or_create_empty(), "reference", "order-get-or-create-empty")),0); (void)registration_barrier; return storage; }
 reference reference::order_get_or_create_empty(reference index) { return (*this)(method_order_get_or_create_empty(), {   index}); }
 reference & reference::basic_order_get_or_create_empty(){static reference storage({string("order-get-or-create-empty"),(std::function<reference(reference, reference index)>)
 [](reference __uncasted_self, reference index) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 219 "reference.cpp"
 	reference result = self.order_get(index);
 # 220 "reference.cpp"
@@ -329,11 +490,29 @@ reference & reference::basic_order_get_or_create_empty(){static reference storag
 # 225 "reference.cpp"
 }}}); return storage;}
 # 226 "reference.cpp"
+=======
+# 229 "reference.cpp"
+	reference result = self.order_get(index);
+# 230 "reference.cpp"
+	if (null() == result) {
+# 231 "reference.cpp"
+		result = reference();
+# 232 "reference.cpp"
+		self.order_set(index, result);
+# 233 "reference.cpp"
+	}
+# 234 "reference.cpp"
+	return (reference)(__return_type)result;
+# 235 "reference.cpp"
+}}}); return storage;}
+# 236 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 
 ___STATIC_ reference & reference::method_order_set() { static reference storage({string("reference::method-order-set")}); static int registration_barrier = ((recognise_method(storage, basic_order_set(), "reference", "order-set")),0); (void)registration_barrier; return storage; }
 reference reference::order_set(reference index, reference value) { return (*this)(method_order_set(), {   index,   value}); }
 reference & reference::basic_order_set(){static reference storage({string("order-set"),(std::function<reference(reference, reference index, reference value)>)
 [](reference __uncasted_self, reference index, reference value) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 229 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
 # 230 "reference.cpp"
@@ -383,6 +562,57 @@ reference & reference::basic_order_set(){static reference storage({string("order
 # 252 "reference.cpp"
 }}}); return storage;}
 # 253 "reference.cpp"
+=======
+# 239 "reference.cpp"
+	if (!self.pointer()) { throw presence_mistake(); }
+# 240 "reference.cpp"
+	auto & ordered_parts = self.pointer()->data.get<part::ordered>();
+# 241 "reference.cpp"
+	index_t index_data = index.data<index_t>();
+# 242 "reference.cpp"
+	if (value != null()) {
+# 243 "reference.cpp"
+		if (index_data < 0 || index_data > (index_t)ordered_parts.size()) {
+# 244 "reference.cpp"
+			throw presence_mistake();
+# 245 "reference.cpp"
+		}
+# 246 "reference.cpp"
+		if (index_data == (index_t)ordered_parts.size()) {
+# 247 "reference.cpp"
+			ordered_parts.emplace_back(value);
+# 248 "reference.cpp"
+			return (reference)(__return_type)null();
+# 249 "reference.cpp"
+		} else {
+# 250 "reference.cpp"
+			reference old_item = ordered_parts[index_data];
+# 251 "reference.cpp"
+			ordered_parts[index_data] = value;
+# 252 "reference.cpp"
+			return (reference)(__return_type)old_item;
+# 253 "reference.cpp"
+		}
+# 254 "reference.cpp"
+	} else {
+# 255 "reference.cpp"
+		if (index_data < 0 || index_data >= (index_t)ordered_parts.size()) {
+# 256 "reference.cpp"
+			throw presence_mistake();
+# 257 "reference.cpp"
+		}
+# 258 "reference.cpp"
+		reference old_item = ordered_parts[index_data];
+# 259 "reference.cpp"
+		ordered_parts.erase(ordered_parts.begin() + index_data);
+# 260 "reference.cpp"
+		return (reference)(__return_type)old_item;
+# 261 "reference.cpp"
+	}
+# 262 "reference.cpp"
+}}}); return storage;}
+# 263 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 
 /*
 reference reference::get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
@@ -418,13 +648,15 @@ reference reference::indirect_set((function<reference(reference,reference,refere
 */
 
 reference const& reference::null() { static reference null((bool *****)"token_for_making_null_reference"); return null; }
-___STATIC_ reference & reference::kindness_mistake() { static reference storage; return storage; }
-___STATIC_ reference & reference::presence_mistake() { static reference storage; return storage; }
+___STATIC_ reference & agreement_mistake() { static reference storage; return storage; }
+___STATIC_ reference & kindness_mistake() { static reference storage; return storage; }
+___STATIC_ reference & presence_mistake() { static reference storage; return storage; }
 
 ___STATIC_ reference & reference::method_operator_equals() { static reference storage({string("reference::method-operator-equals")}); static int registration_barrier = ((recognise_method(storage, basic_operator_equals(), "reference", "operator-equals")),0); (void)registration_barrier; return storage; }
 reference reference::operator_equals(reference other) { return (*this)(method_operator_equals(), {   other}); }
 reference & reference::basic_operator_equals(){static reference storage({string("operator-equals"),(std::function<reference(reference, reference other)>)
 [](reference __uncasted_self, reference other) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 293 "reference.cpp"
 	throw presence_mistake;
 # 294 "reference.cpp"
@@ -432,10 +664,20 @@ reference & reference::basic_operator_equals(){static reference storage({string(
 # 295 "reference.cpp"
 }}}); return storage;}
 # 296 "reference.cpp"
+=======
+# 304 "reference.cpp"
+	throw presence_mistake;
+# 305 "reference.cpp"
+	return (reference)(__return_type){};
+# 306 "reference.cpp"
+}}}); return storage;}
+# 307 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 ___STATIC_ reference & reference::method_operator_brackets() { static reference storage({string("reference::method-operator-brackets")}); static int registration_barrier = ((recognise_method(storage, basic_operator_brackets(), "reference", "operator-brackets")),0); (void)registration_barrier; return storage; }
 reference reference::operator_brackets(reference other) { return (*this)(method_operator_brackets(), {   other}); }
 reference & reference::basic_operator_brackets(){static reference storage({string("operator-brackets"),(std::function<reference(reference, reference other)>)
 [](reference __uncasted_self, reference other) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 298 "reference.cpp"
 	throw presence_mistake;
 # 299 "reference.cpp"
@@ -443,15 +685,30 @@ reference & reference::basic_operator_brackets(){static reference storage({strin
 # 300 "reference.cpp"
 }}}); return storage;}
 # 301 "reference.cpp"
+=======
+# 309 "reference.cpp"
+	throw presence_mistake;
+# 310 "reference.cpp"
+	return (reference)(__return_type){};
+# 311 "reference.cpp"
+}}}); return storage;}
+# 312 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 
 /*
 ___STATIC_ reference & reference::method_destruct() { static reference storage({string("reference::method-destruct")}); static int registration_barrier = ((recognise_method(storage, basic_destruct(), "reference", "destruct")),0); (void)registration_barrier; return storage; }
 void reference::destruct() {  (*this)(method_destruct(), { }); }
 reference & reference::basic_destruct(){static reference storage({string("destruct"),(std::function<void(reference)>)
 [](reference __uncasted_self) -> void {  reference self = __uncasted_self;{
+<<<<<<< HEAD
 # 305 "reference.cpp"
 }}}); return storage;}
 # 306 "reference.cpp"
+=======
+# 316 "reference.cpp"
+}}}); return storage;}
+# 317 "reference.cpp"
+>>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
 reference::~reference()
 {
 	if (is_nonweak() && shared.use_count() == 1) {
@@ -516,6 +773,13 @@ shared_ptr<reference::part> reference::pointer() const
 }
 
 multi_any & reference::raw_data()
+{
+	auto pointing = pointer();
+	if (!pointing) { throw presence_mistake(); }
+	return pointing->data;
+}
+
+multi_any const & reference::raw_data() const
 {
 	auto pointing = pointer();
 	if (!pointing) { throw presence_mistake(); }

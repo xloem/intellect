@@ -33,6 +33,9 @@ public:
 	unsigned long constexpr reserved_bytes() const;
 	void resize(unsigned long new_size);
 
+	void splice(unsigned long index, unsigned long old_length, element_type const * source, unsigned long new_length);
+	void splice(unsigned long index, unsigned long old_length, element_type const & source, unsigned long new_length);
+
 	element_type & front();
 	element_type & back();
 

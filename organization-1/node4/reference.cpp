@@ -100,7 +100,7 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	if (method == basic-operator-equals() || (method == null() && kind == method-operator-equals())) {
 		// default implementation can't be done with a method call because references are passed to methods by copy for now
 		if (parameters.size() != 1) { throw kindness-mistake(); }
-		shared = parameters.begin()->pointer();
+		reseat(*parameters.begin());
 		return *this;
 	}
 
@@ -128,6 +128,16 @@ reference reference::operator()(reference kind, initializer_list<reference> para
 	default:
 		throw "more than 8 method arguments, need new case line here";
 	}
+}
+
+void reference::reseat(reference const & other) {
+	// this is just operator-equals ... subclasses using reference
+	// want a way to adjust the c++ meaning without worrying about
+	// runtime changes.  don't remember how to do that with
+	// method implementation .... basic-operator-equals?
+	// and then how do subclasses like unique-data change?  to manage
+	// index?
+	shared = other.pointer();
 }
 
 DEFINE reference reference::recognised-methods;
@@ -285,8 +295,9 @@ reference reference::indirect-set((function<reference(reference,reference,refere
 */
 
 reference const& reference::null() { static reference null((bool *****)"token_for_making_null_reference"); return null; }
-DEFINE reference reference::kindness-mistake;
-DEFINE reference reference::presence-mistake;
+DEFINE reference agreement-mistake;
+DEFINE reference kindness-mistake;
+DEFINE reference presence-mistake;
 
 METHOD reference reference::operator-equals(reference other)
 {
@@ -367,6 +378,13 @@ shared_ptr<reference::part> reference::pointer() const
 }
 
 multi-any & reference::raw-data()
+{
+	auto pointing = pointer();
+	if (!pointing) { throw presence-mistake(); }
+	return pointing->data;
+}
+
+multi-any const & reference::raw-data() const
 {
 	auto pointing = pointer();
 	if (!pointing) { throw presence-mistake(); }
