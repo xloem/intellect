@@ -150,10 +150,10 @@ METHOD reference reference::kind-get(reference kind)
 
 METHOD reference reference::kind-get-or-create-empty(reference kind)
 {
-	reference result = kind-get(kind);
+	reference result = self.kind-get(kind);
 	if (null() == result) {
 		result = reference();
-		kind-set(kind, result);
+		self.kind-set(kind, result);
 	}
 	return result;
 }
@@ -216,10 +216,10 @@ METHOD reference reference::order-get(reference index)
 
 METHOD reference reference::order-get-or-create-empty(reference index)
 {
-	reference result = order-get(index);
+	reference result = self.order-get(index);
 	if (null() == result) {
 		result = reference();
-		order-set(index, result);
+		self.order-set(index, result);
 	}
 	return result;
 }

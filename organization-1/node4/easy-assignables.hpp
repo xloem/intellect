@@ -2,6 +2,8 @@
 
 #include "basic-assignables.hpp"
 
+class easy;
+
 DECLARE reference kind-inverse;
 
 // link objects would be easy to include here
@@ -30,12 +32,12 @@ class inverting-kinded-assignable : public kinded-assignable
 {
 public:
 
-	inverting-assignable(easy source, reference kind)
+	inverting-kinded-assignable(easy source, reference kind)
 	: basic-assignable(source, kind)
 	{ }
 
 	// TODO? use structured typedness to provide constness of attributes?
-	inverting-assignable & operator=(reference const & other)
+	inverting-kinded-assignable & operator=(reference const & other)
 	{
 		if (source.kind-get(kind).order-count().data<index_t>() > 0) {
 			throw "assigned reference is ordered; try to fix in a way that doesn't make a new big issue later?  or just add code to handle it?";

@@ -69,6 +69,8 @@ public:
 		data_type & data_default(data_type default_data = {});
 	template <typename data_type>
 		data_type & data();
+	template <typename data_type>
+		data_type const & data() const;
 
 	// function call if data has a matching std::function
 	template <typename... parameter_types>
@@ -94,37 +96,47 @@ ___EXTERN_ reference & recognised_methods();
 ___EXTERN_ reference & basic_kind_get();
 ___EXTERN_ reference & method_kind_get();
 	reference kind_get(reference kind);
-# 84 "reference.hpp"
+# 86 "reference.hpp"
+
+___EXTERN_ reference & basic_kind_get_or_create_empty();
+___EXTERN_ reference & method_kind_get_or_create_empty();
+	reference kind_get_or_create_empty(reference kind);
+# 88 "reference.hpp"
 
 	// set a kinded property, returns old value; pass null to unset
 ___EXTERN_ reference & basic_kind_set();
 ___EXTERN_ reference & method_kind_set();
 	reference kind_set(reference kind, reference value);
-# 87 "reference.hpp"
+# 91 "reference.hpp"
 
 	// get all kinded property kinds, ordered
 ___EXTERN_ reference & basic_get_all_kinds();
 ___EXTERN_ reference & method_get_all_kinds();
 	reference get_all_kinds();
-# 90 "reference.hpp"
+# 94 "reference.hpp"
 
 	// get the count of ordered properties
 ___EXTERN_ reference & basic_order_count();
 ___EXTERN_ reference & method_order_count();
 	reference order_count();
-# 93 "reference.hpp"
+# 97 "reference.hpp"
 
 	// get an ordered property by index.  index is expected to have index_t data
 ___EXTERN_ reference & basic_order_get();
 ___EXTERN_ reference & method_order_get();
 	reference order_get(reference index);
-# 96 "reference.hpp"
+# 100 "reference.hpp"
+
+___EXTERN_ reference & basic_order_get_or_create_empty();
+___EXTERN_ reference & method_order_get_or_create_empty();
+	reference order_get_or_create_empty(reference index);
+# 102 "reference.hpp"
 
 	// set an ordered property by index_t number [setting at index=count extendss]
 ___EXTERN_ reference & basic_order_set();
 ___EXTERN_ reference & method_order_set();
 	reference order_set(reference index, reference value);
-# 99 "reference.hpp"
+# 105 "reference.hpp"
 
 	// Warning: IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
 
@@ -132,14 +144,14 @@ ___EXTERN_ reference & method_order_set();
 ___EXTERN_ reference & basic_operator_equals();
 ___EXTERN_ reference & method_operator_equals();
 	reference operator_equals(reference other);
-# 104 "reference.hpp"
+# 110 "reference.hpp"
 	reference operator=(reference other) { return operator_equals(other); }
 
 	// no default; method_operator_brackets property must be set to not throw
 ___EXTERN_ reference & basic_operator_brackets();
 ___EXTERN_ reference & method_operator_brackets();
 	reference operator_brackets(reference index);
-# 108 "reference.hpp"
+# 114 "reference.hpp"
 	reference operator[](reference index) { return operator_brackets(index); }
 
 	// called on destruction: dangerous as inheritance is not managed yet
@@ -148,9 +160,9 @@ ___EXTERN_ reference & method_operator_brackets();
 
 
 	// useful basic objects
-	static reference const& null(); // empty reference
-	static reference& kindness_mistake(); // thrown when kind mismatches
-	static reference& presence_mistake(); // thrown when a null reference is used
+___EXTERN_ reference const & null(); // empty reference
+___EXTERN_ reference & kindness_mistake(); // thrown when kind mismatches
+___EXTERN_ reference & presence_mistake(); // thrown when a null reference is used
 
 	// kinds that might be set to alter behavior
 	// TODO: set these all on some basic object to reference for default behavior
@@ -179,6 +191,7 @@ private:
 	std::weak_ptr<part> weak;
 
 	multi_any & raw_data();
+	multi_any const & raw_data() const;
 };
 #undef ___CLASSNAME_
 #undef ___CLASSNAMESTR_
@@ -186,7 +199,7 @@ private:
 #define ___STATIC_
 #undef ___EXTERN_
 #define ___EXTERN_ extern
-# 148 "reference.hpp"
+# 155 "reference.hpp"
 
 
 // parameters take types and names
@@ -206,6 +219,16 @@ template <typename data_type>
 data_type & reference::data()
 {
 	data_type * pointer = this->raw_data().pointer<data_type>();
+	if (pointer == nullptr) {
+		throw kindness_mistake();
+	}
+	return *pointer;
+}
+
+template <typename data_type>
+data_type const & reference::data() const
+{
+	data_type const * pointer = this->raw_data().pointer<data_type>();
 	if (pointer == nullptr) {
 		throw kindness_mistake();
 	}
@@ -236,11 +259,11 @@ namespace std {
 #define ___CLASSNAME__ hash<reference>
 #define ___CLASSNAMESTR__ "hash<reference>"
 	struct hash<reference>
-# 195 "reference.hpp"
+# 212 "reference.hpp"
 	{
 		size_t operator()(const reference & to_hash) const;
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
-# 198 "reference.hpp"
+# 215 "reference.hpp"
 }
