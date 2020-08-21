@@ -11,6 +11,7 @@ class multiany : public typable_valued
 {
 public:
 private:
+	// this is just a container; don't worry.  it appears already defined.
 	boost::multi_index_container<
 		library::any,
 		boost::multi_index::indexed_by<

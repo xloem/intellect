@@ -4,6 +4,9 @@
 
 DECLARE reference kind-inverse;
 
+// hello to below.  we came from context.hpp, and were wondering if we could integrate it with unique-data to make contextual-data
+// it sounds like the pattern of contextual data geenralizes to invertable sets ... 'what is in context' oh ok, i'll try returning to file
+
 // "big problem present: we need a way to set up struts without relying on order, kinda.  e.g. specifying that some things are inverses of other things, some things are their own inverses, some things have no inverses, in a way that can be done later, arbitrarily.  this likely means interconnecting declarations with hooks or triggers, such that implications expand."
 // 	"so some form of rudimentary logical implication, and expanding everything relevent fully before use" "yeah i guess"
 // "maybe triggers that match patterns or use predicates"

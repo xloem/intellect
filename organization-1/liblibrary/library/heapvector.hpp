@@ -4,7 +4,7 @@
 
 namespace std {
 	template <class T> class initializer_list;
-
+/*
 	template <class C> struct char_traits;
 	template <class C> class allocator;
 #if _GLIBCXX_USE_CXX11_ABI
@@ -16,6 +16,7 @@ namespace std {
 	using namespace __cxx11;
 #endif
 	using string = basic_string<char, char_traits<char>, allocator<char>>;
+	*/
 }
 
 namespace library {

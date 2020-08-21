@@ -1,0 +1,85 @@
+building next steps:
+	- smooth out current work (middle-relevencish) so that fewer errors
+
+		- produce small chunk that runs.  test not passed yet.
+			- propose functional programming for now, to reduce issue-management
+			- and propose a chunk used to produce the running chunk, is produced
+				uhhh this collapses to generating the main loop.
+		- considering: type-checking.  would reduce errors. (1 identified)
+			type-checking can also aid in matching variables when generating habits
+		- can we combine time-relevence with habit generation?  need a way to find
+		  working/nonworking habits -karl-daydream
+		- considering: using flow-tracking to provide for scrubbing through script execution
+		- for-side: variable wraps rather than mutates
+		- for-side: separate the step-variables from specification-variables?  for thinking while debugging.  maybe one of these is unneccessary?
+		- considering: make-most-habits-text, to comprehend dump output
+		- considering: function pointers / class methods over std::function.med-high return.
+		- considering: wrapped values in contexts.  for not mutating values to tag them.
+		- considering: more clear dump format (1 delay): name looked like key
+		- discarded: literal special case.  return too small
+
+		- dataflow.
+			[issue,relevence: inspecting your own dataflow at runtime would make a recursion loop] [quick solution is a hard barrier on time: only things prior to a certain flow]
+			[bug possibly pending: input flows aren't threaded if we assume the latest flow is the relevent one. ]
+
+
+	considering focus management, kinda
+	let's build a bridge so we can cross the river.  meanwhile ...
+		-> bridge to cross river
+		-> getting bricks
+		-> eating food
+		-> communicating with bridge-people
+		each one has a life-shape-goal, that relates with the whole ongoing process.
+			[a community[basically] that stewards how to use it now, given why it is a good idea]
+		okay! bridge-goal-people, over there.  bricks-getting-people, over there.
+		eating-food-people, over there.  eating-food, you say that we need to steward karl's personal life better?  so much that we should act on it now if we can ... and you say that there appears to be a general way to do anything that's a good idea?  we are in that way now, right?
+				[above process is analogous, direct process defeats it]
+				[karl's-life-needs not included in piano-practice-ai.]
+		[karl's-life-needs-people, over there.
+		 ai-people, over there.
+			piano-practice-group
+			other-group
+				i need you to fight me, to do anything.  [oh]
+				[you also appear to be expressing high-priority-emergency,know-how-to-do-this-and-can-do-it-now]
+					[so we would have other-group fight karl's-life-needs.]
+						[i am so confused.  let's organize this better]
+		 write-]
+[BLARGH! our decision making processes!]
+	[i don't want to fight you.  i'm not as strong as you and you look upset.]
+[okay, so that group decided to work on ai right now.  hunger is still retriggering but now it is in decisions.]
+	[i want to writhe a bit then.]
+
+review on do-flow-next: debugging this took too long to be considered caused by effective choice.
+	do-flow-next needs addition that reduces complexity errors.
+			-> variables overlap with nonvariable symbols, could make errors
+			^-- maybe this can help.  also considering general what-to-do.
+
+		[once bug found: would flow tracking have resolved these bugs, by complaining if return values are unused?] [for flow tracking: when value is produced, add to pool.  when value is mutated, remove from pool, and add new values, linked to old values.]
+[this error is big.  please organize parts to reduce further similar errors, after it is fixed.]
+					  ^---- middle relevence
+
+		[also note: error tracking raises dataflow tracking: adding flow tracking
+		 to scripting could severely aid script debugging.]
+
+HEY OLD STUFF IS BORING: THIS IS VERY SLOW UP HERE DUE TO LACK OF BUILT PRACTICE.
+	try doing right-after-small please
+		planning this.
+		smallest is start from nothing
+		after-with-meaning would mean work off of just-started, or smallest-working
+		let's try just using ref class.
+	
+	[note: contexts can be tracked with the sym::outer attribute]
+
+we are taking slow to not make harm. got a nontranslated expression, negativity associated.
+	rep says, piano-practice getting growing-harmed.  time for break.
+		hrrrrrm  want to do basic-small.
+		accepting break, has grown in the past.
+
+
+
+
+	[am i there?  my plan-to-continue involves massive error spread / distraction handling.]
+		[practice smaller parts.]
+
+	distraction: i always want to lubricate my eye.  this is appreciated, supported,
+	distraction.

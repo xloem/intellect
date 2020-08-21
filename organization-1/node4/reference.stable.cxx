@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <iostream> // for debugging
+
 #include "reference.stable.hxx"
 
 using namespace std;
@@ -22,7 +24,7 @@ size_t std::hash<reference>::operator()(const reference & to_hash) const
 #define ___STATIC_ static
 #define ___EXTERN_ static
 class reference::part
-# 15 "reference.cpp"
+# 17 "reference.cpp"
 {
 private:
 	friend class reference;
@@ -41,7 +43,7 @@ private:
 #define ___STATIC_
 #undef ___EXTERN_
 #define ___EXTERN_ extern
-# 27 "reference.cpp"
+# 29 "reference.cpp"
 
 reference::reference(any data)
 : shared(new part())
@@ -165,6 +167,7 @@ void reference::reseat(reference const & other) {
 ___STATIC_ reference & reference::recognised_methods() { static reference storage; return storage; }
 void reference::recognise_method(reference method_kind, reference basic_implementation, char const * classname, char const * methodname)
 {
+	std::cerr << "method recognised: " << methodname << std::endl;
 	basic_kind_set()(recognised_methods(), method_kind, basic_implementation);
 }
 
@@ -172,6 +175,7 @@ ___STATIC_ reference & reference::method_kind_get() { static reference storage({
 reference reference::kind_get(reference kind) { return (*this)(method_kind_get(), {   kind}); }
 reference & reference::basic_kind_get(){static reference storage({string("kind-get"),(std::function<reference(reference, reference kind)>)
 [](reference __uncasted_self, reference kind) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 141 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -214,50 +218,58 @@ reference & reference::basic_kind_get_or_create_empty(){static reference storage
 # 160 "reference.cpp"
 =======
 # 151 "reference.cpp"
-	if (!self.pointer()) { throw presence_mistake(); }
-# 152 "reference.cpp"
-	auto & map = self.pointer()->data.get<part::kinded>();
-# 153 "reference.cpp"
-	auto result = map.find(kind);
+=======
 # 154 "reference.cpp"
-	if (result == map.end()) {
+>>>>>>> usb/xloem-intellect
+	if (!self.pointer()) { throw presence_mistake(); }
 # 155 "reference.cpp"
-		return (reference)(__return_type)null();
+	auto & map = self.pointer()->data.get<part::kinded>();
 # 156 "reference.cpp"
-	} else {
+	auto result = map.find(kind);
 # 157 "reference.cpp"
-		return (reference)(__return_type)result->second;
+	if (result == map.end()) {
 # 158 "reference.cpp"
-	}
+		return (reference)(__return_type)null();
 # 159 "reference.cpp"
-}}}); return storage;}
+	} else {
 # 160 "reference.cpp"
+		return (reference)(__return_type)result->second;
+# 161 "reference.cpp"
+	}
+# 162 "reference.cpp"
+}}}); return storage;}
+# 163 "reference.cpp"
 
 ___STATIC_ reference & reference::method_kind_get_or_create_empty() { static reference storage({string("reference::method-kind-get-or-create-empty")}); static int registration_barrier = ((recognise_method(storage, basic_kind_get_or_create_empty(), "reference", "kind-get-or-create-empty")),0); (void)registration_barrier; return storage; }
 reference reference::kind_get_or_create_empty(reference kind) { return (*this)(method_kind_get_or_create_empty(), {   kind}); }
 reference & reference::basic_kind_get_or_create_empty(){static reference storage({string("kind-get-or-create-empty"),(std::function<reference(reference, reference kind)>)
 [](reference __uncasted_self, reference kind) -> reference { using __return_type = reference; reference self = __uncasted_self;{
-# 163 "reference.cpp"
-	reference result = self.kind_get(kind);
-# 164 "reference.cpp"
-	if (null() == result) {
-# 165 "reference.cpp"
-		result = reference();
 # 166 "reference.cpp"
-		self.kind_set(kind, result);
+	reference result = self.kind_get(kind);
 # 167 "reference.cpp"
-	}
+	if (null() == result) {
 # 168 "reference.cpp"
-	return (reference)(__return_type)result;
+		result = reference();
 # 169 "reference.cpp"
+		self.kind_set(kind, result);
+# 170 "reference.cpp"
+	}
+# 171 "reference.cpp"
+	return (reference)(__return_type)result;
+# 172 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 170 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 173 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 
 ___STATIC_ reference & reference::method_kind_set() { static reference storage({string("reference::method-kind-set")}); static int registration_barrier = ((recognise_method(storage, basic_kind_set(), "reference", "kind-set")),0); (void)registration_barrier; return storage; }
 reference reference::kind_set(reference kind, reference value) { return (*this)(method_kind_set(), {   kind,   value}); }
 reference & reference::basic_kind_set(){static reference storage({string("kind-set"),(std::function<reference(reference, reference kind, reference value)>)
 [](reference __uncasted_self, reference kind, reference value) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 163 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -312,62 +324,70 @@ reference & reference::basic_kind_set(){static reference storage({string("kind-s
 # 188 "reference.cpp"
 =======
 # 173 "reference.cpp"
-	if (!self.pointer()) { throw presence_mistake(); }
-# 174 "reference.cpp"
-	auto & map = self.pointer()->data.get<part::kinded>();
-# 175 "reference.cpp"
-	if (value == null()) {
+=======
 # 176 "reference.cpp"
-		auto spot = map.find(kind);
+>>>>>>> usb/xloem-intellect
+	if (!self.pointer()) { throw presence_mistake(); }
 # 177 "reference.cpp"
-		if (spot == map.end()) {
+	auto & map = self.pointer()->data.get<part::kinded>();
 # 178 "reference.cpp"
-			// already unfilled
+	if (value == null()) {
 # 179 "reference.cpp"
-			return (reference)(__return_type)null();
+		auto spot = map.find(kind);
 # 180 "reference.cpp"
-		} else {
+		if (spot == map.end()) {
 # 181 "reference.cpp"
-			// remove value and return (reference)(__return_type)it
+			// already unfilled
 # 182 "reference.cpp"
-			auto result = spot->second;
+			return (reference)(__return_type)null();
 # 183 "reference.cpp"
-			map.erase(spot);
+		} else {
 # 184 "reference.cpp"
-			return (reference)(__return_type)result;
+			// remove value and return (reference)(__return_type)it
 # 185 "reference.cpp"
-		}
+			auto result = spot->second;
 # 186 "reference.cpp"
-	}
+			map.erase(spot);
 # 187 "reference.cpp"
-	auto result = map.emplace(kind, value);
+			return (reference)(__return_type)result;
 # 188 "reference.cpp"
-	if (result.second) {
+		}
 # 189 "reference.cpp"
-		// insertion happened: no old element
-# 190 "reference.cpp"
-		return (reference)(__return_type)null();
-# 191 "reference.cpp"
-	} else {
-# 192 "reference.cpp"
-		// kind already present
-# 193 "reference.cpp"
-		reference old_value = result.first->second;
-# 194 "reference.cpp"
-		result.first->second = value;
-# 195 "reference.cpp"
-		return (reference)(__return_type)old_value;
-# 196 "reference.cpp"
 	}
+# 190 "reference.cpp"
+	auto result = map.emplace(kind, value);
+# 191 "reference.cpp"
+	if (result.second) {
+# 192 "reference.cpp"
+		// insertion happened: no old element
+# 193 "reference.cpp"
+		return (reference)(__return_type)null();
+# 194 "reference.cpp"
+	} else {
+# 195 "reference.cpp"
+		// kind already present
+# 196 "reference.cpp"
+		reference old_value = result.first->second;
 # 197 "reference.cpp"
+		result.first->second = value;
+# 198 "reference.cpp"
+		return (reference)(__return_type)old_value;
+# 199 "reference.cpp"
+	}
+# 200 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 198 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 201 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 
 ___STATIC_ reference & reference::method_get_all_kinds() { static reference storage({string("reference::method-get-all-kinds")}); static int registration_barrier = ((recognise_method(storage, basic_get_all_kinds(), "reference", "get-all-kinds")),0); (void)registration_barrier; return storage; }
 reference reference::get_all_kinds() { return (*this)(method_get_all_kinds(), { }); }
 reference & reference::basic_get_all_kinds(){static reference storage({string("get-all-kinds"),(std::function<reference(reference)>)
 [](reference __uncasted_self) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 191 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -388,28 +408,36 @@ reference & reference::basic_get_all_kinds(){static reference storage({string("g
 # 199 "reference.cpp"
 =======
 # 201 "reference.cpp"
-	if (!self.pointer()) { throw presence_mistake(); }
-# 202 "reference.cpp"
-	auto & map = self.pointer()->data.get<part::kinded>();
-# 203 "reference.cpp"
-	reference result;
+=======
 # 204 "reference.cpp"
-	for (auto & item : map) {
+>>>>>>> usb/xloem-intellect
+	if (!self.pointer()) { throw presence_mistake(); }
 # 205 "reference.cpp"
-		result.order_set(result.order_count(), item.first);
+	auto & map = self.pointer()->data.get<part::kinded>();
 # 206 "reference.cpp"
-	}
+	reference result;
 # 207 "reference.cpp"
-	return (reference)(__return_type)result;
+	for (auto & item : map) {
 # 208 "reference.cpp"
+		result.order_set(result.order_count(), item.first);
+# 209 "reference.cpp"
+	}
+# 210 "reference.cpp"
+	return (reference)(__return_type)result;
+# 211 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 209 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 212 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 
 ___STATIC_ reference & reference::method_order_count() { static reference storage({string("reference::method-order-count")}); static int registration_barrier = ((recognise_method(storage, basic_order_count(), "reference", "order-count")),0); (void)registration_barrier; return storage; }
 reference reference::order_count() { return (*this)(method_order_count(), { }); }
 reference & reference::basic_order_count(){static reference storage({string("order-count"),(std::function<reference(reference)>)
 [](reference __uncasted_self) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 202 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -420,18 +448,26 @@ reference & reference::basic_order_count(){static reference storage({string("ord
 # 205 "reference.cpp"
 =======
 # 212 "reference.cpp"
+=======
+# 215 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 	if (!self.pointer()) { throw presence_mistake(); }
-# 213 "reference.cpp"
+# 216 "reference.cpp"
 	return (reference)(__return_type)(any)(index_t)self.pointer()->data.get<part::ordered>().size();
-# 214 "reference.cpp"
+# 217 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 215 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 218 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 
 ___STATIC_ reference & reference::method_order_get() { static reference storage({string("reference::method-order-get")}); static int registration_barrier = ((recognise_method(storage, basic_order_get(), "reference", "order-get")),0); (void)registration_barrier; return storage; }
 reference reference::order_get(reference index) { return (*this)(method_order_get(), {   index}); }
 reference & reference::basic_order_get(){static reference storage({string("order-get"),(std::function<reference(reference, reference index)>)
 [](reference __uncasted_self, reference index) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 208 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -452,28 +488,36 @@ reference & reference::basic_order_get(){static reference storage({string("order
 # 216 "reference.cpp"
 =======
 # 218 "reference.cpp"
-	if (!self.pointer()) { throw presence_mistake(); }
-# 219 "reference.cpp"
-	index_t index_data = index.data<index_t>();
-# 220 "reference.cpp"
-	auto & vector = self.pointer()->data.get<part::ordered>();
+=======
 # 221 "reference.cpp"
-	if (index_data < 0 || index_data >= (index_t)vector.size()) {
+>>>>>>> usb/xloem-intellect
+	if (!self.pointer()) { throw presence_mistake(); }
 # 222 "reference.cpp"
-		throw presence_mistake();
+	index_t index_data = index.data<index_t>();
 # 223 "reference.cpp"
-	}
+	auto & vector = self.pointer()->data.get<part::ordered>();
 # 224 "reference.cpp"
-	return (reference)(__return_type)vector[index_data];
+	if (index_data < 0 || index_data >= (index_t)vector.size()) {
 # 225 "reference.cpp"
+		throw presence_mistake();
+# 226 "reference.cpp"
+	}
+# 227 "reference.cpp"
+	return (reference)(__return_type)vector[index_data];
+# 228 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 226 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 229 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 
 ___STATIC_ reference & reference::method_order_get_or_create_empty() { static reference storage({string("reference::method-order-get-or-create-empty")}); static int registration_barrier = ((recognise_method(storage, basic_order_get_or_create_empty(), "reference", "order-get-or-create-empty")),0); (void)registration_barrier; return storage; }
 reference reference::order_get_or_create_empty(reference index) { return (*this)(method_order_get_or_create_empty(), {   index}); }
 reference & reference::basic_order_get_or_create_empty(){static reference storage({string("order-get-or-create-empty"),(std::function<reference(reference, reference index)>)
 [](reference __uncasted_self, reference index) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 219 "reference.cpp"
 	reference result = self.order_get(index);
@@ -492,26 +536,34 @@ reference & reference::basic_order_get_or_create_empty(){static reference storag
 # 226 "reference.cpp"
 =======
 # 229 "reference.cpp"
-	reference result = self.order_get(index);
-# 230 "reference.cpp"
-	if (null() == result) {
-# 231 "reference.cpp"
-		result = reference();
+=======
 # 232 "reference.cpp"
-		self.order_set(index, result);
+>>>>>>> usb/xloem-intellect
+	reference result = self.order_get(index);
 # 233 "reference.cpp"
-	}
+	if (null() == result) {
 # 234 "reference.cpp"
-	return (reference)(__return_type)result;
+		result = reference();
 # 235 "reference.cpp"
+		self.order_set(index, result);
+# 236 "reference.cpp"
+	}
+# 237 "reference.cpp"
+	return (reference)(__return_type)result;
+# 238 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 236 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 239 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 
 ___STATIC_ reference & reference::method_order_set() { static reference storage({string("reference::method-order-set")}); static int registration_barrier = ((recognise_method(storage, basic_order_set(), "reference", "order-set")),0); (void)registration_barrier; return storage; }
 reference reference::order_set(reference index, reference value) { return (*this)(method_order_set(), {   index,   value}); }
 reference & reference::basic_order_set(){static reference storage({string("order-set"),(std::function<reference(reference, reference index, reference value)>)
 [](reference __uncasted_self, reference index, reference value) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 229 "reference.cpp"
 	if (!self.pointer()) { throw presence_mistake(); }
@@ -564,55 +616,62 @@ reference & reference::basic_order_set(){static reference storage({string("order
 # 253 "reference.cpp"
 =======
 # 239 "reference.cpp"
-	if (!self.pointer()) { throw presence_mistake(); }
-# 240 "reference.cpp"
-	auto & ordered_parts = self.pointer()->data.get<part::ordered>();
-# 241 "reference.cpp"
-	index_t index_data = index.data<index_t>();
+=======
 # 242 "reference.cpp"
-	if (value != null()) {
+>>>>>>> usb/xloem-intellect
+	if (!self.pointer()) { throw presence_mistake(); }
 # 243 "reference.cpp"
-		if (index_data < 0 || index_data > (index_t)ordered_parts.size()) {
+	auto & ordered_parts = self.pointer()->data.get<part::ordered>();
 # 244 "reference.cpp"
-			throw presence_mistake();
+	index_t index_data = index.data<index_t>();
 # 245 "reference.cpp"
-		}
+	if (value != null()) {
 # 246 "reference.cpp"
-		if (index_data == (index_t)ordered_parts.size()) {
+		if (index_data < 0 || index_data > (index_t)ordered_parts.size()) {
 # 247 "reference.cpp"
-			ordered_parts.emplace_back(value);
-# 248 "reference.cpp"
-			return (reference)(__return_type)null();
-# 249 "reference.cpp"
-		} else {
-# 250 "reference.cpp"
-			reference old_item = ordered_parts[index_data];
-# 251 "reference.cpp"
-			ordered_parts[index_data] = value;
-# 252 "reference.cpp"
-			return (reference)(__return_type)old_item;
-# 253 "reference.cpp"
-		}
-# 254 "reference.cpp"
-	} else {
-# 255 "reference.cpp"
-		if (index_data < 0 || index_data >= (index_t)ordered_parts.size()) {
-# 256 "reference.cpp"
 			throw presence_mistake();
-# 257 "reference.cpp"
+# 248 "reference.cpp"
 		}
+# 249 "reference.cpp"
+		if (index_data == (index_t)ordered_parts.size()) {
+# 250 "reference.cpp"
+			ordered_parts.emplace_back(value);
+# 251 "reference.cpp"
+			return (reference)(__return_type)null();
+# 252 "reference.cpp"
+		} else {
+# 253 "reference.cpp"
+			reference old_item = ordered_parts[index_data];
+# 254 "reference.cpp"
+			ordered_parts[index_data] = value;
+# 255 "reference.cpp"
+			return (reference)(__return_type)old_item;
+# 256 "reference.cpp"
+		}
+# 257 "reference.cpp"
+	} else {
 # 258 "reference.cpp"
-		reference old_item = ordered_parts[index_data];
+		if (index_data < 0 || index_data >= (index_t)ordered_parts.size()) {
 # 259 "reference.cpp"
-		ordered_parts.erase(ordered_parts.begin() + index_data);
+			throw presence_mistake();
 # 260 "reference.cpp"
-		return (reference)(__return_type)old_item;
+		}
 # 261 "reference.cpp"
-	}
+		reference old_item = ordered_parts[index_data];
 # 262 "reference.cpp"
+		ordered_parts.erase(ordered_parts.begin() + index_data);
+# 263 "reference.cpp"
+		return (reference)(__return_type)old_item;
+# 264 "reference.cpp"
+	}
+# 265 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 263 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 266 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 
 /*
 reference reference::get((function<reference(reference,reference)>)[](reference focus, reference kind) -> reference
@@ -657,6 +716,7 @@ reference reference::operator_equals(reference other) { return (*this)(method_op
 reference & reference::basic_operator_equals(){static reference storage({string("operator-equals"),(std::function<reference(reference, reference other)>)
 [](reference __uncasted_self, reference other) -> reference { using __return_type = reference; reference self = __uncasted_self;{
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 293 "reference.cpp"
 	throw presence_mistake;
 # 294 "reference.cpp"
@@ -666,17 +726,25 @@ reference & reference::basic_operator_equals(){static reference storage({string(
 # 296 "reference.cpp"
 =======
 # 304 "reference.cpp"
+=======
+# 307 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 	throw presence_mistake;
-# 305 "reference.cpp"
+# 308 "reference.cpp"
 	return (reference)(__return_type){};
-# 306 "reference.cpp"
+# 309 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 307 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 310 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 ___STATIC_ reference & reference::method_operator_brackets() { static reference storage({string("reference::method-operator-brackets")}); static int registration_barrier = ((recognise_method(storage, basic_operator_brackets(), "reference", "operator-brackets")),0); (void)registration_barrier; return storage; }
 reference reference::operator_brackets(reference other) { return (*this)(method_operator_brackets(), {   other}); }
 reference & reference::basic_operator_brackets(){static reference storage({string("operator-brackets"),(std::function<reference(reference, reference other)>)
 [](reference __uncasted_self, reference other) -> reference { using __return_type = reference; reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 298 "reference.cpp"
 	throw presence_mistake;
@@ -687,19 +755,27 @@ reference & reference::basic_operator_brackets(){static reference storage({strin
 # 301 "reference.cpp"
 =======
 # 309 "reference.cpp"
+=======
+# 312 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 	throw presence_mistake;
-# 310 "reference.cpp"
+# 313 "reference.cpp"
 	return (reference)(__return_type){};
-# 311 "reference.cpp"
+# 314 "reference.cpp"
 }}}); return storage;}
+<<<<<<< HEAD
 # 312 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 315 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 
 /*
 ___STATIC_ reference & reference::method_destruct() { static reference storage({string("reference::method-destruct")}); static int registration_barrier = ((recognise_method(storage, basic_destruct(), "reference", "destruct")),0); (void)registration_barrier; return storage; }
 void reference::destruct() {  (*this)(method_destruct(), { }); }
 reference & reference::basic_destruct(){static reference storage({string("destruct"),(std::function<void(reference)>)
 [](reference __uncasted_self) -> void {  reference self = __uncasted_self;{
+<<<<<<< HEAD
 <<<<<<< HEAD
 # 305 "reference.cpp"
 }}}); return storage;}
@@ -709,6 +785,11 @@ reference & reference::basic_destruct(){static reference storage({string("destru
 }}}); return storage;}
 # 317 "reference.cpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 319 "reference.cpp"
+}}}); return storage;}
+# 320 "reference.cpp"
+>>>>>>> usb/xloem-intellect
 reference::~reference()
 {
 	if (is_nonweak() && shared.use_count() == 1) {

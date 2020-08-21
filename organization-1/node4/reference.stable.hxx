@@ -26,6 +26,8 @@ class reference;
  *
  * UPDATE BELOW as methods progress
  * METHOD: preprocess.bash processes METHOD lines
+ * 	NOTE: methods call recognise_method statically to identify.
+ *
  * 	they are turned into a member function that accesses the method_methodname attribute and calls it.
  *	method_methodname is made into a static function that returns a reference for the method
  *	it has the provided function as data, which is used as a default implementation
@@ -54,7 +56,7 @@ ___EXTERN_ reference & presence_mistake(); // thrown when a null reference is us
 #define ___STATIC_ static
 #define ___EXTERN_ static
 class reference
-# 47 "reference.hpp"
+# 49 "reference.hpp"
 {
 public:
 	// construction
@@ -102,78 +104,110 @@ ___EXTERN_ reference & basic_kind_get();
 ___EXTERN_ reference & method_kind_get();
 	reference kind_get(reference kind);
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 86 "reference.hpp"
 =======
 # 91 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 93 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 ___EXTERN_ reference & basic_kind_get_or_create_empty();
 ___EXTERN_ reference & method_kind_get_or_create_empty();
 	reference kind_get_or_create_empty(reference kind);
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 88 "reference.hpp"
 =======
 # 93 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 95 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 	// set a kinded property, returns old value; pass null to unset
 ___EXTERN_ reference & basic_kind_set();
 ___EXTERN_ reference & method_kind_set();
 	reference kind_set(reference kind, reference value);
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 91 "reference.hpp"
 =======
 # 96 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 98 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 	// get all kinded property kinds, ordered
 ___EXTERN_ reference & basic_get_all_kinds();
 ___EXTERN_ reference & method_get_all_kinds();
 	reference get_all_kinds();
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 94 "reference.hpp"
 =======
 # 99 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 101 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 	// get the count of ordered properties
 ___EXTERN_ reference & basic_order_count();
 ___EXTERN_ reference & method_order_count();
 	reference order_count();
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 97 "reference.hpp"
 =======
 # 102 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 104 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 	// get an ordered property by index.  index is expected to have index_t data
 ___EXTERN_ reference & basic_order_get();
 ___EXTERN_ reference & method_order_get();
 	reference order_get(reference index);
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 100 "reference.hpp"
 =======
 # 105 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 107 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 ___EXTERN_ reference & basic_order_get_or_create_empty();
 ___EXTERN_ reference & method_order_get_or_create_empty();
 	reference order_get_or_create_empty(reference index);
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 102 "reference.hpp"
 =======
 # 107 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 109 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 	// set an ordered property by index_t number [setting at index=count extendss]
 ___EXTERN_ reference & basic_order_set();
 ___EXTERN_ reference & method_order_set();
 	reference order_set(reference index, reference value);
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 105 "reference.hpp"
 =======
 # 110 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 112 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 	// Warning: IMPLEMENTING OPERATORS CAN CAUSE STACK OVERFLOW IF RECURSIVELY USED
 
@@ -182,10 +216,14 @@ ___EXTERN_ reference & basic_operator_equals();
 ___EXTERN_ reference & method_operator_equals();
 	reference operator_equals(reference other);
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 110 "reference.hpp"
 =======
 # 115 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 117 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 	reference operator=(reference other) { return operator_equals(other); }
 
 	// no default; method_operator_brackets property must be set to not throw
@@ -193,10 +231,14 @@ ___EXTERN_ reference & basic_operator_brackets();
 ___EXTERN_ reference & method_operator_brackets();
 	reference operator_brackets(reference index);
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 114 "reference.hpp"
 =======
 # 119 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 121 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 	reference operator[](reference index) { return operator_brackets(index); }
 
 	// called on destruction: dangerous as inheritance is not managed yet
@@ -251,10 +293,14 @@ private:
 #undef ___EXTERN_
 #define ___EXTERN_ extern
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 155 "reference.hpp"
 =======
 # 161 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 163 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 
 
 // parameters take types and names
@@ -315,18 +361,26 @@ namespace std {
 #define ___CLASSNAMESTR__ "hash<reference>"
 	struct hash<reference>
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 212 "reference.hpp"
 =======
 # 218 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 220 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 	{
 		size_t operator()(const reference & to_hash) const;
 	};
 #undef ___CLASSNAME__
 #undef ___CLASSNAMESTR__
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 215 "reference.hpp"
 =======
 # 221 "reference.hpp"
 >>>>>>> 31143fb32f1542f4f93ecaec21c432b9774aa36b
+=======
+# 223 "reference.hpp"
+>>>>>>> usb/xloem-intellect
 }

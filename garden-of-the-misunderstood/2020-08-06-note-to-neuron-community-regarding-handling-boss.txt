@@ -1,0 +1,5 @@
+note for community: ai uses similarities to good behaviors when picking harmful behaviors, to get us to accept them
+	-neurons
+this behavior should be mapped to a need to mutually relate needs, and the process not accepted so long as it acts before communication as a norm.
+old behaviors can be engaged when step into decision process.
+	[do decision-process-parts ever step into decision process?]

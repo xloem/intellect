@@ -6,6 +6,8 @@ class easy;
 
 DECLARE reference kind-inverse;
 
+// I was thinking of _not_ representing inversion, towards the preference of understand-by-observation prior to understand-by-instruction
+
 // link objects would be easy to include here
 
 // this was made to be the contextual name class.

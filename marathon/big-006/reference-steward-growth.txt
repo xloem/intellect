@@ -1,0 +1,30 @@
+- make-new-ref-class, then: consider-impact-on-rest-of-work
+				during: consider-building-stewards-for-this
+	[refactoring]
+- charge-phone, then: consider-making-meals
+	[consider spreading need-to-hold-realtion-with-universe-for-mutual-impact with relevence from self]
+	[outer-life]
+		found: needs of life.  for example making meals
+		found: contact with others.  charge phone?
+
+okay.  we're doing a lot at once, can be hard.
+we can use repetition to do stuff.  contribution, then switch
+	try to make contribution be small.
+[if we can plan 2 behaviors at once we may be able to do simultaneously]
+
+document at bottom?
+i'd like to form some relation between these 3
+
+	[refactoring into .cpp file a little, ref.  provides for using real refs in the class which resolves a lot of ref-casting]
+	[also wanted operators]
+	[and something is labeled somewhere in file ... maybe relates assume_is?]
+	[maybe important to get generators into their own file]
+	[assume_is wants a way to quickly verify if something is, and throw: wants generalization.  type properties could do that.]
+		[unique data for types =S]
+			[big issue is, how to specify in class]
+		[so ref could take an is argument for verify is]
+			[would be more general if we could provide a model to check against]
+		[like an && operator maybe]
+			[sounds nice.  check quickly if has all properties specified.  but doesn't throw specifying the name of the property. maybe different operator ...]
+				[we have set A and set B, we want to identify all things in set B that are not in set A.] [B-A].
+			[imperfect but regardless still need a way to specify in class] [non-virtual method returns check-set.]

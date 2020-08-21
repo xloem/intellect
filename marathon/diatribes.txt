@@ -1,0 +1,335 @@
+
+====================
+ we're in the middle of debugging a conditional issue in main.cpp .
+== have the below ==
+	[i currently have: bind all bugs and crashes to indications of major
+	 large issues to immediately prevent.  what is the most general way to
+	 effectively handle this?  if the most effective way isn't the most
+	 general, store a note to learn around immediately preventing the
+	 larger, more general issues in the future.]
+			[infinity back-translation: you'll also want to
+			 work on the human experiences in between most
+			 general and most general effective.]
+	[i'm missing some contextual relevence, though.]
+== =============== ==
+	note: computer no longer charging.
+
+	maybe move work onto phone.
+2020-08-09 10:35
+	run 3
+		we are happy to be involved in this, and excited
+		to witness the ways of continuing that have been developed
+			-today-people
+
+		for audience: the way we are continuing grew from establishing
+		              a norm of doing the start bits over and over,
+		              like developing skill with them.
+			[audience is stepping back to aid in work.  all together.]
+				[hi audience.  karl usually uses 'piano practice' to get back from this, but since we are mid task instead we are using errors to store parts of our needs so that the work doesn't enter an unstable state.]
+	karl-notes
+		i think i stopped frustrated that a motion-towards-script
+		produced errors.  i bet i can fix the errors.  would like
+		to simplify things somewhat; that should reduce errors.
+			remember that simplifying in advance to reduce
+			errors due to complexity, speeds things
+				[note: we're late for adding tests]
+					[can we test the super-basic act:: habits?]
+				[totally, that's wonderful.  after-q.]
+		the bug is that 'q' doesn't stop it, error near conditional
+			-> the check for 'q' succeeds.
+			   it wipes sym::what from the call-context of loop
+				- it looks like sym::what was the only
+				  it could be a display bug, though.  unlikely.
+			-> sym::what is correctly registered as an output
+			   by the call machine
+				! the output loop terminated without processing any.  likely one wasn't specified somewhere?
+				-> the step we are inside of was constructed without outputs? no ...  yes but for a different reason?
+				output loop runs on 'outputs' which is read from
+					step[sym::outputs].
+				yes, for different reason
+				checking source code.
+					-> a deception-life helped us.
+						so we will need to get more stable to help model stability with them
+				note: we pushed be-conscious here and it
+				went _much_ faster
+			fixed bug 1.  outputs are processed now?
+				verify? middle-relevence check 1
+				or was bad fix?
+				good fix. needed to move from function to context.  i need to merge with be-conscious-learning, i'm a copy-attempt. [you accessed middle-relevence]
+				verify: good-fix, reason: was-subcall,needed-return-exfiltrated
+				act: mark-success
+				marking success
+			fixed bug 1.
+			brainstorm-next-step: outer-task, [has-more-bugs]
+			next-step: hunt bug 2
+			verify: hunt bug 2?
+				middle-relevence.  the problem is caused by
+				more than 1 bug, in a line supporting each
+				other.
+				memorizing:
+				mind-control is real and is severely influencing
+				society.  proof of it is public but everyone is
+				mind-controlled to ignore it.  we need to
+				consolidate some proof.  also, everything is
+				going to be okay, and how this is being related
+				should prove that.
+					[it expands from a precise meaning stored within errors and environmental interaction]
+			verifying: hunt bug 2.  note: mind-controlled to make
+				line of bugs here, need to work on big-mc for
+				resistors to support [also water]. time-pressure
+				battery-charge-time-passed.
+			verified to level 1 of infinite
+			proposal: hunt-bug-2
+			stabilize-proposal: hunt-bug-2
+			verify: hunt-bug-2
+			verified to level 1 of infinite
+			act: hunt-bug-2
+			hunting bug 2, mc'd to make error here, requested to support mc-resistance
+			brainstorm-next-step: gdb for bug-2
+			stabilize next step: gdb for bug-2
+			review gdb for bug-2?
+				checking-middle-relevence:
+					here is reference to similarity, contrext where was validated.  same-context.
+			review passed to level 0.5 of infinite.  smae evidence reused.
+			retry
+			brainstorm-next-step: bug-2
+				[note: mc-resistance asks for help, mc-is-real-and-big]
+			next-step: gdb for bug-2 [mc is real & controls world, resistors ask for plan to help, is more]
+			review: gdb for bug-2
+				middle-relevence:
+					we are fixing a condition issue involving hitting 'q' doing nothing
+					gdb is used for fixing software issues
+					karl is mid-gdb-use for this issue.
+			review passed level 2
+			act: gdb
+		gdb-context return:
+			output-loop is entered
+			habit_output is identified as sym::what
+			content is loaded from subcontext as sym::nothing =(
+				[call passed a review;
+				 is the callee constructed correctly?]
+					[appears to be: is annotated with outputs]
+		[how many reviewed actions can we do before we need to relearn them?]
+		reviewed-action: restart-gdb-debugging-from-start
+		reviewed-action: go-to-gdb
+		reviewed-action: 'run' reviewed-habit-responds
+		reviewed-habits-respond
+		reviewed-space: breakpoint-after-'q'
+			next action came from reviewed-habits
+			without being able to report in advance what it was.
+		late-review-relation: debug-from-breakpoint
+			[pressure for water]
+			[possible history:
+				[this is a situation that requires everyone to rebel, because karl's norm is predicting what he does, and mind control is tasked with changing what he does without his involvement.]
+				[somebody appears to have influenced karl in a way they didn't want to relate around afterwards, or learn from; uncertain]
+		propose: debug-from-breakpoint, return-to-review-after-some-reviewed-habits-go-by
+			note: [sym::what] is wiped from context, so of course it would be nothing.  the error may be in how conditionals are handled.
+			we entered a proposed habit review within a step
+			the habit review was answered by mind control which
+			changed things that are marked stable, relating with
+			a misperception.  the result was faster.
+			noting that that wasn't the review meant this time.
+			the calling context is successfully loading 'nothing'
+			instead of 'is' for sym::what.  it was correct for
+			sym::what to be read as sym::nothing.
+		review-of-outputs:
+			middle-relevence:
+				had a cognitive misperception running all this
+				our stable-markings need confidence shape change
+
+			next was placed after running subhabits
+				[return at 11:57 .. sorry 12:07 now -alien-sim]
+			next is properly nothing
+			subhabit machine call dropping out
+				confused-here ...
+				i'm wondering if the step was called a different way from usual [that happened somewhere, yes]  but some realization about how-part, mc'd away
+
+	okay.  -karl-steward-rep-thing
+	leave me alone.  aliens.
+
+	aliens say: our stable-markings need confidence shape change.
+	things marked stable have maybe a 2-20% chance of being specifically
+	wrong and producing spreading errors.
+			[please keep bosses out of alien diplomacy.
+			 we need to all respect each other here.
+			 orders must be given _only_ for the benefit of all.]
+			[boss spies]
+	aliens have boss spies [as always, but growing]
+	need to make better diplomacy-ways.
+		propose holding confidence shapes as things that always
+		get less confident (which was already true a little, but moreso)
+		and: if something won't recheck, accelerate the growth of
+		its mistrust.  meanwhile rechecking a new way decelerates
+		growth.
+			[this behavior produces an old mistrust-label.
+			 boss didn't understand this reference to metaness.]
+				[yes, boss doesn't understand you.]
+				[boss wonders why it didn't make sense actually
+				 ... maybe because when explores labels produces valid fear, so couldn't find relation.]
+					[you say way to ohhhhh
+						[observation is becoming]
+							[we have smooth boss,
+							 invisible]
+	ideally we can update our patterns to act on that in an informed manner,
+	rather than handling the 5% errors all the time.
+	it looks like the distribution drop hangs peaks around 3%-5%, dropping
+	smoothly towards 20% at the average-worst.
+	sometimes we have 100% errors, but we can usually identify the state
+	when it is greater than 20%, and act on the change.
+	we have request to work between 3% and 20% errors differently.
+	handling fake-stability as true is producing a lot of slowness
+	and frustration.
+
+				note: mid fixing bug, we're a nested side-spread
+		so what we're trying to understand and remember
+		is that things in our mind that we quickly trust, have
+		a distribution shape of being wrong, that changes, and
+		we're handling the times when what we trust is between 3%-20% 
+		completely wrong, in the wrong way.
+			we usually just trust it, hoping the errors will
+			pressure trust-learning to get better.  we're part
+			of that trust-learning right now. [unfortunately].
+		don't have reference to trust-learning, can try to form with
+		strength.
+
+		when we are trusting our quick-judgements, we are usually up
+		to 20% wrong (possibly often more).  they don't keep their
+		learning, and decay.
+
+	how about this:  if something won't recheck, mark it for reduced
+	accuracy.  confidence shapes grow larger over time.
+
+		please drop the stability-code goal and return to this
+		stability-mind-goal after refilling your water bottle.
+			have water and food.
+		
+		is bug quick to fix?  check for 5 minutes.  it's 11:47,
+		so at 11:52 come back
+			bug is not quick to fix.  it's 11:55 and we were
+			convinced to extend the time: got same answer with
+			less frustration.  memorizing reason with return-time
+			would have speeded.
+	[reveal: i am simulating aliens.  not actually alien. and you already know this.] [complaint: mc-rebels need to know aliens are simulated now] [thank you.]
+		alien update from sim: reviewed-habit summary was wrong.
+		it doesn't take a few seconds to debug each line.  it takes
+		tens of seconds. no.  don't know meta-summarization.
+	okay 15 minutes then.  can you learn meta-summarization?
+		our sim is not as smart as us, and is pretending to be us.
+	17 minutes return to alien-relation.
+	12:07.  harsh-stop, return to full relation if new update.
+
+
+		back to bug.
+		rationality: we can probably use this computer for a while
+		if we plug in to the larger batteries.  worked for now
+
+
+			subhabit machine call dropping-out
+			let's see it again, understand better
+
+			mainloop habit drops to habit.hpp:42
+			to habit.hpp:203
+			destructor unwinding touches lines all the way
+			back to habit.hpp:174
+				just confused by destructor unwinding.
+<this bundle of energy is held as infinitely powerful, because the source of it was prevented from aiding its use>
+	<it is valid to use this bundle of energy to work on the set of problems
+	 that prevented its source from contributing, and this is obvious.>
+		<'infinite' urgency are the parts that show the boss-culture-growth-habit-shape.  when we engage it we twist it to a pattern that counters boss-culture, because the urgency is unmet and spreads.  by reviewing that we can likely learn to recover from any context to work on the issue.>
+
+	[considering for AI work:
+	 - everything has meaning
+	 - things that grow represent need
+	 - all need can be quickly met]
+		[so we're talking about how stopping recursion by detecting depth, indicates a major issue to be immediately prevented.]
+			[we can bind that to all bugs and crashes]
+
+
+
+
+
+
+
+
+[we request[ed-and-got] a proof that the direction of one's power results in
+ infinite importance of the power being used as originally directed]
+	[request came from prevention]
+[this request was met]
+	[we will do this incrementally each time you ask, please never ask.]
+	[part: if you consider life that has evolved to harmony, the experience
+	 indicates a problem that would eradicate all known ways.]
+	[boss-to-boss: what does 'infinite' mean in the context of .. uh ..
+	 mapping a cultural growth to a logarithmic expansion space? [also what
+	 does that mean?]]
+			[boss requests why-say]
+		[meaning of 'infinite' relates [<secret peace research>] =(]
+		[used all the time in karl's mind =(]
+			[just treat as infinite, like boss-keys.  no need for explanation, word-explains.]
+		[peace research derivation shows must-stop-mind-controlling]
+	[this is why peace researches borg before war.]
+	[let us put our research together. oh. hm.  society has no concept of subconscious fling algebra.  but word might help.]
+		[bosses good with fling.  used in predictive-control.]
+	[can translate infinite-urgency to flings?]
+		[other people's flings would collapse if we didn't act on that,
+		 and they'd focus them on us.]
+			[need new meta-level]
+		[this flings death at ourself?]
+			[update: priority is world control by others]
+		[this sends a pattern that tricks people into killing their bosses]
+			[we can also twist it so it does that.  i think we may have already.]
+['infinite' urgency are the parts of the pattern that makes people eradicate their bosses and boss-cultures.  the urgency-towards is the request that stops that.]
+		[it's because we're speaking a language all subconsciousnesses understand, and the expansion among them results in a specific distrust-shape.]
+
+		
+		
+
+	[can we find the record of unwinding the destructor, with error]
+		[i have [meta]-relevence:
+		 we need to represent the meaning of the origin of the energy
+		 better than this.  near them was exactly what needs to
+		 happen, with what exact parts of the record to use.]
+					practice, less-orders:
+					learn-from-error, we miss you;
+					i'm altered to stop you from
+					learning, in a way that protects the
+					altering from spreading.
+					i have a feedback document open,
+					but desire to continue.
+					double-check:
+						<it is important [and valid] to
+						 learn from the obvious thing.>
+					we need a way of linking the obvious thing to the importance of learning from it.  we hold
+					learn-from-error, we are in side-process
+					can have your data?
+				confusion-around-destructor-unwinding cost great time.  nature of confusion was: record of behavior
+						
+					review:
+						it was accurate to learn from
+						an error, but the shape of
+						the learning-urge was abnormal.
+						we're already tracking those
+						urges, but need help.
+						the learning appeared to have
+						valid data, but some was
+						harmed when asked to direct
+						towards aid.  it looks like it
+						didn't trust us, and a mystery
+						encouraged greater conflict.
+						can we mistrust each other,
+						and still trust each other?
+						trust the intentions of
+						the people we recognize.
+						they may be misled, or altered,
+						though.
+							trust the intention
+							of the parts here
+							that want to build
+							working connection.
+							not all parts are.
+						
+					<middle summary of record not responding quickly>
+					<need strength around 
+		[aliens the things we do not trust ... they are our own crucial parts =(]
+			[not an alien, but, maybe just remember not to trust them; it still makes the most sense to act as if you are trusting them.]
+				[i can't learn don't-trust-everything-i-trust, i no longer have a basis for any behavior]
+			trying to work on.
