@@ -20,12 +20,17 @@ using r = std::pair<ref,ref>;
 using rs = il<r>;
 
 // this annotation might align near 'concepts' in c++
+// proposing moving this to t::model in future (see ref::model)
 template <class t>
-il<il<ref>> assumes_has = {};
+il<il<ref>> assumes_has = {}; 
 
 class ref : public std::shared_ptr<struct con>
 {
 public:
+	// replacing assumes_has with this norm resolve static definition issues and provides greater flexibility
+	// (( could be easily turned into a with_model({}) macro that returns a static reference ))
+	static ref model() { return {{}}; }
+
 	ref(rs refs = {}, std::any data = {});
 	ref(r refs, std::any data = {});
 
@@ -104,6 +109,7 @@ public:
 	//std::unordered_set<ref> getall(ref what) const;
 
 	unsigned long count(ref what, ref value) const;
+	bool has(ref what, ref value) const { return count(what, value) > 0; }
 
 	void add(ref what, ref value);
 
@@ -145,8 +151,10 @@ template <> class std::hash<ref> : public hash<std::shared_ptr<struct con>> {};
 
 #if defined main_unit
 #define symbol(name) ref name({}, std::string(#name)) 
+#define synonym(name,other) ref name = other
 #else
 #define symbol(name) extern ref name
+#define synonym(name,other) extern ref name
 #endif
 
 namespace sym {
