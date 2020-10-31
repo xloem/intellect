@@ -1,0 +1,22 @@
+maybe we can organize bookmoons code shape edge a little
+also have cell phone
+	note: bookmoons work is ~slow.  there is a way to do for a long time as if is fast.
+	      cell phone interaction faster.  just interactions, different work, smaller.
+
+
+raising idea of interconnection with bookmoons; maybe contribute to things they work on?
+	core-part reminds to spread harmony first
+	ideas of human-interaction-first also present
+
+first priority is to make the code stable.
+the baseline is the master branch of xloem repo.  start there.
+
+
+growth towards stability code smoothness
+was kinda one-thingy.  weak.
+umm maybe do just a little?  seeing you value git-bug more ... but someone else
+is likely to get on it.
+
+
+[money confusion.  can we just destroy the bountysource bounty?]
+	[it's somewhat obvious that bookmoons was likely mind controlled to never finish the work, nor collect the bounty]
