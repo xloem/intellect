@@ -1,0 +1,41 @@
+insight is that it is possibly not getting filled inside snap
+
+goaling now where the snap is created.  planning to make sure it is filled.
+
+i think i added debug output to something
+maybe the making of a snapshot
+
+we are trying to stay here, and fix the snap issue.  with the recent metadata.
+
+well today was okayish but very little work after running into the productivity
+issue with git-bug and metadata.
+a way to make that block easier could be to store local state in the importer.
+the reason to keep at it is that it helps us/me learn go better.  debugging
+is pretty important for stuff.
+
+
+
+
+
+
+
+something is wrong in our mind.
+there is existing request to work on something different.
+but we are here because we found validity around the existing topic.
+
+	-> go is fast, so git-bug is probably the way to go.  if it's strong
+	   for a projcet with many users, many people can help grow it.
+
+		-> i want to code! i like doing things that do stuff!  so badly want
+		   contribution behaviors.
+
+	
+			i can't mediate with you if you run away
+
+	-> too much bad feedback.  relating the details has not gone well for us
+	   in the past.  [here is bad feedback back at you]
+
+i think we must be intended to close all these panes and reopen them
+so that we can reset a little
+
+
