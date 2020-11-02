@@ -1,0 +1,18 @@
+Be more productive!
+Be less productive!
+Be a little more productive!
+
+
+Okay, if we want to import issues, it's kinda hard.
+It's probably not the most effective approach, but it is more productive than failure.
+
+Boss and I don't have a good relationship to quickly get others to do
+work with feedback.  it's possible-likely that git-bug is the only feasible tool
+due to the size of the data; this may be false.
+
+
+	Although a C solution would be unreasonably large,
+	I'd like to point out that C would be just as speedy,
+	and is the language git itself is written in, offering
+	more options for inclusion someday.  including would
+	significantly increase use.

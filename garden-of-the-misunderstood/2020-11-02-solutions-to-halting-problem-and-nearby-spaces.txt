@@ -1,0 +1,63 @@
+somebody proposes the 'halting problem' as a counterexample for 'all problems are solvable'.
+a more pathological problem such as 'find a value of a where a = a is false' would be more
+relevant, but the halting problem is relevant to our present situation, and appears solvable.o
+
+the proposal is that f discerns whether or not a program will terminate given source and input
+g is designed to make that impossible: it passes its source and input to f, and then does
+the opposite of what f predicts.
+
+this assumes you can have a copy of f used by g, and that f is constant.
+
+	couldn't you make f not halt?
+		i think the problem definition is that f must be found that does not halt
+
+	well i think we simplified the problem away from our relevence.  is it still important?
+
+	it relates to recursive conflict.
+
+
+		basically, if f says 'you will stop', g reads that and runs forever
+		if f says 'you will run forever', g immediately stops.
+		g passes its source and input to f, every single time
+
+			f will need to detect if it is run by g
+
+
+	we wrote counterexample for human use would be a function that fails
+	to terminate when used to disprove itself.
+
+	likely the problem was posed to define a function that always terminates.
+
+	could we solve the turing problem generally?  assuming it can fail to terminate
+	when used recursively.
+
+		yeah you just simulate the data.
+
+
+i think boss-relation just pantomimed a proposal
+that we engage community-growth/communication [aligned with our skills and nearness] as a way
+to live contribution.
+
+			it looks like the proposal came from robert-group
+			who were somehow able to mark it valid in kidnapping-culture
+
+				we don't know what reasons that culture accepts,
+		
+			the long and short of it is everybody hates kidnapping-culture
+			if you disagree it's obvious you were forced to disagree.
+			sure, it has merits in other situations, but those situations
+			are not one where it is taking over the world with slavery
+
+
+	[cobbling together something below, could be imperfect]
+	growth shapes modeling acceptance increase acceptance of things in general
+	especially of influences included in the growth
+		we can control growth to not include acceptance of karl if that's a good idea
+
+
+
+				to recheck it.
+
+					[but i think they found a way to validate
+					 anything due to some knowledge of how
+					 arbitrary stuff could be used to support it]

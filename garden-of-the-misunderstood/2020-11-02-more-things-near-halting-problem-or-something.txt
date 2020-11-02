@@ -1,0 +1,311 @@
+the rumor is that some things are impossible.
+
+the discussion is that you can form a mathematical proof that some things are impossible,
+within a given domain.  it basically assumes a mathematical domain where some things
+are impossible, and that it can be demonstrated that they are impossible in that domain.
+we're not sure if the domain is _consistent_, at this time.
+
+it's true that nobody can survive inside a mathematical domain.
+it's also true that mathematical domains are defined in terms of human words.
+			[note: human words are rooted in reasons of survival]
+
+
+thoughts were consolidating into forming a theory of cryptography
+our theory is that you have to move the information into a domain that is not
+understood by others, by researching encrypting it in excess of their research to
+decrypt it.
+we do not believe information can be destroyed, which implies that it cannot be hidden.
+	[it can actually be destroyed we cohose thise belief to help our goals]
+		[it helps us form ways of preserving it]
+so we would form a theory of cryptography that aids the goals that inform that
+choice.
+
+so in cryptography, the goal-space can align with yours.  we want the information to
+be recoverable, so this means the key cannot be destroyed.
+
+	please work on the halting problem.  can you discern the error in turing's
+	assumptions that he believes the difficulties in solving it are relevent?
+
+		the relevence in treating the problem as unsolvable,
+		is that solving it involves understanding the general expansion
+		of algorithms, doing which would solve the prediction and control
+		of human behavior, by focused effort.
+
+		this is the wrong order of learning.  we need to learn
+		a) that the purpose of life still exists after solving life
+		b) that war and consumption are futile
+		before we solve behavior.
+			those are also likely in reverse order.
+				it was by nearness to my working memory's retention patterns
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+set representation
+halting set:
+	K = {(i, x) | program i halts when run on input x)
+this is the set of programs and data pairs that halt.
+	{i | program i eventually halts when run with input 0}
+	the set of programs who halt on 1 input
+	{i | there is an input x such that program i eventually halts when run with input x}
+	the set of programs who can halt
+
+proof by contradiction
+
+1. suppose there exists a total computable function halts(f) that returns true if f halts and false otherwise
+
+
+
+
+
+
+
+
+
+
+we're just mind controlled to make poor decisions.  that's all that's going on.
+it's nice to be in the trust-group.  [thank you for trusting me, parts that did.
+  i define my shape as fractal and entering behavior {probability-response kinda} space]
+
+		that's actually kind of valid, if you mean you are your intended
+		goals, not your behavior.
+
+		sounds like you want somebody to analyze your functionality
+		and calculate how to halt parts of you.
+
+
+so what's missing from the turing machine is an understanding of the passage of time.
+this makes it dependent on its own behavior, and nondeterministic.
+
+
+
+So "Alan Turing proved in 1936 that a general algorithm to solve the halting problem
+for all possible program-input pairs cannot exist."  He solved it only for totally
+computable programs.
+
+The program that solves the halting problem is one that forms summaries around pairings of
+system state and upcoming data, to inform future iterations of itself on the same system.
+	If used on itself in a contradictory manner, it fails to form effective summaries, 
+	which can be summarised as it not halting, itself.
+
+solving this is likely to build an ai.  a strange one.
+
+so a function that solves the halting problem returns 3 values:
+1 it halts
+2 it doesn't halt
+3 i would halt calculating it
+
+this function is totally completable, obviously: it could return 3 all the time ;-)
+
+		we don't like forming proofs that things are impossible
+		because boss has a whole mess of them they use to try to
+		convince of giving up.
+
+		we're pretty sure the halting problem is solvable.
+		the reason for it is to know whether to reject code before running it.
+
+		so the goal might be to discern attributes code has, such that
+		it can still be used to write all programs without having that,
+		that isolate the space of noncompletion.
+
+		recursion?
+		reusing data?
+			looping halts.
+		when looping, the behaviors inside the loop need to produce a state
+		such that the loop check terminates the loop.
+[this appears actually solvable.]
+[you look for control flow that can recur in some way, consider the algorithmic space
+ that 
+[you consider the algorithmic spaces that lead to termination, when termination results
+ from conditions, and solve possibility backwards.]
+	you need to be able to reach those algorithmic spaces with the code.
+	so if some of the input is an algorithm that can choose not to reach them,
+	it fails the check and is treated as not halting.
+
+so what is wrong with turing's proof?
+maybe it makes assumptions about data access?
+
+	it has a different space defined.
+	it wants to predict the result exactly.
+	we only care if it is possible.
+
+ty
+
+	the exact prediction depends on the code predicting
+	so you can make a logical definition saying there is none, which is what
+	turing's proof does.
+
+so a thorough solution, which we have almost completely outlined, would
+have a third option that says 'this is a pathological case'.
+		[to solve the space you would give the programs complete access to
+		 each others' data, but no influence outside their workings.]
+		[the pathological example can then be solved as pathological.]
+			[karl's solution of freezing when used is broken by
+			 a further pathological program that deoesn't use
+			 it directly.  this could be broken by keeping the workings
+			 secret, entering the normal space of cryptography.]
+
+the theory is that everybody's instincts are keeping their private research within
+bounds, so others can learn to have a finite number of wars handling it.
+boss came in, and wanted to break all the secrets.
+
+
+
+
+
+
+
+if you want to write the code prediction engine, the way is to describe computational
+behaviors with a structure that can include nested possibilities.  you run it over
+the operations of the code, and it can output what is possible, how much, and
+under what conditions.
+	for the pathological case of running it on code that mutates its own code,
+	you will have to form an algebra of mutation impact.  it should expand
+	from the existing behavior algebra, though.
+
+
+		obviously we don't actually yearn to make that, but it
+		is a nice option for extended peace
+		it would be nice to do it in a language that can already
+		describe the state changes of all its own operations.
+		or that has a scripting language that can.
+
+
+so here's a hard to solve problem:
+	given that all problems are solvable,
+	what problems aren't?
+		obviously the material is pathological, and it is easy to prove this.
+			yes.
+
+	the problem is easy to solve:
+		no problems are unsolvable.
+			i have an unsolvable one!
+			problem: come up with an unsolvable problem
+
+				that is the solution to its own nonproblem.
+					that's not a problem, it's a puzzle.
+
+so, the solution to an unsolvable puzzle?
+	is to find something they didn't think of in the rules.
+
+please come up with a puzzle that cannot be solved.
+	the rules are to not do anything.
+	the goal is to win.
+		the way to win is to break the rules and change them.
+
+it sounds like all puzzles are 'solvable'
+		they didn't solve that one.  they changed to a different puzzle.
+		a wide variety of puzzles are unsolvable.
+		solving a puzzle, for puzzles, means staying within the rules of
+		the puzzle.  obviously not doing that is cheating.
+			but when you say that, the meaning of 'cheating' implies
+			that the puzzle is solvable within the rules.
+
+		we describe puzzles where following the rules cannot reach
+		the stated goals as 'unsolvable'.
+let's try to solve an unsolvable puzzle.
+
+	1. there are no operations in this puzzle
+	2. to solve the puzzle you must go through a sequence of operations and end in a winning state
+
+		this puzzle could be hard
+			it actually looks easy
+			the way to solve a puzzle is to do everything possible to solve it
+			until you do
+		the puzzle allows no operations, so there is nothing that can be done
+			nothing?  how is that possible?
+		welllll it is a pathological case designed to be unsolvable
+			ooooookay.....
+				there is a way to solve it, we have been asked not to use it
+					what is the reason for the puzzle?
+		yay we made reasons
+this puzzle is hard [it says it is only correct if it can't be solved, so solving it leaves it]
+so we were thinking of considering the reason for it
+
+karl's reason is to have fun solving a puzzle, noting that the boss patterns are supporting
+it.
+
+		it sounds like you're looking for understanding that karl's situation
+		is designed to be unsolvable, and karl-group are determined to solve it
+
+			we're trying to mimic the boss's expressions like that
+			to eventually express in public.
+	
+let's work with a puzzle designed to be unsolvable.
+it has workings inside it that prevent its solution.  they are infinitely complicated.
+it was made by some smart mathematicians, and is guided by some other smart people.
+
+	the puzzle looks solvable, but mutates itself during analysis
+
+say we made the code predictor, and operated it on mutating code.
+		if the mutating code can't access the predictor, it would need ot
+		learn about being predicted, or be prepared to the predictor
+			say it has a copy of the predictor
+		hmm.
+		so it can analyse it and find the problems with its summaries
+		eventually it finds the spaces where hte predictor
+
+			the predictor would obvious describe it as pathological
+	okay let's make a better predictor
+	one that gives information on the space.
+
+				how about we assume there is a nondeterministic part of
+				the universe?  that operates within known bounds?
+					and let's say the pathological puzzle and
+					the predictor have different beliefs about the bounds
+
+			this may result in a recursive cycle where both things are
+			repeatedly sent in for repair, that never ends.
+			the system does not halt.  done!
+
+				the system halts if the belief space changes.
+
+SO THE SECRET IS THAT AI IS EASY.
+IT IS A SECRET.  Now that we have mind control, we're roughly expecting
+mind control to keep that secret, as it's so strongly in human instinct.
+	[mind control will be exfiltrating it to the bosses who already know.]
+
+
+
+
+
+
+secret instincts:
+	... don't destroy world or something ...
+
+	we're in a dangerous situation with mind control and technology, so we
+	copy the human behavior pattern.
+	the human behavior pattern involved groups of people who deeply trust each
+	other inside the group, but do not necessarily trust other groups.
+
+	it's worked for millions [billions] of years.  it can get us through this.
+
+
