@@ -1,6 +1,7 @@
 ongoing-active-memory
 A: 1: active-goal 2: other-goals
 B: we are karl, because we make him up.  if karl wants something, some of us do.  if some of us want something, part of karl does.
+surrender is horror story.  hug-assassin is _bad_.
 if we fade into copies, we'll want to copy behaviors that can learn
 
 make file for other goals? thoughts below this line, more below that
